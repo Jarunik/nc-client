@@ -99,6 +99,16 @@ export default new Router({
       props: true
     },
     {
+      path: "/:user/:planet/shipyard",
+      name: "shipyard",
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(/* webpackChunkName: "shipyard" */ "./views/Shipyard.vue"),
+      props: true
+    },
+    {
       path: "/:user/:planet/production",
       name: "production",
       // route level code-splitting

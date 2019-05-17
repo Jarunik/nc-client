@@ -1,6 +1,6 @@
 <template>
-  <div class="buildings">
-    <h1>{{ $t("Buildings") }}</h1>
+  <div class="shipyard">
+    <h1>{{ $t("Shipyard") }}</h1>
     <template v-if="user !== this.$store.state.game.user">
       <p>
         {{ $t("User: ") + user }}
@@ -12,36 +12,46 @@
     <template v-if="user !== 'null' && planet != 'null'">
       <table>
         <thead>
-          <th>{{ $t("Building") }}</th>
-          <th>{{ $t("Level") }}</th>
+          <th>{{ $t("Ship") }}</th>
           <th>{{ $t("Coal") }}</th>
           <th>{{ $t("Ore") }}</th>
           <th>{{ $t("Copper") }}</th>
           <th>{{ $t("Uranium") }}</th>
           <th>{{ $t("Needs") }}</th>
-          <th>{{ $t("Upgrading") }}</th>
+          <th>{{ $t("Rocket") }}</th>
+          <th>{{ $t("Bullet") }}</th>
+          <th>{{ $t("Laser") }}</th>
+          <th>{{ $t("Structure") }}</th>
+          <th>{{ $t("Armor") }}</th>
+          <th>{{ $t("Shield") }}</th>
+          <th>{{ $t("Constructing") }}</th>
           <th
             v-if="
               $store.state.game.loginUser !== null &&
                 $store.state.game.loginUser === $store.state.game.user
             "
           >
-            {{ $t("Upgrade") }}
+            {{ $t("Construct") }}
           </th>
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="(building, index) in buildings" :key="building.name">
-            <td>{{ $t(building.name) }}</td>
-            <td>{{ building.current }}</td>
-            <td>{{ building.coal }}</td>
-            <td>{{ building.ore }}</td>
-            <td>{{ building.copper }}</td>
-            <td>{{ building.uranium }}</td>
+          <tr v-for="(ship, index) in shipyard" :key="ship.longname">
+            <td>{{ $t(ship.longname) }}</td>
+            <td>{{ ship.cost.coal }}</td>
+            <td>{{ ship.cost.ore }}</td>
+            <td>{{ ship.cost.copper }}</td>
+            <td>{{ ship.cost.uranium }}</td>
             <td>
-              {{ building.time | timePretty }}
+              {{ ship.cost.time | timePretty }}
             </td>
-            <td>{{ building.busy | busyPretty }}</td>
+            <td>{{ ship.rocket | omitZero }}</td>
+            <td>{{ ship.bullet | omitZero }}</td>
+            <td>{{ ship.laser | omitZero }}</td>
+            <td>{{ ship.structure }}</td>
+            <td>{{ ship.armor }}</td>
+            <td>{{ ship.shield }}</td>
+            <td>{{ ship.busy_until | busyPretty }}</td>
             <td
               v-if="
                 $store.state.game.loginUser !== null &&
@@ -49,15 +59,15 @@
               "
             >
               <button
-                :disabled="clicked.includes(building.name)"
-                v-if="buildingPossible(building, index)"
-                @click="upgradeBuilding(building, index)"
+                :disabled="clicked.includes(ship.longname)"
+                v-if="shipPossible(ship, index)"
+                @click="buildShip(ship, index)"
               >
                 ↑
               </button>
             </td>
-            <td v-if="chainResponse.includes(building.name)">
-              {{ $t("⌛") }}
+            <td v-if="chainResponse.includes(ship.longname)">
+              {{ $t("⏳") }}
             </td>
           </tr>
         </tbody>
@@ -83,17 +93,17 @@
 </template>
 
 <script>
-import BuildingService from "@/services/buildings";
+import ShipyardService from "@/services/shipyard";
 import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
 
 export default {
-  name: "buildings",
+  name: "shipyard",
   props: ["user", "planet"],
   data: function() {
     return {
-      buildings: null,
+      shipyard: null,
       quantity: null,
       interval: null,
       coal: null,
@@ -129,16 +139,22 @@ export default {
     },
     timePretty(time) {
       return moment.duration(parseInt(time), "seconds").humanize();
+    },
+    omitZero(number) {
+      if (number == 0) {
+        return "-";
+      }
+      return number;
     }
   },
   methods: {
     async prepareComponent() {
-      await this.getBuildings();
+      await this.getShipyard();
       await this.getQuantity();
     },
-    async getBuildings() {
-      const response = await BuildingService.all(this.planet);
-      this.buildings = response;
+    async getShipyard() {
+      const response = await ShipyardService.all(this.planet);
+      this.shipyard = response;
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
@@ -153,37 +169,46 @@ export default {
         }
       }
     },
-    upgradeBuilding(building, index) {
-      this.clicked.push(building.name);
+    buildShip(ship, index) {
+      this.clicked.push(ship.longname);
       SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
-      SteemConnectService.upgradeBuilding(
+      SteemConnectService.buildShip(
         this.$store.state.game.loginUser,
         this.$store.state.planet.id,
-        building.name,
+        ship.name,
         (error, result) => {
           if (error === null) {
-            this.chainResponse.push(building.name);
+            this.chainResponse.push(ship.longname);
           }
         }
       );
     },
-    buildingPossible(building, index) {
-      if (this.isBusy(building.busy)) {
+    shipPossible(ship, index) {
+      if (this.isBusy(ship.busy_until)) {
         return false;
       }
-      if (this.coal < building.coal) {
+      if (this.coal < ship.cost.coal) {
         return false;
       }
-      if (this.ore < building.ore) {
+      if (this.ore < ship.cost.ore) {
         return false;
       }
-      if (this.copper < building.copper) {
+      if (this.copper < ship.cost.copper) {
         return false;
       }
-      if (this.uranium < building.uranium) {
+      if (this.uranium < ship.cost.copper) {
         return false;
       }
-      if (this.current >= this.skill) {
+      if (ship.cur_level < ship.min_level) {
+        return false;
+      }
+      if (ship.skill < 20) {
+        return false;
+      }
+      if (ship.variant_name === "laser") {
+        return false;
+      }
+      if (ship.variant_name === "bullet") {
         return false;
       }
       return true;

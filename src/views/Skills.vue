@@ -170,6 +170,7 @@ export default {
       if (this.uranium < skill.uranium) {
         return false;
       }
+
       return true;
     },
     async getQuantity() {
