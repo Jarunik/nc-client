@@ -8,6 +8,22 @@ Documentation about NextColony: https://jarunik.github.io/nc-docs/
 
 Official Game Client: https://nextcolony.io
 
+## Contributing
+
+Contributions to the web client are very welcome.
+
+Please open issues for feedback, ideas, change request and bug reports.
+
+To help with development:
+
+1. Fork the repository
+2. Create a feature branch on the `develop` branch
+3. Make a pull request to the `develop` branch
+4. Let jarunik know on Discord: https://discord.gg/A8tH9Vv
+5. Jarunik will review, discuss and merge the pull request.
+
+In case you want to do bigger changes: Please describe them in an issue and discuss them with jarunik before implementation.
+
 ## Project setup
 ```
 npm install
