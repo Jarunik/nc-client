@@ -33,6 +33,7 @@
           >
             {{ $t("Construct") }}
           </th>
+          <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
           <tr v-for="(ship, index) in shipyard" :key="ship.longname">
@@ -44,9 +45,9 @@
             <td>
               {{ ship.cost.time | timePretty }}
             </td>
-            <td>{{ ship.rocket }}</td>
-            <td>{{ ship.bullet }}</td>
-            <td>{{ ship.laser }}</td>
+            <td>{{ ship.rocket | omitZero }}</td>
+            <td>{{ ship.bullet | omitZero }}</td>
+            <td>{{ ship.laser | omitZero }}</td>
             <td>{{ ship.structure }}</td>
             <td>{{ ship.armor }}</td>
             <td>{{ ship.shield }}</td>
@@ -66,7 +67,7 @@
               </button>
             </td>
             <td v-if="chainResponse.includes(ship.longname)">
-              {{ $t("⌛") }}
+              {{ $t("⏳") }}
             </td>
           </tr>
         </tbody>
@@ -138,6 +139,12 @@ export default {
     },
     timePretty(time) {
       return moment.duration(parseInt(time), "seconds").humanize();
+    },
+    omitZero(number) {
+      if (number == 0) {
+        return "-";
+      }
+      return number;
     }
   },
   methods: {

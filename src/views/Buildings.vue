@@ -28,6 +28,7 @@
           >
             {{ $t("Upgrade") }}
           </th>
+          <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
           <tr v-for="(building, index) in buildings" :key="building.name">
