@@ -4,18 +4,27 @@
       <router-link to="/ranking">{{ $t("Ranking") }}</router-link> |
       <router-link to="/shop">{{ $t("Shop") }}</router-link> |
       <router-link :to="'/' + userName + '/items'">
-        {{ $t("Items") }} </router-link
-      >|
+        {{ $t("Items") }}
+      </router-link>
+      |
       <router-link :to="'/' + userName + '/skills'">
-        {{ $t("Skills") }} </router-link
-      >|
-      <router-link :to="'/' + userName + '/missions'">
-        {{ $t("Missions") }} </router-link
-      >|
+        {{ $t("Skills") }}
+      </router-link>
+      |
       <router-link :to="'/' + userName + '/' + planetId + '/buildings'">
-        {{ $t("Buildings") }} </router-link
-      >| <router-link to="/user">{{ userName || $t("Set User") }}</router-link
-      >|
+        {{ $t("Buildings") }}
+      </router-link>
+      |
+      <router-link :to="'/' + userName + '/' + planetId + '/shipyard'">
+        {{ $t("Shipyard") }}
+      </router-link>
+      |
+      <router-link :to="'/' + userName + '/missions'">
+        {{ $t("Missions") }}
+      </router-link>
+      |
+
+      <router-link to="/user">{{ userName || $t("Set User") }}</router-link> |
       <template v-if="loginUser === null">
         <router-link to="/">{{ $t("Login") }}</router-link>
       </template>
