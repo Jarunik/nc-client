@@ -8,7 +8,6 @@
         <th @click="sort('meta_rate')">{{ $t("Production") }}</th>
         <th @click="sort('planets')">{{ $t("Planets") }}</th>
         <th @click="sort('explorations')">{{ $t("Explorations") }}</th>
-        <th>{{ $t("Per Planet") }}</th>
       </thead>
       <tbody>
         <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
@@ -17,9 +16,6 @@
           <td>{{ rank.meta_rate.toFixed(0) }}</td>
           <td>{{ rank.planets }}</td>
           <td>{{ rank.explorations }}</td>
-          <td>
-            {{ Number(rank.explorations / (rank.planets - 1)).toFixed(0) }}
-          </td>
         </tr>
       </tbody>
     </table>
@@ -34,7 +30,7 @@ export default {
   data: function() {
     return {
       ranking: null,
-      currentSort: "null",
+      currentSort: "production",
       currentSortDir: "asc"
     };
   },
@@ -55,6 +51,8 @@ export default {
         return sortedRanking.sort((a, b) => {
           let modifier = 1;
           if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] === null) return -1 * modifier;
+          if (b[this.currentSort] === null) return 1 * modifier;
           if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
           if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
           return 0;

@@ -15,12 +15,12 @@
           <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortActive('return')">{{ $t("Return") }}</th>
-          <th>{{ $t("Result") }}</th>
+          <th @click="sortOld('result')">{{ $t("Result") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
-            <td>{{ mission.type }}</td>
+            <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
@@ -41,12 +41,12 @@
           <th @click="sortOld('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortOld('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortOld('return')">{{ $t("Return") }}</th>
-          <th>{{ $t("Result") }}</th>
+          <th @click="sortOld('result')">{{ $t("Result") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedOldMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
-            <td>{{ mission.type }}</td>
+            <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
@@ -102,6 +102,8 @@ export default {
         return sortedActiveMissions.sort((a, b) => {
           let modifier = 1;
           if (this.currentActiveSortDir === "desc") modifier = -1;
+          if (a[this.currentActiveSort] === null) return -1 * modifier;
+          if (b[this.currentActiveSort] === null) return 1 * modifier;
           if (a[this.currentActiveSort] < b[this.currentActiveSort])
             return -1 * modifier;
           if (a[this.currentActiveSort] > b[this.currentActiveSort])
@@ -118,6 +120,8 @@ export default {
         return sortedOldMissions.sort((a, b) => {
           let modifier = 1;
           if (this.currentOldSortDir === "desc") modifier = -1;
+          if (a[this.currentOldSort] === null) return -1 * modifier;
+          if (b[this.currentOldSort] === null) return 1 * modifier;
           if (a[this.currentOldSort] < b[this.currentOldSort])
             return -1 * modifier;
           if (a[this.currentOldSort] > b[this.currentOldSort])

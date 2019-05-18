@@ -17,5 +17,17 @@
   "uraniumbooster": "Uranium Booster",
   "missioncontrol": "Mission Control",
   "bunker": "Bunker",
-  "enlargebunker": "Enlarge Bunker"
+  "enlargebunker": "Enlarge Bunker",
+  "rocket": "Rocket",
+  "bullet": "Bullet",
+  "laser": "Laser",
+  "civil": "Civil",
+  "attack": "Attack",
+  "transport": "Transport",
+  "support": "Support",
+  "deploy": "Deploy",
+  "cancel": "Cancel",
+  "nothing_found": "Nothing Found",
+  "nothing_happened": "Nothing Happend",
+  "explorespace": "Explore Space"
 }
