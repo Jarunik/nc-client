@@ -1,0 +1,21 @@
+{
+  "Welcome": "Welcome",
+  "shipyard": "Shipyard",
+  "oredepot": "Ore Depot",
+  "copperdepot": "Copper Depot",
+  "coaldepot": "Coal Depot",
+  "uraniumdepot": "Uranium Depot",
+  "oremine": "Ore Mine",
+  "coalmine": "Coal Mine",
+  "base": "Base",
+  "coppermine": "Copper Mine",
+  "uraniummine": "Uranium Mine",
+  "researchcenter": "Research Center",
+  "orebooster": "Ore Booster",
+  "coalbooster": "Coal Booster",
+  "copperbooster": "Copper Booster",
+  "uraniumbooster": "Uranium Booster",
+  "missioncontrol": "Mission Control",
+  "bunker": "Bunker",
+  "enlargebunker": "Enlarge Bunker"
+}
