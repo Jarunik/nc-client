@@ -8,6 +8,7 @@
 <script>
 import QuantityService from "@/services/quantity";
 import moment from "moment";
+import { mapState } from "vuex";
 
 export default {
   name: "quantityribbon",
@@ -31,15 +32,11 @@ export default {
     }, 1000);
   },
   computed: {
-    planetId: function() {
-      return this.$store.state.planet.id;
-    },
-    planetName: function() {
-      return this.$store.state.planet.name;
-    },
-    user: function() {
-      return this.$store.state.game.user;
-    }
+    ...mapState({
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name,
+      user: state => state.game.user
+    })
   },
   watch: {
     async planetId(newValue, oldValue) {
@@ -53,7 +50,7 @@ export default {
       await this.getQuantity();
     },
     async getQuantity() {
-      const response = await QuantityService.get(this.$store.state.planet.id);
+      const response = await QuantityService.get(this.planetId);
       this.quantity = response;
       this.calculateCoal();
       this.calculateOre();

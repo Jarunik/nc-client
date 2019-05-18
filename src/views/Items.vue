@@ -1,9 +1,9 @@
 <template>
   <div class="items">
     <h1>{{ $t("Items") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
+        {{ $t("User: ") + routeUser }}
       </p>
     </template>
     <template v-if="items !== null && items.length > 0">
@@ -19,7 +19,7 @@
           <tr v-for="(item, index) in items" :key="item.uid">
             <td>{{ $t(item.name) }}</td>
             <td>{{ item.total }}</td>
-            <td v-if="user === $store.state.game.loginUser">
+            <td v-if="routeUser === loginUser">
               <button @click="toggleGift(item.id)">
                 ...
               </button>
@@ -33,11 +33,9 @@
             <td>
               <button
                 v-if="
-                  user === $store.state.game.loginUser &&
-                    item.total > 0 &&
-                    $store.state.planet.id !== null
+                  routeUser === loginUser && item.total > 0 && planetId !== null
                 "
-                @click="activateItem(item, $store.state.planet.id, index)"
+                @click="activateItem(item, planetId, index)"
                 :disabled="clicked.includes(item.id)"
               >
                 {{ $t("☀") }}
@@ -51,13 +49,13 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="user !== 'null'">
+      <template v-if="routeUser !== 'null'">
         <p>
           {{ $t("You have no items. Buy some in the") }}
           <router-link to="/shop">{{ $t("shop") }}</router-link> .
         </p>
       </template>
-      <template v-if="user === 'null'">
+      <template v-if="routeUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
@@ -70,10 +68,11 @@
 <script>
 import ItemsService from "@/services/items";
 import SteemConnectService from "@/services/steemconnect";
+import { mapState } from "vuex";
 
 export default {
   name: "items",
-  props: ["user"],
+  props: ["routeUser"],
   data: function() {
     return {
       items: null,
@@ -87,18 +86,26 @@ export default {
   async mounted() {
     await this.prepareComponent();
   },
+  computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    })
+  },
   methods: {
     async prepareComponent() {
       await this.getShop();
     },
     async getShop() {
-      const response = await ItemsService.byUser(this.user);
+      const response = await ItemsService.byUser(this.routeUser);
       this.items = response;
     },
     giftItem(item, index) {
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.giftItem(
-        this.$store.state.game.loginUser,
+        this.loginUser,
         item.uid,
         this.recipient,
         (error, result) => {
@@ -119,9 +126,9 @@ export default {
     },
     activateItem(item, planetId, index) {
       this.clicked.push(item.id);
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.activateItem(
-        this.$store.state.game.loginUser,
+        this.loginUser,
         item.uid,
         planetId,
         (error, result) => {

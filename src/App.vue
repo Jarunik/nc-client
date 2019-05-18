@@ -3,28 +3,28 @@
     <div id="navtop">
       <router-link to="/ranking">{{ $t("Ranking") }}</router-link> |
       <router-link to="/shop">{{ $t("Shop") }}</router-link> |
-      <router-link :to="'/' + userName + '/items'">
+      <router-link :to="'/' + gameUser + '/items'">
         {{ $t("Items") }}
       </router-link>
       |
-      <router-link :to="'/' + userName + '/skills'">
+      <router-link :to="'/' + gameUser + '/skills'">
         {{ $t("Skills") }}
       </router-link>
       |
-      <router-link :to="'/' + userName + '/' + planetId + '/buildings'">
+      <router-link :to="'/' + gameUser + '/' + planetId + '/buildings'">
         {{ $t("Buildings") }}
       </router-link>
       |
-      <router-link :to="'/' + userName + '/' + planetId + '/shipyard'">
+      <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
         {{ $t("Shipyard") }}
       </router-link>
       |
-      <router-link :to="'/' + userName + '/missions'">
+      <router-link :to="'/' + gameUser + '/missions'">
         {{ $t("Missions") }}
       </router-link>
       |
 
-      <router-link to="/user">{{ userName || $t("Set User") }}</router-link> |
+      <router-link to="/user">{{ gameUser || $t("Set User") }}</router-link> |
       <template v-if="loginUser === null">
         <router-link to="/">{{ $t("Login") }}</router-link>
       </template>
@@ -36,10 +36,10 @@
       <router-view />
     </div>
     <div id="navbottom">
-      <router-link :to="'/' + userName + '/' + planetId + '/production'">
+      <router-link :to="'/' + gameUser + '/' + planetId + '/production'">
         <QuantityRibbon />
       </router-link>
-      <router-link :to="'/' + userName + '/planets'">
+      <router-link :to="'/' + gameUser + '/planets'">
         {{ planetName || $t("Set Planet") }}
       </router-link>
     </div>
@@ -67,7 +67,7 @@ export default {
         this.$store.dispatch("game/setLoginUser", value);
       }
     },
-    userName: {
+    gameUser: {
       get() {
         return this.$store.state.game.user;
       },
@@ -92,10 +92,7 @@ export default {
       new Date(JSON.parse(localStorage.getItem("gameExpiryDate")))
     );
 
-    if (
-      moment.utc().isAfter(expiry) &&
-      this.$store.state.game.loginUser !== null
-    ) {
+    if (moment.utc().isAfter(expiry) && this.loginUser !== null) {
       this.$store.dispatch("game/setLoginUser", null);
       this.$store.dispatch("game/setAccessToken", null);
       this.$store.dispatch("game/setExpiresIn", null);

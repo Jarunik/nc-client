@@ -24,6 +24,7 @@
 
 <script>
 import ShopService from "@/services/shop";
+import { mapState } from "vuex";
 
 export default {
   name: "shop",
@@ -34,6 +35,14 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+  },
+  computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    })
   },
   methods: {
     async prepareComponent() {
@@ -50,7 +59,7 @@ export default {
         "%20STEEM&memo=" +
         "nc" +
         "@{'type':'buy','command':{'user':'" +
-        this.$store.state.game.loginUser +
+        this.loginUser +
         "','itemid':'" +
         item.id +
         "','qty':'1'}}";

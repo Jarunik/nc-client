@@ -1,36 +1,28 @@
 <template>
   <div class="shipyard">
     <h1>{{ $t("Shipyard") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
-        <template v-if="user !== this.$store.state.planet.id">
-          <br />{{ $t("Planet: ") + planet }}
+        {{ $t("User: ") + routeUser }}
+        <template v-if="routeUser !== planetId">
+          <br />{{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
     </template>
-    <template v-if="user !== 'null' && planet != 'null'">
+    <template v-if="routeUser !== 'null' && routePlanet != 'null'">
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
+          <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
           <th @click="sort('coal')">{{ $t("Coal") }}</th>
           <th @click="sort('ore')">{{ $t("Ore") }}</th>
           <th @click="sort('copper')">{{ $t("Copper") }}</th>
           <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
-          <th @click="sort('rocket')">{{ $t("Rocket") }}</th>
-          <th @click="sort('bullet')">{{ $t("Bullet") }}</th>
-          <th @click="sort('laser')">{{ $t("Laser") }}</th>
-          <th @click="sort('structure')">{{ $t("Structure") }}</th>
-          <th @click="sort('armor')">{{ $t("Armor") }}</th>
-          <th @click="sort('shield')">{{ $t("Shield") }}</th>
+          <th @click="sort('attack')">{{ $t("Attack") }}</th>
+          <th @click="sort('defense')">{{ $t("Defense") }}</th>
           <th @click="sort('busy_until')">{{ $t("Constructing") }}</th>
-          <th
-            v-if="
-              $store.state.game.loginUser !== null &&
-                $store.state.game.loginUser === $store.state.game.user
-            "
-          >
+          <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Construct") }}
           </th>
           <th>{{ $t(" ") }}</th>
@@ -38,6 +30,7 @@
         <tbody>
           <tr v-for="ship in sortedShipyard" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
+            <td>{{ $t(ship.variant_name) }}</td>
             <td>{{ ship.cost.coal }}</td>
             <td>{{ ship.cost.ore }}</td>
             <td>{{ ship.cost.copper }}</td>
@@ -45,19 +38,10 @@
             <td>
               {{ ship.cost.time | timePretty }}
             </td>
-            <td>{{ ship.rocket | omitZero }}</td>
-            <td>{{ ship.bullet | omitZero }}</td>
-            <td>{{ ship.laser | omitZero }}</td>
-            <td>{{ ship.structure }}</td>
-            <td>{{ ship.armor }}</td>
-            <td>{{ ship.shield }}</td>
+            <td>{{ (ship.rocket + ship.bullet + ship.laser) | omitZero }}</td>
+            <td>{{ ship.structure + ship.armor + ship.shield }}</td>
             <td>{{ ship.busy_until | busyPretty }}</td>
-            <td
-              v-if="
-                $store.state.game.loginUser !== null &&
-                  $store.state.game.loginUser === $store.state.game.user
-              "
-            >
+            <td v-if="loginUser !== null && loginUser === gameUser">
               <button
                 :disabled="clicked.includes(ship.longname)"
                 v-if="shipPossible(ship)"
@@ -74,16 +58,16 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="user === 'null'">
+      <template v-if="routeUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="planet === 'null'"
+      <template v-if="routePlanet === 'null'"
         ><p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + user + '/planets'">{{
+          <router-link :to="'/' + routeUser + '/planets'">{{
             $t("planet")
           }}</router-link>
         </p>
@@ -97,10 +81,11 @@ import ShipyardService from "@/services/shipyard";
 import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
+import { mapState } from "vuex";
 
 export default {
   name: "shipyard",
-  props: ["user", "planet"],
+  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       shipyard: null,
@@ -112,7 +97,7 @@ export default {
       uranium: null,
       clicked: [],
       chainResponse: [],
-      currentSort: "name",
+      currentSort: "longname",
       currentSortDir: "asc"
     };
   },
@@ -150,12 +135,21 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    }),
     sortedShipyard() {
       var sortedShipyard = this.shipyard;
       if (sortedShipyard !== null) {
         return sortedShipyard.sort((a, b) => {
           let modifier = 1;
           if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] === null) return -1 * modifier;
+          if (b[this.currentSort] === null) return 1 * modifier;
+          // cost
           if (
             this.currentSort === "coal" ||
             this.currentSort === "ore" ||
@@ -167,6 +161,25 @@ export default {
               return -1 * modifier;
             if (a.cost[this.currentSort] > b.cost[this.currentSort])
               return 1 * modifier;
+            // attack
+          } else if (this.currentSort === "attack") {
+            if (a.rocket + a.bullet + a.laser < b.rocket + b.bullet + b.laser)
+              return -1 * modifier;
+            if (a.rocket + a.bullet + a.laser > b.rocket + b.bullet + b.laser)
+              return 1 * modifier;
+            // defense
+          } else if (this.currentSort === "defense") {
+            if (
+              a.structure + a.armor + a.shield <
+              b.structure + b.armor + b.shield
+            )
+              return -1 * modifier;
+            if (
+              a.structure + a.armor + a.shield >
+              b.structure + b.armor + b.shield
+            )
+              return 1 * modifier;
+            // all the others
           } else {
             if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
             if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
@@ -184,7 +197,7 @@ export default {
       await this.getQuantity();
     },
     async getShipyard() {
-      const response = await ShipyardService.all(this.planet);
+      const response = await ShipyardService.all(this.routePlanet);
       this.shipyard = response;
     },
     isBusy(busy) {
@@ -202,10 +215,10 @@ export default {
     },
     buildShip(ship) {
       this.clicked.push(ship.longname);
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.buildShip(
-        this.$store.state.game.loginUser,
-        this.$store.state.planet.id,
+        this.loginUser,
+        this.planetId,
         ship.name,
         (error, result) => {
           if (error === null && result.success) {
@@ -245,7 +258,7 @@ export default {
       return true;
     },
     async getQuantity() {
-      const response = await QuantityService.get(this.$store.state.planet.id);
+      const response = await QuantityService.get(this.planetId);
       this.quantity = response;
       this.calculateCoal();
       this.calculateOre();

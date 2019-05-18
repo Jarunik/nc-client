@@ -1,15 +1,15 @@
 <template>
   <div class="buildings">
     <h1>{{ $t("Buildings") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
-        <template v-if="user !== this.$store.state.planet.id">
-          <br />{{ $t("Planet: ") + planet }}
+        {{ $t("User: ") + routeUser }}
+        <template v-if="routeUser !== planetId">
+          <br />{{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
     </template>
-    <template v-if="user !== 'null' && planet != 'null'">
+    <template v-if="routeUser !== 'null' && routePlanet != 'null'">
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
@@ -20,12 +20,7 @@
           <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Upgrading") }}</th>
-          <th
-            v-if="
-              $store.state.game.loginUser !== null &&
-                $store.state.game.loginUser === $store.state.game.user
-            "
-          >
+          <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Upgrade") }}
           </th>
           <th>{{ $t(" ") }}</th>
@@ -42,12 +37,7 @@
               {{ building.time | timePretty }}
             </td>
             <td>{{ building.busy | busyPretty }}</td>
-            <td
-              v-if="
-                $store.state.game.loginUser !== null &&
-                  $store.state.game.loginUser === $store.state.game.user
-              "
-            >
+            <td v-if="loginUser !== null && loginUser === gameUser">
               <button
                 :disabled="clicked.includes(building.name)"
                 v-if="buildingPossible(building, index)"
@@ -64,16 +54,16 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="user === 'null'">
+      <template v-if="routeUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="planet === 'null'"
+      <template v-if="routePlanet === 'null'"
         ><p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + user + '/planets'">{{
+          <router-link :to="'/' + routeUser + '/planets'">{{
             $t("planet")
           }}</router-link>
         </p>
@@ -86,11 +76,12 @@
 import BuildingService from "@/services/buildings";
 import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
+import { mapState } from "vuex";
 import moment from "moment";
 
 export default {
   name: "buildings",
-  props: ["user", "planet"],
+  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       buildings: null,
@@ -134,12 +125,20 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    }),
     sortedBuildings() {
       var sortedBuildings = this.buildings;
       if (sortedBuildings !== null) {
         return sortedBuildings.sort((a, b) => {
           let modifier = 1;
           if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] === null) return -1 * modifier;
+          if (b[this.currentSort] === null) return 1 * modifier;
           if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
           if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
           return 0;
@@ -155,7 +154,7 @@ export default {
       await this.getQuantity();
     },
     async getBuildings() {
-      const response = await BuildingService.all(this.planet);
+      const response = await BuildingService.all(this.routePlanet);
       this.buildings = response;
     },
     isBusy(busy) {
@@ -173,10 +172,10 @@ export default {
     },
     upgradeBuilding(building) {
       this.clicked.push(building.name);
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.upgradeBuilding(
-        this.$store.state.game.loginUser,
-        this.$store.state.planet.id,
+        this.loginUser,
+        this.planetId,
         building.name,
         (error, result) => {
           if (error === null && result.success) {
@@ -207,7 +206,7 @@ export default {
       return true;
     },
     async getQuantity() {
-      const response = await QuantityService.get(this.$store.state.planet.id);
+      const response = await QuantityService.get(this.planetId);
       this.quantity = response;
       this.calculateCoal();
       this.calculateOre();

@@ -18,9 +18,9 @@ export default new Router({
       component: account,
       props: route => ({
         // pass steemconnect query values as props
-        loginAccessToken: route.query.access_token,
-        loginExpiresIn: route.query.expires_in,
-        loginUserName: route.query.username
+        callbackAccessToken: route.query.access_token,
+        callbackExpiresIn: route.query.expires_in,
+        callbackUserName: route.query.username
       })
     },
     {
@@ -49,7 +49,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "user" */ "./views/User.vue")
     },
     {
-      path: "/:user/skills",
+      path: "/:routeUser/skills",
       name: "skills",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -59,7 +59,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/missions",
+      path: "/:routeUser/missions",
       name: "missions",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -69,7 +69,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/items",
+      path: "/:routeUser/items",
       name: "items",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -79,7 +79,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/planets",
+      path: "/:routeUser/planets",
       name: "planets",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -89,7 +89,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/:planet/buildings",
+      path: "/:routeUser/:routePlanet/buildings",
       name: "buildings",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -99,7 +99,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/:planet/shipyard",
+      path: "/:routeUser/:routePlanet/shipyard",
       name: "shipyard",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -109,7 +109,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:user/:planet/production",
+      path: "/:routeUser/:routePlanet/production",
       name: "production",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route

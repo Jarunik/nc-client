@@ -36,7 +36,7 @@
         {{ $t("Official NextColony Client") }}</a
       >
     </p>
-    <template v-if="!gameLoginUser">
+    <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
         <i>{{ $t("Secure 1-click-registration via SteemConnect:") }}</i>
@@ -45,13 +45,13 @@
     </template>
     <template v-else>
       <p>---</p>
-      <p>{{ $t("Logged in as") }}: {{ gameLoginUser }}</p>
-      <p>{{ $t("Valid Access Token") }}: {{ gameAccessToken !== null }}</p>
+      <p>{{ $t("Logged in as") }}: {{ loginUser }}</p>
+      <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
       <p>
         {{ $t("Valid until") }}:
         {{
           moment
-            .utc(gameExpiryDate)
+            .utc(expiryDate)
             .local()
             .format("LLL")
         }}
@@ -67,10 +67,11 @@
 import PlanetsService from "@/services/planets";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
+import { mapState } from "vuex";
 
 export default {
   name: "overview",
-  props: ["loginUserName", "loginAccessToken", "loginExpiresIn"],
+  props: ["callbackUserName", "callbackAccessTokken", "callbackExpiresIn"],
   data: function() {
     return {
       loginURL: null,
@@ -78,26 +79,12 @@ export default {
     };
   },
   computed: {
-    gameLoginUser: {
-      get() {
-        return this.$store.state.game.loginUser;
-      }
-    },
-    gameAccessToken: {
-      get() {
-        return this.$store.state.game.accessToken;
-      }
-    },
-    gameExpiresIn: {
-      get() {
-        return this.$store.state.game.expiresIn;
-      }
-    },
-    gameExpiryDate: {
-      get() {
-        return JSON.parse(this.$store.state.game.expiryDate);
-      }
-    }
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      expiresIn: state => state.game.expiresIn,
+      expiryDate: state => JSON.parse(state.game.expiryDate)
+    })
   },
   methods: {
     login() {
@@ -122,16 +109,19 @@ export default {
   },
   created() {
     // Set new Login Information from props in the store
-    if (this.loginUserName) {
-      this.$store.dispatch("game/setLoginUser", this.loginUserName);
-      this.$store.dispatch("game/setAccessToken", this.loginAccessToken);
-      this.$store.dispatch("game/setExpiresIn", this.loginExpiresIn);
-      var duration = moment.duration(parseInt(this.loginExpiresIn), "seconds");
+    if (this.callbackUserName) {
+      this.$store.dispatch("game/setLoginUser", this.callbackUserName);
+      this.$store.dispatch("game/setAccessToken", this.callbackAccessToken);
+      this.$store.dispatch("game/setExpiresIn", this.callbackExpiresIn);
+      var duration = moment.duration(
+        parseInt(this.callbackExpiresIn),
+        "seconds"
+      );
       var expiryDate = JSON.stringify(moment.utc().add(duration));
       this.$store.dispatch("game/setExpiryDate", expiryDate);
       // Fill Defaults
-      this.$store.dispatch("game/setUser", this.loginUserName);
-      this.getStarterPlanet(this.loginUserName).then(() => {
+      this.$store.dispatch("game/setUser", this.callbackUserName);
+      this.getStarterPlanet(this.callbackUserName).then(() => {
         this.$store.dispatch("planet/setId", this.planetSearch.id);
         this.$store.dispatch("planet/setName", this.planetSearch.name);
       });

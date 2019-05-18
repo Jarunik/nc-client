@@ -1,18 +1,18 @@
 <template>
   <div class="planets">
     <h1>{{ $t("Planets") }}</h1>
-    <template v-if="user !== $store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
+        {{ $t("User: ") + routeUser }}
       </p>
     </template>
-    <template v-if="user !== 'null'">
+    <template v-if="routeUser !== 'null'">
       <table>
         <thead>
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
-          <th v-if="user === $store.state.game.loginUser">
+          <th v-if="routeUser === loginUser">
             {{ $t("Rename") }}
           </th>
           <th>{{ $t("Context") }}</th>
@@ -22,7 +22,7 @@
             <td>{{ planet.id }}</td>
             <td>({{ planet.posx }}/{{ planet.posy }})</td>
             <td>{{ planet.name }}</td>
-            <td v-if="user === $store.state.game.loginUser">
+            <td v-if="routeUser === loginUser">
               <button @click="toggleRename(planet.id)">
                 ...
               </button>
@@ -54,10 +54,11 @@
 <script>
 import PlanetsService from "@/services/planets";
 import SteemConnectService from "@/services/steemconnect";
+import { mapState } from "vuex";
 
 export default {
   name: "planets",
-  props: ["user"],
+  props: ["routeUser"],
   data: function() {
     return {
       planets: null,
@@ -69,16 +70,24 @@ export default {
   async mounted() {
     await this.prepareComponent();
   },
+  computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    })
+  },
   methods: {
     async prepareComponent() {
       await this.getPlanets();
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.user);
+      const response = await PlanetsService.byUser(this.routeUser);
       this.planets = response.planets;
     },
     setPlanet(planetId, planetName) {
-      if (planetId !== this.$store.state.planet.id) {
+      if (planetId !== this.planetId) {
         this.$store.dispatch("planet/setId", planetId);
         this.$store.dispatch("planet/setName", planetName);
       } else {
@@ -90,9 +99,9 @@ export default {
       this.$store.dispatch("planet/setName", null);
     },
     renamePlanet(planetId, index) {
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.renamePlanet(
-        this.$store.state.game.loginUser,
+        this.loginUser,
         planetId,
         this.newName,
         (error, result) => {

@@ -1,12 +1,12 @@
 <template>
   <div class="missions">
     <h1>{{ $t("Missions") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
+        {{ $t("User: ") + routeUser }}
       </p>
     </template>
-    <template v-if="user !== 'null'">
+    <template v-if="routeUser !== 'null'">
       <table class="mission">
         <thead>
           <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
@@ -15,12 +15,12 @@
           <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortActive('return')">{{ $t("Return") }}</th>
-          <th>{{ $t("Result") }}</th>
+          <th @click="sortOld('result')">{{ $t("Result") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
-            <td>{{ mission.type }}</td>
+            <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
@@ -41,12 +41,12 @@
           <th @click="sortOld('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortOld('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortOld('return')">{{ $t("Return") }}</th>
-          <th>{{ $t("Result") }}</th>
+          <th @click="sortOld('result')">{{ $t("Result") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedOldMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
-            <td>{{ mission.type }}</td>
+            <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
@@ -70,18 +70,19 @@
 
 <script>
 import MissionsService from "@/services/missions";
+import { mapState } from "vuex";
 
 export default {
   name: "missions",
-  props: ["user"],
+  props: ["routeUser"],
   data: function() {
     return {
       missions: null,
       activeMissions: null,
       oldMissions: null,
-      currentActiveSort: "name",
+      currentActiveSort: "arrival",
       currentActiveSortDir: "asc",
-      currentOldSort: "name",
+      currentOldSort: "return",
       currentOldSortDir: "asc"
     };
   },
@@ -89,12 +90,20 @@ export default {
     await this.prepareComponent();
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    }),
     sortedActiveMissions() {
       var sortedActiveMissions = this.activeMissions;
       if (sortedActiveMissions !== null) {
         return sortedActiveMissions.sort((a, b) => {
           let modifier = 1;
           if (this.currentActiveSortDir === "desc") modifier = -1;
+          if (a[this.currentActiveSort] === null) return -1 * modifier;
+          if (b[this.currentActiveSort] === null) return 1 * modifier;
           if (a[this.currentActiveSort] < b[this.currentActiveSort])
             return -1 * modifier;
           if (a[this.currentActiveSort] > b[this.currentActiveSort])
@@ -111,6 +120,8 @@ export default {
         return sortedOldMissions.sort((a, b) => {
           let modifier = 1;
           if (this.currentOldSortDir === "desc") modifier = -1;
+          if (a[this.currentOldSort] === null) return -1 * modifier;
+          if (b[this.currentOldSort] === null) return 1 * modifier;
           if (a[this.currentOldSort] < b[this.currentOldSort])
             return -1 * modifier;
           if (a[this.currentOldSort] > b[this.currentOldSort])
@@ -127,7 +138,7 @@ export default {
       await this.getMissions();
     },
     async getMissions() {
-      const response = await MissionsService.all(this.user);
+      const response = await MissionsService.all(this.routeUser);
       this.missions = response;
       this.activeMissions = response.new;
       this.oldMissions = response.old;
