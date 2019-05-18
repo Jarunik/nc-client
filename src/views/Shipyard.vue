@@ -9,7 +9,7 @@
         </template>
       </p>
     </template>
-    <template v-if="routeUser !== 'null' && planet != 'null'">
+    <template v-if="routeUser !== 'null' && routePlanet != 'null'">
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
@@ -70,7 +70,7 @@
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="planet === 'null'"
+      <template v-if="routePlanet === 'null'"
         ><p>
           {{ $t("Please set the") }}
           <router-link :to="'/' + routeUser + '/planets'">{{
@@ -142,10 +142,10 @@ export default {
   },
   computed: {
     ...mapState({
-      gameLoginUser: state => state.game.loginUser,
-      gameAccessToken: state => state.game.accessToken,
-      gameExpiresIn: state => state.game.expiresIn,
-      gameExpiryDate: state => JSON.parse(state.game.expiryDate)
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
     }),
     sortedShipyard() {
       var sortedShipyard = this.shipyard;
@@ -181,7 +181,7 @@ export default {
       await this.getQuantity();
     },
     async getShipyard() {
-      const response = await ShipyardService.all(this.planet);
+      const response = await ShipyardService.all(this.routePlanet);
       this.shipyard = response;
     },
     isBusy(busy) {

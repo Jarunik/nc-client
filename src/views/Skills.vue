@@ -68,7 +68,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "skills",
-  props: ["routerUser"],
+  props: ["routeUser"],
   data: function() {
     return {
       skills: null,

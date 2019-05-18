@@ -61,7 +61,7 @@
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="planet == 'null'">
+      <template v-if="routePlanet == 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/' + routeUser + '/planets'">{{
