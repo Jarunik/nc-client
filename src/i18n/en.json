@@ -29,5 +29,7 @@
   "cancel": "Cancel",
   "nothing_found": "Nothing Found",
   "nothing_happened": "Nothing Happend",
-  "explorespace": "Explore Space"
+  "explorespace": "Explore Space",
+  "explorer_lost": "Explorer Lost",
+  "planet_found": "Planet Found"
 }

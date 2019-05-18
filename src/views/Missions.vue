@@ -24,7 +24,12 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
-            <td>{{ moment.unix(mission.return, "seconds").format("LLL") }}</td>
+            <td>
+              <span v-if="mission.return !== null">{{
+                moment.unix(mission.return, "seconds").format("LLL")
+              }}</span>
+              <span v-else>{{ $t("-") }}</span>
+            </td>
             <td>{{ $t(mission.result || "-") }}</td>
           </tr>
         </tbody>
@@ -50,7 +55,12 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
-            <td>{{ moment.unix(mission.return, "seconds").format("LLL") }}</td>
+            <td>
+              <span v-if="mission.return !== null">{{
+                moment.unix(mission.return, "seconds").format("LLL")
+              }}</span>
+              <span v-else>{{ $t("-") }}</span>
+            </td>
             <td>{{ $t(mission.result || "-") }}</td>
           </tr>
         </tbody>
@@ -83,7 +93,7 @@ export default {
       currentActiveSort: "arrival",
       currentActiveSortDir: "asc",
       currentOldSort: "return",
-      currentOldSortDir: "asc"
+      currentOldSortDir: "desc"
     };
   },
   async mounted() {
