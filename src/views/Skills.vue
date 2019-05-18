@@ -9,14 +9,14 @@
     <template v-if="user !== 'null'">
       <table>
         <thead>
-          <th>{{ $t("Skill") }}</th>
-          <th>{{ $t("Level") }}</th>
-          <th>{{ $t("Coal") }}</th>
-          <th>{{ $t("Ore") }}</th>
-          <th>{{ $t("Copper") }}</th>
-          <th>{{ $t("Uranium") }}</th>
-          <th>{{ $t("Needs") }}</th>
-          <th>{{ $t("Enhancing") }}</th>
+          <th @click="sort('name')">{{ $t("Skill") }}</th>
+          <th @click="sort('current')">{{ $t("Level") }}</th>
+          <th @click="sort('coal')">{{ $t("Coal") }}</th>
+          <th @click="sort('ore')">{{ $t("Ore") }}</th>
+          <th @click="sort('copper')">{{ $t("Copper") }}</th>
+          <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
+          <th @click="sort('time')">{{ $t("Needs") }}</th>
+          <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
           <th
             v-if="
               $store.state.game.loginUser !== null &&
@@ -28,7 +28,7 @@
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="skill in skills" :key="skill.name">
+          <tr v-for="skill in sortedSkills" :key="skill.name">
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
             <td>{{ skill.coal }}</td>
@@ -88,7 +88,9 @@ export default {
       copper: null,
       uranium: null,
       clicked: [],
-      chainResponse: []
+      chainResponse: [],
+      currentSort: "name",
+      currentSortDir: "asc"
     };
   },
   async mounted() {
@@ -116,6 +118,22 @@ export default {
     },
     timePretty(time) {
       return moment.duration(parseInt(time), "seconds").humanize();
+    }
+  },
+  computed: {
+    sortedSkills() {
+      var sortedSkills = this.skills;
+      if (sortedSkills !== null) {
+        return sortedSkills.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          return 0;
+        });
+      } else {
+        return sortedSkills;
+      }
     }
   },
   methods: {
@@ -242,6 +260,13 @@ export default {
       } else {
         this.uranium = 0;
       }
+    },
+    sort(s) {
+      //if s == current sort, reverse
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
+      }
+      this.currentSort = s;
     }
   },
   beforeDestroy() {

@@ -12,19 +12,19 @@
     <template v-if="user !== 'null' && planet != 'null'">
       <table>
         <thead>
-          <th>{{ $t("Ship") }}</th>
-          <th>{{ $t("Coal") }}</th>
-          <th>{{ $t("Ore") }}</th>
-          <th>{{ $t("Copper") }}</th>
-          <th>{{ $t("Uranium") }}</th>
-          <th>{{ $t("Needs") }}</th>
-          <th>{{ $t("Rocket") }}</th>
-          <th>{{ $t("Bullet") }}</th>
-          <th>{{ $t("Laser") }}</th>
-          <th>{{ $t("Structure") }}</th>
-          <th>{{ $t("Armor") }}</th>
-          <th>{{ $t("Shield") }}</th>
-          <th>{{ $t("Constructing") }}</th>
+          <th @click="sort('longname')">{{ $t("Ship") }}</th>
+          <th @click="sort('coal')">{{ $t("Coal") }}</th>
+          <th @click="sort('ore')">{{ $t("Ore") }}</th>
+          <th @click="sort('copper')">{{ $t("Copper") }}</th>
+          <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
+          <th @click="sort('time')">{{ $t("Needs") }}</th>
+          <th @click="sort('rocket')">{{ $t("Rocket") }}</th>
+          <th @click="sort('bullet')">{{ $t("Bullet") }}</th>
+          <th @click="sort('laser')">{{ $t("Laser") }}</th>
+          <th @click="sort('structure')">{{ $t("Structure") }}</th>
+          <th @click="sort('armor')">{{ $t("Armor") }}</th>
+          <th @click="sort('shield')">{{ $t("Shield") }}</th>
+          <th @click="sort('busy_until')">{{ $t("Constructing") }}</th>
           <th
             v-if="
               $store.state.game.loginUser !== null &&
@@ -36,7 +36,7 @@
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="ship in shipyard" :key="ship.longname">
+          <tr v-for="ship in sortedShipyard" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ ship.cost.coal }}</td>
             <td>{{ ship.cost.ore }}</td>
@@ -111,7 +111,9 @@ export default {
       copper: null,
       uranium: null,
       clicked: [],
-      chainResponse: []
+      chainResponse: [],
+      currentSort: "name",
+      currentSortDir: "asc"
     };
   },
   async mounted() {
@@ -145,6 +147,35 @@ export default {
         return "-";
       }
       return number;
+    }
+  },
+  computed: {
+    sortedShipyard() {
+      var sortedShipyard = this.shipyard;
+      if (sortedShipyard !== null) {
+        return sortedShipyard.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentSortDir === "desc") modifier = -1;
+          if (
+            this.currentSort === "coal" ||
+            this.currentSort === "ore" ||
+            this.currentSort === "copper" ||
+            this.currentSort === "uranium" ||
+            this.currentSort === "time"
+          ) {
+            if (a.cost[this.currentSort] < b.cost[this.currentSort])
+              return -1 * modifier;
+            if (a.cost[this.currentSort] > b.cost[this.currentSort])
+              return 1 * modifier;
+          } else {
+            if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+            if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          }
+          return 0;
+        });
+      } else {
+        return sortedShipyard;
+      }
     }
   },
   methods: {
@@ -282,6 +313,13 @@ export default {
       } else {
         this.uranium = 0;
       }
+    },
+    sort(s) {
+      //if s == current sort, reverse
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
+      }
+      this.currentSort = s;
     }
   },
   beforeDestroy() {
