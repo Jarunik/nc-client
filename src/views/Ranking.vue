@@ -4,14 +4,14 @@
     <table>
       <thead>
         <th>{{ $t("Rank") }}</th>
-        <th>{{ $t("User") }}</th>
-        <th>{{ $t("Production") }}</th>
-        <th>{{ $t("Planets") }}</th>
-        <th>{{ $t("Explorations") }}</th>
+        <th @click="sort('user')">{{ $t("User") }}</th>
+        <th @click="sort('meta_rate')">{{ $t("Production") }}</th>
+        <th @click="sort('planets')">{{ $t("Planets") }}</th>
+        <th @click="sort('explorations')">{{ $t("Explorations") }}</th>
         <th>{{ $t("Per Planet") }}</th>
       </thead>
       <tbody>
-        <tr v-for="(rank, index) in topRanks" :key="rank.user">
+        <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
           <td>{{ index + 1 }}</td>
           <td>{{ rank.user }}</td>
           <td>{{ rank.meta_rate.toFixed(0) }}</td>
@@ -33,7 +33,9 @@ export default {
   name: "ranking",
   data: function() {
     return {
-      ranking: null
+      ranking: null,
+      currentSort: "name",
+      currentSortDir: "asc"
     };
   },
   async mounted() {
@@ -46,6 +48,20 @@ export default {
       } else {
         return this.ranking;
       }
+    },
+    sortedRanking() {
+      var sortedRanking = this.ranking;
+      if (sortedRanking !== null) {
+        return sortedRanking.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          return 0;
+        });
+      } else {
+        return sortedRanking;
+      }
     }
   },
   methods: {
@@ -55,6 +71,13 @@ export default {
     async getRanking() {
       const response = await RankingService.all();
       this.ranking = response;
+    },
+    sort(s) {
+      //if s == current sort, reverse
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
+      }
+      this.currentSort = s;
     }
   }
 };

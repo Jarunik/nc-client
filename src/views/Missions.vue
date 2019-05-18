@@ -9,16 +9,16 @@
     <template v-if="user !== 'null'">
       <table class="mission">
         <thead>
-          <th>{{ $t("Active Mission") }}</th>
-          <th>{{ $t("Type") }}</th>
-          <th>{{ $t("Origin") }}</th>
-          <th>{{ $t("Destination") }}</th>
-          <th>{{ $t("Arrival") }}</th>
-          <th>{{ $t("Return") }}</th>
+          <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
+          <th @click="sortActive('type')">{{ $t("Type") }}</th>
+          <th @click="sortActive('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sortActive('return')">{{ $t("Return") }}</th>
           <th>{{ $t("Result") }}</th>
         </thead>
         <tbody>
-          <tr v-for="mission in activeMissions" :key="mission.id">
+          <tr v-for="mission in sortedActiveMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
             <td>{{ mission.type }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
@@ -35,16 +35,16 @@
       <br />
       <table class="mission">
         <thead>
-          <th>{{ $t("Finished Mission") }}</th>
-          <th>{{ $t("Type") }}</th>
-          <th>{{ $t("Origin") }}</th>
-          <th>{{ $t("Destination") }}</th>
-          <th>{{ $t("Arrival") }}</th>
-          <th>{{ $t("Return") }}</th>
+          <th @click="sortOld('id')">{{ $t("Finished Mission") }}</th>
+          <th @click="sortOld('type')">{{ $t("Type") }}</th>
+          <th @click="sortOld('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sortOld('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sortOld('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sortOld('return')">{{ $t("Return") }}</th>
           <th>{{ $t("Result") }}</th>
         </thead>
         <tbody>
-          <tr v-for="mission in oldMissions" :key="mission.id">
+          <tr v-for="mission in sortedOldMissions" :key="mission.id">
             <td>{{ mission.id }}</td>
             <td>{{ mission.type }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
@@ -78,11 +78,49 @@ export default {
     return {
       missions: null,
       activeMissions: null,
-      oldMissions: null
+      oldMissions: null,
+      currentActiveSort: "name",
+      currentActiveSortDir: "asc",
+      currentOldSort: "name",
+      currentOldSortDir: "asc"
     };
   },
   async mounted() {
     await this.prepareComponent();
+  },
+  computed: {
+    sortedActiveMissions() {
+      var sortedActiveMissions = this.activeMissions;
+      if (sortedActiveMissions !== null) {
+        return sortedActiveMissions.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentActiveSortDir === "desc") modifier = -1;
+          if (a[this.currentActiveSort] < b[this.currentActiveSort])
+            return -1 * modifier;
+          if (a[this.currentActiveSort] > b[this.currentActiveSort])
+            return 1 * modifier;
+          return 0;
+        });
+      } else {
+        return sortedActiveMissions;
+      }
+    },
+    sortedOldMissions() {
+      var sortedOldMissions = this.oldMissions;
+      if (sortedOldMissions !== null) {
+        return sortedOldMissions.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentOldSortDir === "desc") modifier = -1;
+          if (a[this.currentOldSort] < b[this.currentOldSort])
+            return -1 * modifier;
+          if (a[this.currentOldSort] > b[this.currentOldSort])
+            return 1 * modifier;
+          return 0;
+        });
+      } else {
+        return sortedOldMissions;
+      }
+    }
   },
   methods: {
     async prepareComponent() {
@@ -93,6 +131,22 @@ export default {
       this.missions = response;
       this.activeMissions = response.new;
       this.oldMissions = response.old;
+    },
+    sortActive(s) {
+      //if s == current sort, reverse
+      if (s === this.currentActiveSort) {
+        this.currentActiveSortDir =
+          this.currentActiveSortDir === "asc" ? "desc" : "asc";
+      }
+      this.currentActiveSort = s;
+    },
+    sortOld(s) {
+      //if s == current sort, reverse
+      if (s === this.currentOldSort) {
+        this.currentOldSortDir =
+          this.currentOldSortDir === "asc" ? "desc" : "asc";
+      }
+      this.currentOldSort = s;
     }
   }
 };
