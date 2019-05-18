@@ -1,12 +1,12 @@
 <template>
   <div class="skills">
     <h1>{{ $t("Skills") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
+        {{ $t("User: ") + routeUser }}
       </p>
     </template>
-    <template v-if="user !== 'null'">
+    <template v-if="routeUser !== 'null'">
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Skill") }}</th>
@@ -17,12 +17,7 @@
           <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
-          <th
-            v-if="
-              $store.state.game.loginUser !== null &&
-                $store.state.game.loginUser === $store.state.game.user
-            "
-          >
+          <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Enhance") }}
           </th>
           <th>{{ $t(" ") }}</th>
@@ -39,12 +34,7 @@
               {{ skill.time | timePretty }}
             </td>
             <td>{{ skill.busy | busyPretty }}</td>
-            <td
-              v-if="
-                $store.state.game.loginUser !== null &&
-                  $store.state.game.loginUser === $store.state.game.user
-              "
-            >
+            <td v-if="loginUser !== null && loginUser === gameUser">
               <button
                 :disabled="clicked.includes(skill.name)"
                 v-if="skillPossible(skill)"
@@ -74,10 +64,11 @@ import SkillsService from "@/services/skills";
 import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
+import { mapState } from "vuex";
 
 export default {
   name: "skills",
-  props: ["user"],
+  props: ["routerUser"],
   data: function() {
     return {
       skills: null,
@@ -121,6 +112,12 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    }),
     sortedSkills() {
       var sortedSkills = this.skills;
       if (sortedSkills !== null) {
@@ -142,7 +139,7 @@ export default {
       await this.getQuantity();
     },
     async getSkills() {
-      const response = await SkillsService.all(this.user);
+      const response = await SkillsService.all(this.routeUser);
       this.skills = response;
     },
     isBusy(busy) {
@@ -160,10 +157,10 @@ export default {
     },
     enhanceSkill(skill) {
       this.clicked.push(skill.name);
-      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.enhanceSkill(
-        this.$store.state.game.loginUser,
-        this.$store.state.planet.id,
+        this.loginUser,
+        this.planetId,
         skill.name,
         (error, result) => {
           if (error === null && result.success) {
@@ -192,7 +189,7 @@ export default {
       return true;
     },
     async getQuantity() {
-      const response = await QuantityService.get(this.$store.state.planet.id);
+      const response = await QuantityService.get(this.planetId);
       this.quantity = response;
       this.calculateCoal();
       this.calculateOre();

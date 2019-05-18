@@ -34,7 +34,7 @@ export default {
   data: function() {
     return {
       ranking: null,
-      currentSort: "name",
+      currentSort: "null",
       currentSortDir: "asc"
     };
   },

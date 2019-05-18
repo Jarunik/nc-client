@@ -1,12 +1,12 @@
 <template>
   <div class="missions">
     <h1>{{ $t("Missions") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
+        {{ $t("User: ") + routeUser }}
       </p>
     </template>
-    <template v-if="user !== 'null'">
+    <template v-if="routeUser !== 'null'">
       <table class="mission">
         <thead>
           <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
@@ -70,18 +70,19 @@
 
 <script>
 import MissionsService from "@/services/missions";
+import { mapState } from "vuex";
 
 export default {
   name: "missions",
-  props: ["user"],
+  props: ["routeUser"],
   data: function() {
     return {
       missions: null,
       activeMissions: null,
       oldMissions: null,
-      currentActiveSort: "name",
+      currentActiveSort: "arrival",
       currentActiveSortDir: "asc",
-      currentOldSort: "name",
+      currentOldSort: "return",
       currentOldSortDir: "asc"
     };
   },
@@ -89,6 +90,12 @@ export default {
     await this.prepareComponent();
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    }),
     sortedActiveMissions() {
       var sortedActiveMissions = this.activeMissions;
       if (sortedActiveMissions !== null) {
@@ -127,7 +134,7 @@ export default {
       await this.getMissions();
     },
     async getMissions() {
-      const response = await MissionsService.all(this.user);
+      const response = await MissionsService.all(this.routeUser);
       this.missions = response;
       this.activeMissions = response.new;
       this.oldMissions = response.old;

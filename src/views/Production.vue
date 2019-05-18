@@ -1,16 +1,18 @@
 <template>
   <div class="production">
     <h1>{{ $t("Production") }}</h1>
-    <template v-if="user !== this.$store.state.game.user">
+    <template v-if="routeUser !== gameUser">
       <p>
-        {{ $t("User: ") + user }}
-        <template v-if="user !== this.$store.state.planet.id">
-          <br />{{ $t("Planet: ") + planet }}
+        {{ $t("User: ") + routeUser }}
+        <template v-if="routeUser !== planetId">
+          <br />{{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
     </template>
     <template
-      v-if="user !== 'null' && planet !== 'null' && production !== null"
+      v-if="
+        routeUser !== 'null' && routePlanet !== 'null' && production !== null
+      "
     >
       <table>
         <thead>
@@ -53,7 +55,7 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="user === 'null'">
+      <template v-if="routeUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
@@ -62,7 +64,7 @@
       <template v-if="planet == 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + user + '/planets'">{{
+          <router-link :to="'/' + routeUser + '/planets'">{{
             $t("planet")
           }}</router-link>
         </p>
@@ -73,10 +75,11 @@
 
 <script>
 import ProductionService from "@/services/production";
+import { mapState } from "vuex";
 
 export default {
   name: "production",
-  props: ["user", "planet"],
+  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       production: null
@@ -85,12 +88,23 @@ export default {
   async mounted() {
     await this.prepareComponent();
   },
+  computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
+    })
+  },
   methods: {
     async prepareComponent() {
       await this.getProduction();
     },
     async getProduction() {
-      const response = await ProductionService.all(this.user, this.planet);
+      const response = await ProductionService.all(
+        this.routeUser,
+        this.routePlanet
+      );
       this.production = response;
     }
   }
