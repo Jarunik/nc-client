@@ -36,7 +36,7 @@
         {{ $t("Official NextColony Client") }}</a
       >
     </p>
-    <template v-if="!gameLoginUser">
+    <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
         <i>{{ $t("Secure 1-click-registration via SteemConnect:") }}</i>
@@ -45,13 +45,13 @@
     </template>
     <template v-else>
       <p>---</p>
-      <p>{{ $t("Logged in as") }}: {{ gameLoginUser }}</p>
-      <p>{{ $t("Valid Access Token") }}: {{ gameAccessToken !== null }}</p>
+      <p>{{ $t("Logged in as") }}: {{ loginUser }}</p>
+      <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
       <p>
         {{ $t("Valid until") }}:
         {{
           moment
-            .utc(gameExpiryDate)
+            .utc(expiryDate)
             .local()
             .format("LLL")
         }}
@@ -80,10 +80,10 @@ export default {
   },
   computed: {
     ...mapState({
-      gameLoginUser: state => state.game.loginUser,
-      gameAccessToken: state => state.game.accessToken,
-      gameExpiresIn: state => state.game.expiresIn,
-      gameExpiryDate: state => JSON.parse(state.game.expiryDate)
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      expiresIn: state => state.game.expiresIn,
+      expiryDate: state => JSON.parse(state.game.expiryDate)
     })
   },
   methods: {
