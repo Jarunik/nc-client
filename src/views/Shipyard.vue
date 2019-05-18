@@ -36,7 +36,7 @@
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="(ship, index) in shipyard" :key="ship.longname">
+          <tr v-for="ship in shipyard" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ ship.cost.coal }}</td>
             <td>{{ ship.cost.ore }}</td>
@@ -60,8 +60,8 @@
             >
               <button
                 :disabled="clicked.includes(ship.longname)"
-                v-if="shipPossible(ship, index)"
-                @click="buildShip(ship, index)"
+                v-if="shipPossible(ship)"
+                @click="buildShip(ship)"
               >
                 ↑
               </button>
@@ -169,7 +169,7 @@ export default {
         }
       }
     },
-    buildShip(ship, index) {
+    buildShip(ship) {
       this.clicked.push(ship.longname);
       SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
       SteemConnectService.buildShip(
@@ -177,13 +177,13 @@ export default {
         this.$store.state.planet.id,
         ship.name,
         (error, result) => {
-          if (error === null) {
+          if (error === null && result.success) {
             this.chainResponse.push(ship.longname);
           }
         }
       );
     },
-    shipPossible(ship, index) {
+    shipPossible(ship) {
       if (this.isBusy(ship.busy_until)) {
         return false;
       }

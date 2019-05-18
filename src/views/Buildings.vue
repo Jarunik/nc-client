@@ -153,7 +153,7 @@ export default {
         }
       }
     },
-    upgradeBuilding(building, index) {
+    upgradeBuilding(building) {
       this.clicked.push(building.name);
       SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
       SteemConnectService.upgradeBuilding(
@@ -161,13 +161,13 @@ export default {
         this.$store.state.planet.id,
         building.name,
         (error, result) => {
-          if (error === null) {
+          if (error === null && result.success) {
             this.chainResponse.push(building.name);
           }
         }
       );
     },
-    buildingPossible(building, index) {
+    buildingPossible(building) {
       if (this.isBusy(building.busy)) {
         return false;
       }

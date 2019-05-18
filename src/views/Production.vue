@@ -1,11 +1,11 @@
 <template>
   <div class="production">
     <h1>{{ $t("Production") }}</h1>
-        <template v-if="user !== this.$store.state.game.user">
+    <template v-if="user !== this.$store.state.game.user">
       <p>
         {{ $t("User: ") + user }}
         <template v-if="user !== this.$store.state.planet.id">
-          </br>{{ $t("Planet: ") + planet }}
+          <br />{{ $t("Planet: ") + planet }}
         </template>
       </p>
     </template>
@@ -21,7 +21,7 @@
           <th>{{ $t("Uranium") }}</th>
         </thead>
         <tbody>
-                    <tr>
+          <tr>
             <td>{{ $t("Depot Size") }}</td>
             <td>{{ production.coal.depot }}</td>
             <td>{{ production.ore.depot }}</td>

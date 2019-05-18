@@ -26,7 +26,7 @@ export default {
     },
     [types.SET_GAME_EXPIRYDATE](state, payload) {
       state.expiryDate = payload.value;
-    },    
+    },
     [types.SET_GAME_LANGUAGE](state, payload) {
       state.language = payload.value;
     },
@@ -75,7 +75,7 @@ export default {
         type: types.SET_GAME_EXPIRYDATE,
         value
       });
-    },    
+    },
     setLanguage: ({ commit }, value) => {
       localStorage.setItem("gameLanguage", JSON.stringify(value));
 

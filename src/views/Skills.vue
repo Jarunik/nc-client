@@ -28,7 +28,7 @@
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="(skill, index) in skills" :key="skill.name">
+          <tr v-for="skill in skills" :key="skill.name">
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
             <td>{{ skill.coal }}</td>
@@ -47,8 +47,8 @@
             >
               <button
                 :disabled="clicked.includes(skill.name)"
-                v-if="skillPossible(skill, index)"
-                @click="enhanceSkill(skill, index)"
+                v-if="skillPossible(skill)"
+                @click="enhanceSkill(skill)"
               >
                 ↑
               </button>
@@ -140,7 +140,7 @@ export default {
         }
       }
     },
-    enhanceSkill(skill, index) {
+    enhanceSkill(skill) {
       this.clicked.push(skill.name);
       SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
       SteemConnectService.enhanceSkill(
@@ -148,13 +148,13 @@ export default {
         this.$store.state.planet.id,
         skill.name,
         (error, result) => {
-          if (error === null) {
+          if (error === null && result.success) {
             this.chainResponse.push(skill.name);
           }
         }
       );
     },
-    skillPossible(skill, index) {
+    skillPossible(skill) {
       if (this.isBusy(skill.busy)) {
         return false;
       }

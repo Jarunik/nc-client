@@ -11,11 +11,41 @@
         <thead>
           <th>{{ $t("Name") }}</th>
           <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Gift") }}</th>
+          <th>{{ $t("Activate") }}</th>
+          <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.uid">
+          <tr v-for="(item, index) in items" :key="item.uid">
             <td>{{ $t(item.name) }}</td>
             <td>{{ item.total }}</td>
+            <td v-if="user === $store.state.game.loginUser">
+              <button @click="toggleGift(item.id)">
+                ...
+              </button>
+              <template v-if="showGift === item.id">
+                <input v-model="recipient" :placeholder="$t(placeholderGift)" />
+                <button @click="giftItem(item, index)" v-if="item.total > 0">
+                  {{ $t("Send") }}
+                </button>
+              </template>
+            </td>
+            <td>
+              <button
+                v-if="
+                  user === $store.state.game.loginUser &&
+                    item.total > 0 &&
+                    $store.state.planet.id !== null
+                "
+                @click="activateItem(item, $store.state.planet.id, index)"
+                :disabled="clicked.includes(item.id)"
+              >
+                {{ $t("☀") }}
+              </button>
+            </td>
+            <td>
+              <span v-if="chainResponse.includes(item.id)">{{ $t("⌛") }}</span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -39,13 +69,19 @@
 
 <script>
 import ItemsService from "@/services/items";
+import SteemConnectService from "@/services/steemconnect";
 
 export default {
   name: "items",
   props: ["user"],
   data: function() {
     return {
-      items: null
+      items: null,
+      recipient: null,
+      showGift: null,
+      clicked: [],
+      chainResponse: [],
+      placeholderGift: "enter recipient"
     };
   },
   async mounted() {
@@ -58,6 +94,43 @@ export default {
     async getShop() {
       const response = await ItemsService.byUser(this.user);
       this.items = response;
+    },
+    giftItem(item, index) {
+      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.giftItem(
+        this.$store.state.game.loginUser,
+        item.uid,
+        this.recipient,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.recipient = null;
+            this.placeholderGift = "Success";
+            this.items[index].total = this.items[index].total - 1;
+          }
+        }
+      );
+    },
+    toggleGift(itemId) {
+      if (this.showGift !== itemId) {
+        this.showGift = itemId;
+      } else {
+        this.showGift = null;
+      }
+    },
+    activateItem(item, planetId, index) {
+      this.clicked.push(item.id);
+      SteemConnectService.setAccessToken(this.$store.state.game.accessToken);
+      SteemConnectService.activateItem(
+        this.$store.state.game.loginUser,
+        item.uid,
+        planetId,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.chainResponse.push(item.id);
+            this.items[index].total = this.items[index].total - 1;
+          }
+        }
+      );
     }
   }
 };

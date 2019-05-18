@@ -96,7 +96,7 @@ export default {
         planetId,
         this.newName,
         (error, result) => {
-          if (error === null) {
+          if (error === null && result.success) {
             this.planets[index].name = this.newName;
             this.$store.dispatch("planet/setName", this.newName);
             this.newName = null;
