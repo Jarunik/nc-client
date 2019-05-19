@@ -78,7 +78,7 @@
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>
-              <span v-if="planet.id === planetId"> ⮜</span>
+              <span v-if="planet.id === planetId"> {{ $t("⮜") }}</span>
             </td>
           </tr>
         </tbody>
