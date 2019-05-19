@@ -25,7 +25,11 @@
               </button>
               <template v-if="showGift === item.id">
                 <input v-model="recipient" :placeholder="$t(placeholderGift)" />
-                <button @click="giftItem(item, index)" v-if="item.total > 0">
+                <button
+                  :disabled="clicked.includes(item.id)"
+                  @click="giftItem(item, index)"
+                  v-if="item.total > 0"
+                >
                   {{ $t("Send") }}
                 </button>
               </template>
@@ -103,6 +107,7 @@ export default {
       this.items = response;
     },
     giftItem(item, index) {
+      this.clicked.push(item.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.giftItem(
         this.loginUser,

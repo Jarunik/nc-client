@@ -7,7 +7,7 @@
       </p>
     </template>
     <template v-if="routeUser !== 'null'">
-      <table class="mission">
+      <table>
         <thead>
           <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
           <th @click="sortActive('type')">{{ $t("Type") }}</th>
@@ -24,7 +24,12 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
-            <td>{{ moment.unix(mission.return, "seconds").format("LLL") }}</td>
+            <td>
+              <span v-if="mission.return !== null">{{
+                moment.unix(mission.return, "seconds").format("LLL")
+              }}</span>
+              <span v-else>{{ $t("-") }}</span>
+            </td>
             <td>{{ $t(mission.result || "-") }}</td>
           </tr>
         </tbody>
@@ -33,7 +38,7 @@
         {{ $t("No Result") }}
       </p>
       <br />
-      <table class="mission">
+      <table>
         <thead>
           <th @click="sortOld('id')">{{ $t("Finished Mission") }}</th>
           <th @click="sortOld('type')">{{ $t("Type") }}</th>
@@ -50,7 +55,12 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
-            <td>{{ moment.unix(mission.return, "seconds").format("LLL") }}</td>
+            <td>
+              <span v-if="mission.return !== null">{{
+                moment.unix(mission.return, "seconds").format("LLL")
+              }}</span>
+              <span v-else>{{ $t("-") }}</span>
+            </td>
             <td>{{ $t(mission.result || "-") }}</td>
           </tr>
         </tbody>
@@ -83,7 +93,7 @@ export default {
       currentActiveSort: "arrival",
       currentActiveSortDir: "asc",
       currentOldSort: "return",
-      currentOldSortDir: "asc"
+      currentOldSortDir: "desc"
     };
   },
   async mounted() {
@@ -164,11 +174,8 @@ export default {
 </script>
 
 <style>
-table.mission,
-.mission th,
-.mission td {
-  border-collapse: collapse;
-  border: 1px solid dimgrey;
-  padding: 5px;
+table {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

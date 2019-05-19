@@ -222,4 +222,8 @@ table {
   margin-left: auto;
   margin-right: auto;
 }
+td {
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
