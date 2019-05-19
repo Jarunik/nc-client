@@ -9,10 +9,10 @@
         @keyup.enter="setUser(user)"
         :placeholder="placeholder"
       /><button @click="setUser">
-        {{ $t("Show") }}
+        {{ $t("Set") }}
       </button>
     </p>
-    <p><button @click="setUser(loginUser)">Show myself</button></p>
+    <p><button @click="setUser(loginUser)">Set myself</button></p>
     <p>
       {{ $t("Language") }}:
       <select v-model="gameLanguage">

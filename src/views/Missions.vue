@@ -7,7 +7,7 @@
       </p>
     </template>
     <template v-if="routeUser !== 'null'">
-      <table class="mission">
+      <table>
         <thead>
           <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
           <th @click="sortActive('type')">{{ $t("Type") }}</th>
@@ -38,7 +38,7 @@
         {{ $t("No Result") }}
       </p>
       <br />
-      <table class="mission">
+      <table>
         <thead>
           <th @click="sortOld('id')">{{ $t("Finished Mission") }}</th>
           <th @click="sortOld('type')">{{ $t("Type") }}</th>
@@ -174,11 +174,8 @@ export default {
 </script>
 
 <style>
-table.mission,
-.mission th,
-.mission td {
-  border-collapse: collapse;
-  border: 1px solid dimgrey;
-  padding: 5px;
+table {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
