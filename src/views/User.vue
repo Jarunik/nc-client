@@ -1,17 +1,18 @@
 <template>
   <div class="user">
     <h1>{{ $t("User") }}</h1>
-    <p>User: {{ gameUser }}</p>
+    <p>{{ $t("Current user") }}: {{ gameUser }}</p>
     <p>
-      {{ $t("Change User") }}:
+      {{ $t("User") }}:
       <input
         v-model="user"
-        @keyup.enter="setUser"
+        @keyup.enter="setUser(user)"
         :placeholder="placeholder"
       /><button @click="setUser">
-        Set
+        {{ $t("Show") }}
       </button>
     </p>
+    <p><button @click="setUser(loginUser)">Show myself</button></p>
     <p>
       {{ $t("Language") }}:
       <select v-model="gameLanguage">
@@ -26,17 +27,22 @@
 import UserService from "@/services/user";
 import PlanetsService from "@/services/planets";
 import moment from "moment";
+import { mapState } from "vuex";
 
 export default {
   data: function() {
     return {
       user: null,
-      userSearch: null,
       placeholder: "Search",
       planetSearch: null
     };
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      planetId: state => state.planet.id
+    }),
     gameUser: {
       get() {
         return this.$store.state.game.user;
@@ -65,17 +71,14 @@ export default {
     }
   },
   methods: {
-    setUser() {
-      this.getUser().then(() => {
-        if (
-          this.userSearch !== null &&
-          this.userSearch.username === this.user
-        ) {
-          this.gameUser = this.user;
+    setUser(newUser) {
+      this.fetchhUser(newUser).then(searchedUser => {
+        if (searchedUser !== null && searchedUser === newUser) {
+          this.gameUser = newUser;
           this.placeholder = "Search";
-          this.getStarterPlanet(this.gameUser).then(() => {
-            this.$store.dispatch("planet/setId", this.planetSearch.id);
-            this.$store.dispatch("planet/setName", this.planetSearch.name);
+          this.fetchStarterPlanet(newUser).then(planet => {
+            this.$store.dispatch("planet/setId", planet.id);
+            this.$store.dispatch("planet/setName", planet.name);
           });
         } else {
           this.placeholder = "not found";
@@ -83,13 +86,13 @@ export default {
         }
       });
     },
-    async getUser() {
-      const response = await UserService.get(this.user);
-      this.userSearch = response;
+    async fetchhUser(user) {
+      const response = await UserService.get(user);
+      return response.username;
     },
-    async getStarterPlanet(user) {
+    async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
-      this.planetSearch = response.planets[0];
+      return response.planets[0];
     }
   }
 };
