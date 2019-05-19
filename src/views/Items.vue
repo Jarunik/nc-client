@@ -19,20 +19,28 @@
           <tr v-for="(item, index) in items" :key="item.uid">
             <td>{{ $t(item.name) }}</td>
             <td>{{ item.total }}</td>
-            <td v-if="routeUser === loginUser">
-              <button @click="toggleGift(item.id)">
-                ...
-              </button>
-              <template v-if="showGift === item.id">
-                <input v-model="recipient" :placeholder="$t(placeholderGift)" />
-                <button
-                  :disabled="clicked.includes(item.id)"
-                  @click="giftItem(item, index)"
-                  v-if="item.total > 0"
-                >
-                  {{ $t("Send") }}
+            <td>
+              <span v-if="routeUser === loginUser">
+                <button @click="toggleGift(item.id)">
+                  ...
                 </button>
-              </template>
+                <template v-if="showGift === item.id">
+                  <input
+                    v-model="recipient"
+                    :placeholder="$t(placeholderGift)"
+                  />
+                  <button
+                    :disabled="clicked.includes(item.id)"
+                    @click="giftItem(item, index)"
+                    v-if="item.total > 0"
+                  >
+                    {{ $t("Send") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>
+                {{ $t("-") }}
+              </span>
             </td>
             <td>
               <button
@@ -44,6 +52,9 @@
               >
                 {{ $t("☀") }}
               </button>
+              <span v-else>
+                {{ $t("-") }}
+              </span>
             </td>
             <td>
               <span v-if="chainResponse.includes(item.id)">{{ $t("⌛") }}</span>

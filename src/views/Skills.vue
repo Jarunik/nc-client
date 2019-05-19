@@ -34,7 +34,13 @@
               {{ skill.time | timePretty }}
             </td>
             <td>{{ skill.busy | busyPretty }}</td>
-            <td v-if="loginUser !== null && loginUser === gameUser">
+            <td
+              v-if="
+                loginUser !== null &&
+                  loginUser === gameUser &&
+                  skill.current < 20
+              "
+            >
               <button
                 :disabled="clicked.includes(skill.name)"
                 v-if="skillPossible(skill)"

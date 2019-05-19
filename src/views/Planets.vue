@@ -12,7 +12,7 @@
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
-          <th v-if="routeUser === loginUser">
+          <th>
             {{ $t("Rename") }}
           </th>
           <th>{{ $t("Context") }}</th>
@@ -42,6 +42,9 @@
                     {{ $t("Send") }}
                   </button>
                 </template>
+              </span>
+              <span v-else>
+                {{ $t("-") }}
               </span>
             </td>
             <td>
