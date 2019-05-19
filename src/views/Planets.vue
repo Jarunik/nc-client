@@ -19,6 +19,9 @@
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift Planet") }}</font>
           </th>
+          <th>
+            {{ $t("Selected") }}
+          </th>
         </thead>
         <tbody>
           <tr v-for="(planet, index) in planets" :key="planet.id">
@@ -73,6 +76,9 @@
                 </template>
               </span>
               <span v-else>{{ $t("-") }}</span>
+            </td>
+            <td>
+              <span v-if="planet.id === planetId"> ⮜</span>
             </td>
           </tr>
         </tbody>
