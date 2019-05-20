@@ -1,43 +1,43 @@
 <template>
   <div>
     <div>
-      <h1><b>Next</b>Colony</h1>
+      <h1>
+        <b>Next</b>Colony
+      </h1>
     </div>
     <p>{{ $t("Explore. Colonize. Battle. Collect.") }}</p>
     <p>
       {{ $t("Explore undiscovered space") }}
-      <br />
+      <br>
       {{ $t("Find and colonize new planets") }}
-      <br />
+      <br>
       {{ $t("Battle for honor and resources") }}
-      <br />
+      <br>
       {{ $t("Trade digital collectibles") }}
     </p>
     <p>
-      <i
-        >{{
-          $t(
-            "Warning: This is alternative, experimental client and in development."
-          )
-        }}
-      </i>
-      <br />
       <i>
         {{
-          $t(
-            "Please use the offical client if you don't want to test an alpha version."
-          )
-        }}</i
-      >
+        $t(
+        "Warning: This is alternative, experimental client and in development."
+        )
+        }}
+      </i>
+      <br>
+      <i>
+        {{
+        $t(
+        "Please use the offical client if you don't want to test an alpha version."
+        )
+        }}
+      </i>
     </p>
 
     <p>
-      <a href="https://nextcolony.io">
-        {{ $t("Official NextColony Client") }}</a
-      >
+      <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
     <template v-if="!loginUser">
-      <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
+      <img src="@/assets/nextcolony-icon.png" width="90px" height="90px">
       <p>
         <i>{{ $t("Secure 1-click-registration via SteemConnect:") }}</i>
       </p>
@@ -50,10 +50,10 @@
       <p>
         {{ $t("Valid until") }}:
         {{
-          moment
-            .utc(expiryDate)
-            .local()
-            .format("LLL")
+        moment
+        .utc(expiryDate)
+        .local()
+        .format("LLL")
         }}
       </p>
       <p>
@@ -102,9 +102,13 @@ export default {
       this.$store.dispatch("planet/setName", null);
       window.location.href = "/";
     },
-    async getStarterPlanet(user) {
+    async fetchUser(user) {
+      const response = await UserService.get(user);
+      return response.username;
+    },
+    async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
-      this.planetSearch = response.planets[0];
+      return response.planets[0];
     }
   },
   created() {
@@ -120,10 +124,18 @@ export default {
       var expiryDate = JSON.stringify(moment.utc().add(duration));
       this.$store.dispatch("game/setExpiryDate", expiryDate);
       // Fill Defaults
-      this.$store.dispatch("game/setUser", this.callbackUserName);
-      this.getStarterPlanet(this.callbackUserName).then(() => {
-        this.$store.dispatch("planet/setId", this.planetSearch.id);
-        this.$store.dispatch("planet/setName", this.planetSearch.name);
+      this.fetchUser(this.callbackUserName).then(searchedUser => {
+        if (searchedUser !== null) {
+          this.$store.dispatch("game/setUser", this.searchedUser);
+          this.fetchStarterPlanet(this.callbackUserName).then(() => {
+            this.$store.dispatch("planet/setId", this.planetSearch.id);
+            this.$store.dispatch("planet/setName", this.planetSearch.name);
+          });
+        } else {
+          this.$store.dispatch("game/setUser", null);
+          this.$store.dispatch("planet/setId", null);
+          this.$store.dispatch("planet/setName", null);
+        }
       });
     }
   }

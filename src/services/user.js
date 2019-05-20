@@ -1,6 +1,6 @@
 import ApiService from "@/services/api";
 
-class UserSService {
+class UserService {
   async get(user) {
     const response = await ApiService.get(`/loaduser?user=${user}`);
 
@@ -8,4 +8,4 @@ class UserSService {
   }
 }
 
-export default new UserSService();
+export default new UserService();

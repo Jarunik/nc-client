@@ -8,11 +8,12 @@
         v-model="user"
         @keyup.enter="setUser(user)"
         :placeholder="placeholder"
-      /><button @click="setUser">
-        {{ $t("Set") }}
-      </button>
+      >
+      <button @click="setUser">{{ $t("Set") }}</button>
     </p>
-    <p><button @click="setUser(loginUser)">Set myself</button></p>
+    <p>
+      <button @click="setUser(loginUser)">Set myself</button>
+    </p>
     <p>
       {{ $t("Language") }}:
       <select v-model="gameLanguage">
@@ -72,7 +73,7 @@ export default {
   },
   methods: {
     setUser(newUser) {
-      this.fetchhUser(newUser).then(searchedUser => {
+      this.fetchUser(newUser).then(searchedUser => {
         if (searchedUser !== null && searchedUser === newUser) {
           this.gameUser = newUser;
           this.placeholder = "Search";
@@ -86,7 +87,7 @@ export default {
         }
       });
     },
-    async fetchhUser(user) {
+    async fetchUser(user) {
       const response = await UserService.get(user);
       return response.username;
     },
