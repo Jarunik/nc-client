@@ -59,6 +59,16 @@
       <p>
         <button v-on:click="logout">{{ $t("Logout") }}</button>
       </p>
+      <div v-if="showRegistration">
+        <button
+          :disabled="registrationClicked"
+          v-on:click="register(loginUser)"
+        >{{ $t("Generate Starter Planet") }}</button>
+        <div v-if="registrationSuccess">
+          <p>{{$t("Generating Planet ...")}}</p>
+          <p>{{$t("Give it some time and then refresh the page with F5.")}}</p>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -66,6 +76,7 @@
 <script>
 import PlanetsService from "@/services/planets";
 import SteemConnectService from "@/services/steemconnect";
+import UserService from "@/services/user";
 import moment from "moment";
 import { mapState } from "vuex";
 
@@ -75,7 +86,9 @@ export default {
   data: function() {
     return {
       loginURL: null,
-      planetSearch: null
+      showRegistration: false,
+      registrationClicked: false,
+      registrationSuccess: false
     };
   },
   computed: {
@@ -83,7 +96,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       expiresIn: state => state.game.expiresIn,
-      expiryDate: state => JSON.parse(state.game.expiryDate)
+      expiryDate: state => JSON.parse(state.game.expiryDate),
+      gameUser: state => state.game.user
     })
   },
   methods: {
@@ -109,6 +123,15 @@ export default {
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
       return response.planets[0];
+    },
+    register(user) {
+      this.registrationClicked = true;
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.newUser(user, (error, result) => {
+        if (error === null && result.success) {
+          this.registrationSuccess = true;
+        }
+      });
     }
   },
   created() {
@@ -123,18 +146,27 @@ export default {
       );
       var expiryDate = JSON.stringify(moment.utc().add(duration));
       this.$store.dispatch("game/setExpiryDate", expiryDate);
+
       // Fill Defaults
       this.fetchUser(this.callbackUserName).then(searchedUser => {
-        if (searchedUser !== null) {
-          this.$store.dispatch("game/setUser", this.searchedUser);
-          this.fetchStarterPlanet(this.callbackUserName).then(() => {
-            this.$store.dispatch("planet/setId", this.planetSearch.id);
-            this.$store.dispatch("planet/setName", this.planetSearch.name);
-          });
+        if (searchedUser) {
+          this.$store.dispatch("game/setUser", searchedUser);
+          this.fetchStarterPlanet(this.callbackUserName).then(
+            searchedPlanet => {
+              if (searchedPlanet) {
+                this.$store.dispatch("planet/setId", searchedPlanet.id);
+                this.$store.dispatch("planet/setName", searchedPlanet.name);
+              } else {
+                this.$store.dispatch("planet/setId", null);
+                this.$store.dispatch("planet/setName", null);
+              }
+            }
+          );
         } else {
           this.$store.dispatch("game/setUser", null);
           this.$store.dispatch("planet/setId", null);
           this.$store.dispatch("planet/setName", null);
+          this.showRegistration = true;
         }
       });
     }

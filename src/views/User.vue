@@ -9,7 +9,7 @@
         @keyup.enter="setUser(user)"
         :placeholder="placeholder"
       >
-      <button @click="setUser">{{ $t("Set") }}</button>
+      <button @click="setUser(user)">{{ $t("Set") }}</button>
     </p>
     <p>
       <button @click="setUser(loginUser)">Set myself</button>
