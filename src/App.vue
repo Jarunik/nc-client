@@ -19,6 +19,10 @@
         {{ $t("Shipyard") }}
       </router-link>
       |
+      <router-link :to="'/' + gameUser + '/' + planetId + '/fleet'">
+        {{ $t("Fleet") }}
+      </router-link>
+      |
       <router-link :to="'/' + gameUser + '/missions'">
         {{ $t("Missions") }}
       </router-link>
