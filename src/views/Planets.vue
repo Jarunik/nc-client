@@ -12,12 +12,15 @@
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
-          <th v-if="routeUser === loginUser">
+          <th>
             {{ $t("Rename") }}
           </th>
           <th>{{ $t("Context") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift Planet") }}</font>
+          </th>
+          <th>
+            {{ $t("Selected") }}
           </th>
         </thead>
         <tbody>
@@ -42,6 +45,9 @@
                     {{ $t("Send") }}
                   </button>
                 </template>
+              </span>
+              <span v-else>
+                {{ $t("-") }}
               </span>
             </td>
             <td>
@@ -70,6 +76,9 @@
                 </template>
               </span>
               <span v-else>{{ $t("-") }}</span>
+            </td>
+            <td>
+              <span v-if="planet.id === planetId"> {{ $t("⮜") }}</span>
             </td>
           </tr>
         </tbody>

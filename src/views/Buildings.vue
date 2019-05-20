@@ -37,7 +37,13 @@
               {{ building.time | timePretty }}
             </td>
             <td>{{ building.busy | busyPretty }}</td>
-            <td v-if="loginUser !== null && loginUser === gameUser">
+            <td
+              v-if="
+                loginUser !== null &&
+                  loginUser === gameUser &&
+                  building.current < 20
+              "
+            >
               <button
                 :disabled="clicked.includes(building.name)"
                 v-if="buildingPossible(building, index)"
