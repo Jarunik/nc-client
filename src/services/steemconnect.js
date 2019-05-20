@@ -131,6 +131,120 @@ class SteemConnectService extends Client {
 
     super.customJson([], [user], [appId], finalJson, cb);
   }
+
+  explorerspace(user, originPlanetId, x, y, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "explorespace";
+    scCommand["tr_var1"] = originPlanetId;
+    scCommand["tr_var2"] = x;
+    scCommand["tr_var3"] = y;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  transport(
+    user,
+    numberOfTransporter,
+    originPlanetId,
+    x,
+    y,
+    coal,
+    ore,
+    copper,
+    uranium,
+    cb
+  ) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "transport";
+    scCommand["tr_var1"] = numberOfTransporter;
+    scCommand["tr_var2"] = originPlanetId;
+    scCommand["tr_var3"] = x;
+    scCommand["tr_var4"] = y;
+    scCommand["tr_var5"] = coal;
+    scCommand["tr_var6"] = ore;
+    scCommand["tr_var7"] = copper;
+    scCommand["tr_var8"] = uranium;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  // shipList = { "transportship": 2, "explorership": 1 }
+  deploy(user, originPlanetId, shipList, x, y, coal, ore, copper, uranium, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "deploy";
+    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var2"] = x;
+    scCommand["tr_var3"] = y;
+    scCommand["tr_var4"] = coal;
+    scCommand["tr_var5"] = ore;
+    scCommand["tr_var6"] = copper;
+    scCommand["tr_var7"] = uranium;
+    scCommand["tr_var8"] = originPlanetId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
+  attack(user, originPlanetId, shipList, x, y, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "attack";
+    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var2"] = x;
+    scCommand["tr_var3"] = y;
+    scCommand["tr_var4"] = originPlanetId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  cancel(user, missionId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "cancel";
+    scCommand["tr_var1"] = missionId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
+  support(user, shipList, x, y, originPlanetId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "support";
+    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var2"] = x;
+    scCommand["tr_var3"] = y;
+    scCommand["tr_var4"] = originPlanetId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
 }
 
 export default new SteemConnectService();
