@@ -263,7 +263,7 @@ export default {
     },
     neededTransporter() {
       let sum = parseInt(this.transportCoal) + parseInt(this.transportOre) + parseInt(this.transportCopper) + parseInt(this.transportUranium);
-      return sum/100; 
+      return Math.ceil(sum/100); 
     }
   },
   methods: {
@@ -382,7 +382,29 @@ export default {
       );
     },
     transport() {
-      console.log("transport");
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.transport(
+        this.loginUser,
+        this.neededTransporter,
+        this.planetId,
+        this.xCoordinate,
+        this.yCoordinate,
+        this.transportCoal,
+        this.transportOre,
+        this.transportCopper,
+        this.transportUranium,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+            this.transportCoal= 0;
+            this.transportOre= 0;
+            this.transportCopper= 0;
+            this.transportUranium= 0;
+          }
+        }
+      );
     }
   },
   beforeDestroy() {
