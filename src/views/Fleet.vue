@@ -50,14 +50,29 @@
         </select>
       </p>
       <template v-if="command !== null">
-        {{ $t("X") }}: <input v-model="xCoordinate" /> {{ $t("Y") }}:<input
-          v-model="yCoordinate"
-        />
+        {{ $t("X") }}: <input type="number" v-model="xCoordinate" />
+        {{ $t("Y") }}:<input type="number" v-model="yCoordinate" />
         <p v-if="command === 'explorespace'">
           <button @click="explore" :disabled="!explorationPossible">
             {{ $t("Send Explorer") }}
           </button>
         </p>
+        <div v-if="command === 'transport'">
+          <p>
+          <div>
+            {{ $t("C") }}: <input type="number" v-model="transportCoal" />
+            {{ $t("Fe") }}: <input type="number" v-model="transportOre" />
+            {{ $t("Cu") }}: <input type="number" v-model="transportCopper" />
+            {{ $t("U") }}: <input type="number" v-model="transportUranium" />
+          </div>
+          <p>{{ $t("Needed Transporter") }}: {{ neededTransporter }}</p>
+          <p>
+            <button @click="transport" :disabled="!transportPossible">
+              {{ $t("Send Trasnporter") }}
+            </button>
+          </p>
+          </p>
+        </div>
       </template>
     </template>
     <template v-else>
@@ -112,7 +127,11 @@ export default {
       currentSortDir: "asc",
       command: null,
       xCoordinate: null,
-      yCoordinate: null
+      yCoordinate: null,
+      transportCoal: 0,
+      transportOre: 0,
+      transportCopper: 0,
+      transportUranium: 0
     };
   },
   async mounted() {
@@ -188,6 +207,7 @@ export default {
               if (ship.longname === current.longname) {
                 ship.quantity++;
                 ship.available = ship.available + current.available;
+                ship.capacity = ship.capacity + current.capacity;
               }
             });
             return acc;
@@ -199,7 +219,7 @@ export default {
       }
     },
     explorationPossible() {
-      var possible = false;
+      let possible = false;
       if (
         this.command !== null &&
         this.command === "explorespace" &&
@@ -214,6 +234,36 @@ export default {
       }
 
       return possible;
+    },
+    transportPossible() {
+      let possible = false;
+      if (
+        this.command !== null &&
+        this.command === "transport" &&
+        this.xCoordinate !== null &&
+        this.xCoordinate !== "" &&
+        this.yCoordinate !== null &&
+        this.yCoordinate !== "" &&
+        parseInt(this.coal) > parseInt(this.transportCoal) &&
+        parseInt(this.ore) > parseInt(this.transportOre) &&
+        parseInt(this.copper) > parseInt(this.transportCopper)  &&
+        parseInt(this.uranium) > parseInt(this.transportUranium)
+      ) {
+        this.sortedFleet.forEach(ship => {
+          if (
+            ship.longname === "Transporter" &&
+            ship.available >= this.neededTransporter
+          ) {
+            possible = true;
+          }
+        });
+      }
+
+      return possible;
+    },
+    neededTransporter() {
+      let sum = parseInt(this.transportCoal) + parseInt(this.transportOre) + parseInt(this.transportCopper) + parseInt(this.transportUranium);
+      return sum/100; 
     }
   },
   methods: {
@@ -330,6 +380,9 @@ export default {
           }
         }
       );
+    },
+    transport() {
+      console.log("transport");
     }
   },
   beforeDestroy() {
