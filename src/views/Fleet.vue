@@ -58,7 +58,6 @@
           </button>
         </p>
         <div v-if="command === 'transport'">
-          <p>
           <div>
             {{ $t("C") }}: <input type="number" v-model="transportCoal" />
             {{ $t("Fe") }}: <input type="number" v-model="transportOre" />
@@ -70,7 +69,6 @@
             <button @click="transport" :disabled="!transportPossible">
               {{ $t("Send Trasnporter") }}
             </button>
-          </p>
           </p>
         </div>
       </template>
@@ -246,7 +244,7 @@ export default {
         this.yCoordinate !== "" &&
         parseInt(this.coal) > parseInt(this.transportCoal) &&
         parseInt(this.ore) > parseInt(this.transportOre) &&
-        parseInt(this.copper) > parseInt(this.transportCopper)  &&
+        parseInt(this.copper) > parseInt(this.transportCopper) &&
         parseInt(this.uranium) > parseInt(this.transportUranium)
       ) {
         this.sortedFleet.forEach(ship => {
@@ -262,8 +260,12 @@ export default {
       return possible;
     },
     neededTransporter() {
-      let sum = parseInt(this.transportCoal) + parseInt(this.transportOre) + parseInt(this.transportCopper) + parseInt(this.transportUranium);
-      return Math.ceil(sum/100); 
+      let sum =
+        parseInt(this.transportCoal) +
+        parseInt(this.transportOre) +
+        parseInt(this.transportCopper) +
+        parseInt(this.transportUranium);
+      return Math.ceil(sum / 100);
     }
   },
   methods: {
@@ -398,10 +400,10 @@ export default {
             this.command = "sent";
             this.xCoordinate = null;
             this.yCoordinate = null;
-            this.transportCoal= 0;
-            this.transportOre= 0;
-            this.transportCopper= 0;
-            this.transportUranium= 0;
+            this.transportCoal = 0;
+            this.transportOre = 0;
+            this.transportCopper = 0;
+            this.transportUranium = 0;
           }
         }
       );
