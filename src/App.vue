@@ -19,6 +19,10 @@
         {{ $t("Shipyard") }}
       </router-link>
       |
+      <router-link :to="'/' + gameUser + '/' + planetId + '/fleet'">
+        {{ $t("Fleet") }}
+      </router-link>
+      |
       <router-link :to="'/' + gameUser + '/missions'">
         {{ $t("Missions") }}
       </router-link>
@@ -225,5 +229,8 @@ table {
 td {
   padding-left: 4px;
   padding-right: 4px;
+}
+input {
+  width: 15ch;
 }
 </style>

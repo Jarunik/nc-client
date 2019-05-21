@@ -117,6 +117,16 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "production" */ "./views/Production.vue"),
       props: true
+    },
+    {
+      path: "/:routeUser/:routePlanet/fleet",
+      name: "fleet",
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(/* webpackChunkName: "fleet" */ "./views/Fleet.vue"),
+      props: true
     }
   ]
 });
