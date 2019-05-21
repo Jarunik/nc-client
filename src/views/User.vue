@@ -8,7 +8,7 @@
         v-model="user"
         @keyup.enter="setUser(user)"
         :placeholder="placeholder"
-      >
+      />
       <button @click="setUser(user)">{{ $t("Set") }}</button>
     </p>
     <p>
@@ -98,9 +98,3 @@ export default {
   }
 };
 </script>
-
-<style>
-input {
-  width: 20ch;
-}
-</style>

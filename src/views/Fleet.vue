@@ -5,7 +5,7 @@
       <p>
         {{ $t("User: ") + routeUser }}
         <template v-if="routeUser !== planetId">
-          <br>
+          <br />
           {{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
@@ -25,19 +25,40 @@
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('cons')">{{ $t("Consumption") }}</th>
           <th @click="sort('capacity')">{{ $t("Capacity") }}</th>
-          <th @click="sort('busy')">{{ $t("Busy") }}</th>
+          <th @click="sort('available')">{{ $t("Available") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
-            <td>{{ship.quantity}}</td>
+            <td>{{ ship.quantity }}</td>
             <td>{{ ship.speed }}</td>
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
-            <td>{{ ship.busy | busyPretty }}</td>
+            <td>{{ ship.available }}</td>
           </tr>
         </tbody>
       </table>
+      <p>
+        {{ $t("Command") }}
+        <select v-model="command">
+          <option value="explorespace">{{ $t("Explore") }}</option>
+          <option value="transport">{{ $t("Transport") }}</option>
+          <option value="deploy">{{ $t("Deploy") }}</option>
+          <option value="support">{{ $t("Support") }}</option>
+          <option value="attack">{{ $t("Attack") }}</option>
+          <option value="sent">{{ $t("Sent") }}</option>
+        </select>
+      </p>
+      <template v-if="command !== null">
+        {{ $t("X") }}: <input v-model="xCoordinate" /> {{ $t("Y") }}:<input
+          v-model="yCoordinate"
+        />
+        <p v-if="command === 'explorespace'">
+          <button @click="explore" :disabled="!explorationPossible">
+            {{ $t("Send Explorer") }}
+          </button>
+        </p>
+      </template>
     </template>
     <template v-else>
       <template v-if="routeUser === 'null'">
@@ -50,9 +71,7 @@
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/' + routeUser + '/planets'">
-            {{
-            $t("planet")
-            }}
+            {{ $t("planet") }}
           </router-link>
         </p>
       </template>
@@ -60,10 +79,8 @@
         <p>
           {{ $t("You have no ships. Buy some in the") }}
           <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
-            {{
-            $t("Shipyard")
-            }}
-          </router-link>.
+            {{ $t("Shipyard") }} </router-link
+          >.
         </p>
       </template>
     </template>
@@ -75,6 +92,7 @@ import FleetService from "@/services/fleet";
 import QuantityService from "@/services/quantity";
 import { mapState } from "vuex";
 import moment from "moment";
+import SteemConnectService from "@/services/steemconnect";
 
 export default {
   name: "fleet",
@@ -91,7 +109,10 @@ export default {
       clicked: [],
       chainResponse: [],
       currentSort: "name",
-      currentSortDir: "asc"
+      currentSortDir: "asc",
+      command: null,
+      xCoordinate: null,
+      yCoordinate: null
     };
   },
   async mounted() {
@@ -150,10 +171,14 @@ export default {
         groupedFleet.forEach(ship => {
           // add quantity property
           ship.quantity = 1;
+          if (this.isBusy(ship.busy)) {
+            ship.available = 0;
+          } else {
+            ship.available = 1;
+          }
         });
         groupedFleet = groupedFleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
-          console.log(acc);
           if (!x) {
             // add first found by name
             return acc.concat([current]);
@@ -162,6 +187,7 @@ export default {
               // count up the duplicates
               if (ship.longname === current.longname) {
                 ship.quantity++;
+                ship.available = ship.available + current.available;
               }
             });
             return acc;
@@ -171,6 +197,23 @@ export default {
       } else {
         return groupedFleet;
       }
+    },
+    explorationPossible() {
+      var possible = false;
+      if (
+        this.command !== null &&
+        this.command === "explorespace" &&
+        this.xCoordinate !== null &&
+        this.yCoordinate !== null
+      ) {
+        this.sortedFleet.forEach(ship => {
+          if (ship.longname === "Explorer" && ship.available > 0) {
+            possible = true;
+          }
+        });
+      }
+
+      return possible;
     }
   },
   methods: {
@@ -271,6 +314,22 @@ export default {
         this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    explore() {
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.explorespace(
+        this.loginUser,
+        this.planetId,
+        this.xCoordinate,
+        this.yCoordinate,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
     }
   },
   beforeDestroy() {
