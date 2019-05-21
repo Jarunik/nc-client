@@ -5,7 +5,8 @@
       <p>
         {{ $t("User: ") + routeUser }}
         <template v-if="routeUser !== planetId">
-          <br />{{ $t("Planet: ") + routePlanet }}
+          <br>
+          {{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
     </template>
@@ -19,20 +20,20 @@
     >
       <table>
         <thead>
-          <th @click="sort('id')">{{ $t("Ship") }}</th>
           <th @click="sort('longname')">{{ $t("Name") }}</th>
+          <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('cons')">{{ $t("Consumption") }}</th>
           <th @click="sort('capacity')">{{ $t("Capacity") }}</th>
           <th @click="sort('busy')">{{ $t("Busy") }}</th>
         </thead>
         <tbody>
-          <tr v-for="ship in sortedFleet" :key="ship.id">
-            <td>{{ $t(ship.id) }}</td>
+          <tr v-for="ship in sortedFleet" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
-            <td>{{ $t(ship.speed) }}</td>
-            <td>{{ $t(ship.cons) }}</td>
-            <td>{{ $t(ship.capacity) }}</td>
+            <td>{{ship.quantity}}</td>
+            <td>{{ ship.speed }}</td>
+            <td>{{ ship.cons }}</td>
+            <td>{{ ship.capacity }}</td>
             <td>{{ ship.busy | busyPretty }}</td>
           </tr>
         </tbody>
@@ -45,21 +46,24 @@
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="routePlanet === 'null'"
-        ><p>
+      <template v-if="routePlanet === 'null'">
+        <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">{{
+          <router-link :to="'/' + routeUser + '/planets'">
+            {{
             $t("planet")
-          }}</router-link>
+            }}
+          </router-link>
         </p>
       </template>
       <template v-if="routeUser !== 'null'">
         <p>
           {{ $t("You have no ships. Buy some in the") }}
-          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">{{
+          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
+            {{
             $t("Shipyard")
-          }}</router-link>
-          .
+            }}
+          </router-link>.
         </p>
       </template>
     </template>
@@ -125,7 +129,7 @@ export default {
       planetId: state => state.planet.id
     }),
     sortedFleet() {
-      var sortedFleet = this.fleet;
+      var sortedFleet = this.groupedFleet;
       if (sortedFleet !== null) {
         return sortedFleet.sort((a, b) => {
           let modifier = 1;
@@ -138,6 +142,34 @@ export default {
         });
       } else {
         return sortedFleet;
+      }
+    },
+    groupedFleet() {
+      var groupedFleet = this.fleet;
+      if (groupedFleet !== null) {
+        groupedFleet.forEach(ship => {
+          // add quantity property
+          ship.quantity = 1;
+        });
+        groupedFleet = groupedFleet.reduce((acc, current) => {
+          const x = acc.find(item => item.longname === current.longname);
+          console.log(acc);
+          if (!x) {
+            // add first found by name
+            return acc.concat([current]);
+          } else {
+            acc.forEach(ship => {
+              // count up the duplicates
+              if (ship.longname === current.longname) {
+                ship.quantity++;
+              }
+            });
+            return acc;
+          }
+        }, []);
+        return groupedFleet;
+      } else {
+        return groupedFleet;
       }
     }
   },
