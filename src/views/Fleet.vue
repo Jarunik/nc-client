@@ -50,8 +50,10 @@
         </select>
       </p>
       <template v-if="command !== null">
-        {{ $t("X") }}: <input type="number" v-model="xCoordinate" />
-        {{ $t("Y") }}:<input type="number" v-model="yCoordinate" />
+        <p>
+          {{ $t("X") }}: <input type="number" v-model="xCoordinate" />
+          {{ $t("Y") }}:<input type="number" v-model="yCoordinate" />
+        </p>
         <p v-if="command === 'explorespace'">
           <button @click="explore" :disabled="!explorationPossible">
             {{ $t("Send Explorer") }}

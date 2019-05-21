@@ -231,6 +231,6 @@ td {
   padding-right: 4px;
 }
 input {
-  width: 15ch;
+  width: 12ch;
 }
 </style>
