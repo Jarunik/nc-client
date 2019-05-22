@@ -14,6 +14,12 @@ class PlanetsService {
 
     return response;
   }
+
+  async byId(planetId) {
+    const response = await ApiService.get(`/loadplanet?id=${planetId}`);
+
+    return response;
+  }
 }
 
 export default new PlanetsService();
