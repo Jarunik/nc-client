@@ -54,14 +54,13 @@
           {{ $t("X") }}: <input type="number" v-model="xCoordinate" />
           {{ $t("Y") }}:<input type="number" v-model="yCoordinate" />
         </p>
-        <p>
-          {{ $t("Distance") }}: {{ distance }}
-        </p>
+        <p>{{ $t("Distance") }}: {{ distance }}</p>
         <div v-if="command === 'explorespace'">
-          <p>{{ $t("Uranium Consumption") }}:
-          {{ consumption }}</p>
-           <p>{{ $t("Outbound Travel") }}:
-          {{ moment.duration(parseFloat(travelTime), 'hours').humanize()}}</p>
+          <p>{{ $t("Uranium Consumption") }}: {{ consumption }}</p>
+          <p>
+            {{ $t("Outbound Travel") }}:
+            {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+          </p>
           <button @click="explore" :disabled="!explorationPossible">
             {{ $t("Send Explorer") }}
           </button>
@@ -74,15 +73,16 @@
             {{ $t("U") }}: <input type="number" v-model="transportUranium" />
           </div>
           <p>{{ $t("Needed Transporter") }}: {{ neededTransporter }}</p>
-          <p>
-            <p>{{ $t("Uranium Consumption") }}:
-          {{ consumption }}</p>
-          <p>{{ $t("Outbound Travel") }}:
-          {{ moment.duration(parseFloat(travelTime), 'hours').humanize() }}</p>
+          <div>
+            <p>{{ $t("Uranium Consumption") }}: {{ consumption }}</p>
+            <p>
+              {{ $t("Outbound Travel") }}:
+              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+            </p>
             <button @click="transport" :disabled="!transportPossible">
               {{ $t("Send Trasnporter") }}
             </button>
-          </p>
+          </div>
         </div>
       </template>
     </template>
@@ -115,7 +115,6 @@
 
 <script>
 import FleetService from "@/services/fleet";
-import PlanetService from "@/services/planets";
 import QuantityService from "@/services/quantity";
 import { mapState } from "vuex";
 import moment from "moment";
@@ -127,7 +126,6 @@ export default {
   data: function() {
     return {
       fleet: null,
-      planet: null,
       quantity: null,
       interval: null,
       coal: null,
@@ -179,7 +177,9 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      planetPosX: state => state.planet.posX,
+      planetPosY: state => state.planet.posY
     }),
     sortedFleet() {
       var sortedFleet = this.groupedFleet;
@@ -262,7 +262,8 @@ export default {
         parseFloat(this.coal) > parseFloat(this.transportCoal) &&
         parseFloat(this.ore) > parseFloat(this.transportOre) &&
         parseFloat(this.copper) > parseFloat(this.transportCopper) &&
-        parseFloat(this.uranium) > (parseFloat(this.transportUranium) + parseFloat(this.consumption))
+        parseFloat(this.uranium) >
+          parseFloat(this.transportUranium) + parseFloat(this.consumption)
       ) {
         this.sortedFleet.forEach(ship => {
           if (
@@ -285,8 +286,8 @@ export default {
       return Math.ceil(sum / 100);
     },
     distance() {
-      var a = this.planet.planet_corx - this.xCoordinate;
-      var b = this.planet.planet_cory - this.yCoordinate;
+      var a = this.planetPosX - this.xCoordinate;
+      var b = this.planetPosY - this.yCoordinate;
 
       return Math.sqrt(a * a + b * b);
     },
@@ -297,17 +298,19 @@ export default {
           if (ship.longname === "Explorer") {
             shipConsumption = ship.cons;
           }
-        })
-        return Number (this.distance * shipConsumption).toFixed(2); 
+        });
+        return Number(this.distance * shipConsumption).toFixed(2);
       }
       if (this.command === "transport") {
-                let shipConsumption = 0;
-                this.sortedFleet.forEach(ship => {
+        let shipConsumption = 0;
+        this.sortedFleet.forEach(ship => {
           if (ship.longname === "Transporter") {
-            shipConsumption =  ship.cons;
-          } 
-        })
-        return Number (this.neededTransporter * this.distance * shipConsumption).toFixed(2); 
+            shipConsumption = ship.cons;
+          }
+        });
+        return Number(
+          this.neededTransporter * this.distance * shipConsumption
+        ).toFixed(2);
       }
       return 0;
     },
@@ -316,19 +319,19 @@ export default {
         let speed = 0;
         this.sortedFleet.forEach(ship => {
           if (ship.longname === "Explorer") {
-            speed =  ship.speed;
-          } 
-        })
-        return Number (this.distance / speed).toFixed(2);
+            speed = ship.speed;
+          }
+        });
+        return Number(this.distance / speed).toFixed(2);
       }
       if (this.command === "transport") {
-                let speed = 0;
-                this.sortedFleet.forEach(ship => {
+        let speed = 0;
+        this.sortedFleet.forEach(ship => {
           if (ship.longname === "Transporter") {
             speed = ship.speed;
-          } 
-        })
-        return Number (this.distance / speed).toFixed(2); 
+          }
+        });
+        return Number(this.distance / speed).toFixed(2);
       }
       return 0;
     }
@@ -337,15 +340,10 @@ export default {
     async prepareComponent() {
       await this.getFleet();
       await this.getQuantity();
-      await this.getPlanet();
     },
     async getFleet() {
       const response = await FleetService.all(this.routeUser, this.routePlanet);
       this.fleet = response;
-    },
-    async getPlanet() {
-      const response = await PlanetService.byId(this.routePlanet);
-      this.planet = response;
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));

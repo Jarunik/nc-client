@@ -51,7 +51,7 @@
               </span>
             </td>
             <td>
-              <button @click="setPlanet(planet.id, planet.name)">
+              <button @click="setPlanet(planet)">
                 {{ $t("Set") }}
               </button>
             </td>
@@ -158,10 +158,12 @@ export default {
       const response = await PlanetsService.byUser(this.routeUser);
       this.planets = response.planets;
     },
-    setPlanet(planetId, planetName) {
-      if (planetId !== this.planetId) {
-        this.$store.dispatch("planet/setId", planetId);
-        this.$store.dispatch("planet/setName", planetName);
+    setPlanet(planet) {
+      if (planet.id !== this.planetId) {
+        this.$store.dispatch("planet/setId", planet.id);
+        this.$store.dispatch("planet/setName", planet.name);
+        this.$store.dispatch("planet/setPosX", planet.posx);
+        this.$store.dispatch("planet/setPoxY", planet.posy);
       } else {
         this.resetPlanet();
       }
@@ -169,6 +171,8 @@ export default {
     resetPlanet() {
       this.$store.dispatch("planet/setId", null);
       this.$store.dispatch("planet/setName", null);
+      this.$store.dispatch("planet/setPosX", null);
+      this.$store.dispatch("planet/setPoxY", null);
     },
     renamePlanet(planetId, newName, index) {
       this.clicked.push(planetId);
