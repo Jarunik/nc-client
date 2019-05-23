@@ -69,10 +69,11 @@
           <option value="deploy">{{ $t("Deploy") }}</option>
           <option value="support">{{ $t("Support") }}</option>
           <option value="attack">{{ $t("Attack") }}</option>
+          <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </div>
       <br />
-      <template v-if="command !== null">
+      <template v-if="command !== null && command !== 'sent'">
         <!-- General Form -->
         <table>
           <thead>
@@ -83,7 +84,7 @@
           <tbody>
             <tr v-for="(ship, shipType) in shipFormation.ships" :key="shipType">
               <td>{{ ship.pos }}</td>
-              <td>{{ $t(shipType) }}</td>
+              <td>{{ $t(ship.name) }}</td>
               <td>{{ ship.n }}</td>
             </tr>
           </tbody>
@@ -361,7 +362,11 @@ export default {
     onCommand(command) {
       this.resetShipFormation();
       if (command === "explorespace") {
-        this.shipFormation.ships.Explorer.n = 1;
+        this.sortedFleet.forEach(ship => {
+          if (ship.type === "explorership") {
+            this.add(ship, 1);
+          }
+        });
       }
     },
     onResourceChange() {
@@ -370,7 +375,11 @@ export default {
         parseFloat(this.transportOre) +
         parseFloat(this.transportCopper) +
         parseFloat(this.transportUranium);
-      this.shipFormation.ships.Transporter.n = Math.ceil(sum / 100);
+      this.sortedFleet.forEach(ship => {
+        if (ship.type === "transportship") {
+          this.add(ship, Math.ceil(sum / 100));
+        }
+      });
     },
     onCoordinateChange() {
       this.fuelConsumption = 0;
@@ -442,17 +451,20 @@ export default {
       this.shipFormation = {
         count: 0,
         ships: {
-          Corvette: { n: 0, c: 0, pos: 0, type: corvette },
-          Frigate: { n: 0, c: 0, pos: 0, type: frigate },
-          Destroyer: { n: 0, c: 0, pos: 0, type: destroyer },
-          Cruiser: { n: 0, c: 0, pos: 0, type: cruiser },
-          Battlecruiser: { n: 0, c: 0, pos: 0, type: battlecruiser },
-          Carrier: { n: 0, c: 0, pos: 0, type: carrier },
-          Dreadnought: { n: 0, c: 0, pos: 0, type: dreadnought },
-          Transporter: { n: 0, c: 0, pos: 0, type: transportship },
-          Explorer: { n: 0, c: 0, pos: 0, type: explorership }
+          corvette: { n: 0, c: 0, pos: 0, name: "Corvette" },
+          frigate: { n: 0, c: 0, pos: 0, name: "Frigate" },
+          destroyer: { n: 0, c: 0, pos: 0, name: "Destroyer" },
+          cruiser: { n: 0, c: 0, pos: 0, name: "Cruiser" },
+          battlecruiser: { n: 0, c: 0, pos: 0, name: "Battlecruiser" },
+          carrier: { n: 0, c: 0, pos: 0, name: "Carrier" },
+          dreadnought: { n: 0, c: 0, pos: 0, name: "Dreadnought" },
+          transportship: { n: 0, c: 0, pos: 0, name: "Transporter" },
+          explorership: { n: 0, c: 0, pos: 0, name: "Explorer" }
         }
       };
+      this.fleet.forEach(ship => {
+        ship.toSend = 0;
+      });
     },
     async getQuantity() {
       const response = await QuantityService.get(this.planetId);
@@ -538,12 +550,18 @@ export default {
       if (ship.speed < this.slowestSpeed) {
         this.slowestSpeed = ship.speed;
       }
-      var longname = ship.longname;
-      var type = longname.split(" ", 1)[0];
-      this.shipFormation.ships[type].n = Math.min(quantity, ship.available);
-      this.shipFormation.ships[type].c = ship.cons;
-      this.shipFormation.ships[type].pos = this.pos;
+      this.shipFormation.count = this.shipFormation.count + 1;
+      this.shipFormation.ships[ship.type].n = Math.min(
+        quantity,
+        ship.available
+      );
+      this.shipFormation.ships[ship.type].c = ship.cons;
+      this.shipFormation.ships[ship.type].pos = this.pos;
       this.pos++;
+      // There are only 8 slots.
+      if (this.pos > 8) {
+        this.pos = 1;
+      }
     },
     explore() {
       SteemConnectService.setAccessToken(this.accessToken);
@@ -568,7 +586,7 @@ export default {
         this.planetId,
         this.xCoordinate,
         this.yCoordinate,
-        this.shipFormation.ships.Transporter.n,
+        this.shipFormation.ships.transportship.n,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,
@@ -591,9 +609,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[
-            this.shipFormation.ships[key].type
-          ] = this.shipFormation.ships[key].n;
+          shipList[key] = this.shipFormation.ships[key].n;
         }
       }
 
@@ -617,7 +633,6 @@ export default {
             this.transportOre = 0;
             this.transportCopper = 0;
             this.transportUranium = 0;
-            this.shipList = {};
           }
         }
       );
@@ -627,7 +642,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[this.shipFormation.ships[key].type] = {
+          shipList[key] = {
             pos: this.shipFormation.ships[key].pos,
             n: this.shipFormation.ships[key].n
           };
@@ -645,7 +660,6 @@ export default {
             this.command = "sent";
             this.xCoordinate = null;
             this.yCoordinate = null;
-            this.shipList = {};
           }
         }
       );
@@ -655,7 +669,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[this.shipFormation.ships[key].type] = {
+          shipList[key] = {
             pos: this.shipFormation.ships[key].pos,
             n: this.shipFormation.ships[key].n
           };
@@ -673,7 +687,6 @@ export default {
             this.command = "sent";
             this.xCoordinate = null;
             this.yCoordinate = null;
-            this.shipList = {};
           }
         }
       );
