@@ -5,7 +5,7 @@
       <p>
         {{ $t("User: ") + routeUser }}
         <template v-if="routeUser !== planetId">
-          <br />
+          <br>
           {{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
@@ -21,11 +21,15 @@
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Name") }}</th>
-          <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
+          <th @click="sort('quantity')">{{ $t("All") }}</th>
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
-          <th @click="sort('cons')">{{ $t("Consumption") }}</th>
-          <th @click="sort('capacity')">{{ $t("Capacity") }}</th>
-          <th @click="sort('available')">{{ $t("Available") }}</th>
+          <th @click="sort('cons')">{{ $t("Use") }}</th>
+          <th @click="sort('capacity')">{{ $t("Load") }}</th>
+          <th @click="sort('available')">{{ $t("Free") }}</th>
+          <th
+            v-if="command === 'deploy' || command === 'support' || command === 'attack'"
+            @click="sort('toSend')"
+          >{{ $t("Send") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -35,6 +39,9 @@
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
+            <td v-if="command === 'deploy' || command === 'support' || command === 'attack'">
+              <input type="number" v-model="ship.toSend">
+            </td>
           </tr>
         </tbody>
       </table>
@@ -51,8 +58,10 @@
       </p>
       <template v-if="command !== null">
         <p>
-          {{ $t("X") }}: <input type="number" v-model="xCoordinate" />
-          {{ $t("Y") }}:<input type="number" v-model="yCoordinate" />
+          {{ $t("X") }}:
+          <input type="number" v-model="xCoordinate">
+          {{ $t("Y") }}:
+          <input type="number" v-model="yCoordinate">
         </p>
         <p>{{ $t("Distance") }}: {{ distance }}</p>
         <div v-if="command === 'explorespace'">
@@ -61,16 +70,18 @@
             {{ $t("Outbound Travel") }}:
             {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
           </p>
-          <button @click="explore" :disabled="!explorationPossible">
-            {{ $t("Send Explorer") }}
-          </button>
+          <button @click="explore" :disabled="!explorationPossible">{{ $t("Send Explorer") }}</button>
         </div>
         <div v-if="command === 'transport'">
           <div>
-            {{ $t("C") }}: <input type="number" v-model="transportCoal" />
-            {{ $t("Fe") }}: <input type="number" v-model="transportOre" />
-            {{ $t("Cu") }}: <input type="number" v-model="transportCopper" />
-            {{ $t("U") }}: <input type="number" v-model="transportUranium" />
+            {{ $t("C") }}:
+            <input type="number" v-model="transportCoal">
+            {{ $t("Fe") }}:
+            <input type="number" v-model="transportOre">
+            {{ $t("Cu") }}:
+            <input type="number" v-model="transportCopper">
+            {{ $t("U") }}:
+            <input type="number" v-model="transportUranium">
           </div>
           <p>{{ $t("Needed Transporter") }}: {{ neededTransporter }}</p>
           <div>
@@ -79,10 +90,11 @@
               {{ $t("Outbound Travel") }}:
               {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
             </p>
-            <button @click="transport" :disabled="!transportPossible">
-              {{ $t("Send Trasnporter") }}
-            </button>
+            <button @click="transport" :disabled="!transportPossible">{{ $t("Send Trasnporter") }}</button>
           </div>
+        </div>
+        <div v-if="command === 'deploy'">
+          <button @click="deploy" :disabled="!deployPossible">{{ $t("Send Trasnporter") }}</button>
         </div>
       </template>
     </template>
@@ -96,17 +108,13 @@
       <template v-if="routePlanet === 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">
-            {{ $t("planet") }}
-          </router-link>
+          <router-link :to="'/' + routeUser + '/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
       <template v-if="routeUser !== 'null'">
         <p>
           {{ $t("You have no ships. Buy some in the") }}
-          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
-            {{ $t("Shipyard") }} </router-link
-          >.
+          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">{{ $t("Shipyard") }}</router-link>.
         </p>
       </template>
     </template>
@@ -182,7 +190,7 @@ export default {
       planetPosY: state => state.planet.posY
     }),
     sortedFleet() {
-      var sortedFleet = this.groupedFleet;
+      var sortedFleet = this.fleet;
       if (sortedFleet !== null) {
         return sortedFleet.sort((a, b) => {
           let modifier = 1;
@@ -195,40 +203,6 @@ export default {
         });
       } else {
         return sortedFleet;
-      }
-    },
-    groupedFleet() {
-      var groupedFleet = this.fleet;
-      if (groupedFleet !== null) {
-        groupedFleet.forEach(ship => {
-          // add quantity property
-          ship.quantity = 1;
-          if (this.isBusy(ship.busy)) {
-            ship.available = 0;
-          } else {
-            ship.available = 1;
-          }
-        });
-        groupedFleet = groupedFleet.reduce((acc, current) => {
-          const x = acc.find(item => item.longname === current.longname);
-          if (!x) {
-            // add first found by name
-            return acc.concat([current]);
-          } else {
-            acc.forEach(ship => {
-              // count up the duplicates
-              if (ship.longname === current.longname) {
-                ship.quantity++;
-                ship.available = ship.available + current.available;
-                ship.capacity = ship.capacity + current.capacity;
-              }
-            });
-            return acc;
-          }
-        }, []);
-        return groupedFleet;
-      } else {
-        return groupedFleet;
       }
     },
     explorationPossible() {
@@ -344,6 +318,35 @@ export default {
     async getFleet() {
       const response = await FleetService.all(this.routeUser, this.routePlanet);
       this.fleet = response;
+      if (this.fleet !== null) {
+        this.fleet.forEach(ship => {
+          // add quantity property
+          ship.quantity = 1;
+          if (this.isBusy(ship.busy)) {
+            ship.available = 0;
+          } else {
+            ship.available = 1;
+          }
+          ship.toSend = 0;
+        });
+        this.fleet = this.fleet.reduce((acc, current) => {
+          const x = acc.find(item => item.longname === current.longname);
+          if (!x) {
+            // add first found by name
+            return acc.concat([current]);
+          } else {
+            acc.forEach(ship => {
+              // count up the duplicates
+              if (ship.longname === current.longname) {
+                ship.quantity++;
+                ship.available = ship.available + current.available;
+                ship.capacity = ship.capacity + current.capacity;
+              }
+            });
+            return acc;
+          }
+        }, []);
+      }
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
