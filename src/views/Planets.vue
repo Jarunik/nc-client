@@ -2,9 +2,7 @@
   <div class="planets">
     <h1>{{ $t("Planets") }}</h1>
     <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-      </p>
+      <p>{{ $t("User: ") + routeUser }}</p>
     </template>
     <template v-if="routeUser !== 'null'">
       <table>
@@ -12,16 +10,12 @@
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
-          <th>
-            {{ $t("Rename") }}
-          </th>
+          <th>{{ $t("Rename") }}</th>
           <th>{{ $t("Context") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift Planet") }}</font>
           </th>
-          <th>
-            {{ $t("Selected") }}
-          </th>
+          <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
           <tr v-for="(planet, index) in planets" :key="planet.id">
@@ -30,55 +24,35 @@
             <td>{{ planet.name }}</td>
             <td>
               <span v-if="routeUser === loginUser">
-                <button @click="toggleRename(planet.id)">
-                  ...
-                </button>
+                <button @click="toggleRename(planet.id)">...</button>
                 <template v-if="planet.id !== null && showRename === planet.id">
-                  <input
-                    v-model="newName"
-                    :placeholder="$t(placeholderRename)"
-                  />
+                  <input v-model="newName" :placeholder="$t(placeholderRename)">
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="renamePlanet(planet.id, newName, index)"
-                  >
-                    {{ $t("Send") }}
-                  </button>
-                </template>
-              </span>
-              <span v-else>
-                {{ $t("-") }}
-              </span>
-            </td>
-            <td>
-              <button @click="setPlanet(planet)">
-                {{ $t("Set") }}
-              </button>
-            </td>
-            <td v-if="!giftingLock">
-              <span v-if="routeUser === loginUser && planet.starter !== 1">
-                <button @click="toggleGifting(planet.id)">
-                  ...
-                </button>
-                <template
-                  v-if="planet.id !== null && showGifting === planet.id"
-                >
-                  <input
-                    v-model="giftRecipient"
-                    :placeholder="$t(placeholderGifting)"
-                  />
-                  <button
-                    :disabled="clicked.includes(planet.id)"
-                    @click="giftPlanet(planet, giftRecipient, index)"
-                  >
-                    {{ $t("Send") }}
-                  </button>
+                  >{{ $t("Send") }}</button>
                 </template>
               </span>
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>
-              <span v-if="planet.id === planetId"> {{ $t("⮜") }}</span>
+              <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
+            </td>
+            <td v-if="!giftingLock">
+              <span v-if="routeUser === loginUser && planet.starter !== 1">
+                <button @click="toggleGifting(planet.id)">...</button>
+                <template v-if="planet.id !== null && showGifting === planet.id">
+                  <input v-model="giftRecipient" :placeholder="$t(placeholderGifting)">
+                  <button
+                    :disabled="clicked.includes(planet.id)"
+                    @click="giftPlanet(planet, giftRecipient, index)"
+                  >{{ $t("Send") }}</button>
+                </template>
+              </span>
+              <span v-else>{{ $t("-") }}</span>
+            </td>
+            <td>
+              <span v-if="planet.id === planetId">{{ $t("⮜") }}</span>
             </td>
           </tr>
         </tbody>
@@ -89,23 +63,21 @@
         </h2>
         <p>
           {{
-            $t(
-              "Warning: You activated actions with potentially severe consequences."
-            )
+          $t(
+          "Warning: You activated actions with potentially severe consequences."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
-            )
+          $t(
+          "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
+          )
           }}
         </p>
       </font>
       <p>
-        <button @click="toggleGiftingLock">
-          {{ $t("Gifting") }}
-        </button>
+        <button @click="toggleGiftingLock">{{ $t("Gifting") }}</button>
       </p>
     </template>
     <template v-else>
@@ -163,7 +135,7 @@ export default {
         this.$store.dispatch("planet/setId", planet.id);
         this.$store.dispatch("planet/setName", planet.name);
         this.$store.dispatch("planet/setPosX", planet.posx);
-        this.$store.dispatch("planet/setPoxY", planet.posy);
+        this.$store.dispatch("planet/setPosY", planet.posy);
       } else {
         this.resetPlanet();
       }
@@ -172,7 +144,7 @@ export default {
       this.$store.dispatch("planet/setId", null);
       this.$store.dispatch("planet/setName", null);
       this.$store.dispatch("planet/setPosX", null);
-      this.$store.dispatch("planet/setPoxY", null);
+      this.$store.dispatch("planet/setPosY", null);
     },
     renamePlanet(planetId, newName, index) {
       this.clicked.push(planetId);
