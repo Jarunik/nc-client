@@ -149,10 +149,10 @@ class SteemConnectService extends Client {
 
   transport(
     user,
-    numberOfTransporter,
     originPlanetId,
     x,
     y,
+    numberOfTransporter,
     coal,
     ore,
     copper,
@@ -179,12 +179,12 @@ class SteemConnectService extends Client {
   }
 
   // shipList = { "transportship": 2, "explorership": 1 }
-  deploy(user, originPlanetId, shipList, x, y, coal, ore, copper, uranium, cb) {
+  deploy(user, originPlanetId, x, y, shipList, coal, ore, copper, uranium, cb) {
     var scJson = {};
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "deploy";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = coal;
@@ -200,12 +200,12 @@ class SteemConnectService extends Client {
   }
 
   // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
-  attack(user, originPlanetId, shipList, x, y, cb) {
+  attack(user, originPlanetId, x, y, shipList, cb) {
     var scJson = {};
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "attack";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = originPlanetId;
@@ -230,12 +230,12 @@ class SteemConnectService extends Client {
   }
 
   // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
-  support(user, shipList, x, y, originPlanetId, cb) {
+  support(user, originPlanetId, x, y, shipList, cb) {
     var scJson = {};
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "support";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = originPlanetId;

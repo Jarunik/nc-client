@@ -88,6 +88,16 @@ export default {
       get() {
         return this.$store.state.planet.id;
       }
+    },
+    planetPosX: {
+      get() {
+        return this.$store.state.planet.posX;
+      }
+    },
+    planetPosY: {
+      get() {
+        return this.$store.state.planet.posY;
+      }
     }
   },
   mounted() {
@@ -105,6 +115,8 @@ export default {
       this.$store.dispatch("game/setUser", null);
       this.$store.dispatch("planet/setId", null);
       this.$store.dispatch("planet/setName", null);
+      this.$store.dispatch("planet/setPosX", null);
+      this.$store.dispatch("planet/setPosY", null);
       window.location.href = "/";
     }
   },
@@ -143,6 +155,16 @@ export default {
     var planetName = localStorage.getItem("planetName");
     if (planetName !== "undefined") {
       this.$store.dispatch("planet/setName", JSON.parse(planetName));
+    }
+
+    var planetPosX = localStorage.getItem("planetPosX");
+    if (planetPosX !== "undefined") {
+      this.$store.dispatch("planet/setPosX", JSON.parse(planetPosX));
+    }
+
+    var planetPosY = localStorage.getItem("planetPosY");
+    if (planetPosY !== "undefined") {
+      this.$store.dispatch("planet/setPosY", JSON.parse(planetPosY));
     }
 
     var gameLanguage = localStorage.getItem("gameLanguage");
@@ -231,6 +253,6 @@ td {
   padding-right: 4px;
 }
 input {
-  width: 12ch;
+  width: 15ch;
 }
 </style>

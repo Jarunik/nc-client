@@ -1,34 +1,32 @@
 <template>
   <div>
     <div>
-      <h1>
-        <b>Next</b>Colony
-      </h1>
+      <h1><b>Next</b>Colony</h1>
     </div>
     <p>{{ $t("Explore. Colonize. Battle. Collect.") }}</p>
     <p>
       {{ $t("Explore undiscovered space") }}
-      <br>
+      <br />
       {{ $t("Find and colonize new planets") }}
-      <br>
+      <br />
       {{ $t("Battle for honor and resources") }}
-      <br>
+      <br />
       {{ $t("Trade digital collectibles") }}
     </p>
     <p>
       <i>
         {{
-        $t(
-        "Warning: This is alternative, experimental client and in development."
-        )
+          $t(
+            "Warning: This is alternative, experimental client and in development."
+          )
         }}
       </i>
-      <br>
+      <br />
       <i>
         {{
-        $t(
-        "Please use the offical client if you don't want to test an alpha version."
-        )
+          $t(
+            "Please use the offical client if you don't want to test an alpha version."
+          )
         }}
       </i>
     </p>
@@ -37,7 +35,7 @@
       <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
     <template v-if="!loginUser">
-      <img src="@/assets/nextcolony-icon.png" width="90px" height="90px">
+      <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
         <i>{{ $t("Secure 1-click-registration via SteemConnect:") }}</i>
       </p>
@@ -50,10 +48,10 @@
       <p>
         {{ $t("Valid until") }}:
         {{
-        moment
-        .utc(expiryDate)
-        .local()
-        .format("LLL")
+          moment
+            .utc(expiryDate)
+            .local()
+            .format("LLL")
         }}
       </p>
       <p>
@@ -63,10 +61,14 @@
         <button
           :disabled="registrationClicked"
           v-on:click="register(loginUser)"
-        >{{ $t("Generate Starter Planet") }}</button>
+        >
+          {{ $t("Generate Starter Planet") }}
+        </button>
         <div v-if="registrationSuccess">
-          <p>{{$t("Generating Planet ...")}}</p>
-          <p>{{$t("Give it some time and then refresh the page with F5.")}}</p>
+          <p>{{ $t("Generating Planet ...") }}</p>
+          <p>
+            {{ $t("Give it some time and then refresh the page with F5.") }}
+          </p>
         </div>
       </div>
     </template>
@@ -114,6 +116,8 @@ export default {
       this.$store.dispatch("game/setUser", null);
       this.$store.dispatch("planet/setId", null);
       this.$store.dispatch("planet/setName", null);
+      this.$store.dispatch("planet/setPosX", null);
+      this.$store.dispatch("planet/setPosY", null);
       window.location.href = "/";
     },
     async fetchUser(user) {
@@ -156,9 +160,13 @@ export default {
               if (searchedPlanet) {
                 this.$store.dispatch("planet/setId", searchedPlanet.id);
                 this.$store.dispatch("planet/setName", searchedPlanet.name);
+                this.$store.dispatch("planet/setPosX", searchedPlanet.posx);
+                this.$store.dispatch("planet/setPosY", searchedPlanet.posy);
               } else {
                 this.$store.dispatch("planet/setId", null);
                 this.$store.dispatch("planet/setName", null);
+                this.$store.dispatch("planet/setPosX", null);
+                this.$store.dispatch("planet/setPosY", null);
               }
             }
           );
@@ -166,6 +174,8 @@ export default {
           this.$store.dispatch("game/setUser", null);
           this.$store.dispatch("planet/setId", null);
           this.$store.dispatch("planet/setName", null);
+          this.$store.dispatch("planet/setPosX", null);
+          this.$store.dispatch("planet/setPosY", null);
           this.showRegistration = true;
         }
       });

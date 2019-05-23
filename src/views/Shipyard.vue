@@ -219,7 +219,7 @@ export default {
       SteemConnectService.buildShip(
         this.loginUser,
         this.planetId,
-        ship.name,
+        ship.type,
         (error, result) => {
           if (error === null && result.success) {
             this.chainResponse.push(ship.longname);
@@ -340,10 +340,3 @@ export default {
   }
 };
 </script>
-
-<style>
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>

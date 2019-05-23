@@ -2,9 +2,7 @@
   <div class="planets">
     <h1>{{ $t("Planets") }}</h1>
     <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-      </p>
+      <p>{{ $t("User: ") + routeUser }}</p>
     </template>
     <template v-if="routeUser !== 'null'">
       <table>
@@ -12,16 +10,12 @@
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
-          <th>
-            {{ $t("Rename") }}
-          </th>
+          <th>{{ $t("Rename") }}</th>
           <th>{{ $t("Context") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift Planet") }}</font>
           </th>
-          <th>
-            {{ $t("Selected") }}
-          </th>
+          <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
           <tr v-for="(planet, index) in planets" :key="planet.id">
@@ -30,9 +24,7 @@
             <td>{{ planet.name }}</td>
             <td>
               <span v-if="routeUser === loginUser">
-                <button @click="toggleRename(planet.id)">
-                  ...
-                </button>
+                <button @click="toggleRename(planet.id)">...</button>
                 <template v-if="planet.id !== null && showRename === planet.id">
                   <input
                     v-model="newName"
@@ -46,20 +38,14 @@
                   </button>
                 </template>
               </span>
-              <span v-else>
-                {{ $t("-") }}
-              </span>
+              <span v-else>{{ $t("-") }}</span>
             </td>
             <td>
-              <button @click="setPlanet(planet.id, planet.name)">
-                {{ $t("Set") }}
-              </button>
+              <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td v-if="!giftingLock">
               <span v-if="routeUser === loginUser && planet.starter !== 1">
-                <button @click="toggleGifting(planet.id)">
-                  ...
-                </button>
+                <button @click="toggleGifting(planet.id)">...</button>
                 <template
                   v-if="planet.id !== null && showGifting === planet.id"
                 >
@@ -78,7 +64,7 @@
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>
-              <span v-if="planet.id === planetId"> {{ $t("⮜") }}</span>
+              <span v-if="planet.id === planetId">{{ $t("⮜") }}</span>
             </td>
           </tr>
         </tbody>
@@ -103,9 +89,7 @@
         </p>
       </font>
       <p>
-        <button @click="toggleGiftingLock">
-          {{ $t("Gifting") }}
-        </button>
+        <button @click="toggleGiftingLock">{{ $t("Gifting") }}</button>
       </p>
     </template>
     <template v-else>
@@ -158,10 +142,12 @@ export default {
       const response = await PlanetsService.byUser(this.routeUser);
       this.planets = response.planets;
     },
-    setPlanet(planetId, planetName) {
-      if (planetId !== this.planetId) {
-        this.$store.dispatch("planet/setId", planetId);
-        this.$store.dispatch("planet/setName", planetName);
+    setPlanet(planet) {
+      if (planet.id !== this.planetId) {
+        this.$store.dispatch("planet/setId", planet.id);
+        this.$store.dispatch("planet/setName", planet.name);
+        this.$store.dispatch("planet/setPosX", planet.posx);
+        this.$store.dispatch("planet/setPosY", planet.posy);
       } else {
         this.resetPlanet();
       }
@@ -169,6 +155,8 @@ export default {
     resetPlanet() {
       this.$store.dispatch("planet/setId", null);
       this.$store.dispatch("planet/setName", null);
+      this.$store.dispatch("planet/setPosX", null);
+      this.$store.dispatch("planet/setPosY", null);
     },
     renamePlanet(planetId, newName, index) {
       this.clicked.push(planetId);
@@ -243,10 +231,3 @@ export default {
   }
 };
 </script>
-
-<style>
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>

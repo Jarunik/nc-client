@@ -2,72 +2,37 @@
   <div class="missions">
     <h1>{{ $t("Missions") }}</h1>
     <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-      </p>
+      <p>{{ $t("User: ") + routeUser }}</p>
     </template>
     <template v-if="routeUser !== 'null'">
       <table>
         <thead>
-          <th @click="sortActive('id')">{{ $t("Active Mission") }}</th>
-          <th @click="sortActive('type')">{{ $t("Type") }}</th>
-          <th @click="sortActive('start_x')">{{ $t("Origin") }}</th>
-          <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
-          <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
-          <th @click="sortActive('return')">{{ $t("Return") }}</th>
-          <th @click="sortOld('result')">{{ $t("Result") }}</th>
+          <th @click="sort('type')">{{ $t("Type") }}</th>
+          <th @click="sort('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sort('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sort('return')">{{ $t("Return") }}</th>
+          <th @click="sort('result')">{{ $t("Result") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancelled") }}</th>
         </thead>
         <tbody>
-          <tr v-for="mission in sortedActiveMissions" :key="mission.id">
-            <td>{{ mission.id }}</td>
+          <tr v-for="mission in sortedMissions" :key="mission.id">
             <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
             <td>
-              <span v-if="mission.return !== null">{{
-                moment.unix(mission.return, "seconds").format("LLL")
-              }}</span>
+              <span v-if="mission.return !== null">
+                {{ moment.unix(mission.return, "seconds").format("LLL") }}
+              </span>
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>{{ $t(mission.result || "-") }}</td>
+            <td>{{ mission.cancel_trx !== null ? "-" : "+" }}</td>
           </tr>
         </tbody>
       </table>
-      <p v-if="JSON.stringify(activeMissions) === '[]'">
-        {{ $t("No Result") }}
-      </p>
-      <br />
-      <table>
-        <thead>
-          <th @click="sortOld('id')">{{ $t("Finished Mission") }}</th>
-          <th @click="sortOld('type')">{{ $t("Type") }}</th>
-          <th @click="sortOld('start_x')">{{ $t("Origin") }}</th>
-          <th @click="sortOld('end_x')">{{ $t("Destination") }}</th>
-          <th @click="sortOld('arrival')">{{ $t("Arrival") }}</th>
-          <th @click="sortOld('return')">{{ $t("Return") }}</th>
-          <th @click="sortOld('result')">{{ $t("Result") }}</th>
-        </thead>
-        <tbody>
-          <tr v-for="mission in sortedOldMissions" :key="mission.id">
-            <td>{{ mission.id }}</td>
-            <td>{{ $t(mission.type) }}</td>
-            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
-            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
-            <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
-            <td>
-              <span v-if="mission.return !== null">{{
-                moment.unix(mission.return, "seconds").format("LLL")
-              }}</span>
-              <span v-else>{{ $t("-") }}</span>
-            </td>
-            <td>{{ $t(mission.result || "-") }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-if="JSON.stringify(oldMissions) === '[]'">
-        {{ $t("No Result") }}
-      </p>
+      <p v-if="JSON.stringify(missions) === '[]'">{{ $t("No Result") }}</p>
     </template>
     <template v-else>
       <p>
@@ -88,12 +53,8 @@ export default {
   data: function() {
     return {
       missions: null,
-      activeMissions: null,
-      oldMissions: null,
-      currentActiveSort: "arrival",
-      currentActiveSortDir: "asc",
-      currentOldSort: "return",
-      currentOldSortDir: "desc"
+      currentSort: "arrival",
+      currentDir: "desc"
     };
   },
   async mounted() {
@@ -106,40 +67,20 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id
     }),
-    sortedActiveMissions() {
-      var sortedActiveMissions = this.activeMissions;
-      if (sortedActiveMissions !== null) {
-        return sortedActiveMissions.sort((a, b) => {
+    sortedMissions() {
+      var sortedMissions = this.missions;
+      if (sortedMissions !== null) {
+        return sortedMissions.sort((a, b) => {
           let modifier = 1;
-          if (this.currentActiveSortDir === "desc") modifier = -1;
-          if (a[this.currentActiveSort] === null) return -1 * modifier;
-          if (b[this.currentActiveSort] === null) return 1 * modifier;
-          if (a[this.currentActiveSort] < b[this.currentActiveSort])
-            return -1 * modifier;
-          if (a[this.currentActiveSort] > b[this.currentActiveSort])
-            return 1 * modifier;
+          if (this.currentDir === "desc") modifier = -1;
+          if (a[this.currentSort] === null) return -1 * modifier;
+          if (b[this.currentSort] === null) return 1 * modifier;
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
           return 0;
         });
       } else {
-        return sortedActiveMissions;
-      }
-    },
-    sortedOldMissions() {
-      var sortedOldMissions = this.oldMissions;
-      if (sortedOldMissions !== null) {
-        return sortedOldMissions.sort((a, b) => {
-          let modifier = 1;
-          if (this.currentOldSortDir === "desc") modifier = -1;
-          if (a[this.currentOldSort] === null) return -1 * modifier;
-          if (b[this.currentOldSort] === null) return 1 * modifier;
-          if (a[this.currentOldSort] < b[this.currentOldSort])
-            return -1 * modifier;
-          if (a[this.currentOldSort] > b[this.currentOldSort])
-            return 1 * modifier;
-          return 0;
-        });
-      } else {
-        return sortedOldMissions;
+        return sortedMissions;
       }
     }
   },
@@ -150,32 +91,14 @@ export default {
     async getMissions() {
       const response = await MissionsService.all(this.routeUser);
       this.missions = response;
-      this.activeMissions = response.new;
-      this.oldMissions = response.old;
     },
-    sortActive(s) {
+    sort(s) {
       //if s == current sort, reverse
-      if (s === this.currentActiveSort) {
-        this.currentActiveSortDir =
-          this.currentActiveSortDir === "asc" ? "desc" : "asc";
+      if (s === this.currentSort) {
+        this.currentDir = this.currentDir === "asc" ? "desc" : "asc";
       }
-      this.currentActiveSort = s;
-    },
-    sortOld(s) {
-      //if s == current sort, reverse
-      if (s === this.currentOldSort) {
-        this.currentOldSortDir =
-          this.currentOldSortDir === "asc" ? "desc" : "asc";
-      }
-      this.currentOldSort = s;
+      this.currentSort = s;
     }
   }
 };
 </script>
-
-<style>
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
