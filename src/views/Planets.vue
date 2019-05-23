@@ -26,11 +26,16 @@
               <span v-if="routeUser === loginUser">
                 <button @click="toggleRename(planet.id)">...</button>
                 <template v-if="planet.id !== null && showRename === planet.id">
-                  <input v-model="newName" :placeholder="$t(placeholderRename)">
+                  <input
+                    v-model="newName"
+                    :placeholder="$t(placeholderRename)"
+                  />
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="renamePlanet(planet.id, newName, index)"
-                  >{{ $t("Send") }}</button>
+                  >
+                    {{ $t("Send") }}
+                  </button>
                 </template>
               </span>
               <span v-else>{{ $t("-") }}</span>
@@ -41,12 +46,19 @@
             <td v-if="!giftingLock">
               <span v-if="routeUser === loginUser && planet.starter !== 1">
                 <button @click="toggleGifting(planet.id)">...</button>
-                <template v-if="planet.id !== null && showGifting === planet.id">
-                  <input v-model="giftRecipient" :placeholder="$t(placeholderGifting)">
+                <template
+                  v-if="planet.id !== null && showGifting === planet.id"
+                >
+                  <input
+                    v-model="giftRecipient"
+                    :placeholder="$t(placeholderGifting)"
+                  />
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="giftPlanet(planet, giftRecipient, index)"
-                  >{{ $t("Send") }}</button>
+                  >
+                    {{ $t("Send") }}
+                  </button>
                 </template>
               </span>
               <span v-else>{{ $t("-") }}</span>
@@ -63,16 +75,16 @@
         </h2>
         <p>
           {{
-          $t(
-          "Warning: You activated actions with potentially severe consequences."
-          )
+            $t(
+              "Warning: You activated actions with potentially severe consequences."
+            )
           }}
         </p>
         <p>
           {{
-          $t(
-          "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
-          )
+            $t(
+              "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
+            )
           }}
         </p>
       </font>
@@ -219,10 +231,3 @@ export default {
   }
 };
 </script>
-
-<style>
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>

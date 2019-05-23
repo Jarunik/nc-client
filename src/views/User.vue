@@ -100,3 +100,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.user input {
+  width: 20ch;
+}
+</style>

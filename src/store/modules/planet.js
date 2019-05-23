@@ -38,14 +38,14 @@ export default {
       });
     },
     setPosX: ({ commit }, value) => {
-      localStorage.setItem("posX", JSON.stringify(value));
+      localStorage.setItem("planetPosX", JSON.stringify(value));
       commit({
         type: types.SET_PLANET_POSX,
         value
       });
     },
     setPosY: ({ commit }, value) => {
-      localStorage.setItem("posY", JSON.stringify(value));
+      localStorage.setItem("planetPosY", JSON.stringify(value));
       commit({
         type: types.SET_PLANET_POSY,
         value

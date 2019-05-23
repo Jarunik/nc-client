@@ -5,7 +5,7 @@
       <p>
         {{ $t("User: ") + routeUser }}
         <template v-if="routeUser !== planetId">
-          <br>
+          <br />
           {{ $t("Planet: ") + routePlanet }}
         </template>
       </p>
@@ -18,6 +18,7 @@
           sortedFleet.length > 0
       "
     >
+      <!-- Ship List -->
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Name") }}</th>
@@ -27,9 +28,15 @@
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('available')">{{ $t("Free") }}</th>
           <th
-            v-if="command === 'deploy' || command === 'support' || command === 'attack'"
+            v-if="
+              command === 'deploy' ||
+                command === 'support' ||
+                command === 'attack'
+            "
             @click="sort('toSend')"
-          >{{ $t("Send") }}</th>
+          >
+            {{ $t("Send") }}
+          </th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -39,86 +46,142 @@
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
-            <td v-if="command === 'deploy' || command === 'support' || command === 'attack'">
-              <input type="number" v-model="ship.toSend">
-              <button @click="add(ship,ship.toSend)">{{$t("Add")}}</button>
+            <td
+              v-if="
+                command === 'deploy' ||
+                  command === 'support' ||
+                  command === 'attack'
+              "
+            >
+              <input type="number" v-model="ship.toSend" />
+              <button @click="add(ship, ship.toSend)">{{ $t("Add") }}</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <p>
+      <br />
+      <!-- Commands -->
+      <div>
         {{ $t("Command") }}
-        <select v-model="command">
+        <select @change="onCommand(command)" v-model="command">
           <option value="explorespace">{{ $t("Explore") }}</option>
           <option value="transport">{{ $t("Transport") }}</option>
           <option value="deploy">{{ $t("Deploy") }}</option>
           <option value="support">{{ $t("Support") }}</option>
           <option value="attack">{{ $t("Attack") }}</option>
-          <option value="sent">{{ $t("Sent") }}</option>
         </select>
-      </p>
+      </div>
+      <br />
       <template v-if="command !== null">
+        <!-- General Form -->
+        <table>
+          <thead>
+            <th>{{ $t("Position") }}</th>
+            <th>{{ $t("Ship Type") }}</th>
+            <th>{{ $t("Number") }}</th>
+          </thead>
+          <tbody>
+            <tr v-for="(ship, shipType) in shipFormation.ships" :key="shipType">
+              <td>{{ ship.pos }}</td>
+              <td>{{ $t(shipType) }}</td>
+              <td>{{ ship.n }}</td>
+            </tr>
+          </tbody>
+        </table>
+
         <p>
           {{ $t("X") }}:
-          <input type="number" v-model="xCoordinate">
+          <input
+            type="number"
+            v-model="xCoordinate"
+            v-on:change="onCoordinateChange"
+          />
           {{ $t("Y") }}:
-          <input type="number" v-model="yCoordinate">
+          <input
+            type="number"
+            v-model="yCoordinate"
+            v-on:change="onCoordinateChange"
+          />
         </p>
-        <p>{{ $t("Distance") }}: {{ distance }}</p>
+        <p>{{ $t("Distance") }}: {{ Number(distance).toFixed(2) }}</p>
+        <p>
+          {{ $t("Uranium Needed") }}:
+          {{ Number(this.fuelConsumption).toFixed(2) }}
+        </p>
+        <p>
+          {{ $t("Outbound Travel") }}:
+          {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+        </p>
+        <!-- Exploration -->
         <div v-if="command === 'explorespace'">
-          <p>{{ $t("Uranium Consumption") }}: {{ consumption }}</p>
-          <p>
-            {{ $t("Outbound Travel") }}:
-            {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-          </p>
-          <button @click="explore" :disabled="!explorationPossible">{{ $t("Send Explorer") }}</button>
+          <button @click="explore" :disabled="!commandEnabled('explorespace')">
+            {{ $t("Send Explorer") }}
+          </button>
         </div>
+        <!-- Transport -->
         <div v-if="command === 'transport'">
           <div>
             {{ $t("C") }}:
-            <input type="number" v-model="transportCoal">
+            <input
+              type="number"
+              v-model="transportCoal"
+              v-on:change="onResourceChange"
+            />
             {{ $t("Fe") }}:
-            <input type="number" v-model="transportOre">
+            <input
+              type="number"
+              v-model="transportOre"
+              v-on:change="onResourceChange"
+            />
             {{ $t("Cu") }}:
-            <input type="number" v-model="transportCopper">
+            <input
+              type="number"
+              v-model="transportCopper"
+              v-on:change="onResourceChange"
+            />
             {{ $t("U") }}:
-            <input type="number" v-model="transportUranium">
+            <input
+              type="number"
+              v-model="transportUranium"
+              v-on:change="onResourceChange"
+            />
           </div>
-          <p>{{ $t("Needed Transporter") }}: {{ neededTransporter }}</p>
+          <br />
           <div>
-            <p>{{ $t("Uranium Consumption") }}: {{ consumption }}</p>
-            <p>
-              {{ $t("Outbound Travel") }}:
-              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-            </p>
-            <button @click="transport" :disabled="!transportPossible">{{ $t("Send Transporter") }}</button>
+            <button @click="transport" :disabled="!commandEnabled('transport')">
+              {{ $t("Send Transporter") }}
+            </button>
           </div>
         </div>
-        <div v-if="command ==='deploy' || command === 'support' || command === 'attack'">
+        <!-- Deploy / Support / Attack-->
+        <div
+          v-if="
+            command === 'deploy' ||
+              command === 'support' ||
+              command === 'attack'
+          "
+        >
           <div>
-            <p>{{ $t("Uranium Consumption") }}: {{ consumption}}</p>
-            <p>
-              {{ $t("Outbound Travel") }}:
-              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-            </p>
-            <div
-              v-for="(quantity,ship) in shipList"
-              :key="ship"
-            >{{$t(searchLongName(ship))}}: {{quantity}}</div>
-            <br>
-            <div v-if="command ==='deploy'">
-              <button @click="deploy" :disabled="!commandPossible">{{ $t("Deploy Ships") }}</button>
+            <div v-if="command === 'deploy'">
+              <button @click="deploy" :disabled="!commandEnabled('deploy')">
+                {{ $t("Deploy Ships") }}
+              </button>
             </div>
-            <div v-if="command ==='support'">
-              <button @click="support" :disabled="!commandPossible">{{ $t("Support Planet") }}</button>
+            <div v-if="command === 'support'">
+              <button @click="support" :disabled="!commandEnabled('support')">
+                {{ $t("Support Planet") }}
+              </button>
             </div>
-            <div v-if="command ==='attack'">
-              <button @click="attack" :disabled="!commandPossible">{{ $t("Attack Planet") }}</button>
+            <div v-if="command === 'attack'">
+              <button @click="attack" :disabled="!commandEnabled('attack')">
+                {{ $t("Attack Planet") }}
+              </button>
             </div>
           </div>
         </div>
       </template>
     </template>
+    <!-- Not enough Context -->
     <template v-else>
       <template v-if="routeUser === 'null'">
         <p>
@@ -129,13 +192,18 @@
       <template v-if="routePlanet === 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">{{ $t("planet") }}</router-link>
+          <router-link :to="'/' + routeUser + '/planets'">{{
+            $t("planet")
+          }}</router-link>
         </p>
       </template>
       <template v-if="routeUser !== 'null'">
         <p>
           {{ $t("You have no ships. Buy some in the") }}
-          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">{{ $t("Shipyard") }}</router-link>.
+          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">{{
+            $t("Shipyard")
+          }}</router-link
+          >.
         </p>
       </template>
     </template>
@@ -172,9 +240,10 @@ export default {
       transportOre: 0,
       transportCopper: 0,
       transportUranium: 0,
-      shipList: {},
-      shipListEmpty: true,
-      slowestSpeed: null
+      shipFormation: {},
+      fuelConsumption: 0,
+      slowestSpeed: null,
+      pos: 1
     };
   },
   async mounted() {
@@ -229,151 +298,14 @@ export default {
         return sortedFleet;
       }
     },
-    explorationPossible() {
-      let possible = false;
-      let consumption = this.consumption;
-      if (
-        this.command !== null &&
-        this.command === "explorespace" &&
-        this.xCoordinate !== null &&
-        this.yCoordinate !== null &&
-        parseFloat(this.coal) > parseFloat(consumption)
-      ) {
-        this.sortedFleet.forEach(ship => {
-          if (ship.longname === "Explorer" && ship.available > 0) {
-            possible = true;
-          }
-        });
-      }
-
-      return possible;
-    },
-    transportPossible() {
-      let possible = false;
-      if (
-        this.command !== null &&
-        this.command === "transport" &&
-        this.xCoordinate !== null &&
-        this.xCoordinate !== "" &&
-        this.yCoordinate !== null &&
-        this.yCoordinate !== "" &&
-        parseFloat(this.coal) > parseFloat(this.transportCoal) &&
-        parseFloat(this.ore) > parseFloat(this.transportOre) &&
-        parseFloat(this.copper) > parseFloat(this.transportCopper) &&
-        parseFloat(this.uranium) >
-          parseFloat(this.transportUranium) + parseFloat(this.consumption)
-      ) {
-        this.sortedFleet.forEach(ship => {
-          if (
-            ship.longname === "Transporter" &&
-            ship.available >= this.neededTransporter
-          ) {
-            possible = true;
-          }
-        });
-      }
-
-      return possible;
-    },
-    commandPossible() {
-      let possible = false;
-      if (
-        this.command !== null &&
-        (this.command === "deploy" ||
-          this.command === "support" ||
-          this.command === "attack") &&
-        this.xCoordinate !== null &&
-        this.xCoordinate !== "" &&
-        this.yCoordinate !== null &&
-        this.yCoordinate !== "" &&
-        !this.shipListEmpty
-      ) {
-        possible = true;
-      }
-
-      return possible;
-    },
-    neededTransporter() {
-      let sum =
-        parseFloat(this.transportCoal) +
-        parseFloat(this.transportOre) +
-        parseFloat(this.transportCopper) +
-        parseFloat(this.transportUranium);
-      return Math.ceil(sum / 100);
-    },
     distance() {
       var a = this.planetPosX - this.xCoordinate;
       var b = this.planetPosY - this.yCoordinate;
 
       return Math.sqrt(a * a + b * b);
     },
-    consumption() {
-      var oneWay = this.distance;
-      if (this.command === "explorespace") {
-        let shipConsumption = 0;
-        this.sortedFleet.forEach(ship => {
-          if (ship.longname === "Explorer") {
-            shipConsumption = ship.cons;
-          }
-        });
-        return Number(2 * oneWay * shipConsumption).toFixed(2);
-      }
-      if (this.command === "transport") {
-        let shipConsumption = 0;
-        this.sortedFleet.forEach(ship => {
-          if (ship.longname === "Transporter") {
-            shipConsumption = ship.cons;
-          }
-        });
-        return Number(
-          this.neededTransporter * 2 * oneWay * shipConsumption
-        ).toFixed(2);
-      }
-      if (this.command !== "transport" && this.command != "explorespace") {
-        let shipConsumption = 0;
-        this.sortedFleet.forEach(ship => {
-          if (ship.toSend > 0) {
-            shipConsumption =
-              shipConsumption +
-              ship.cons * oneWay * Math.min(ship.toSend, ship.available);
-          }
-        });
-        return Number(shipConsumption).toFixed(2);
-      }
-      return 0;
-    },
     travelTime() {
-      if (this.command === "explorespace") {
-        let speed = 0;
-        this.sortedFleet.forEach(ship => {
-          if (ship.longname === "Explorer") {
-            speed = ship.speed;
-          }
-        });
-        return Number(this.distance / speed).toFixed(2);
-      }
-      if (this.command === "transport") {
-        let speed = 0;
-        this.sortedFleet.forEach(ship => {
-          if (ship.longname === "Transporter") {
-            speed = ship.speed;
-          }
-        });
-        return Number(this.distance / speed).toFixed(2);
-      }
-      if (this.command !== "transport" && this.command !== "transport") {
-        return Number(this.distance / this.slowestSpeed).toFixed(2);
-      }
-      return 0;
-    },
-    shipsToSend() {
-      var total = 0;
-      this.sortedFleet.forEach(ship => {
-        if (ship.toSend > 0) {
-          total = total + Math.min(ship.available, ship.toSend);
-        }
-      });
-      return total;
+      return Number(this.distance / this.slowestSpeed).toFixed(2);
     }
   },
   methods: {
@@ -386,7 +318,6 @@ export default {
       this.fleet = response;
       if (this.fleet !== null) {
         this.fleet.forEach(ship => {
-          // add quantity property
           ship.quantity = 1;
           if (this.isBusy(ship.busy)) {
             ship.available = 0;
@@ -426,6 +357,102 @@ export default {
           return true;
         }
       }
+    },
+    onCommand(command) {
+      this.resetShipFormation();
+      if (command === "explorespace") {
+        this.shipFormation.ships.Explorer.n = 1;
+      }
+    },
+    onResourceChange() {
+      let sum =
+        parseFloat(this.transportCoal) +
+        parseFloat(this.transportOre) +
+        parseFloat(this.transportCopper) +
+        parseFloat(this.transportUranium);
+      this.shipFormation.ships.Transporter.n = Math.ceil(sum / 100);
+    },
+    onCoordinateChange() {
+      this.fuelConsumption = 0;
+      for (var ship in this.shipFormation.ships) {
+        if (this.shipFormation.ships[ship].n > 0) {
+          this.fuelConsumption =
+            this.fuelConsumption +
+            this.shipFormation.ships[ship].n *
+              this.shipFormation.ships[ship].c *
+              this.distance;
+        }
+      }
+    },
+    commandEnabled(command) {
+      let enabled = false;
+      if (
+        this.command !== null &&
+        this.command === command &&
+        this.xCoordinate !== null &&
+        this.xCoordinate !== "" &&
+        this.yCoordinate !== null &&
+        this.yCoordinate !== "" &&
+        this.shipFormation.count > 0 &&
+        parseFloat(this.uranium) > parseFloat(this.fuelConsumption)
+      ) {
+        if (command === "transport") {
+          if (
+            parseFloat(this.coal) > parseFloat(this.transportCoal) &&
+            parseFloat(this.ore) > parseFloat(this.transportOre) &&
+            parseFloat(this.copper) > parseFloat(this.transportCopper) &&
+            parseFloat(this.uranium) >
+              parseFloat(this.transportUranium) +
+                parseFloat(this.fuelConsumption) &&
+            this.shipFormation.ships.transportship.n > 0
+          ) {
+            enabled = true;
+          } else {
+            enabled = false;
+          }
+        } else if (command === "explorespace") {
+          if (
+            parseFloat(this.coal) > parseFloat(this.transportCoal) &&
+            parseFloat(this.ore) > parseFloat(this.transportOre) &&
+            parseFloat(this.copper) > parseFloat(this.transportCopper) &&
+            parseFloat(this.uranium) >
+              parseFloat(this.transportUranium) +
+                parseFloat(this.fuelConsumption) &&
+            this.shipFormation.ships.explorership.n > 0
+          ) {
+            enabled = true;
+          } else {
+            enabled = false;
+          }
+        } else {
+          enabled = true;
+        }
+      }
+      return enabled;
+    },
+    searchLongName(key) {
+      for (var i = 0; i < this.sortedFleet.length; i++) {
+        if (this.sortedFleet[i].type === key) {
+          return this.sortedFleet[i].longname;
+        }
+      }
+    },
+    resetShipFormation() {
+      this.pos = 1;
+      this.shipFormation = {
+        count: 0,
+        ships: {
+          Corvette: { n: 0, c: 0, pos: 0, type: corvette },
+          Frigate: { n: 0, c: 0, pos: 0, type: frigate },
+          Destroyer: { n: 0, c: 0, pos: 0, type: destroyer },
+          Cruiser: { n: 0, c: 0, pos: 0, type: cruiser },
+          Battlecruiser: { n: 0, c: 0, pos: 0, type: battlecruiser },
+          Carrier: { n: 0, c: 0, pos: 0, type: carrier },
+          Dreadnought: { n: 0, c: 0, pos: 0, type: dreadnought },
+          Transporter: { n: 0, c: 0, pos: 0, type: transportship },
+          Explorer: { n: 0, c: 0, pos: 0, type: explorership }
+        }
+      };
     },
     async getQuantity() {
       const response = await QuantityService.get(this.planetId);
@@ -504,6 +531,20 @@ export default {
       }
       this.currentSort = s;
     },
+    add(ship, quantity) {
+      if (this.slowestSpeed === null) {
+        this.slowestSpeed = ship.speed;
+      }
+      if (ship.speed < this.slowestSpeed) {
+        this.slowestSpeed = ship.speed;
+      }
+      var longname = ship.longname;
+      var type = longname.split(" ", 1)[0];
+      this.shipFormation.ships[type].n = Math.min(quantity, ship.available);
+      this.shipFormation.ships[type].c = ship.cons;
+      this.shipFormation.ships[type].pos = this.pos;
+      this.pos++;
+    },
     explore() {
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.explorespace(
@@ -524,10 +565,10 @@ export default {
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.transport(
         this.loginUser,
-        this.neededTransporter,
         this.planetId,
         this.xCoordinate,
         this.yCoordinate,
+        this.shipFormation.ships.Transporter.n,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,
@@ -545,26 +586,24 @@ export default {
         }
       );
     },
-    add(ship, quantity) {
-      if (this.slowestSpeed === null) {
-        this.slowestSpeed = ship.speed;
-      }
-      if (ship.speed < this.slowestSpeed) {
-        this.slowestSpeed = ship.speed;
-      }
-      this.shipListEmpty = false;
-      var type = ship.type;
-      this.shipList[type] = Math.min(quantity, ship.available);
-      this.$forceUpdate();
-    },
     deploy() {
+      // shipList = { "transportship": 2, "explorership": 1 }
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[
+            this.shipFormation.ships[key].type
+          ] = this.shipFormation.ships[key].n;
+        }
+      }
+
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.deploy(
         this.loginUser,
         this.planetId,
-        this.shipList,
         this.xCoordinate,
         this.yCoordinate,
+        shipList,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,
@@ -578,62 +617,66 @@ export default {
             this.transportOre = 0;
             this.transportCopper = 0;
             this.transportUranium = 0;
+            this.shipList = {};
           }
         }
       );
     },
     support() {
-      let shipPosList = {};
-      let pos = 1;
-      for (let key in this.shipList) {
-        shipPosList[key] = { pos: pos, n: this.shipList[key] };
-        pos++;
+      // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[this.shipFormation.ships[key].type] = {
+            pos: this.shipFormation.ships[key].pos,
+            n: this.shipFormation.ships[key].n
+          };
+        }
       }
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.support(
         this.loginUser,
-        shipPosList,
+        this.planetId,
         this.xCoordinate,
         this.yCoordinate,
-        this.planetId,
+        shipList,
         (error, result) => {
           if (error === null && result.success) {
             this.command = "sent";
             this.xCoordinate = null;
             this.yCoordinate = null;
+            this.shipList = {};
           }
         }
       );
     },
     attack() {
-      let shipPosList = {};
-      let pos = 1;
-      for (let key in this.shipList) {
-        shipPosList[key] = { pos: pos, n: this.shipList[key] };
-        pos++;
+      // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[this.shipFormation.ships[key].type] = {
+            pos: this.shipFormation.ships[key].pos,
+            n: this.shipFormation.ships[key].n
+          };
+        }
       }
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.attack(
         this.loginUser,
         this.planetId,
-        shipPosList,
         this.xCoordinate,
         this.yCoordinate,
+        shipList,
         (error, result) => {
           if (error === null && result.success) {
             this.command = "sent";
             this.xCoordinate = null;
             this.yCoordinate = null;
+            this.shipList = {};
           }
         }
       );
-    },
-    searchLongName(key) {
-      for (var i = 0; i < this.sortedFleet.length; i++) {
-        if (this.sortedFleet[i].type === key) {
-          return this.sortedFleet[i].longname;
-        }
-      }
     }
   },
   beforeDestroy() {
@@ -643,8 +686,10 @@ export default {
 </script>
 
 <style>
-table {
-  margin-left: auto;
-  margin-right: auto;
+.fleet input {
+  width: 10ch;
+}
+.fleet select {
+  width: 15ch;
 }
 </style>
