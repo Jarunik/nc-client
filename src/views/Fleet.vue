@@ -40,7 +40,7 @@
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
             <td v-if="command === 'deploy' || command === 'support' || command === 'attack'">
-              <input type="number" v-model="ship.toSend">
+              <input type="number" v-model="ship.toSend" on>
             </td>
           </tr>
         </tbody>
@@ -90,11 +90,30 @@
               {{ $t("Outbound Travel") }}:
               {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
             </p>
-            <button @click="transport" :disabled="!transportPossible">{{ $t("Send Trasnporter") }}</button>
+            <button @click="transport" :disabled="!transportPossible">{{ $t("Send Transporter") }}</button>
           </div>
         </div>
         <div v-if="command === 'deploy'">
-          <button @click="deploy" :disabled="!deployPossible">{{ $t("Send Trasnporter") }}</button>
+          <div>
+            {{ $t("C") }}:
+            <input type="number" v-model="transportCoal">
+            {{ $t("Fe") }}:
+            <input type="number" v-model="transportOre">
+            {{ $t("Cu") }}:
+            <input type="number" v-model="transportCopper">
+            {{ $t("U") }}:
+            <input type="number" v-model="transportUranium">
+          </div>
+          <div>
+            <br>
+            <p>{{ $t("Total Ships") }}: {{ shipsToSend}}</p>
+            <p>{{ $t("Uranium Consumption") }}: {{ consumption}}</p>
+            <p>
+              {{ $t("Outbound Travel") }}:
+              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+            </p>
+            <button @click="deploy" :disabled="!deployPossible">{{ $t("Deploy Ships") }}</button>
+          </div>
         </div>
       </template>
     </template>
@@ -251,6 +270,27 @@ export default {
 
       return possible;
     },
+    deployPossible() {
+      let possible = false;
+      if (
+        this.command !== null &&
+        this.command === "deploy" &&
+        this.xCoordinate !== null &&
+        this.xCoordinate !== "" &&
+        this.yCoordinate !== null &&
+        this.yCoordinate !== "" &&
+        parseFloat(this.coal) > parseFloat(this.transportCoal) &&
+        parseFloat(this.ore) > parseFloat(this.transportOre) &&
+        parseFloat(this.copper) > parseFloat(this.transportCopper) &&
+        parseFloat(this.uranium) >
+          parseFloat(this.transportUranium) + parseFloat(this.consumption)
+      ) {
+        //TOOD Have to check ship availability
+        possible = true;
+      }
+
+      return possible;
+    },
     neededTransporter() {
       let sum =
         parseFloat(this.transportCoal) +
@@ -266,6 +306,7 @@ export default {
       return Math.sqrt(a * a + b * b);
     },
     consumption() {
+      var oneWay = this.distance;
       if (this.command === "explorespace") {
         let shipConsumption = 0;
         this.sortedFleet.forEach(ship => {
@@ -273,7 +314,7 @@ export default {
             shipConsumption = ship.cons;
           }
         });
-        return Number(this.distance * shipConsumption).toFixed(2);
+        return Number(2 * oneWay * shipConsumption).toFixed(2);
       }
       if (this.command === "transport") {
         let shipConsumption = 0;
@@ -283,8 +324,19 @@ export default {
           }
         });
         return Number(
-          this.neededTransporter * this.distance * shipConsumption
+          this.neededTransporter * 2 * oneWay * shipConsumption
         ).toFixed(2);
+      }
+      if (this.command !== "transport" && this.command != "explorespace") {
+        let shipConsumption = 0;
+        this.sortedFleet.forEach(ship => {
+          if (ship.toSend > 0) {
+            shipConsumption =
+              shipConsumption +
+              ship.cons * oneWay * Math.min(ship.toSend, ship.available);
+          }
+        });
+        return Number(shipConsumption).toFixed(2);
       }
       return 0;
     },
@@ -308,6 +360,15 @@ export default {
         return Number(this.distance / speed).toFixed(2);
       }
       return 0;
+    },
+    shipsToSend() {
+      var total = 0;
+      this.sortedFleet.forEach(ship => {
+        if (ship.toSend > 0) {
+          total = total + Math.min(ship.available, ship.toSend);
+        }
+      });
+      return total;
     }
   },
   methods: {
@@ -478,6 +539,39 @@ export default {
           }
         }
       );
+    },
+    deploy() {
+      var shipList = {};
+      this.sortedFleet.forEach(ship => {
+        if (ship.toSend > 0) {
+          shipList[ship.type] = Math.min(ship.toSend, ship.available);
+        }
+      });
+      console.log(shipList);
+      /*  
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.deploy(
+        this.loginUser,
+        shipList,
+        this.xCoordinate,
+        this.yCoordinate,
+        this.transportCoal,
+        this.transportOre,
+        this.transportCopper,
+        this.transportUranium,
+        this.planetId,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+            this.transportCoal = 0;
+            this.transportOre = 0;
+            this.transportCopper = 0;
+            this.transportUranium = 0;
+          }
+        }
+      );*/
     }
   },
   beforeDestroy() {
