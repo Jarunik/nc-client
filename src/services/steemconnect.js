@@ -184,7 +184,7 @@ class SteemConnectService extends Client {
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "deploy";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = coal;
@@ -205,7 +205,7 @@ class SteemConnectService extends Client {
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "attack";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = originPlanetId;
@@ -235,7 +235,7 @@ class SteemConnectService extends Client {
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "support";
-    scCommand["tr_var1"] = JSON.stringify(shipList);
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
     scCommand["tr_var4"] = originPlanetId;

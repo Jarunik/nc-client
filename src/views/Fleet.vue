@@ -40,7 +40,8 @@
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
             <td v-if="command === 'deploy' || command === 'support' || command === 'attack'">
-              <input type="number" v-model="ship.toSend" on>
+              <input type="number" v-model="ship.toSend">
+              <button @click="add(ship,ship.toSend)">{{$t("Add")}}</button>
             </td>
           </tr>
         </tbody>
@@ -93,26 +94,27 @@
             <button @click="transport" :disabled="!transportPossible">{{ $t("Send Transporter") }}</button>
           </div>
         </div>
-        <div v-if="command === 'deploy'">
+        <div v-if="command ==='deploy' || command === 'support' || command === 'attack'">
           <div>
-            {{ $t("C") }}:
-            <input type="number" v-model="transportCoal">
-            {{ $t("Fe") }}:
-            <input type="number" v-model="transportOre">
-            {{ $t("Cu") }}:
-            <input type="number" v-model="transportCopper">
-            {{ $t("U") }}:
-            <input type="number" v-model="transportUranium">
-          </div>
-          <div>
-            <br>
-            <p>{{ $t("Total Ships") }}: {{ shipsToSend}}</p>
             <p>{{ $t("Uranium Consumption") }}: {{ consumption}}</p>
             <p>
               {{ $t("Outbound Travel") }}:
               {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
             </p>
-            <button @click="deploy" :disabled="!deployPossible">{{ $t("Deploy Ships") }}</button>
+            <div
+              v-for="(quantity,ship) in shipList"
+              :key="ship"
+            >{{$t(searchLongName(ship))}}: {{quantity}}</div>
+            <br>
+            <div v-if="command ==='deploy'">
+              <button @click="deploy" :disabled="!commandPossible">{{ $t("Deploy Ships") }}</button>
+            </div>
+            <div v-if="command ==='support'">
+              <button @click="support" :disabled="!commandPossible">{{ $t("Support Planet") }}</button>
+            </div>
+            <div v-if="command ==='attack'">
+              <button @click="attack" :disabled="!commandPossible">{{ $t("Attack Planet") }}</button>
+            </div>
           </div>
         </div>
       </template>
@@ -169,7 +171,10 @@ export default {
       transportCoal: 0,
       transportOre: 0,
       transportCopper: 0,
-      transportUranium: 0
+      transportUranium: 0,
+      shipList: {},
+      shipListEmpty: true,
+      slowestSpeed: null
     };
   },
   async mounted() {
@@ -270,22 +275,19 @@ export default {
 
       return possible;
     },
-    deployPossible() {
+    commandPossible() {
       let possible = false;
       if (
         this.command !== null &&
-        this.command === "deploy" &&
+        (this.command === "deploy" ||
+          this.command === "support" ||
+          this.command === "attack") &&
         this.xCoordinate !== null &&
         this.xCoordinate !== "" &&
         this.yCoordinate !== null &&
         this.yCoordinate !== "" &&
-        parseFloat(this.coal) > parseFloat(this.transportCoal) &&
-        parseFloat(this.ore) > parseFloat(this.transportOre) &&
-        parseFloat(this.copper) > parseFloat(this.transportCopper) &&
-        parseFloat(this.uranium) >
-          parseFloat(this.transportUranium) + parseFloat(this.consumption)
+        !this.shipListEmpty
       ) {
-        //TOOD Have to check ship availability
         possible = true;
       }
 
@@ -358,6 +360,9 @@ export default {
           }
         });
         return Number(this.distance / speed).toFixed(2);
+      }
+      if (this.command !== "transport" && this.command !== "transport") {
+        return Number(this.distance / this.slowestSpeed).toFixed(2);
       }
       return 0;
     },
@@ -540,26 +545,30 @@ export default {
         }
       );
     },
+    add(ship, quantity) {
+      if (this.slowestSpeed === null) {
+        this.slowestSpeed = ship.speed;
+      }
+      if (ship.speed < this.slowestSpeed) {
+        this.slowestSpeed = ship.speed;
+      }
+      this.shipListEmpty = false;
+      var type = ship.type;
+      this.shipList[type] = Math.min(quantity, ship.available);
+      this.$forceUpdate();
+    },
     deploy() {
-      var shipList = {};
-      this.sortedFleet.forEach(ship => {
-        if (ship.toSend > 0) {
-          shipList[ship.type] = Math.min(ship.toSend, ship.available);
-        }
-      });
-      console.log(shipList);
-      /*  
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.deploy(
         this.loginUser,
-        shipList,
+        this.planetId,
+        this.shipList,
         this.xCoordinate,
         this.yCoordinate,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,
         this.transportUranium,
-        this.planetId,
         (error, result) => {
           if (error === null && result.success) {
             this.command = "sent";
@@ -571,7 +580,60 @@ export default {
             this.transportUranium = 0;
           }
         }
-      );*/
+      );
+    },
+    support() {
+      let shipPosList = {};
+      let pos = 1;
+      for (let key in this.shipList) {
+        shipPosList[key] = { pos: pos, n: this.shipList[key] };
+        pos++;
+      }
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.support(
+        this.loginUser,
+        shipPosList,
+        this.xCoordinate,
+        this.yCoordinate,
+        this.planetId,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
+    },
+    attack() {
+      let shipPosList = {};
+      let pos = 1;
+      for (let key in this.shipList) {
+        shipPosList[key] = { pos: pos, n: this.shipList[key] };
+        pos++;
+      }
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.attack(
+        this.loginUser,
+        this.planetId,
+        shipPosList,
+        this.xCoordinate,
+        this.yCoordinate,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
+    },
+    searchLongName(key) {
+      for (var i = 0; i < this.sortedFleet.length; i++) {
+        if (this.sortedFleet[i].type === key) {
+          return this.sortedFleet[i].longname;
+        }
+      }
     }
   },
   beforeDestroy() {
