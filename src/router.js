@@ -109,6 +109,16 @@ export default new Router({
       props: true
     },
     {
+      path: "/:routeUser/:routePlanet/galaxy",
+      name: "galaxy",
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(/* webpackChunkName: "galaxy" */ "./views/Galaxy.vue"),
+      props: true
+    },
+    {
       path: "/:routeUser/:routePlanet/production",
       name: "production",
       // route level code-splitting
