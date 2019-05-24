@@ -51,7 +51,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "galaxy",
-  props: ["routeUser", "routePlanet", "searchX", "searchY"],
+  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       galaxy: null,
@@ -135,11 +135,12 @@ export default {
       return icon;
     },
     goTo(goX, goY) {
+      let newPath = this.$route.path;
       this.$router.push({
-        path: this.$route.path,
+        path: newPath,
         query: { x: goX, y: goY }
       });
-      this.$router.go();
+      this.getGalaxy();
     },
     goToSearch(search) {
       let split = search
@@ -150,11 +151,11 @@ export default {
       this.goTo(split[0], split[1]);
     },
     goFleet(goX, goY) {
+      let newPath = this.$route.path.replace("galaxy", "fleet");
       this.$router.push({
-        path: this.$route.path.replace("galaxy", "fleet"),
+        path: newPath,
         query: { x: goX, y: goY }
       });
-      this.$router.go();
     }
   }
 };
