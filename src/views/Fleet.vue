@@ -89,7 +89,10 @@
             </tr>
           </tbody>
         </table>
-
+        <p>
+          <input v-model="search" placeholder="(x/y)" />
+          <button @click="fillCoordinates(search)">{{ $t("Fill") }}</button>
+        </p>
         <p>
           {{ $t("X") }}:
           <input
@@ -244,7 +247,8 @@ export default {
       shipFormation: {},
       fuelConsumption: 0,
       slowestSpeed: null,
-      pos: 1
+      pos: 1,
+      search: null
     };
   },
   async mounted() {
@@ -360,6 +364,13 @@ export default {
       }
     },
     onCommand(command) {
+      if (
+        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+        (this.$route.query.y !== undefined && this.$route.query.y !== null)
+      ) {
+        this.xCoordinate = this.$route.query.x;
+        this.yCoordinate = this.$route.query.y;
+      }
       this.resetShipFormation();
       if (command === "explorespace") {
         this.sortedFleet.forEach(ship => {
@@ -690,6 +701,15 @@ export default {
           }
         }
       );
+    },
+    fillCoordinates(search) {
+      let split = search
+        .replace("(", "")
+        .replace(")", "")
+        .replace(/\s+/g, "")
+        .split("/");
+      this.xCoordinate = split[0];
+      this.yCoordinate = split[1];
     }
   },
   beforeDestroy() {
