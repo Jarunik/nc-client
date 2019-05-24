@@ -13,7 +13,7 @@
       <table>
         <tbody>
           <tr v-for="y in 13" :key="y">
-            <td @click="focus(x, y)" v-for="x in 23" :key="x">
+            <td @click="focus(x, y)" v-for="x in 21" :key="x">
               <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
                 ><font color="green">{{ lookupLocation(x, y) }}</font></span
               >
@@ -22,7 +22,25 @@
           </tr>
         </tbody>
       </table>
-      X: {{ focusX }} Y: {{ focusY }}
+      <p>
+        ({{ focusX }}/{{ focusY }})
+        <button @click="goTo(focusX, focusY)">{{ $t("Go") }}</button>
+      </p>
+      <p>
+        {{ $t("Home") }}
+        <button @click="goTo(posX, posY)">{{ $t("Go") }}</button>
+      </p>
+      <p>
+        {{ $t("Earth") }} <button @click="goTo(0, 0)">{{ $t("Go") }}</button>
+      </p>
+      <p>
+        <input v-model="search" placeholder="(x/y)" />
+        <button @click="goToSearch(search)">{{ $t("Go") }}</button>
+      </p>
+      <p>
+        ({{ focusX }}/{{ focusY }})
+        <button @click="goFleet(focusX, focusY)">{{ $t("Send Fleet") }}</button>
+      </p>
     </template>
   </div>
 </template>
@@ -33,12 +51,13 @@ import { mapState } from "vuex";
 
 export default {
   name: "galaxy",
-  props: ["routeUser", "routePlanet"],
+  props: ["routeUser", "routePlanet", "searchX", "searchY"],
   data: function() {
     return {
       galaxy: null,
       focusX: null,
-      focusY: null
+      focusY: null,
+      search: null
     };
   },
   async mounted() {
@@ -64,6 +83,17 @@ export default {
       if (this.planetId !== null) {
         xCoordinate = this.posX;
         yCoordinate = this.posY;
+        this.focusX = xCoordinate;
+        this.focusY = yCoordinate;
+      }
+      if (
+        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+        (this.$route.query.y !== undefined && this.$route.query.y !== null)
+      ) {
+        xCoordinate = this.$route.query.x;
+        yCoordinate = this.$route.query.y;
+        this.focusX = xCoordinate;
+        this.focusY = yCoordinate;
       }
       const response = await GalaxyService.galaxy(xCoordinate, yCoordinate);
       this.galaxy = response;
@@ -81,28 +111,50 @@ export default {
     lookupLocation(tableX, tableY) {
       let posX = this.coordinateX(tableX);
       let posY = this.coordinateY(tableY);
-      let icon = "x";
+      let icon = "░";
 
       this.galaxy.explore.forEach(explore => {
         if (explore.x === posX && explore.y === posY) {
-          icon = "e";
+          icon = "🔎";
         }
       });
 
       this.galaxy.explored.forEach(explored => {
         if (explored.x === posX && explored.y === posY) {
-          icon = ".";
+          icon = " ";
         }
       });
 
       //planets
       this.galaxy.planets.forEach(planet => {
         if (planet.x === posX && planet.y === posY) {
-          icon = "p";
+          icon = "⬤";
         }
       });
 
       return icon;
+    },
+    goTo(goX, goY) {
+      this.$router.push({
+        path: this.$route.path,
+        query: { x: goX, y: goY }
+      });
+      this.$router.go();
+    },
+    goToSearch(search) {
+      let split = search
+        .replace("(", "")
+        .replace(")", "")
+        .replace(/\s+/g, "")
+        .split("/");
+      this.goTo(split[0], split[1]);
+    },
+    goFleet(goX, goY) {
+      this.$router.push({
+        path: this.$route.path.replace("galaxy", "fleet"),
+        query: { x: goX, y: goY }
+      });
+      this.$router.go();
     }
   }
 };
