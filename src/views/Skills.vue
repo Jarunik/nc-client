@@ -50,7 +50,7 @@
               </button>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
-              {{ $t("⌛") }}
+              <timer-sand-icon />
             </td>
           </tr>
         </tbody>
@@ -71,9 +71,13 @@ import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
 import { mapState } from "vuex";
+import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 
 export default {
   name: "skills",
+  components: {
+    TimerSandIcon
+  },
   props: ["routeUser"],
   data: function() {
     return {
