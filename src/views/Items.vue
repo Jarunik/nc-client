@@ -50,14 +50,16 @@
                 @click="activateItem(item, planetId, index)"
                 :disabled="clicked.includes(item.id)"
               >
-                {{ $t("☀") }}
+                <white-balance-sunny-icon />
               </button>
               <span v-else>
                 {{ $t("-") }}
               </span>
             </td>
             <td>
-              <span v-if="chainResponse.includes(item.id)">{{ $t("⌛") }}</span>
+              <span v-if="chainResponse.includes(item.id)"
+                ><timer-sand-icon
+              /></span>
             </td>
           </tr>
         </tbody>
@@ -84,9 +86,15 @@
 import ItemsService from "@/services/items";
 import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
+import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
 
 export default {
   name: "items",
+  components: {
+    TimerSandIcon,
+    WhiteBalanceSunnyIcon
+  },
   props: ["routeUser"],
   data: function() {
     return {

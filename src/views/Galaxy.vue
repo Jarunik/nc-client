@@ -1,5 +1,5 @@
 <template>
-  <div class="galax">
+  <div class="galaxy">
     <h1>{{ $t("Galaxy") }}</h1>
     <template v-if="routeUser !== gameUser">
       <p>
@@ -15,9 +15,22 @@
           <tr v-for="y in 13" :key="y">
             <td @click="focus(x, y)" v-for="x in 21" :key="x">
               <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
-                ><font color="green">{{ lookupLocation(x, y) }}</font></span
-              >
-              <span v-else>{{ lookupLocation(x, y) }}</span>
+                ><font color="green">
+                  <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
+                  <magnify-icon v-if="lookupLocation(x, y) === 'explore'" />
+                  <texture-icon v-if="lookupLocation(x, y) === 'fog'" />
+                  <earth-icon v-if="lookupLocation(x, y) === 'home'" />
+                  <circle-icon
+                    v-if="lookupLocation(x, y) === 'planet'"
+                  /> </font
+              ></span>
+              <span v-else>
+                <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
+                <magnify-icon v-if="lookupLocation(x, y) === 'explore'" />
+                <texture-icon v-if="lookupLocation(x, y) === 'fog'" />
+                <circle-icon v-if="lookupLocation(x, y) === 'planet'" />
+                <earth-icon v-if="lookupLocation(x, y) === 'home'" />
+              </span>
             </td>
           </tr>
         </tbody>
@@ -48,9 +61,19 @@
 <script>
 import GalaxyService from "@/services/galaxy";
 import { mapState } from "vuex";
+import CircleIcon from "vue-material-design-icons/Circle.vue";
+import MagnifyIcon from "vue-material-design-icons/Magnify.vue";
+import TextureIcon from "vue-material-design-icons/Texture.vue";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "galaxy",
+  components: {
+    CircleIcon,
+    MagnifyIcon,
+    TextureIcon,
+    EarthIcon
+  },
   props: ["routeUser", "routePlanet"],
   data: function() {
     return {
@@ -111,24 +134,34 @@ export default {
     lookupLocation(tableX, tableY) {
       let posX = this.coordinateX(tableX);
       let posY = this.coordinateY(tableY);
-      let icon = "░";
+      let icon = "fog";
 
       this.galaxy.explore.forEach(explore => {
         if (explore.x === posX && explore.y === posY) {
-          icon = "🔎";
+          icon = "explore";
         }
       });
 
       this.galaxy.explored.forEach(explored => {
         if (explored.x === posX && explored.y === posY) {
-          icon = " ";
+          icon = "space";
         }
       });
 
-      //planets
       this.galaxy.planets.forEach(planet => {
         if (planet.x === posX && planet.y === posY) {
-          icon = "⬤";
+          icon = "planet";
+        }
+      });
+
+      this.galaxy.planets.forEach(planet => {
+        if (
+          planet.x === posX &&
+          planet.y === posY &&
+          planet.x === this.posX &&
+          planet.y == this.posY
+        ) {
+          icon = "home";
         }
       });
 

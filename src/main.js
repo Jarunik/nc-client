@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import i18n from "./i18n";
 import moment from "moment";
+import "vue-material-design-icons/styles.css";
 
 Vue.config.productionTip = false;
 Vue.prototype.moment = moment;

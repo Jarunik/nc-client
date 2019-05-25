@@ -53,7 +53,7 @@
               </button>
             </td>
             <td v-if="chainResponse.includes(building.name)">
-              {{ $t("⌛") }}
+              <timer-sand-icon />
             </td>
           </tr>
         </tbody>
@@ -84,9 +84,13 @@ import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
 import moment from "moment";
+import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 
 export default {
   name: "buildings",
+  components: {
+    TimerSandIcon
+  },
   props: ["routeUser", "routePlanet"],
   data: function() {
     return {
