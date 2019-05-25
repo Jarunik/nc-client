@@ -1,7 +1,13 @@
 <template>
   <span v-if="planetId !== null">
-    {{ coal }} {{ $t("C") }} | {{ ore }} {{ $t("Fe") }} | {{ copper }}
-    {{ $t("Cu") }} | {{ uranium }} {{ $t("U") }} |
+    {{ coal }} <alpha-c-box-icon :title="$t('Coal')" /> | {{ ore }}
+    <alpha-f-box-icon :title="$t('ore')" /><alpha-e-box-icon
+      :title="$t('Ore')"
+    />
+    | {{ copper }} <alpha-c-box-icon :title="$t('Copper')" /><alpha-u-box-icon
+      :title="$t('Copper')"
+    />
+    | {{ uranium }} <alpha-u-box-icon :title="$t('Uranium')" /> |
   </span>
 </template>
 
@@ -9,9 +15,19 @@
 import QuantityService from "@/services/quantity";
 import moment from "moment";
 import { mapState } from "vuex";
+import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
+import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
+import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
+import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
 
 export default {
   name: "quantityribbon",
+  components: {
+    AlphaCBoxIcon,
+    AlphaFBoxIcon,
+    AlphaEBoxIcon,
+    AlphaUBoxIcon
+  },
   data: function() {
     return {
       quantity: null,

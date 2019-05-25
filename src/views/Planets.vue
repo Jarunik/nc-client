@@ -64,7 +64,9 @@
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>
-              <span v-if="planet.id === planetId">{{ $t("⮜") }}</span>
+              <span v-if="planet.id === planetId"
+                ><earth-icon :title="$t('Home')"
+              /></span>
             </td>
           </tr>
         </tbody>
@@ -106,9 +108,13 @@ import PlanetsService from "@/services/planets";
 import SteemConnectService from "@/services/steemconnect";
 import UserService from "@/services/user";
 import { mapState } from "vuex";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "planets",
+  components: {
+    EarthIcon
+  },
   props: ["routeUser"],
   data: function() {
     return {

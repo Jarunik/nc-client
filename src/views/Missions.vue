@@ -13,7 +13,6 @@
           <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
-          <th @click="sort('cancel_trx')">{{ $t("Cancelled") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">
@@ -28,7 +27,6 @@
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>{{ $t(mission.result || "-") }}</td>
-            <td>{{ mission.cancel_trx !== null ? "-" : "+" }}</td>
           </tr>
         </tbody>
       </table>
