@@ -46,7 +46,7 @@
                 v-if="skillPossible(skill)"
                 @click="enhanceSkill(skill)"
               >
-                ↑
+                <arrow-up-bold-icon :title="$t('Enhance')" />
               </button>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
@@ -72,11 +72,13 @@ import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 
 export default {
   name: "skills",
   components: {
-    TimerSandIcon
+    TimerSandIcon,
+    ArrowUpBoldIcon
   },
   props: ["routeUser"],
   data: function() {

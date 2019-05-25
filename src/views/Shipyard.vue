@@ -47,7 +47,7 @@
                 v-if="shipPossible(ship)"
                 @click="buildShip(ship)"
               >
-                ↑
+                <arrow-up-bold-icon :title="$t('Build')" />
               </button>
             </td>
             <td v-if="chainResponse.includes(ship.longname)">
@@ -83,11 +83,13 @@ import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 
 export default {
   name: "shipyard",
   components: {
-    TimerSandIcon
+    TimerSandIcon,
+    ArrowUpBoldIcon
   },
   props: ["routeUser", "routePlanet"],
   data: function() {

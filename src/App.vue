@@ -1,44 +1,41 @@
 <template>
   <div id="app">
     <div id="navtop">
-      <router-link to="/ranking">{{ $t("Ranking") }}</router-link> |
-      <router-link to="/shop">{{ $t("Shop") }}</router-link> |
+      <router-link to="/ranking"
+        ><chevron-triple-up-icon :title="$t('Ranking')"
+      /></router-link>
+      | <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
       <router-link :to="'/' + gameUser + '/items'">
-        {{ $t("Items") }}
+        <package-variant-closed-icon :title="$t('Items')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/skills'">
-        {{ $t("Skills") }}
+        <school-icon :title="$t('Skills')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/' + planetId + '/buildings'">
-        {{ $t("Buildings") }}
+        <home-city-icon :title="$t('Buildings')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
-        {{ $t("Shipyard") }}
+        <factory-icon :title="$t('Shipyard')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/' + planetId + '/galaxy'">
-        {{ $t("Galaxy") }}
+        <map-icon :title="$t('Galaxy')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/' + planetId + '/fleet'">
-        {{ $t("Fleet") }}
+        <ship-wheel-icon :title="$t('Fleet')" />
       </router-link>
       |
       <router-link :to="'/' + gameUser + '/missions'">
-        {{ $t("Missions") }}
+        <calendar-icon :title="$t('Mission')" />
       </router-link>
       |
-
-      <router-link to="/user">{{ gameUser || $t("Set User") }}</router-link> |
-      <template v-if="loginUser === null">
-        <router-link to="/">{{ $t("Login") }}</router-link>
-      </template>
-      <template v-else>
-        <router-link to="/">{{ "@" }}</router-link>
-      </template>
+      <router-link to="/user"><account-icon :title="$t('User')"/></router-link>
+      |
+      <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
     </div>
     <div id="middle">
       <router-view />
@@ -48,7 +45,7 @@
         <QuantityRibbon />
       </router-link>
       <router-link :to="'/' + gameUser + '/planets'">
-        {{ planetName || $t("Set Planet") }}
+        <earth-icon :title="$t('Planets')" />
       </router-link>
     </div>
   </div>
@@ -58,11 +55,35 @@
 import { mapGetters } from "vuex";
 import moment from "moment";
 import QuantityRibbon from "@/components/QuantityRibbon.vue";
+import HomeCityIcon from "vue-material-design-icons/HomeCity.vue";
+import SchoolIcon from "vue-material-design-icons/School.vue";
+import CartIcon from "vue-material-design-icons/Cart.vue";
+import PackageVariantClosedIcon from "vue-material-design-icons/PackageVariantClosed.vue";
+import ChevronTripleUpIcon from "vue-material-design-icons/ChevronTripleUp.vue";
+import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
+import FactoryIcon from "vue-material-design-icons/Factory.vue";
+import MapIcon from "vue-material-design-icons/Map.vue";
+import CalendarIcon from "vue-material-design-icons/Calendar.vue";
+import LoginIcon from "vue-material-design-icons/Login.vue";
+import AccountIcon from "vue-material-design-icons/Account.vue";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "App",
   components: {
-    QuantityRibbon
+    QuantityRibbon,
+    HomeCityIcon,
+    SchoolIcon,
+    CartIcon,
+    PackageVariantClosedIcon,
+    ChevronTripleUpIcon,
+    ShipWheelIcon,
+    FactoryIcon,
+    MapIcon,
+    CalendarIcon,
+    LoginIcon,
+    AccountIcon,
+    EarthIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -208,6 +229,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
+  font-size: 140%;
 }
 
 #navtop a {
@@ -229,6 +251,7 @@ export default {
   bottom: 0;
   width: 100%;
   background-color: #100f1c;
+  font-size: 130%;
 }
 #navbottom a {
   color: white;

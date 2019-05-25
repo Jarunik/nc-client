@@ -49,7 +49,7 @@
                 v-if="buildingPossible(building, index)"
                 @click="upgradeBuilding(building, index)"
               >
-                ↑
+                <arrow-up-bold-icon :title="$t('Upgrade')" />
               </button>
             </td>
             <td v-if="chainResponse.includes(building.name)">
@@ -85,11 +85,13 @@ import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
 import moment from "moment";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 
 export default {
   name: "buildings",
   components: {
-    TimerSandIcon
+    TimerSandIcon,
+    ArrowUpBoldIcon
   },
   props: ["routeUser", "routePlanet"],
   data: function() {

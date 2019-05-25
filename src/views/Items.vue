@@ -50,7 +50,7 @@
                 @click="activateItem(item, planetId, index)"
                 :disabled="clicked.includes(item.id)"
               >
-                <white-balance-sunny-icon />
+                <white-balance-sunny-icon :title="$t('Activate')" />
               </button>
               <span v-else>
                 {{ $t("-") }}
