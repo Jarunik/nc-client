@@ -26,10 +26,22 @@
               ></span>
               <span v-else>
                 <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                <magnify-icon v-if="lookupLocation(x, y) === 'explore'" />
-                <texture-icon v-if="lookupLocation(x, y) === 'fog'" />
-                <circle-icon v-if="lookupLocation(x, y) === 'planet'" />
-                <earth-icon v-if="lookupLocation(x, y) === 'home'" />
+                <magnify-icon
+                  v-if="lookupLocation(x, y) === 'explore'"
+                  :title="$t('Exploring')"
+                />
+                <texture-icon
+                  v-if="lookupLocation(x, y) === 'fog'"
+                  :title="$t('Fog')"
+                />
+                <circle-icon
+                  v-if="lookupLocation(x, y) === 'planet'"
+                  :title="$t('Planet')"
+                />
+                <earth-icon
+                  v-if="lookupLocation(x, y) === 'home'"
+                  :title="$t('Home')"
+                />
               </span>
             </td>
           </tr>
