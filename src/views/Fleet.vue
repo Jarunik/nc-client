@@ -462,15 +462,27 @@ export default {
       this.shipFormation = {
         count: 0,
         ships: {
-          corvette: { n: 0, c: 0, pos: 0, name: "Corvette" },
-          frigate: { n: 0, c: 0, pos: 0, name: "Frigate" },
-          destroyer: { n: 0, c: 0, pos: 0, name: "Destroyer" },
-          cruiser: { n: 0, c: 0, pos: 0, name: "Cruiser" },
-          battlecruiser: { n: 0, c: 0, pos: 0, name: "Battlecruiser" },
-          carrier: { n: 0, c: 0, pos: 0, name: "Carrier" },
-          dreadnought: { n: 0, c: 0, pos: 0, name: "Dreadnought" },
-          transportship: { n: 0, c: 0, pos: 0, name: "Transporter" },
-          explorership: { n: 0, c: 0, pos: 0, name: "Explorer" }
+          corvette: { type: null, n: 0, c: 0, pos: 0, name: "Corvette" },
+          frigate: { type: null, n: 0, c: 0, pos: 0, name: "Frigate" },
+          destroyer: { type: null, n: 0, c: 0, pos: 0, name: "Destroyer" },
+          cruiser: { type: null, n: 0, c: 0, pos: 0, name: "Cruiser" },
+          battlecruiser: {
+            type: null,
+            n: 0,
+            c: 0,
+            pos: 0,
+            name: "Battlecruiser"
+          },
+          carrier: { type: null, n: 0, c: 0, pos: 0, name: "Carrier" },
+          dreadnought: { type: null, n: 0, c: 0, pos: 0, name: "Dreadnought" },
+          transportship: {
+            type: null,
+            n: 0,
+            c: 0,
+            pos: 0,
+            name: "Transporter"
+          },
+          explorership: { type: null, n: 0, c: 0, pos: 0, name: "Explorer" }
         }
       };
       this.fleet.forEach(ship => {
@@ -570,6 +582,8 @@ export default {
       );
       this.shipFormation.ships[shipClass].c = ship.cons;
       this.shipFormation.ships[shipClass].pos = this.pos;
+      this.shipFormation.ships[shipClass].type = ship.type;
+      this.shipFormation.ships[shipClass].name = ship.longname;
       this.pos++;
       // There are only 8 slots.
       if (this.pos > 8) {
@@ -620,7 +634,7 @@ export default {
     deploy() {
       // shipList = { "transportship": 2, "explorership": 1 }
       let shipList = {};
-      for (let key in this.shipFormation.ships) {
+      for (let key in this.shipFormation.ships.type) {
         if (this.shipFormation.ships[key].n > 0) {
           shipList[key] = this.shipFormation.ships[key].n;
         }
@@ -653,7 +667,7 @@ export default {
     support() {
       // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
       let shipList = {};
-      for (let key in this.shipFormation.ships) {
+      for (let key in this.shipFormation.ships.type) {
         if (this.shipFormation.ships[key].n > 0) {
           shipList[key] = {
             pos: this.shipFormation.ships[key].pos,
@@ -680,7 +694,7 @@ export default {
     attack() {
       // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
       let shipList = {};
-      for (let key in this.shipFormation.ships) {
+      for (let key in this.shipFormation.ships.type) {
         if (this.shipFormation.ships[key].n > 0) {
           shipList[key] = {
             pos: this.shipFormation.ships[key].pos,
