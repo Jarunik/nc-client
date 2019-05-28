@@ -132,6 +132,9 @@ export default {
       if (mission.cancel_trx !== null) {
         return false;
       }
+      if (mission.user !== this.loginUser) {
+        return false;
+      }
       if (mission.result != null) {
         return false;
       }
