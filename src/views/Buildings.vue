@@ -35,28 +35,31 @@
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
             <td>{{ building.current }}</td>
-            <td>{{ building.coal }}</td>
-            <td>{{ building.ore }}</td>
-            <td>{{ building.copper }}</td>
-            <td>{{ building.uranium }}</td>
+            <td>{{ building.coal === 0 ? "-" : building.coal }}</td>
+            <td>{{ building.ore === 0 ? "-" : building.ore }}</td>
+            <td>{{ building.copper === 0 ? "-" : building.copper }}</td>
+            <td>{{ building.uranium === 0 ? "-" : building.uranium }}</td>
             <td>
               {{ building.time | timePretty }}
             </td>
             <td>{{ building.busy | busyPretty }}</td>
-            <td
-              v-if="
-                loginUser !== null &&
-                  loginUser === gameUser &&
-                  building.current < 20
-              "
-            >
-              <button
-                :disabled="clicked.includes(building.name)"
-                v-if="buildingPossible(building, index)"
-                @click="upgradeBuilding(building, index)"
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.current < 20
+                "
               >
-                <arrow-up-bold-icon :title="$t('Upgrade')" />
-              </button>
+                <button
+                  :disabled="clicked.includes(building.name)"
+                  v-if="buildingPossible(building, index)"
+                  @click="upgradeBuilding(building, index)"
+                >
+                  <arrow-up-bold-icon :title="$t('Upgrade')" />
+                </button>
+              </span>
+              <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
             </td>
             <td
               v-if="
@@ -87,6 +90,9 @@
               >
                 <white-balance-sunny-icon :title="$t('Enable')" />
               </button>
+              <span v-if="isBusy(building.misc.shieldprotection_busy)"
+                ><shield-icon :title="$t('Protected')"
+              /></span>
             </td>
             <td v-if="chainResponse.includes(building.name)">
               <timer-sand-icon :title="$t('Transaction sent')" />
@@ -124,6 +130,8 @@ import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import RefreshIcon from "vue-material-design-icons/Refresh.vue";
 import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
+import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
+import ShieldIcon from "vue-material-design-icons/Shield.vue";
 
 export default {
   name: "buildings",
@@ -131,7 +139,9 @@ export default {
     TimerSandIcon,
     ArrowUpBoldIcon,
     RefreshIcon,
-    WhiteBalanceSunnyIcon
+    WhiteBalanceSunnyIcon,
+    CheckOutlineIcon,
+    ShieldIcon
   },
   props: ["routeUser", "routePlanet"],
   data: function() {
@@ -277,11 +287,23 @@ export default {
       if (building.current === 0) {
         return false;
       }
+      if (building.misc.shieldcharged === 1) {
+        return false;
+      }
+      if (this.isBusy(building.misc.shieldcharge_busy)) {
+        return false;
+      }
       return true;
     },
     enablePossible(building) {
       // TODO Check if enable possible.
       if (building.current === 0) {
+        return false;
+      }
+      if (building.misc.shieldcharged !== 1) {
+        return false;
+      }
+      if (this.isBusy(building.misc.shieldprotection_busy)) {
         return false;
       }
       return true;

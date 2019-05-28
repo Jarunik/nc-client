@@ -250,7 +250,7 @@ class SteemConnectService extends Client {
     var scJson = {};
     var scCommand = {};
     scJson["username"] = user;
-    scJson["type"] = "support";
+    scJson["type"] = "enable";
     scCommand["tr_var1"] = originPlanetId;
     scCommand["tr_var2"] = buildingName;
     scJson["command"] = scCommand;
