@@ -51,7 +51,7 @@
               </button>
             </td>
             <td v-if="chainResponse.includes(ship.longname)">
-              <timer-sand-icon />
+              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>

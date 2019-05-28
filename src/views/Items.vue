@@ -58,7 +58,7 @@
             </td>
             <td>
               <span v-if="chainResponse.includes(item.id)"
-                ><timer-sand-icon
+                ><timer-sand-icon :title="$t('Transaction sent')"
               /></span>
             </td>
           </tr>

@@ -53,7 +53,7 @@
               <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
-              <timer-sand-icon />
+              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>
