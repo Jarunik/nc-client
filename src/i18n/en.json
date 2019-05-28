@@ -1,5 +1,4 @@
 {
-  "Welcome": "Welcome",
   "shipyard": "Shipyard",
   "oredepot": "Ore Depot",
   "copperdepot": "Copper Depot",
@@ -27,9 +26,14 @@
   "support": "Support",
   "deploy": "Deploy",
   "cancel": "Cancel",
-  "nothing_found": "Nothing Found",
-  "nothing_happened": "Nothing Happend",
   "explorespace": "Explore Space",
-  "explorer_lost": "Explorer Lost",
-  "planet_found": "Planet Found"
+  "shieldgenerator": "Shield Generator",
+  "armorimprove": "Armor Improvement",
+  "bulletimprove": "Bullet Improvement",
+  "laserimprove": "Laser Improvement",
+  "regenerationbonus": "Regeneration Bonus",
+  "rocketimprove": "Rocket Improvement",
+  "shieldimprove": "Shield Improvement",
+  "structureimprove": "Structure Improvement",
+  "repairbonus": "Repair Bonus"
 }

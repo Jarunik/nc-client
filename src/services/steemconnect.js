@@ -245,6 +245,34 @@ class SteemConnectService extends Client {
 
     super.customJson([], [user], [appId], finalJson, cb);
   }
+
+  enable(user, originPlanetId, buildingName, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "enable";
+    scCommand["tr_var1"] = originPlanetId;
+    scCommand["tr_var2"] = buildingName;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  charge(user, originPlanetId, buildingName, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "charge";
+    scCommand["tr_var1"] = originPlanetId;
+    scCommand["tr_var2"] = buildingName;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
 }
 
 export default new SteemConnectService();

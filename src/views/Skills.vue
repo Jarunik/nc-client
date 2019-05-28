@@ -26,28 +26,31 @@
           <tr v-for="skill in sortedSkills" :key="skill.name">
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
-            <td>{{ skill.coal }}</td>
-            <td>{{ skill.ore }}</td>
-            <td>{{ skill.copper }}</td>
-            <td>{{ skill.uranium }}</td>
+            <td>{{ skill.coal === 0 ? "-" : skill.coal }}</td>
+            <td>{{ skill.ore === 0 ? "-" : skill.ore }}</td>
+            <td>{{ skill.copper === 0 ? "-" : skill.copper }}</td>
+            <td>{{ skill.uranium === 0 ? "-" : skill.uranium }}</td>
             <td>
               {{ skill.time | timePretty }}
             </td>
             <td>{{ skill.busy | busyPretty }}</td>
-            <td
-              v-if="
-                loginUser !== null &&
-                  loginUser === gameUser &&
-                  skill.current < 20
-              "
-            >
-              <button
-                :disabled="clicked.includes(skill.name)"
-                v-if="skillPossible(skill)"
-                @click="enhanceSkill(skill)"
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    skill.current < 20
+                "
               >
-                <arrow-up-bold-icon :title="$t('Enhance')" />
-              </button>
+                <button
+                  :disabled="clicked.includes(skill.name)"
+                  v-if="skillPossible(skill)"
+                  @click="enhanceSkill(skill)"
+                >
+                  <arrow-up-bold-icon :title="$t('Enhance')" />
+                </button>
+              </span>
+              <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
               <timer-sand-icon />
@@ -73,12 +76,14 @@ import moment from "moment";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
+import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
 
 export default {
   name: "skills",
   components: {
     TimerSandIcon,
-    ArrowUpBoldIcon
+    ArrowUpBoldIcon,
+    CheckOutlineIcon
   },
   props: ["routeUser"],
   data: function() {
@@ -120,6 +125,9 @@ export default {
       }
     },
     timePretty(time) {
+      if (time === 0) {
+        return "-";
+      }
       return moment.duration(parseInt(time), "seconds").humanize();
     }
   },

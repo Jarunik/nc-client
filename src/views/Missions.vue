@@ -10,6 +10,7 @@
           <th @click="sort('type')">{{ $t("Type") }}</th>
           <th @click="sort('start_x')">{{ $t("Origin") }}</th>
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
           <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
@@ -19,6 +20,7 @@
             <td>{{ $t(mission.type) }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>{{ mission.ships.total }}</td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
             <td>
               <span v-if="mission.return !== null">
@@ -26,7 +28,7 @@
               </span>
               <span v-else>{{ $t("-") }}</span>
             </td>
-            <td>{{ $t(mission.result || "-") }}</td>
+            <td>{{ $t(parseResult(mission.result) || "-") }}</td>
           </tr>
         </tbody>
       </table>
@@ -73,8 +75,13 @@ export default {
           if (this.currentDir === "desc") modifier = -1;
           if (a[this.currentSort] === null) return -1 * modifier;
           if (b[this.currentSort] === null) return 1 * modifier;
-          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          if (this.currentSort === "ships.total") {
+            if (a.ships.total < b.ships.total) return -1 * modifier;
+            if (a.ships.total > b.ships.total) return 1 * modifier;
+          } else {
+            if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+            if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          }
           return 0;
         });
       } else {
@@ -96,6 +103,35 @@ export default {
         this.currentDir = this.currentDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    parseResult(result) {
+      if (result === "nothing_found") {
+        return "Nothing found";
+      }
+      if (result === "planet_found") {
+        return "Planet found";
+      }
+      if (result === "nothing_happened") {
+        return "Nothing Happened";
+      }
+      if (result === "cancel_support") {
+        return "Cancel support";
+      }
+      if (result === "cancel") {
+        return "Cancel";
+      }
+      if (result === "explorer_lost") {
+        return "Explorer lost";
+      }
+      if (result === "2") {
+        return "Victory";
+      }
+      if (result === "1") {
+        return "Defeat";
+      }
+      if (result === "0") {
+        return "Draw";
+      }
     }
   }
 };

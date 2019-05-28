@@ -14,14 +14,20 @@
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
           <th @click="sort('current')">{{ $t("Level") }}</th>
-          <th @click="sort('coal')">{{ $t("Coal") }}</th>
-          <th @click="sort('ore')">{{ $t("Ore") }}</th>
-          <th @click="sort('copper')">{{ $t("Copper") }}</th>
-          <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
-          <th @click="sort('busy')">{{ $t("Upgrading") }}</th>
+          <th @click="sort('busy')">{{ $t("Busy") }}</th>
           <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Upgrade") }}
+          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Charge") }}
+          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Activate") }}
           </th>
           <th>{{ $t(" ") }}</th>
         </thead>
@@ -29,31 +35,67 @@
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
             <td>{{ building.current }}</td>
-            <td>{{ building.coal }}</td>
-            <td>{{ building.ore }}</td>
-            <td>{{ building.copper }}</td>
-            <td>{{ building.uranium }}</td>
+            <td>{{ building.coal === 0 ? "-" : building.coal }}</td>
+            <td>{{ building.ore === 0 ? "-" : building.ore }}</td>
+            <td>{{ building.copper === 0 ? "-" : building.copper }}</td>
+            <td>{{ building.uranium === 0 ? "-" : building.uranium }}</td>
             <td>
               {{ building.time | timePretty }}
             </td>
             <td>{{ building.busy | busyPretty }}</td>
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.current < 20
+                "
+              >
+                <button
+                  :disabled="clicked.includes(building.name)"
+                  v-if="buildingPossible(building, index)"
+                  @click="upgradeBuilding(building, index)"
+                >
+                  <arrow-up-bold-icon :title="$t('Upgrade')" />
+                </button>
+              </span>
+              <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
+            </td>
             <td
               v-if="
                 loginUser !== null &&
                   loginUser === gameUser &&
-                  building.current < 20
+                  building.name === 'shieldgenerator'
               "
             >
               <button
                 :disabled="clicked.includes(building.name)"
-                v-if="buildingPossible(building, index)"
-                @click="upgradeBuilding(building, index)"
+                v-if="chargePossible(building, index)"
+                @click="charge(building, index)"
               >
-                <arrow-up-bold-icon :title="$t('Upgrade')" />
+                <refresh-icon :title="$t('Charge')" />
               </button>
             </td>
+            <td
+              v-if="
+                loginUser !== null &&
+                  loginUser === gameUser &&
+                  building.name === 'shieldgenerator'
+              "
+            >
+              <button
+                :disabled="clicked.includes(building.name)"
+                v-if="enablePossible(building, index)"
+                @click="enable(building, index)"
+              >
+                <white-balance-sunny-icon :title="$t('Enable')" />
+              </button>
+              <span v-if="isBusy(building.misc.shieldprotection_busy)"
+                ><shield-icon :title="$t('Protected')"
+              /></span>
+            </td>
             <td v-if="chainResponse.includes(building.name)">
-              <timer-sand-icon />
+              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>
@@ -86,12 +128,20 @@ import { mapState } from "vuex";
 import moment from "moment";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
+import RefreshIcon from "vue-material-design-icons/Refresh.vue";
+import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
+import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
+import ShieldIcon from "vue-material-design-icons/Shield.vue";
 
 export default {
   name: "buildings",
   components: {
     TimerSandIcon,
-    ArrowUpBoldIcon
+    ArrowUpBoldIcon,
+    RefreshIcon,
+    WhiteBalanceSunnyIcon,
+    CheckOutlineIcon,
+    ShieldIcon
   },
   props: ["routeUser", "routePlanet"],
   data: function() {
@@ -133,6 +183,9 @@ export default {
       }
     },
     timePretty(time) {
+      if (time === 0) {
+        return "-";
+      }
       return moment.duration(parseInt(time), "seconds").humanize();
     }
   },
@@ -217,6 +270,44 @@ export default {
       }
       return true;
     },
+    chargePossible(building) {
+      // TODO Check if charge possible.
+      if (this.coal < building.coal) {
+        return false;
+      }
+      if (this.ore < building.ore) {
+        return false;
+      }
+      if (this.copper < building.copper) {
+        return false;
+      }
+      if (this.uranium < building.uranium) {
+        return false;
+      }
+      if (building.current === 0) {
+        return false;
+      }
+      if (building.misc.shieldcharged === 1) {
+        return false;
+      }
+      if (this.isBusy(building.misc.shieldcharge_busy)) {
+        return false;
+      }
+      return true;
+    },
+    enablePossible(building) {
+      // TODO Check if enable possible.
+      if (building.current === 0) {
+        return false;
+      }
+      if (building.misc.shieldcharged !== 1) {
+        return false;
+      }
+      if (this.isBusy(building.misc.shieldprotection_busy)) {
+        return false;
+      }
+      return true;
+    },
     async getQuantity() {
       const response = await QuantityService.get(this.planetId);
       this.quantity = response;
@@ -293,6 +384,34 @@ export default {
         this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    charge(building) {
+      this.clicked.push(building.name);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.charge(
+        this.loginUser,
+        this.planetId,
+        building.name,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.chainResponse.push(building.name);
+          }
+        }
+      );
+    },
+    enable(building) {
+      this.clicked.push(building.name);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.enable(
+        this.loginUser,
+        this.planetId,
+        building.name,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.chainResponse.push(building.name);
+          }
+        }
+      );
     }
   },
   beforeDestroy() {

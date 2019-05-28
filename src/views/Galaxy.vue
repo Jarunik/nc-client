@@ -35,25 +35,16 @@
           </tr>
         </tbody>
       </table>
-      <p>
-        ({{ focusX }}/{{ focusY }})
-        <button @click="goTo(focusX, focusY)">{{ $t("Go") }}</button>
-      </p>
-      <p>
-        {{ $t("Home") }}
-        <button @click="goTo(posX, posY)">{{ $t("Go") }}</button>
-      </p>
-      <p>
-        {{ $t("Earth") }} <button @click="goTo(0, 0)">{{ $t("Go") }}</button>
-      </p>
-      <p>
-        <input v-model="search" placeholder="(x/y)" />
-        <button @click="goToSearch(search)">{{ $t("Go") }}</button>
-      </p>
-      <p>
-        ({{ focusX }}/{{ focusY }})
-        <button @click="goFleet(focusX, focusY)">{{ $t("Send Fleet") }}</button>
-      </p>
+      <input v-model="search" placeholder="(x/y)" />
+      <button @click="goToSearch(search)">
+        <target-variant-icon :title="$t('Focus')" />
+      </button>
+      <button @click="goTo(posX, posY)">
+        <earth-icon :title="$t('Home')" />
+      </button>
+      <button @click="goFleet(focusX, focusY)">
+        <ship-wheel-icon :title="$t('Fleet')" />
+      </button>
     </template>
   </div>
 </template>
@@ -65,6 +56,8 @@ import CircleIcon from "vue-material-design-icons/Circle.vue";
 import MagnifyIcon from "vue-material-design-icons/Magnify.vue";
 import TextureIcon from "vue-material-design-icons/Texture.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
+import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
 
 export default {
   name: "galaxy",
@@ -72,7 +65,9 @@ export default {
     CircleIcon,
     MagnifyIcon,
     TextureIcon,
-    EarthIcon
+    EarthIcon,
+    TargetVariantIcon,
+    ShipWheelIcon
   },
   props: ["routeUser", "routePlanet"],
   data: function() {
@@ -108,6 +103,7 @@ export default {
         yCoordinate = this.posY;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
+        this.search = "(" + this.focusX + "/" + this.focusY + ")";
       }
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
@@ -117,6 +113,7 @@ export default {
         yCoordinate = this.$route.query.y;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
+        this.search = "(" + this.focusX + "/" + this.focusY + ")";
       }
       const response = await GalaxyService.galaxy(xCoordinate, yCoordinate);
       this.galaxy = response;
@@ -130,6 +127,7 @@ export default {
     focus(tableX, tableY) {
       this.focusX = this.coordinateX(tableX);
       this.focusY = this.coordinateY(tableY);
+      this.search = "(" + this.focusX + "/" + this.focusY + ")";
     },
     lookupLocation(tableX, tableY) {
       let posX = this.coordinateX(tableX);
@@ -167,11 +165,11 @@ export default {
 
       return icon;
     },
-    goTo(goX, goY) {
+    goTo(realX, realY) {
       let newPath = this.$route.path;
       this.$router.push({
         path: newPath,
-        query: { x: goX, y: goY }
+        query: { x: realX, y: realY }
       });
       this.getGalaxy();
     },
@@ -183,11 +181,11 @@ export default {
         .split("/");
       this.goTo(split[0], split[1]);
     },
-    goFleet(goX, goY) {
+    goFleet(realX, realY) {
       let newPath = this.$route.path.replace("galaxy", "fleet");
       this.$router.push({
         path: newPath,
-        query: { x: goX, y: goY }
+        query: { x: realX, y: realY }
       });
     }
   }
