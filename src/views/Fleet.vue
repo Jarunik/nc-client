@@ -555,6 +555,8 @@ export default {
       this.currentSort = s;
     },
     add(ship, quantity) {
+      var shipClass = ship.type;
+      shipClass = shipClass.replace(/[0-9]/g, "");
       if (this.slowestSpeed === null) {
         this.slowestSpeed = ship.speed;
       }
@@ -562,12 +564,12 @@ export default {
         this.slowestSpeed = ship.speed;
       }
       this.shipFormation.count = this.shipFormation.count + 1;
-      this.shipFormation.ships[ship.type].n = Math.min(
+      this.shipFormation.ships[shipClass].n = Math.min(
         quantity,
         ship.available
       );
-      this.shipFormation.ships[ship.type].c = ship.cons;
-      this.shipFormation.ships[ship.type].pos = this.pos;
+      this.shipFormation.ships[shipClass].c = ship.cons;
+      this.shipFormation.ships[shipClass].pos = this.pos;
       this.pos++;
       // There are only 8 slots.
       if (this.pos > 8) {

@@ -17,19 +17,40 @@
               <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
                 ><font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                  <magnify-icon v-if="lookupLocation(x, y) === 'explore'" />
-                  <texture-icon v-if="lookupLocation(x, y) === 'fog'" />
-                  <earth-icon v-if="lookupLocation(x, y) === 'home'" />
+                  <magnify-icon
+                    v-if="lookupLocation(x, y) === 'explore'"
+                    :title="$t('Exploring')"
+                  />
+                  <texture-icon
+                    v-if="lookupLocation(x, y) === 'fog'"
+                    :title="$t('Fog')"
+                  />
+                  <earth-icon
+                    v-if="lookupLocation(x, y) === 'home'"
+                    :title="$t('Home')"
+                  />
                   <circle-icon
                     v-if="lookupLocation(x, y) === 'planet'"
                   /> </font
               ></span>
               <span v-else>
                 <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                <magnify-icon v-if="lookupLocation(x, y) === 'explore'" />
-                <texture-icon v-if="lookupLocation(x, y) === 'fog'" />
-                <circle-icon v-if="lookupLocation(x, y) === 'planet'" />
-                <earth-icon v-if="lookupLocation(x, y) === 'home'" />
+                <magnify-icon
+                  v-if="lookupLocation(x, y) === 'explore'"
+                  :title="$t('Exploring')"
+                />
+                <texture-icon
+                  v-if="lookupLocation(x, y) === 'fog'"
+                  :title="$t('Fog')"
+                />
+                <circle-icon
+                  v-if="lookupLocation(x, y) === 'planet'"
+                  :title="$t('Planet')"
+                />
+                <earth-icon
+                  v-if="lookupLocation(x, y) === 'home'"
+                  :title="$t('Home')"
+                />
               </span>
             </td>
           </tr>
