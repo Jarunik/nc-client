@@ -14,6 +14,8 @@
           <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">
@@ -29,6 +31,18 @@
               <span v-else>{{ $t("-") }}</span>
             </td>
             <td>{{ $t(parseResult(mission.result) || "-") }}</td>
+            <td>
+              <button
+                :disabled="clicked.includes(mission.id)"
+                v-if="cancelPossible(mission)"
+                @click="cancel(mission)"
+              >
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(mission.id)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -46,15 +60,25 @@
 <script>
 import MissionsService from "@/services/missions";
 import { mapState } from "vuex";
+import CancelIcon from "vue-material-design-icons/Cancel.vue";
+import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import SteemConnectService from "@/services/steemconnect";
+import moment from "moment";
 
 export default {
   name: "missions",
+  components: {
+    CancelIcon,
+    TimerSandIcon
+  },
   props: ["routeUser"],
   data: function() {
     return {
       missions: null,
       currentSort: "arrival",
-      currentDir: "desc"
+      currentDir: "desc",
+      clicked: [],
+      chainResponse: []
     };
   },
   async mounted() {
@@ -103,6 +127,44 @@ export default {
         this.currentDir = this.currentDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    cancelPossible(mission) {
+      if (mission.cancel_trx !== null) {
+        return false;
+      }
+      if (mission.result != null) {
+        return false;
+      }
+      if (!this.isOutgoing(mission.arrival)) {
+        return false;
+      }
+      return true;
+    },
+    cancel(mission) {
+      this.clicked.push(mission.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.cancel(
+        this.loginUser,
+        mission.id,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.chainResponse.push(mission.id);
+          }
+        }
+      );
+    },
+    isOutgoing(arrival) {
+      var arrivalUntil = moment(new Date(arrival * 1000));
+      var now = moment.utc();
+      if (arrivalUntil === 0) {
+        return false;
+      } else {
+        if (now.isAfter(arrivalUntil)) {
+          return false;
+        } else {
+          return true;
+        }
+      }
     },
     parseResult(result) {
       if (result === "nothing_found") {
