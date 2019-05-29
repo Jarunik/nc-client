@@ -47,7 +47,7 @@
             <td>
               <router-link
                 v-if="mission.type === 'attack'"
-                :to="{ path: 'battle/' + mission.id }"
+                :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
               >
             </td>

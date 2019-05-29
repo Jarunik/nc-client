@@ -1,9 +1,9 @@
 import ApiService from "@/services/api";
 
 class BattleService {
-  async all(userId, missionId) {
+  async all(missionId) {
     const response = await ApiService.get(
-      `/loadbattle?user=${userId}&mission_id=${missionId}`
+      `/loadbattle?mission_id=${missionId}`
     );
 
     return response;

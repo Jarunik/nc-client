@@ -115,7 +115,7 @@ export default {
       await this.getBattle();
     },
     async getBattle() {
-      const response = await BattleService.all(this.routeUser, this.missionId);
+      const response = await BattleService.all(this.missionId);
       this.battle = response;
     }
   }
