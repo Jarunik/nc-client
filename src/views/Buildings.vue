@@ -61,38 +61,40 @@
               </span>
               <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
             </td>
-            <td
-              v-if="
-                loginUser !== null &&
-                  loginUser === gameUser &&
-                  building.name === 'shieldgenerator'
-              "
-            >
+            <td>
               <button
                 :disabled="clicked.includes(building.name)"
-                v-if="chargePossible(building, index)"
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.name === 'shieldgenerator' &&
+                    chargePossible(building, index)
+                "
                 @click="charge(building, index)"
               >
                 <refresh-icon :title="$t('Charge')" />
               </button>
             </td>
-            <td
-              v-if="
-                loginUser !== null &&
-                  loginUser === gameUser &&
-                  building.name === 'shieldgenerator'
-              "
-            >
-              <button
-                :disabled="clicked.includes(building.name)"
-                v-if="enablePossible(building, index)"
-                @click="enable(building, index)"
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.name === 'shieldgenerator' &&
+                    enablePossible(building, index)
+                "
               >
-                <white-balance-sunny-icon :title="$t('Enable')" />
-              </button>
-              <span v-if="isBusy(building.misc.shieldprotection_busy)"
-                ><shield-icon :title="$t('Protected')"
-              /></span>
+                <button
+                  :disabled="clicked.includes(building.name)"
+                  v-if="enablePossible(building, index)"
+                  @click="enable(building, index)"
+                >
+                  <white-balance-sunny-icon :title="$t('Enable')" />
+                </button>
+                <span v-if="isBusy(building.misc.shieldprotection_busy)"
+                  ><shield-icon :title="$t('Protected')"
+                /></span>
+              </span>
             </td>
             <td v-if="chainResponse.includes(building.name)">
               <timer-sand-icon :title="$t('Transaction sent')" />
