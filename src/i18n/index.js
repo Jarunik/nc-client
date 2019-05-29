@@ -14,5 +14,5 @@ const messages = {
 export default new VueI18n({
   locale: store.getters["game/language"],
   messages,
-  silentTranslationWarn: true
+  silentTranslationWarn: false
 });

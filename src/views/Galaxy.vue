@@ -31,6 +31,7 @@
                   />
                   <circle-icon
                     v-if="lookupLocation(x, y) === 'planet'"
+                    :title="$t('Planet')"
                   /> </font
               ></span>
               <span v-else>

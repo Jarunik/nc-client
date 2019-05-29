@@ -1,7 +1,7 @@
 <template>
   <span v-if="planetId !== null">
     {{ coal }} <alpha-c-box-icon :title="$t('Coal')" /> | {{ ore }}
-    <alpha-f-box-icon :title="$t('ore')" /><alpha-e-box-icon
+    <alpha-f-box-icon :title="$t('Ore')" /><alpha-e-box-icon
       :title="$t('Ore')"
     />
     | {{ copper }} <alpha-c-box-icon :title="$t('Copper')" /><alpha-u-box-icon

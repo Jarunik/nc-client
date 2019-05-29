@@ -11,10 +11,10 @@
         <thead>
           <th @click="sort('name')">{{ $t("Skill") }}</th>
           <th @click="sort('current')">{{ $t("Level") }}</th>
-          <th @click="sort('coal')">{{ $t("Coal") }}</th>
-          <th @click="sort('ore')">{{ $t("Ore") }}</th>
-          <th @click="sort('copper')">{{ $t("Copper") }}</th>
-          <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
           <th v-if="loginUser !== null && loginUser === gameUser">

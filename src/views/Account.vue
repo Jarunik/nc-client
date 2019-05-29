@@ -25,7 +25,7 @@
       <i>
         {{
           $t(
-            "Please use the offical client if you don't want to test an alpha version."
+            "Please use the official client if you don't want to test an alpha version."
           )
         }}
       </i>

@@ -14,10 +14,10 @@
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
           <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
-          <th @click="sort('coal')">{{ $t("Coal") }}</th>
-          <th @click="sort('ore')">{{ $t("Ore") }}</th>
-          <th @click="sort('copper')">{{ $t("Copper") }}</th>
-          <th @click="sort('uranium')">{{ $t("Uranium") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('attack')">{{ $t("Attack") }}</th>
           <th @click="sort('defense')">{{ $t("Defense") }}</th>
@@ -253,12 +253,6 @@ export default {
         return false;
       }
       if (ship.skill < 20) {
-        return false;
-      }
-      if (ship.variant_name === "laser") {
-        return false;
-      }
-      if (ship.variant_name === "bullet") {
         return false;
       }
       return true;

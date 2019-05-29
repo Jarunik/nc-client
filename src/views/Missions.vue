@@ -15,6 +15,7 @@
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th @click="sort('id')">{{ $t("Details") }}</th>
           <th>{{ $t(" ") }}</th>
         </thead>
         <tbody>
@@ -23,10 +24,10 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>{{ mission.ships.total }}</td>
-            <td>{{ moment.unix(mission.arrival, "seconds").format("LLL") }}</td>
+            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
             <td>
               <span v-if="mission.return !== null">
-                {{ moment.unix(mission.return, "seconds").format("LLL") }}
+                {{ moment.unix(mission.return, "seconds").format("lll") }}
               </span>
               <span v-else>{{ $t("-") }}</span>
             </td>
@@ -42,6 +43,13 @@
             </td>
             <td v-if="chainResponse.includes(mission.id)">
               <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+            <td>
+              <router-link
+                v-if="mission.type === 'attack'"
+                :to="{ path: 'battle/' + mission.id }"
+                >{{ $t("Log") }}</router-link
+              >
             </td>
           </tr>
         </tbody>
