@@ -7,7 +7,7 @@
     | {{ copper }} <alpha-c-box-icon :title="$t('Copper')" /><alpha-u-box-icon
       :title="$t('Copper')"
     />
-    | {{ uranium }} <alpha-u-box-icon :title="$t('Uranium')" /> |
+    | {{ uranium }} <alpha-u-box-icon :title="$t('Uranium')" />
   </span>
 </template>
 

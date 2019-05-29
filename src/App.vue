@@ -41,11 +41,10 @@
       <router-view />
     </div>
     <div id="navbottom">
+      <PlanetNav :routeUser="gameUser" />
+      <br />
       <router-link :to="'/' + gameUser + '/' + planetId + '/production'">
         <QuantityRibbon />
-      </router-link>
-      <router-link :to="'/' + gameUser + '/planets'">
-        <earth-icon :title="$t('Planets')" />
       </router-link>
     </div>
   </div>
@@ -55,6 +54,7 @@
 import { mapGetters } from "vuex";
 import moment from "moment";
 import QuantityRibbon from "@/components/QuantityRibbon.vue";
+import PlanetNav from "@/components/PlanetNav.vue";
 import HomeCityIcon from "vue-material-design-icons/HomeCity.vue";
 import SchoolIcon from "vue-material-design-icons/School.vue";
 import CartIcon from "vue-material-design-icons/Cart.vue";
@@ -66,12 +66,12 @@ import MapIcon from "vue-material-design-icons/Map.vue";
 import CalendarIcon from "vue-material-design-icons/Calendar.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
-import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "App",
   components: {
     QuantityRibbon,
+    PlanetNav,
     HomeCityIcon,
     SchoolIcon,
     CartIcon,
@@ -82,8 +82,7 @@ export default {
     MapIcon,
     CalendarIcon,
     LoginIcon,
-    AccountIcon,
-    EarthIcon
+    AccountIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -243,7 +242,7 @@ export default {
 
 #middle {
   padding-top: 60px;
-  padding-bottom: 60px;
+  padding-bottom: 120px;
 }
 #navbottom {
   padding: 15px;
