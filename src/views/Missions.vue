@@ -43,9 +43,15 @@
             </td>
             <td>
               <router-link
-                v-if="mission.type === 'attack'"
+                v-if="mission.type === 'attack' && mission.result !== null"
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
+              >&nbsp;
+              <router-link
+                v-if="mission.type === 'attack' && mission.result !== null"
+                :to="{ path: '/replay/' + mission.id }"
+              >
+                {{ $t("Replay") }}</router-link
               >
             </td>
           </tr>

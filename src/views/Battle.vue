@@ -12,7 +12,9 @@
           <font v-if="mission.result === 2" color="green">{{
             $t("Winner")
           }}</font>
-          <font v-if="mission.result === 1" color="red">{{ $t("Loser") }}</font>
+          <font v-if="mission.result === 1" color="red">{{
+            $t("Looser")
+          }}</font>
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
@@ -79,7 +81,9 @@
 
         <h3>
           {{ $t("Defender") }} {{ mission.defender }}
-          <font v-if="mission.result === 2" color="red">{{ $t("Loser") }}</font>
+          <font v-if="mission.result === 2" color="red">{{
+            $t("Looser")
+          }}</font>
           <font v-if="mission.result === 1" color="green">{{
             $t("Winner")
           }}</font>

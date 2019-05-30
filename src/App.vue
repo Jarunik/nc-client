@@ -29,6 +29,10 @@
         <ship-wheel-icon :title="$t('Fleet')" />
       </router-link>
       |
+      <router-link :to="'/simulator'">
+        <animation-play-icon :title="$t('Simulator')" />
+      </router-link>
+      |
       <router-link :to="'/missions'">
         <calendar-icon :title="$t('Mission')" />
       </router-link>
@@ -71,6 +75,7 @@ import CalendarIcon from "vue-material-design-icons/Calendar.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 
 export default {
   name: "App",
@@ -88,7 +93,8 @@ export default {
     CalendarIcon,
     LoginIcon,
     AccountIcon,
-    EarthIcon
+    EarthIcon,
+    AnimationPlayIcon
   },
   computed: {
     // Needed to set i18n.locale to change language

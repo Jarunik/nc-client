@@ -189,7 +189,6 @@
   "Attacker": "Attacker",
   "Defender": "Defender",
   "Winner": "Winner",
-  "Loser":"Loser",
-  "Draw": "Draw"
+  "Looser":"Looser"
 
 }
