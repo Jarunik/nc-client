@@ -40,7 +40,7 @@
                     :style="{
                       width:
                         (attacker.structure /
-                          mission.inital_attacker_ships[a].structure) *
+                          mission.initial_attacker_ships[a].structure) *
                           100 +
                         '%'
                     }"
