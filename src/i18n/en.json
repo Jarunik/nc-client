@@ -183,6 +183,10 @@
   "Gifting will hand over ownership of your planet to someone else and you can't claim it back.":"Gifting will hand over ownership of your planet to someone else and you can't claim it back.",
   "Enable": "Enable",
   "No Result": "No Result",
-  "Exploring": "Exploring"
+  "Exploring": "Exploring",
+  "Battle": "Battle",
+  "Loot": "Loot",
+  "Attacker": "Attacker",
+  "Defender": "Defender"
 
 }

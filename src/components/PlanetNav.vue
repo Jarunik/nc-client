@@ -11,7 +11,7 @@
           </span></font
         ></span
       >
-      <span v-else @click="setPlanet(planet)">
+      <span class="pointer" v-else @click="setPlanet(planet)">
         {{ planet.name | shorten }}
       </span>
     </span>
@@ -75,3 +75,8 @@ export default {
   }
 };
 </script>
+<style>
+.pointer {
+  cursor: pointer;
+}
+</style>
