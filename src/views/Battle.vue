@@ -55,7 +55,7 @@
                     :style="{
                       width:
                         (attacker.armor /
-                          mission.inital_attacker_ships[a].armor) *
+                          mission.initial_attacker_ships[a].armor) *
                           100 +
                         '%'
                     }"
@@ -68,7 +68,7 @@
                     :style="{
                       width:
                         (attacker.shield /
-                          mission.inital_attacker_ships[a].shield) *
+                          mission.initial_attacker_ships[a].shield) *
                           100 +
                         '%'
                     }"
@@ -114,7 +114,7 @@
                     :style="{
                       width:
                         (defender.structure /
-                          mission.inital_defender_ships[d].structure) *
+                          mission.initial_defender_ships[d].structure) *
                           100 +
                         '%'
                     }"
@@ -127,7 +127,7 @@
                     :style="{
                       width:
                         (defender.armor /
-                          mission.inital_defender_ships[d].armor) *
+                          mission.initial_defender_ships[d].armor) *
                           100 +
                         '%'
                     }"
@@ -140,7 +140,7 @@
                     :style="{
                       width:
                         (defender.shield /
-                          mission.inital_defender_ships[d].shield) *
+                          mission.initial_defender_ships[d].shield) *
                           100 +
                         '%'
                     }"
@@ -173,8 +173,7 @@ export default {
   props: ["missionId"],
   data: function() {
     return {
-      battle: null,
-      health: 100
+      battle: null
     };
   },
   async mounted() {
