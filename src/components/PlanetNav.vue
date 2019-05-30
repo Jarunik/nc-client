@@ -28,7 +28,6 @@ export default {
   components: {
     EarthIcon
   },
-  props: ["routeUser"],
   data: function() {
     return {
       planets: null
@@ -55,7 +54,7 @@ export default {
       await this.getPlanets();
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.routeUser);
+      const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
     },
     setPlanet(planet) {
