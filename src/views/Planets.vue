@@ -1,10 +1,7 @@
 <template>
   <div class="planets">
     <h1>{{ $t("Planets") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>{{ $t("User: ") + routeUser }}</p>
-    </template>
-    <template v-if="routeUser !== 'null'">
+    <template v-if="gameUser !== 'null'">
       <table>
         <thead>
           <th>{{ $t("Planet Identifier") }}</th>
@@ -23,7 +20,7 @@
             <td>({{ planet.posx }}/{{ planet.posy }})</td>
             <td>{{ planet.name }}</td>
             <td>
-              <span v-if="routeUser === loginUser">
+              <span v-if="gameUser === loginUser">
                 <button @click="toggleRename(planet.id)">...</button>
                 <template v-if="planet.id !== null && showRename === planet.id">
                   <input
@@ -44,7 +41,7 @@
               <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td v-if="!giftingLock">
-              <span v-if="routeUser === loginUser && planet.starter !== 1">
+              <span v-if="gameUser === loginUser && planet.starter !== 1">
                 <button @click="toggleGifting(planet.id)">...</button>
                 <template
                   v-if="planet.id !== null && showGifting === planet.id"
@@ -115,7 +112,6 @@ export default {
   components: {
     EarthIcon
   },
-  props: ["routeUser"],
   data: function() {
     return {
       planets: null,
@@ -145,7 +141,7 @@ export default {
       await this.getPlanets();
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.routeUser);
+      const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
     },
     setPlanet(planet) {

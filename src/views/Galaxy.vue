@@ -1,14 +1,6 @@
 <template>
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-        <template v-if="routeUser !== planetId">
-          <br />{{ $t("Planet: ") + routePlanet }}
-        </template>
-      </p>
-    </template>
     <template v-if="this.galaxy != null">
       <table>
         <tbody>
@@ -80,6 +72,7 @@ import TextureIcon from "vue-material-design-icons/Texture.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
 import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "galaxy",
@@ -91,7 +84,6 @@ export default {
     TargetVariantIcon,
     ShipWheelIcon
   },
-  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       galaxy: null,
@@ -102,6 +94,12 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_POSY:
+          this.prepareComponent();
+      }
+    });
   },
   computed: {
     ...mapState({

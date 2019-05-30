@@ -1,10 +1,7 @@
 <template>
   <div class="missions">
     <h1>{{ $t("Missions") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>{{ $t("User: ") + routeUser }}</p>
-    </template>
-    <template v-if="routeUser !== 'null'">
+    <template v-if="gameUser !== 'null'">
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
@@ -79,7 +76,6 @@ export default {
     CancelIcon,
     TimerSandIcon
   },
-  props: ["routeUser"],
   data: function() {
     return {
       missions: null,
@@ -126,7 +122,7 @@ export default {
       await this.getMissions();
     },
     async getMissions() {
-      const response = await MissionsService.all(this.routeUser);
+      const response = await MissionsService.all(this.gameUser);
       this.missions = response;
     },
     sort(s) {

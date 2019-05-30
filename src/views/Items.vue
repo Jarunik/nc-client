@@ -1,11 +1,6 @@
 <template>
   <div class="items">
     <h1>{{ $t("Items") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-      </p>
-    </template>
     <template v-if="items !== null && items.length > 0">
       <table>
         <thead>
@@ -20,7 +15,7 @@
             <td>{{ $t(item.name) }}</td>
             <td>{{ item.total }}</td>
             <td>
-              <span v-if="routeUser === loginUser">
+              <span v-if="gameUser === loginUser">
                 <button @click="toggleGift(item.id)">
                   ...
                 </button>
@@ -45,7 +40,7 @@
             <td>
               <button
                 v-if="
-                  routeUser === loginUser && item.total > 0 && planetId !== null
+                  gameUser === loginUser && item.total > 0 && planetId !== null
                 "
                 @click="activateItem(item, planetId, index)"
                 :disabled="clicked.includes(item.id)"
@@ -66,13 +61,13 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="routeUser !== 'null'">
+      <template v-if="gameUser !== 'null'">
         <p>
           {{ $t("You have no items. Buy some in the") }}
           <router-link to="/shop">{{ $t("shop") }}</router-link> .
         </p>
       </template>
-      <template v-if="routeUser === 'null'">
+      <template v-if="gameUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
@@ -95,7 +90,6 @@ export default {
     TimerSandIcon,
     WhiteBalanceSunnyIcon
   },
-  props: ["routeUser"],
   data: function() {
     return {
       items: null,
@@ -122,7 +116,7 @@ export default {
       await this.getShop();
     },
     async getShop() {
-      const response = await ItemsService.byUser(this.routeUser);
+      const response = await ItemsService.byUser(this.gameUser);
       this.items = response;
     },
     giftItem(item, index) {

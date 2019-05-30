@@ -1,13 +1,20 @@
 <template>
   <span class="planetnav">
-    <router-link :to="'/' + gameUser + '/planets'">
+    <router-link :to="'/planets'">
       <earth-icon :title="$t('Planets')" />
-      <span v-for="planet in this.planets" :key="planet.id">
-        <span v-if="planet.id === planetId">
-          {{ planet.name }}
-        </span>
-      </span>
     </router-link>
+    <span v-for="planet in this.planets" :key="planet.id">
+      <span v-if="planet.id === planetId"
+        ><font color="green"
+          ><span @click="setPlanet(planet)">
+            {{ planet.name | shorten }}
+          </span></font
+        ></span
+      >
+      <span v-else @click="setPlanet(planet)">
+        {{ planet.name | shorten }}
+      </span>
+    </span>
   </span>
 </template>
 
@@ -29,6 +36,11 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+  },
+  filters: {
+    shorten(name) {
+      return name.substring(0, 2);
+    }
   },
   computed: {
     ...mapState({
@@ -52,8 +64,6 @@ export default {
         this.$store.dispatch("planet/setName", planet.name);
         this.$store.dispatch("planet/setPosX", planet.posx);
         this.$store.dispatch("planet/setPosY", planet.posy);
-      } else {
-        this.resetPlanet();
       }
     },
     resetPlanet() {

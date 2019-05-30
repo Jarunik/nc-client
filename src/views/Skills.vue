@@ -1,12 +1,7 @@
 <template>
   <div class="skills">
     <h1>{{ $t("Skills") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-      </p>
-    </template>
-    <template v-if="routeUser !== 'null'">
+    <template v-if="gameUser !== 'null'">
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Skill") }}</th>
@@ -77,6 +72,7 @@ import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "skills",
@@ -85,7 +81,6 @@ export default {
     ArrowUpBoldIcon,
     CheckOutlineIcon
   },
-  props: ["routeUser"],
   data: function() {
     return {
       skills: null,
@@ -109,6 +104,12 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
     }, 1000);
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.prepareComponent();
+      }
+    });
   },
   filters: {
     busyPretty(busy) {
@@ -161,7 +162,7 @@ export default {
       await this.getQuantity();
     },
     async getSkills() {
-      const response = await SkillsService.all(this.routeUser);
+      const response = await SkillsService.all(this.gameUser);
       this.skills = response;
     },
     isBusy(busy) {

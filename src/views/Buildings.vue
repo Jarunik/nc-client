@@ -1,15 +1,7 @@
 <template>
   <div class="buildings">
     <h1>{{ $t("Buildings") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-        <template v-if="routeUser !== planetId">
-          <br />{{ $t("Planet: ") + routePlanet }}
-        </template>
-      </p>
-    </template>
-    <template v-if="routeUser !== 'null' && routePlanet != 'null'">
+    <template v-if="gameUser !== 'null' && planetId != 'null'">
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
@@ -104,18 +96,16 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="routeUser === 'null'">
+      <template v-if="gameUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="routePlanet === 'null'"
+      <template v-if="planetId === 'null'"
         ><p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">{{
-            $t("planet")
-          }}</router-link>
+          <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
     </template>
@@ -134,6 +124,7 @@ import RefreshIcon from "vue-material-design-icons/Refresh.vue";
 import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
 import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
 import ShieldIcon from "vue-material-design-icons/Shield.vue";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "buildings",
@@ -145,7 +136,6 @@ export default {
     CheckOutlineIcon,
     ShieldIcon
   },
-  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       buildings: null,
@@ -169,6 +159,12 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
     }, 1000);
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.prepareComponent();
+      }
+    });
   },
   filters: {
     busyPretty(busy) {
@@ -221,7 +217,7 @@ export default {
       await this.getQuantity();
     },
     async getBuildings() {
-      const response = await BuildingService.all(this.routePlanet);
+      const response = await BuildingService.all(this.planetId);
       this.buildings = response;
     },
     isBusy(busy) {

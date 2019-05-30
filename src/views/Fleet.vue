@@ -1,19 +1,10 @@
 <template>
   <div class="fleet">
     <h1>{{ $t("Fleet") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-        <template v-if="routeUser !== planetId">
-          <br>
-          {{ $t("Planet: ") + routePlanet }}
-        </template>
-      </p>
-    </template>
     <template
       v-if="
-        routeUser !== 'null' &&
-          routePlanet != 'null' &&
+        gameUser !== 'null' &&
+          planetId != 'null' &&
           sortedFleet !== null &&
           sortedFleet.length > 0
       "
@@ -34,7 +25,9 @@
                 command === 'attack'
             "
             @click="sort('toSend')"
-          >{{ $t("Send") }}</th>
+          >
+            {{ $t("Send") }}
+          </th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -51,13 +44,13 @@
                   command === 'attack'
               "
             >
-              <input type="number" v-model="ship.toSend">
+              <input type="number" v-model="ship.toSend" />
               <button @click="add(ship, ship.toSend)">{{ $t("Add") }}</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <br>
+      <br />
       <!-- Commands -->
       <div>
         {{ $t("Command") }}
@@ -70,7 +63,7 @@
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </div>
-      <br>
+      <br />
       <template v-if="command !== null && command !== 'sent'">
         <!-- General Form -->
         <table>
@@ -88,18 +81,22 @@
           </tbody>
         </table>
         <p>
-          <input v-model="search" placeholder="(x/y)">
+          <input v-model="search" placeholder="(x/y)" />
           <button @click="fillCoordinates(search)">{{ $t("Fill") }}</button>
         </p>
         <p>
           {{ $t("X") }}:
-          <input type="number" v-model="xCoordinate" v-on:change="onCoordinateChange">
+          <input
+            type="number"
+            v-model="xCoordinate"
+            v-on:change="onCoordinateChange"
+          />
           {{ $t("Y") }}:
           <input
             type="number"
             v-model="yCoordinate"
             v-on:change="onCoordinateChange"
-          >
+          />
         </p>
         <p>{{ $t("Distance") }}: {{ Number(distance).toFixed(2) }}</p>
         <p>
@@ -112,10 +109,9 @@
         </p>
         <!-- Exploration -->
         <div v-if="command === 'explorespace'">
-          <button
-            @click="explore"
-            :disabled="!commandEnabled('explorespace')"
-          >{{ $t("Send Explorer") }}</button>
+          <button @click="explore" :disabled="!commandEnabled('explorespace')">
+            {{ $t("Send Explorer") }}
+          </button>
         </div>
         <!-- Transport -->
         <div v-if="command === 'transport'">
@@ -125,32 +121,31 @@
               type="number"
               v-model="transportCoal"
               v-on:change="onResourceChange"
-            >
+            />
             {{ $t("Fe") }}:
             <input
               type="number"
               v-model="transportOre"
               v-on:change="onResourceChange"
-            >
+            />
             {{ $t("Cu") }}:
             <input
               type="number"
               v-model="transportCopper"
               v-on:change="onResourceChange"
-            >
+            />
             {{ $t("U") }}:
             <input
               type="number"
               v-model="transportUranium"
               v-on:change="onResourceChange"
-            >
+            />
           </div>
-          <br>
+          <br />
           <div>
-            <button
-              @click="transport"
-              :disabled="!commandEnabled('transport')"
-            >{{ $t("Send Transporter") }}</button>
+            <button @click="transport" :disabled="!commandEnabled('transport')">
+              {{ $t("Send Transporter") }}
+            </button>
           </div>
         </div>
         <!-- Deploy / Support / Attack-->
@@ -163,19 +158,19 @@
         >
           <div>
             <div v-if="command === 'deploy'">
-              <button @click="deploy" :disabled="!commandEnabled('deploy')">{{ $t("Deploy Ships") }}</button>
+              <button @click="deploy" :disabled="!commandEnabled('deploy')">
+                {{ $t("Deploy Ships") }}
+              </button>
             </div>
             <div v-if="command === 'support'">
-              <button
-                @click="support"
-                :disabled="!commandEnabled('support')"
-              >{{ $t("Support Planet") }}</button>
+              <button @click="support" :disabled="!commandEnabled('support')">
+                {{ $t("Support Planet") }}
+              </button>
             </div>
             <div v-if="command === 'attack'">
-              <button
-                @click="attack"
-                :disabled="!commandEnabled('attack')"
-              >{{ $t("Attack Planet") }}</button>
+              <button @click="attack" :disabled="!commandEnabled('attack')">
+                {{ $t("Attack Planet") }}
+              </button>
             </div>
           </div>
         </div>
@@ -183,30 +178,24 @@
     </template>
     <!-- Not enough Context -->
     <template v-else>
-      <template v-if="routeUser === 'null'">
+      <template v-if="gameUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="routePlanet === 'null'">
+      <template v-if="planetId === 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">
-            {{
-            $t("planet")
-            }}
+          <router-link :to="'/planets'">
+            {{ $t("planet") }}
           </router-link>
         </p>
       </template>
-      <template v-if="routeUser !== 'null'">
+      <template v-if="gameUser !== 'null'">
         <p>
           {{ $t("You have no ships. Buy some in the") }}
-          <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
-            {{
-            $t("Shipyard")
-            }}
-          </router-link>.
+          <router-link :to="'/shipyard'"> {{ $t("Shipyard") }} </router-link>.
         </p>
       </template>
     </template>
@@ -219,10 +208,10 @@ import QuantityService from "@/services/quantity";
 import { mapState } from "vuex";
 import moment from "moment";
 import SteemConnectService from "@/services/steemconnect";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "fleet",
-  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       fleet: null,
@@ -258,6 +247,12 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
     }, 1000);
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.prepareComponent();
+      }
+    });
   },
   filters: {
     busyPretty(busy) {
@@ -318,7 +313,7 @@ export default {
       await this.getQuantity();
     },
     async getFleet() {
-      const response = await FleetService.all(this.routeUser, this.routePlanet);
+      const response = await FleetService.all(this.gameUser, this.planetId);
       this.fleet = response;
       if (this.fleet !== null) {
         this.fleet.forEach(ship => {

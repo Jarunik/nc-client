@@ -173,5 +173,16 @@
   "Context": "Context",
   "Gifting": "Gifting",
   "Selected": "Selected",
-  "Transaction sent": "Transaction sent"
+  "Transaction sent": "Transaction sent",
+  "enter new name": "enter new name",
+  "Send": "Send",
+  "Success": "Success",
+  "Gift Planet": "Gift Planet",
+  "Danger Zone": "Danger Zone",
+  "Warning: You activated actions with potentially severe consequences.": "Warning: You activated actions with potentially severe consequences.",
+  "Gifting will hand over ownership of your planet to someone else and you can't claim it back.":"Gifting will hand over ownership of your planet to someone else and you can't claim it back.",
+  "Enable": "Enable",
+  "No Result": "No Result",
+  "Exploring": "Exploring"
+
 }

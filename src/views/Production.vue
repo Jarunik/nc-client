@@ -1,18 +1,8 @@
 <template>
   <div class="production">
     <h1>{{ $t("Production") }}</h1>
-    <template v-if="routeUser !== gameUser">
-      <p>
-        {{ $t("User: ") + routeUser }}
-        <template v-if="routeUser !== planetId">
-          <br />{{ $t("Planet: ") + routePlanet }}
-        </template>
-      </p>
-    </template>
     <template
-      v-if="
-        routeUser !== 'null' && routePlanet !== 'null' && production !== null
-      "
+      v-if="gameUser !== 'null' && planetId !== 'null' && production !== null"
     >
       <table>
         <thead>
@@ -55,18 +45,16 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="routeUser === 'null'">
+      <template v-if="gameUser === 'null'">
         <p>
           {{ $t("Please set the") }}
           <router-link to="/user">{{ $t("user") }}</router-link>
         </p>
       </template>
-      <template v-if="routePlanet == 'null'">
+      <template v-if="planetId == 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/' + routeUser + '/planets'">{{
-            $t("planet")
-          }}</router-link>
+          <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
     </template>
@@ -76,10 +64,10 @@
 <script>
 import ProductionService from "@/services/production";
 import { mapState } from "vuex";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "production",
-  props: ["routeUser", "routePlanet"],
   data: function() {
     return {
       production: null
@@ -99,11 +87,17 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getProduction();
+      this.$store.subscribe(mutation => {
+        switch (mutation.type) {
+          case "planet/" + types.SET_PLANET_ID:
+            this.prepareComponent();
+        }
+      });
     },
     async getProduction() {
       const response = await ProductionService.all(
-        this.routeUser,
-        this.routePlanet
+        this.gameUser,
+        this.planetId
       );
       this.production = response;
     }

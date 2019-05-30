@@ -59,7 +59,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/skills",
+      path: "/skills",
       name: "skills",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -69,7 +69,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/missions",
+      path: "/missions",
       name: "missions",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -79,7 +79,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/items",
+      path: "/items",
       name: "items",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -89,7 +89,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/planets",
+      path: "/planets",
       name: "planets",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -99,7 +99,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/:routePlanet/buildings",
+      path: "/buildings",
       name: "buildings",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -109,7 +109,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/:routePlanet/shipyard",
+      path: "/shipyard",
       name: "shipyard",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -119,7 +119,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/:routePlanet/galaxy",
+      path: "/galaxy",
       name: "galaxy",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -129,7 +129,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/:routePlanet/production",
+      path: "/production",
       name: "production",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -139,7 +139,7 @@ export default new Router({
       props: true
     },
     {
-      path: "/:routeUser/:routePlanet/fleet",
+      path: "/fleet",
       name: "fleet",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route

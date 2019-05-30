@@ -5,32 +5,36 @@
         ><chevron-triple-up-icon :title="$t('Ranking')"
       /></router-link>
       | <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
-      <router-link :to="'/' + gameUser + '/items'">
+      <router-link :to="'/items'">
         <package-variant-closed-icon :title="$t('Items')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/skills'">
+      <router-link :to="'/skills'">
         <school-icon :title="$t('Skills')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/' + planetId + '/buildings'">
+      <router-link :to="'/buildings'">
         <home-city-icon :title="$t('Buildings')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/' + planetId + '/shipyard'">
+      <router-link :to="'/shipyard'">
         <factory-icon :title="$t('Shipyard')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/' + planetId + '/galaxy'">
+      <router-link :to="'/galaxy'">
         <map-icon :title="$t('Galaxy')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/' + planetId + '/fleet'">
+      <router-link :to="'/fleet'">
         <ship-wheel-icon :title="$t('Fleet')" />
       </router-link>
       |
-      <router-link :to="'/' + gameUser + '/missions'">
+      <router-link :to="'/missions'">
         <calendar-icon :title="$t('Mission')" />
+      </router-link>
+      |
+      <router-link :to="'/planets'">
+        <earth-icon :title="$t('Planets')" />
       </router-link>
       |
       <router-link to="/user"><account-icon :title="$t('User')"/></router-link>
@@ -43,7 +47,7 @@
     <div id="navbottom">
       <PlanetNav :routeUser="gameUser" />
       <br />
-      <router-link :to="'/' + gameUser + '/' + planetId + '/production'">
+      <router-link :to="'/production'">
         <QuantityRibbon />
       </router-link>
     </div>
@@ -66,6 +70,7 @@ import MapIcon from "vue-material-design-icons/Map.vue";
 import CalendarIcon from "vue-material-design-icons/Calendar.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "App",
@@ -82,7 +87,8 @@ export default {
     MapIcon,
     CalendarIcon,
     LoginIcon,
-    AccountIcon
+    AccountIcon,
+    EarthIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -228,7 +234,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 140%;
+  font-size: 150%;
 }
 
 #navtop a {
@@ -245,12 +251,12 @@ export default {
   padding-bottom: 120px;
 }
 #navbottom {
-  padding: 15px;
+  padding: 10px;
   position: fixed;
   bottom: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 130%;
+  font-size: 120%;
 }
 #navbottom a {
   color: white;
