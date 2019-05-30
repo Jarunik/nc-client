@@ -630,7 +630,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[key] = this.shipFormation.ships[key].n;
+          shipList[this.shipFormation.ships[key].type] = this.shipFormation.ships[key].n;
         }
       }
       SteemConnectService.setAccessToken(this.accessToken);
@@ -662,7 +662,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[key] = {
+          shipList[this.shipFormation.ships[key].type] = {
             pos: this.shipFormation.ships[key].pos,
             n: this.shipFormation.ships[key].n
           };
@@ -689,7 +689,7 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[key] = {
+          shipList[this.shipFormation.ships[key].type] = {
             pos: this.shipFormation.ships[key].pos,
             n: this.shipFormation.ships[key].n
           };
