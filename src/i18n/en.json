@@ -187,6 +187,9 @@
   "Battle": "Battle",
   "Loot": "Loot",
   "Attacker": "Attacker",
-  "Defender": "Defender"
+  "Defender": "Defender",
+  "Winner": "Winner",
+  "Loser":"Loser",
+  "Draw": "Draw"
 
 }
