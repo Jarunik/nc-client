@@ -3,8 +3,7 @@
     <h1>Replay</h1>
     <div v-for="fight in report" :key="fight.battle_number">
       <p>
-        {{ $t("Mission") }} : {{ fight.mission_id }} {{ $t("Battle") }} :
-        {{ fight.battle_number }}
+        {{ $t("Mission") }} : {{ fight.mission_id }} <router-link :to="{ path: '/battle/' + fight.mission_id }">{{ $t("Battle Log") }}</router-link>
       </p>
     </div>
     <h3>
@@ -859,23 +858,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
 input {
   width: 6ch;
 }
