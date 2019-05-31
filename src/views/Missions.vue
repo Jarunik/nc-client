@@ -13,7 +13,7 @@
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
-          <th>{{ $t(" ") }}</th>
+          <th>" "</th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">

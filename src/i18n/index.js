@@ -8,7 +8,8 @@ const messages = {
   en: require("./en.json"),
   "en-gb": require("./en.json"),
   "en-us": require("./en.json"),
-  ko: require("./ko.json")
+  ko: require("./ko.json"),
+  de: require("./de.json")
 };
 
 export default new VueI18n({

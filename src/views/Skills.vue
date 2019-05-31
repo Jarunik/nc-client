@@ -15,7 +15,7 @@
           <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Enhance") }}
           </th>
-          <th>{{ $t(" ") }}</th>
+          <th>" "</th>
         </thead>
         <tbody>
           <tr v-for="skill in sortedSkills" :key="skill.name">

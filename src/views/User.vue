@@ -15,10 +15,26 @@
       <button @click="setUser(loginUser)">Set myself</button>
     </p>
     <p>
+      <i>{{
+        $t(
+          "You can show all users but you can only issue actions for the authorized user."
+        )
+      }}</i>
+    </p>
+    <p>
+      <i
+        >{{ $t("Please") }}
+        <router-link to="/">{{ $t("logout/login") }}</router-link>
+        {{ $t("to switch the authorized user.") }}</i
+      >
+    </p>
+    <p>Authorized User: {{ loginUser }}</p>
+    <p>
       {{ $t("Language") }}:
       <select v-model="gameLanguage">
         <option value="en">{{ $t("English") }}</option>
         <option value="ko">{{ $t("Korean") }}</option>
+        <option value="ko">{{ $t("German") }}</option>
       </select>
     </p>
   </div>

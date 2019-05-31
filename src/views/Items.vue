@@ -8,7 +8,7 @@
           <th>{{ $t("Quantity") }}</th>
           <th>{{ $t("Gift") }}</th>
           <th>{{ $t("Activate") }}</th>
-          <th>{{ $t(" ") }}</th>
+          <th>" "</th>
         </thead>
         <tbody>
           <tr v-for="(item, index) in items" :key="item.uid">
