@@ -59,12 +59,33 @@
       <button @click="goFleet(focusX, focusY)">
         <ship-wheel-icon :title="$t('Fleet')" />
       </button>
+      <div>
+        <br />
+        <table v-if="planet !== null">
+          <tr>
+            <td>{{ planet.planet_id }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.planet_rarity }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.planet_type }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.planet_name }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.user }}</td>
+          </tr>
+        </table>
+      </div>
     </template>
   </div>
 </template>
 
 <script>
 import GalaxyService from "@/services/galaxy";
+import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import CircleIcon from "vue-material-design-icons/Circle.vue";
 import MagnifyIcon from "vue-material-design-icons/Magnify.vue";
@@ -89,7 +110,8 @@ export default {
       galaxy: null,
       focusX: null,
       focusY: null,
-      search: null
+      search: null,
+      planet: null
     };
   },
   async mounted() {
@@ -138,6 +160,10 @@ export default {
       const response = await GalaxyService.galaxy(xCoordinate, yCoordinate);
       this.galaxy = response;
     },
+    async getPlanet(planetId) {
+      const response = await PlanetsService.byId(planetId);
+      this.planet = response;
+    },
     coordinateX(tableX) {
       return this.galaxy.area.xmin + tableX;
     },
@@ -148,6 +174,18 @@ export default {
       this.focusX = this.coordinateX(tableX);
       this.focusY = this.coordinateY(tableY);
       this.search = "(" + this.focusX + "/" + this.focusY + ")";
+      this.locationDetail(tableX, tableY);
+    },
+    locationDetail(tableX, tableY) {
+      let posX = this.coordinateX(tableX);
+      let posY = this.coordinateY(tableY);
+      this.planet = null;
+
+      this.galaxy.planets.forEach(planet => {
+        if (planet.x === posX && planet.y === posY) {
+          this.getPlanet(planet.id);
+        }
+      });
     },
     lookupLocation(tableX, tableY) {
       let posX = this.coordinateX(tableX);
