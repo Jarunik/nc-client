@@ -52,7 +52,7 @@
       </table>
       <br />
       <!-- Commands -->
-      <div>
+      <h3>
         {{ $t("Command") }}
         <select @change="onCommand(command)" v-model="command">
           <option value="explorespace">{{ $t("Explore") }}</option>
@@ -62,18 +62,17 @@
           <option value="attack">{{ $t("Attack") }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
-      </div>
-      <br />
+      </h3>
       <template v-if="command !== null && command !== 'sent'">
-        <!-- General Form -->
+        <!-- Formation -->
         <table>
           <thead>
             <th>{{ $t("Position") }}</th>
-            <th>{{ $t("Ship Type") }}</th>
+            <th>{{ $t("Ship") }}</th>
             <th>{{ $t("Number") }}</th>
           </thead>
           <tbody>
-            <tr v-for="(ship, shipType) in shipFormation.ships" :key="shipType">
+            <tr v-for="ship in shipFormation.ships" :key="ship.id">
               <td>{{ ship.pos }}</td>
               <td>{{ $t(ship.name) }}</td>
               <td>{{ ship.n }}</td>
@@ -81,9 +80,16 @@
           </tbody>
         </table>
         <p>
-          <input v-model="search" placeholder="(x/y)" />
-          <button @click="fillCoordinates(search)">{{ $t("Fill") }}</button>
+          <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
+        <h3>
+          {{ $t("Destination") }}
+          <input
+            v-on:change="fillCoordinates(search)"
+            v-model="search"
+            placeholder="(x/y)"
+          />
+        </h3>
         <p>
           {{ $t("X") }}:
           <input
@@ -100,7 +106,7 @@
         </p>
         <p>{{ $t("Distance") }}: {{ Number(distance).toFixed(2) }}</p>
         <p>
-          {{ $t("Uranium Needed") }}:
+          {{ $t("Uranium Fuel") }}:
           {{ Number(this.fuelConsumption).toFixed(2) }}
         </p>
         <p>
@@ -235,7 +241,7 @@ export default {
       shipFormation: {},
       fuelConsumption: 0,
       slowestSpeed: null,
-      pos: 1,
+      pos: 0,
       search: null
     };
   },
@@ -364,6 +370,8 @@ export default {
       ) {
         this.xCoordinate = this.$route.query.x;
         this.yCoordinate = this.$route.query.y;
+        this.search =
+          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
       }
       this.resetShipFormation();
       if (command === "explorespace") {
@@ -397,6 +405,7 @@ export default {
               this.distance;
         }
       }
+      this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
     },
     commandEnabled(command) {
       let enabled = false;
@@ -417,8 +426,7 @@ export default {
             parseFloat(this.copper) > parseFloat(this.transportCopper) &&
             parseFloat(this.uranium) >
               parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption) &&
-            this.shipFormation.ships.transportship.n > 0
+                parseFloat(this.fuelConsumption)
           ) {
             enabled = true;
           } else {
@@ -431,8 +439,7 @@ export default {
             parseFloat(this.copper) > parseFloat(this.transportCopper) &&
             parseFloat(this.uranium) >
               parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption) &&
-            this.shipFormation.ships.explorership.n > 0
+                parseFloat(this.fuelConsumption)
           ) {
             enabled = true;
           } else {
@@ -452,36 +459,71 @@ export default {
       }
     },
     resetShipFormation() {
-      this.pos = 1;
+      this.pos = 0;
+      this.slowestSpeed = null;
       this.shipFormation = {
         count: 0,
-        ships: {
-          corvette: { type: null, n: 0, c: 0, pos: 0, name: "Corvette" },
-          frigate: { type: null, n: 0, c: 0, pos: 0, name: "Frigate" },
-          destroyer: { type: null, n: 0, c: 0, pos: 0, name: "Destroyer" },
-          cruiser: { type: null, n: 0, c: 0, pos: 0, name: "Cruiser" },
-          battlecruiser: {
-            type: null,
-            n: 0,
-            c: 0,
-            pos: 0,
-            name: "Battlecruiser"
-          },
-          carrier: { type: null, n: 0, c: 0, pos: 0, name: "Carrier" },
-          dreadnought: { type: null, n: 0, c: 0, pos: 0, name: "Dreadnought" },
-          transportship: {
-            type: null,
-            n: 0,
-            c: 0,
-            pos: 0,
-            name: "Transporter"
-          },
-          explorership: { type: null, n: 0, c: 0, pos: 0, name: "Explorer" }
-        }
+        ships: [
+          { id: 1, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 2, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 3, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 4, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 5, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 6, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 7, type: null, n: "-", c: 0, pos: "-", name: "-" },
+          { id: 8, type: null, n: "-", c: 0, pos: "-", name: "-" }
+        ]
       };
       this.fleet.forEach(ship => {
         ship.toSend = 0;
       });
+    },
+    add(ship, quantity) {
+      let existingGroup = false;
+      // There are only 8 slots
+      if (this.pos > 8 || quantity < 1) {
+        return;
+      }
+      // Recalculate Slowest
+      if (this.slowestSpeed === null) {
+        this.slowestSpeed = ship.speed;
+      }
+      if (ship.speed < this.slowestSpeed) {
+        this.slowestSpeed = ship.speed;
+      }
+      // Replace existing
+      this.shipFormation.ships.forEach(s => {
+        if (s.type === ship.type) {
+          s.n = Math.min(quantity, ship.available);
+          s.c = ship.cons;
+          s.pos = this.pos;
+          s.type = ship.type;
+          s.name = ship.longname;
+          existingGroup = true;
+        }
+      });
+      // Add a new one
+      if (!existingGroup) {
+        this.shipFormation.count = this.shipFormation.count + 1;
+        this.shipFormation.ships[this.pos].n = Math.min(
+          quantity,
+          ship.available
+        );
+        this.shipFormation.ships[this.pos].c = ship.cons;
+        this.shipFormation.ships[this.pos].pos = this.pos + 1;
+        this.shipFormation.ships[this.pos].type = ship.type;
+        this.shipFormation.ships[this.pos].name = ship.longname;
+        this.pos++;
+      }
+    },
+    fillCoordinates(search) {
+      let split = search
+        .replace("(", "")
+        .replace(")", "")
+        .replace(/\s+/g, "")
+        .split("/");
+      this.xCoordinate = split[0];
+      this.yCoordinate = split[1];
     },
     async getQuantity() {
       const response = await QuantityService.get(this.planetId);
@@ -560,30 +602,7 @@ export default {
       }
       this.currentSort = s;
     },
-    add(ship, quantity) {
-      var shipClass = ship.type;
-      shipClass = shipClass.replace(/[0-9]/g, "");
-      if (this.slowestSpeed === null) {
-        this.slowestSpeed = ship.speed;
-      }
-      if (ship.speed < this.slowestSpeed) {
-        this.slowestSpeed = ship.speed;
-      }
-      this.shipFormation.count = this.shipFormation.count + 1;
-      this.shipFormation.ships[shipClass].n = Math.min(
-        quantity,
-        ship.available
-      );
-      this.shipFormation.ships[shipClass].c = ship.cons;
-      this.shipFormation.ships[shipClass].pos = this.pos;
-      this.shipFormation.ships[shipClass].type = ship.type;
-      this.shipFormation.ships[shipClass].name = ship.longname;
-      this.pos++;
-      // There are only 8 slots.
-      if (this.pos > 8) {
-        this.pos = 1;
-      }
-    },
+
     explore() {
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.explorespace(
@@ -601,13 +620,19 @@ export default {
       );
     },
     transport() {
+      let transporterCount;
+      this.shipFormation.ships.forEach(ship => {
+        if (ship.type === "transportship") {
+          transporterCount = ship.n;
+        }
+      });
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.transport(
         this.loginUser,
         this.planetId,
         this.xCoordinate,
         this.yCoordinate,
-        this.shipFormation.ships.transportship.n,
+        transporterCount,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,
@@ -630,7 +655,9 @@ export default {
       let shipList = {};
       for (let key in this.shipFormation.ships) {
         if (this.shipFormation.ships[key].n > 0) {
-          shipList[this.shipFormation.ships[key].type] = this.shipFormation.ships[key].n;
+          shipList[
+            this.shipFormation.ships[key].type
+          ] = this.shipFormation.ships[key].n;
         }
       }
       SteemConnectService.setAccessToken(this.accessToken);
@@ -710,15 +737,6 @@ export default {
           }
         }
       );
-    },
-    fillCoordinates(search) {
-      let split = search
-        .replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "")
-        .split("/");
-      this.xCoordinate = split[0];
-      this.yCoordinate = split[1];
     }
   },
   beforeDestroy() {
