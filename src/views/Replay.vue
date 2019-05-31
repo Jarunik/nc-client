@@ -1,6 +1,6 @@
 <template>
   <div class="replay">
-    <h1>Replay</h1>
+    <h1>{{ t("Replay") }}</h1>
     <div v-for="fight in report" :key="fight.battle_number">
       <p>
         {{ $t("Mission") }} : {{ fight.mission_id }}
@@ -10,32 +10,36 @@
       </p>
     </div>
     <h3>
-      Attacker
+      {{ t("Attacker") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
         color="yellow"
-        >Draw</font
+        >{{ t("Draw") }}</font
       >
       <span v-else>
-        <font v-if="currentDefender === this.slots" color="green">Winner</font>
-        <font v-if="currentAttacker === this.slots" color="red">Looser</font>
+        <font v-if="currentDefender === this.slots" color="green">{{
+          t("Winner")
+        }}</font>
+        <font v-if="currentAttacker === this.slots" color="red">{{
+          t("Looser")
+        }}</font>
       </span>
     </h3>
     <br />
     <table>
       <thead>
-        <th>Tank</th>
-        <th>Shooter</th>
-        <th>Order</th>
-        <th>Ship</th>
-        <th>Quantity</th>
-        <th>Structure</th>
-        <th>Armor</th>
-        <th>Shield</th>
-        <th>Rocket</th>
-        <th>Bullet</th>
-        <th>Laser</th>
-        <th>Survivor</th>
+        <th>{{ t("Tank") }}</th>
+        <th>{{ t("Shooter") }}</th>
+        <th>{{ t("Order") }}</th>
+        <th>{{ t("Ship") }}</th>
+        <th>{{ t("Quantity") }}</th>
+        <th>{{ t("Structure") }}</th>
+        <th>{{ t("Armor") }}</th>
+        <th>{{ t("Shield") }}</th>
+        <th>{{ t("Rocket") }}</th>
+        <th>{{ t("Bullet") }}</th>
+        <th>{{ t("Laser") }}</th>
+        <th>{{ t("Survivor") }}</th>
       </thead>
       <tbody>
         <tr v-for="(attacker, index) in attackers" :key="attacker.id">
@@ -108,32 +112,36 @@
       </tbody>
     </table>
     <h3>
-      Defender
+      {{ t("Defender") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
         color="yellow"
-        >Draw</font
+        >{{ t("Draw") }}</font
       >
       <span v-else>
-        <font v-if="currentAttacker === slots" color="green">Winner</font>
-        <font v-if="currentDefender === slots" color="red">Looser</font>
+        <font v-if="currentAttacker === slots" color="green">{{
+          t("Winner")
+        }}</font>
+        <font v-if="currentDefender === slots" color="red">{{
+          t("Looser")
+        }}</font>
       </span>
     </h3>
     <br />
     <table>
       <thead>
-        <th>Tank</th>
-        <th>Shooter</th>
-        <th>Order</th>
-        <th>Ship</th>
-        <th>Quantity</th>
-        <th>Structure</th>
-        <th>Armor</th>
-        <th>Shield</th>
-        <th>Rocket</th>
-        <th>Bullet</th>
-        <th>Laser</th>
-        <th>Survivor</th>
+        <th>{{ t("Tank") }}</th>
+        <th>{{ t("Shooter") }}</th>
+        <th>{{ t("Order") }}</th>
+        <th>{{ t("Ship") }}</th>
+        <th>{{ t("Quantity") }}</th>
+        <th>{{ t("Structure") }}</th>
+        <th>{{ t("Armor") }}</th>
+        <th>{{ t("Shield") }}</th>
+        <th>{{ t("Rocket") }}</th>
+        <th>{{ t("Bullet") }}</th>
+        <th>{{ t("Laser") }}</th>
+        <th>{{ t("Survivor") }}</th>
       </thead>
       <tbody>
         <tr v-for="(defender, index) in defenders" :key="defender.id">
@@ -201,14 +209,14 @@
         </tr>
       </tbody>
     </table>
-    <h2>Battle</h2>
-    <button v-on:click="battle()">Play Turn</button>
-    <button v-on:click="auto()">Play Battle</button>
-    <button v-on:click="reset()">Reset</button>
-    <h2>Battle Log</h2>
+    <h2>{{ t("Battle") }}</h2>
+    <button v-on:click="battle()">{{ t("Play Turn") }}</button>
+    <button v-on:click="auto()">{{ t("Play Battle") }}</button>
+    <button v-on:click="reset()">{{ t("Reset") }}</button>
+    <h2>{{ t("Battle Log") }}</h2>
     <p>{{ result }}</p>
-    <p>Next Turn: {{ turn }}</p>
-    <p>Round: {{ round }}</p>
+    <p>{{ t("Next Turn") }}: {{ turn }}</p>
+    <p>{{ t("Round") }}: {{ round }}</p>
   </div>
 </template>
 

@@ -66,10 +66,10 @@
             <td>{{ planet.planet_id }}</td>
           </tr>
           <tr>
-            <td>{{ planet.planet_rarity }}</td>
+            <td>{{ $t(planet.planet_rarity) }}</td>
           </tr>
           <tr>
-            <td>{{ planet.planet_type }}</td>
+            <td>{{ $t(planet.planet_type) }}</td>
           </tr>
           <tr>
             <td>{{ planet.planet_name }}</td>

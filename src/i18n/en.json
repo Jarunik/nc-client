@@ -111,6 +111,10 @@
   "Destroyer Rocket": "Destroyer Rocket",
   "Dreadnought Royal": "Dreadnought Royal",
   "Frigate Quorn": "Frigate Quorn",
+  "Frigate Redmill": "Frigate Redmill",
+  "Destroyer Janus": "Destroyer Janus",
+  "Battlecruiser Lion": "Battlecruiser Lion",
+  "Carrier Unicorn": "Carrier Unicorn",
   "Fog": "Fog",
   "Home": "Home",
   "Planet": "Planet",
@@ -190,6 +194,16 @@
   "Defender": "Defender",
   "Winner": "Winner",
   "Looser":"Looser",
-  "Simulator": "Simulator"
-
+  "Simulator": "Simulator",
+  "Rarity": "Rarity",
+  "Replay": "Replay",
+  "common": "Common",
+  "earth": "Earth",
+  "uncommon": "uncommon",
+  "rare": "Rare",
+  "legendary": "Legendary",
+  "coal": "Coal",
+  "ore": "Ore",
+  "copper": "Copper",
+  "uranium": "Uranium"
 }
