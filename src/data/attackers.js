@@ -1,0 +1,121 @@
+var attackers = [
+  {
+    id: "corvette",
+    name: "Corvette Crocus",
+    class: "Corvette",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "frigate",
+    name: "Frigate Quorn",
+    class: "Frigate",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "destroyer",
+    name: "Destroyer Rocket",
+    class: "Destroyer",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "cruiser",
+    name: "Cruiser Kent",
+    class: "Cruiser",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "battlecruiser",
+    name: "Battlecruiser Tiger",
+    class: "Battlecruiser",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "carrier",
+    name: "Carrier Argus",
+    class: "Carrier",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "dreadnought",
+    name: "Dreadnought Royal",
+    class: "Dreadnought",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "transporter",
+    name: "Transporter",
+    class: "Civil",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  },
+  {
+    id: "end",
+    name: "end",
+    class: "end",
+    quantity: 0,
+    structure: 0,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0,
+    survivor: 0
+  }
+];
+
+export default attackers;

@@ -190,7 +190,7 @@
       </tbody>
     </table>
     <h2>Battle</h2>
-    <button v-on:click="prepare()">Prepare</button>
+    <button v-on:click="prepare()">Reset</button>
     <button v-on:click="battle()">Play Round</button>
     <button v-on:click="auto()">Battle</button>
     <h2>Battle Log</h2>

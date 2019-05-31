@@ -32,27 +32,31 @@
       </thead>
       <tbody>
         <tr v-for="(attacker, index) in attackers" :key="attacker.id">
-          <td v-show="attacker.ship !== 'end'">
+          <td v-show="attacker.id !== 'end'">
             <div v-if="index === currentAttacker">⮞</div>
           </td>
-          <td v-show="attacker.ship !== 'end'">
+          <td v-show="attacker.id !== 'end'">
             <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
               ⮞
             </div>
           </td>
-          <td v-show="attacker.ship !== 'end'">
+          <td v-show="attacker.id !== 'end'">
             <button v-on:click="up('attacker', attacker)">↑</button>
             <button v-on:click="down('attacker', attacker)">↓</button>
           </td>
-          <td v-show="attacker.ship !== 'end'">
-            <select v-model="attacker.ship">
-              <option v-for="ship in ships" :key="ship.id" :value="ship.name">
+          <td v-show="attacker.id !== 'end'">
+            <select v-model="attacker.name" @change="prepare">
+              <option v-for="ship in ships" :key="ship.name">
                 {{ ship.name }}
               </option>
             </select>
           </td>
-          <td v-show="attacker.ship !== 'end'">
-            <input v-model="attacker.quantity" />
+          <td v-show="attacker.id !== 'end'">
+            <input
+              type="number"
+              v-model="attacker.quantity"
+              v-on:input="prepare"
+            />
           </td>
           <td>
             <div v-if="attacker.structure > 0">
@@ -85,7 +89,7 @@
               <font color="orange">{{ attacker.laser }}</font>
             </div>
           </td>
-          <td v-show="attacker.ship !== 'end'">
+          <td v-show="attacker.id !== 'end'">
             <div v-if="attacker.survivor > 0">
               <font v-if="attacker.survivor > 0" color="green">
                 {{ attacker.survivor }}
@@ -126,27 +130,27 @@
       </thead>
       <tbody>
         <tr v-for="(defender, index) in defenders" :key="defender.id">
-          <td v-show="defender.ship !== 'end'">
+          <td v-show="defender.id !== 'end'">
             <div v-if="index === currentDefender">⮞</div>
           </td>
-          <td v-show="defender.ship !== 'end'">
+          <td v-show="defender.id !== 'end'">
             <div v-if="turn === 'Defender' && index === currentDefenderShooter">
               ⮞
             </div>
           </td>
-          <td v-show="defender.ship !== 'end'">
+          <td v-show="defender.id !== 'end'">
             <button v-on:click="up('defender', defender)">↑</button>
             <button v-on:click="down('defender', defender)">↓</button>
           </td>
-          <td v-show="defender.ship !== 'end'">
-            <select v-model="defender.ship">
-              <option v-for="ship in ships" :key="ship.id" :value="ship.name">
+          <td v-show="defender.id !== 'end'">
+            <select v-model="defender.name" @change="prepare">
+              <option v-for="ship in ships" :key="ship.name">
                 {{ ship.name }}
               </option>
             </select>
           </td>
-          <td v-show="defender.ship !== 'end'">
-            <input v-model="defender.quantity" />
+          <td v-show="defender.id !== 'end'" v-on:input="prepare">
+            <input type="number" v-model="defender.quantity" />
           </td>
           <td>
             <div v-if="defender.structure > 0">
@@ -191,9 +195,9 @@
       </tbody>
     </table>
     <h2>Battle</h2>
-    <button v-on:click="prepare()">Prepare</button>
-    <button v-on:click="battle()">Play Round</button>
-    <button v-on:click="auto()">Battle</button>
+    <button v-on:click="battle()">Play Turn</button>
+    <button v-on:click="auto()">Play Battle</button>
+    <button v-on:click="reset()">Reset</button>
     <h2>Battle Log</h2>
     <p>{{ result }}</p>
     <p>Next Turn: {{ turn }}</p>
@@ -202,291 +206,15 @@
 </template>
 
 <script>
+import ships from "@/data/ships.js";
+import attackers from "@/data/attackers.js";
+import defenders from "@/data/defenders.js";
+
 export default {
   name: "Simulator",
   data() {
     return {
-      ships: [
-        // Rocket - Balanced
-        {
-          id: 1,
-          name: "Corvette Crocus",
-          type: "Corvette",
-          structure: 6,
-          armor: 8,
-          shield: 10,
-          rocket: 2,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 2,
-          name: "Frigate Quorn",
-          type: "Frigate",
-          structure: 12,
-          armor: 16,
-          shield: 8,
-          rocket: 3,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 3,
-          name: "Destroyer Rocket",
-          type: "Destroyer",
-          structure: 12,
-          armor: 14,
-          shield: 16,
-          rocket: 4,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 4,
-          name: "Cruiser Kent",
-          type: "Cruiser",
-          structure: 15,
-          armor: 25,
-          shield: 20,
-          rocket: 5,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 5,
-          name: "Battlecruiser Tiger",
-          type: "Battlecruiser",
-          structure: 40,
-          armor: 20,
-          shield: 36,
-          rocket: 8,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 6,
-          name: "Carrier Argus",
-          type: "Carrier",
-          structure: 60,
-          armor: 100,
-          shield: 80,
-          rocket: 20,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 7,
-          name: "Dreadnought Royal",
-          type: "Dreadnought",
-          structure: 200,
-          armor: 240,
-          shield: 160,
-          rocket: 50,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 8,
-          name: "Transporter",
-          type: "Civil",
-          structure: 80,
-          armor: 20,
-          shield: 20,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        },
-        // Bullet with Shield
-        {
-          id: 11,
-          name: "Corvette Petunia",
-          type: "Corvette",
-          structure: 6,
-          armor: 8,
-          shield: 10,
-          rocket: 0,
-          bullet: 2,
-          laser: 0
-        },
-        {
-          id: 12,
-          name: "Frigate Redmill",
-          type: "Frigate",
-          structure: 12,
-          armor: 16,
-          shield: 8,
-          rocket: 0,
-          bullet: 3,
-          laser: 0
-        },
-        {
-          id: 13,
-          name: "Destroyer Janus",
-          type: "Destroyer",
-          structure: 12,
-          armor: 14,
-          shield: 16,
-          rocket: 0,
-          bullet: 4,
-          laser: 0
-        },
-        {
-          id: 14,
-          name: "Cruiser Drake",
-          type: "Cruiser",
-          structure: 15,
-          armor: 25,
-          shield: 20,
-          rocket: 0,
-          bullet: 5,
-          laser: 0
-        },
-        {
-          id: 15,
-          name: "Battlecruiser Lion",
-          type: "Battlecruiser",
-          structure: 40,
-          armor: 20,
-          shield: 36,
-          rocket: 0,
-          bullet: 8,
-          laser: 0
-        },
-        {
-          id: 16,
-          name: "Carrier Unicorn",
-          type: "Carrier",
-          structure: 60,
-          armor: 100,
-          shield: 80,
-          rocket: 0,
-          bullet: 20,
-          laser: 0
-        },
-        {
-          id: 17,
-          name: "Dreadnought Imperial",
-          type: "Dreadnought",
-          structure: 200,
-          armor: 240,
-          shield: 160,
-          rocket: 0,
-          bullet: 50,
-          laser: 0
-        },
-        {
-          id: 9,
-          name: "Transporter",
-          type: "Civil",
-          structure: 80,
-          armor: 20,
-          shield: 20,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        },
-        // Laser with Armor
-        {
-          id: 21,
-          name: "Corvette Pimpernel",
-          type: "Corvette",
-          structure: 6,
-          armor: 8,
-          shield: 10,
-          rocket: 0,
-          bullet: 0,
-          laser: 2
-        },
-        {
-          id: 22,
-          name: "Frigate Lasalle",
-          type: "Frigate",
-          structure: 12,
-          armor: 16,
-          shield: 8,
-          rocket: 0,
-          bullet: 0,
-          laser: 3
-        },
-        {
-          id: 23,
-          name: "Destroyer Banshee",
-          type: "Destroyer",
-          structure: 12,
-          armor: 14,
-          shield: 16,
-          rocket: 0,
-          bullet: 0,
-          laser: 4
-        },
-        {
-          id: 24,
-          name: "Cruiser Hogue",
-          type: "Cruiser",
-          structure: 15,
-          armor: 25,
-          shield: 20,
-          rocket: 0,
-          bullet: 0,
-          laser: 5
-        },
-        {
-          id: 25,
-          name: "Battlecruiser Leopard",
-          type: "Battlecruiser",
-          structure: 40,
-          armor: 20,
-          shield: 36,
-          rocket: 0,
-          bullet: 0,
-          laser: 8
-        },
-        {
-          id: 26,
-          name: "Carrier Centaur",
-          type: "Carrier",
-          structure: 60,
-          armor: 100,
-          shield: 80,
-          rocket: 0,
-          bullet: 0,
-          laser: 20
-        },
-        {
-          id: 27,
-          name: "Dreadnought Galactic",
-          type: "Dreadnought",
-          structure: 200,
-          armor: 240,
-          shield: 160,
-          rocket: 0,
-          bullet: 0,
-          laser: 50
-        },
-        {
-          id: 10,
-          name: "Transporter",
-          type: "Civil",
-          structure: 80,
-          armor: 20,
-          shield: 20,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 99,
-          name: "end",
-          type: "end",
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          defense: 0
-        } // dummy
-      ],
+      ships: ships,
       rates: [
         { id: 1, attack: "rocket", defense: "structure", rate: 4 },
         { id: 2, attack: "rocket", defense: "armor", rate: 2 },
@@ -498,241 +226,8 @@ export default {
         { id: 8, attack: "bullet", defense: "armor", rate: 4 },
         { id: 9, attack: "bullet", defense: "shield", rate: 1 }
       ],
-      attackers: [
-        {
-          id: 0,
-          ship: "Corvette Crocus",
-          type: "Corvette",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 1,
-          ship: "Frigate Quorn",
-          type: "Frigate",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 2,
-          ship: "Destroyer Rocket",
-          type: "Destroyer",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 3,
-          ship: "Cruiser Kent",
-          type: "Cruiser",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 4,
-          ship: "Battlecruiser Tiger",
-          type: "Battlecruiser",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 5,
-          ship: "Carrier Argus",
-          type: "Carrier",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 6,
-          ship: "Dreadnought Royal",
-          type: "Dreadnought",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 7,
-          ship: "Transporter",
-          type: "Civil",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 8,
-          ship: "end",
-          type: "end",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        }
-      ],
-      defenders: [
-        {
-          id: 0,
-          ship: "Corvette Crocus",
-          type: "Corvette",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 1,
-          ship: "Frigate Quorn",
-          type: "Frigate",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 2,
-          ship: "Destroyer Rocket",
-          type: "Destroyer",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 3,
-          ship: "Cruiser Kent",
-          type: "Cruiser",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 4,
-          ship: "Battlecruiser Tiger",
-          type: "Battlecruiser",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 5,
-          ship: "Carrier Argus",
-          type: "Carrier",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 6,
-          ship: "Dreadnought Royal",
-          type: "Dreadnought",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        },
-        {
-          id: 7,
-          ship: "Transporter",
-          type: "Civil",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0
-        },
-        {
-          id: 8,
-          ship: "end",
-          type: "end",
-          quantity: 0,
-          structure: 0,
-          armor: 0,
-          shield: 0,
-          rocket: 0,
-          bullet: 0,
-          laser: 0,
-          survivor: 0
-        }
-      ],
+      attackers: attackers,
+      defenders: defenders,
       turn: "Attacker",
       currentAttacker: 0,
       currentDefender: 0,
@@ -747,7 +242,8 @@ export default {
       piercerateshield: 1,
       pierceratearmor: 1,
       slots: 8,
-      prepared: false
+      prepared: false,
+      interval: null
     };
   },
   methods: {
@@ -755,7 +251,7 @@ export default {
     prepare: function() {
       this.attackers.forEach(attacker => {
         let aship = this.ships.filter(s => {
-          return s.name === attacker.ship;
+          return s.name === attacker.name;
         });
         attacker.structure = attacker.quantity * aship[0].structure;
         attacker.armor = attacker.quantity * aship[0].armor;
@@ -767,7 +263,7 @@ export default {
       });
       this.defenders.forEach(defender => {
         let dship = this.ships.filter(s => {
-          return s.name === defender.ship;
+          return s.name === defender.name;
         });
         defender.structure = defender.quantity * dship[0].structure;
         defender.armor = defender.quantity * dship[0].armor;
@@ -786,7 +282,71 @@ export default {
       this.result = "Ready";
       this.prepared = true;
     },
-
+    reset: function() {
+      clearInterval(this.interval);
+      this.prepare();
+    },
+    rate: function(attack, defense) {
+      var rate = this.rates.filter(
+        r => r.attack === attack && r.defense === defense
+      );
+      return rate[0].rate;
+    },
+    auto: function() {
+      this.prepare();
+      this.interval = setInterval(() => {
+        this.battle();
+      }, 500);
+      this.battle();
+    },
+    up(who, ship) {
+      if (who === "attacker") {
+        var index = this.attackers.indexOf(ship);
+        if (index === 0) {
+          return;
+        }
+        if (index === this.slots) {
+          return;
+        }
+        this.attackers[index] = this.attackers[index - 1];
+        this.attackers[index - 1] = ship;
+      } else {
+        var index2 = this.defenders.indexOf(ship);
+        if (index2 === 0) {
+          return;
+        }
+        if (index2 === this.slots) {
+          return;
+        }
+        this.defenders[index2] = this.defenders[index2 - 1];
+        this.defenders[index2 - 1] = ship;
+      }
+      this.$forceUpdate();
+    },
+    down(who, ship) {
+      if (who === "attacker") {
+        var index = this.attackers.indexOf(ship);
+        if (index === this.slots) {
+          return;
+        }
+        if (index === this.slots - 1) {
+          return;
+        }
+        this.attackers[index] = this.attackers[index + 1];
+        this.attackers[index + 1] = ship;
+      } else {
+        var index2 = this.defenders.indexOf(ship);
+        if (index2 === this.slots) {
+          return;
+        }
+        if (index2 === this.slots - 1) {
+          return;
+        }
+        this.defenders[index2] = this.defenders[index2 + 1];
+        this.defenders[index2 + 1] = ship;
+      }
+      this.$forceUpdate();
+    },
     battle: function() {
       var attackerIndex = this.currentAttacker;
       var defenderIndex = this.currentDefender;
@@ -803,9 +363,11 @@ export default {
       if (attackerIndex === this.slots || defenderIndex === this.slots) {
         if (attackerIndex === this.slots) {
           this.result = "Defender won battle. Game Over";
+          clearInterval(this.interval);
         }
         if (defenderIndex === this.slots) {
           this.result = "Attacker won battle. Game Over";
+          clearInterval(this.interval);
         }
 
         return;
@@ -856,7 +418,7 @@ export default {
         if (this.turn === "Attacker") {
           // Initial stats of defender
           let dShip = this.ships.filter(s => {
-            return s.name === d.ship;
+            return s.name === d.name;
           });
           // Attacker Shoots
           if (as.structure > 0) {
@@ -1032,7 +594,7 @@ export default {
         if (this.turn === "Defender") {
           // Initial stats of Attacker
           let aShip = this.ships.filter(s => {
-            return s.name === a.ship;
+            return s.name === a.name;
           });
           // Defender Shoots
           if (ds.structure > 0) {
@@ -1261,71 +823,10 @@ export default {
         }
         this.round = this.round + 1;
       }
-    },
-    rate: function(attack, defense) {
-      var rate = this.rates.filter(
-        r => r.attack === attack && r.defense === defense
-      );
-      return rate[0].rate;
-    },
-    auto: function() {
-      this.prepare();
-      while (
-        this.currentAttacker !== this.slots &&
-        this.currentDefender !== this.slots
-      ) {
-        setTimeout(this.battle(), 1000);
-      }
-      this.battle();
-    },
-    up(who, ship) {
-      if (who === "attacker") {
-        var index = this.attackers.indexOf(ship);
-        if (index === 0) {
-          return;
-        }
-        if (index === this.slots) {
-          return;
-        }
-        this.attackers[index] = this.attackers[index - 1];
-        this.attackers[index - 1] = ship;
-      } else {
-        var index2 = this.defenders.indexOf(ship);
-        if (index2 === 0) {
-          return;
-        }
-        if (index2 === this.slots) {
-          return;
-        }
-        this.defenders[index2] = this.defenders[index2 - 1];
-        this.defenders[index2 - 1] = ship;
-      }
-      this.$forceUpdate();
-    },
-    down(who, ship) {
-      if (who === "attacker") {
-        var index = this.attackers.indexOf(ship);
-        if (index === this.slots) {
-          return;
-        }
-        if (index === this.slots - 1) {
-          return;
-        }
-        this.attackers[index] = this.attackers[index + 1];
-        this.attackers[index + 1] = ship;
-      } else {
-        var index2 = this.defenders.indexOf(ship);
-        if (index2 === this.slots) {
-          return;
-        }
-        if (index2 === this.slots - 1) {
-          return;
-        }
-        this.defenders[index2] = this.defenders[index2 + 1];
-        this.defenders[index2 + 1] = ship;
-      }
-      this.$forceUpdate();
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 };
 </script>

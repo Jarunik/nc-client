@@ -189,6 +189,7 @@
   "Attacker": "Attacker",
   "Defender": "Defender",
   "Winner": "Winner",
-  "Looser":"Looser"
+  "Looser":"Looser",
+  "Simulator": "Simulator"
 
 }
