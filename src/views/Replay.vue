@@ -3,7 +3,10 @@
     <h1>Replay</h1>
     <div v-for="fight in report" :key="fight.battle_number">
       <p>
-        {{ $t("Mission") }} : {{ fight.mission_id }} <router-link :to="{ path: '/battle/' + fight.mission_id }">{{ $t("Battle Log") }}</router-link>
+        {{ $t("Mission") }} : {{ fight.mission_id }}
+        <router-link :to="{ path: '/battle/' + fight.mission_id }">{{
+          $t("Battle Log")
+        }}</router-link>
       </p>
     </div>
     <h3>
@@ -50,9 +53,9 @@
           </td>
           <td v-show="attacker.id !== 'end'">
             <select v-model="attacker.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">
-                {{ ship.name }}
-              </option>
+              <option v-for="ship in attackerShips" :key="ship.name">{{
+                ship.name
+              }}</option>
             </select>
           </td>
           <td v-show="attacker.id !== 'end'">
@@ -64,9 +67,9 @@
           </td>
           <td>
             <div v-if="attacker.structure > 0">
-              <font v-if="attacker.structure === 0" color="red">
-                {{ attacker.structure.toFixed(0) }}
-              </font>
+              <font v-if="attacker.structure === 0" color="red">{{
+                attacker.structure.toFixed(0)
+              }}</font>
               <font v-else>{{ attacker.structure.toFixed(0) }}</font>
             </div>
           </td>
@@ -95,9 +98,9 @@
           </td>
           <td v-show="attacker.id !== 'end'">
             <div v-if="attacker.survivor > 0">
-              <font v-if="attacker.survivor > 0" color="green">
-                {{ attacker.survivor }}
-              </font>
+              <font v-if="attacker.survivor > 0" color="green">{{
+                attacker.survivor
+              }}</font>
               <div v-else>{{ attacker.survivor }}</div>
             </div>
           </td>
@@ -148,9 +151,9 @@
           </td>
           <td v-show="defender.id !== 'end'">
             <select v-model="defender.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">
-                {{ ship.name }}
-              </option>
+              <option v-for="ship in defenderShips" :key="ship.name">{{
+                ship.name
+              }}</option>
             </select>
           </td>
           <td v-show="defender.id !== 'end'" v-on:input="prepare">
@@ -158,9 +161,9 @@
           </td>
           <td>
             <div v-if="defender.structure > 0">
-              <font v-if="defender.structure === 0" color="red">
-                {{ defender.structure.toFixed(0) }}
-              </font>
+              <font v-if="defender.structure === 0" color="red">{{
+                defender.structure.toFixed(0)
+              }}</font>
               <font v-else>{{ defender.structure.toFixed(0) }}</font>
             </div>
           </td>
@@ -189,9 +192,9 @@
           </td>
           <td>
             <div v-if="defender.survivor > 0">
-              <font v-if="defender.survivor > 0" color="green">
-                {{ defender.survivor }}
-              </font>
+              <font v-if="defender.survivor > 0" color="green">{{
+                defender.survivor
+              }}</font>
               <div v-else>{{ defender.survivor }}</div>
             </div>
           </td>
@@ -210,7 +213,8 @@
 </template>
 
 <script>
-import ships from "@/data/ships";
+import attackerShips from "@/data/attackerShips";
+import defenderShips from "@/data/defenderShips";
 import attackers from "@/data/attackers";
 import defenders from "@/data/defenders";
 import BattleService from "@/services/battle";
@@ -220,7 +224,6 @@ export default {
   props: ["missionId"],
   data() {
     return {
-      ships: ships,
       rates: [
         { id: 1, attack: "rocket", defense: "structure", rate: 4 },
         { id: 2, attack: "rocket", defense: "armor", rate: 2 },
@@ -241,16 +244,20 @@ export default {
       currentDefenderShooter: 0,
       round: 0,
       result: "Ready",
-      shieldregen: 0.2,
+      attackerShieldRegen: 0.2,
+      defenderShieldRegen: 0.2,
       shieldregreduce: 0.005,
-      armorrep: 0.1,
+      attackerArmorRep: 0.1,
+      defenderArmorRep: 0.1,
       armorregreduce: 0.01,
       piercerateshield: 1,
       pierceratearmor: 1,
       slots: 8,
       prepared: false,
       interval: null,
-      report: null
+      report: null,
+      attackerShips: attackerShips,
+      defenderShips: defenderShips
     };
   },
   async mounted() {
@@ -266,12 +273,17 @@ export default {
       this.prepare();
     },
     prepare: function() {
+      this.attackerArmorRep = this.report[0].attacker_armorrep;
+      this.defenderArmorRep = this.report[0].defender_armorrep;
+      this.attackerShieldRegen = this.report[0].attacker_shieldregen;
+      this.defenderShieldRegen = this.report[0].defender_shieldregen;
       var initialAttackers = this.report[0].initial_attacker_ships;
       this.attackers.forEach(attacker => {
         attacker.name = null;
       });
       initialAttackers.forEach(ina => {
         let i = ina.pos - 1;
+        // Fill stats variables (will change)
         attackers[i].name = ina.longname;
         attackers[i].quantity = ina.n;
         attackers[i].structure = ina.structure;
@@ -281,6 +293,17 @@ export default {
         attackers[i].bullet = ina.bullet;
         attackers[i].laser = ina.laser;
         attackers[i].survivor = ina.survivor;
+        // Save start values (will stay)
+        attackerShips.forEach(ship => {
+          if (ship.name === ina.longname) {
+            ship.structure = ina.structure;
+            ship.armor = ina.armor;
+            ship.shield = ina.shield;
+            ship.rocket = ina.rocket;
+            ship.bullet = ina.bullet;
+            ship.laser = ina.laser;
+          }
+        });
       });
       var initialDefenders = this.report[0].initial_defender_ships;
       this.defenders.forEach(defender => {
@@ -297,6 +320,16 @@ export default {
         defenders[j].bullet = ina.bullet;
         defenders[j].laser = ina.laser;
         defenders[j].survivor = ina.survivor;
+        defenderShips.forEach(ship => {
+          if (ship.name === ina.longname) {
+            ship.structure = ina.structure;
+            ship.armor = ina.armor;
+            ship.shield = ina.shield;
+            ship.rocket = ina.rocket;
+            ship.bullet = ina.bullet;
+            ship.laser = ina.laser;
+          }
+        });
       });
       this.turn = "Attacker";
       this.round = 0;
@@ -442,7 +475,7 @@ export default {
         var lorocket2 = 0;
         if (this.turn === "Attacker") {
           // Initial stats of defender
-          let dShip = this.ships.filter(s => {
+          let dShip = this.defenderShips.filter(s => {
             return s.name === d.name;
           });
           // Attacker Shoots
@@ -595,7 +628,7 @@ export default {
                 this.defenders[defenderIndex].armor +
                   dShip[0].armor *
                     Math.max(
-                      this.armorrep - this.armorregreduce * this.round,
+                      this.defenderArmorRep - this.armorregreduce * this.round,
                       0
                     ),
                 dShip[0].armor * this.defenders[defenderIndex].survivor
@@ -607,7 +640,8 @@ export default {
                 this.defenders[defenderIndex].shield +
                   dShip[0].shield *
                     Math.max(
-                      this.shieldregen - this.shieldregreduce * this.round,
+                      this.defenderShieldRegen -
+                        this.shieldregreduce * this.round,
                       0
                     ),
                 dShip[0].shield * this.defenders[defenderIndex].survivor
@@ -618,7 +652,7 @@ export default {
 
         if (this.turn === "Defender") {
           // Initial stats of Attacker
-          let aShip = this.ships.filter(s => {
+          let aShip = this.attackerShips.filter(s => {
             return s.name === a.name;
           });
           // Defender Shoots
@@ -771,7 +805,7 @@ export default {
                 this.attackers[attackerIndex].armor +
                   aShip[0].armor *
                     Math.max(
-                      this.armorrep - this.armorregreduce * this.round,
+                      this.attackerArmorRep - this.armorregreduce * this.round,
                       0
                     ),
                 aShip[0].armor * this.attackers[attackerIndex].survivor
@@ -783,7 +817,8 @@ export default {
                 this.attackers[attackerIndex].shield +
                   aShip[0].shield *
                     Math.max(
-                      this.shieldregen - this.shieldregreduce * this.round,
+                      this.attackerShieldRegen -
+                        this.shieldregreduce * this.round,
                       0
                     ),
                 aShip[0].shield * this.attackers[attackerIndex].survivor
