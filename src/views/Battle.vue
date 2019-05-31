@@ -34,7 +34,7 @@
               :key="attacker.type"
             >
               <td>{{ attacker.pos }}</td>
-              <td>{{ attacker.type }}</td>
+              <td>{{ attacker.longname }}</td>
               <td>{{ attacker.survivor }} / {{ attacker.n }}</td>
               <td>
                 <div id="bag-health">
@@ -106,7 +106,7 @@
               :key="defender.type"
             >
               <td>{{ defender.pos }}</td>
-              <td>{{ defender.type }}</td>
+              <td>{{ defender.longname }}</td>
               <td>{{ defender.survivor }} / {{ defender.n }}</td>
               <td>
                 <div id="bag-health">
@@ -158,6 +158,11 @@
           Cu:{{ Number(mission.copper).toFixed(0) }} U:{{
             Number(mission.uranium).toFixed(0)
           }}
+        </p>
+        <p>
+          <router-link :to="{ path: '/replay/' + mission.mission_id }">
+            {{ $t("Replay") }}</router-link
+          >
         </p>
       </div>
     </div>

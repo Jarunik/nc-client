@@ -1,6 +1,6 @@
 var attackers = [
   {
-    id: "corvette",
+    id: "1",
     name: "Corvette Crocus",
     class: "Corvette",
     quantity: 0,
@@ -13,7 +13,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "frigate",
+    id: "2",
     name: "Frigate Quorn",
     class: "Frigate",
     quantity: 0,
@@ -26,7 +26,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "destroyer",
+    id: "3",
     name: "Destroyer Rocket",
     class: "Destroyer",
     quantity: 0,
@@ -39,7 +39,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "cruiser",
+    id: "4",
     name: "Cruiser Kent",
     class: "Cruiser",
     quantity: 0,
@@ -52,7 +52,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "battlecruiser",
+    id: "5",
     name: "Battlecruiser Tiger",
     class: "Battlecruiser",
     quantity: 0,
@@ -65,7 +65,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "carrier",
+    id: "6",
     name: "Carrier Argus",
     class: "Carrier",
     quantity: 0,
@@ -78,7 +78,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "dreadnought",
+    id: "7",
     name: "Dreadnought Royal",
     class: "Dreadnought",
     quantity: 0,
@@ -91,7 +91,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "transporter",
+    id: "8",
     name: "Transporter",
     class: "Civil",
     quantity: 0,
@@ -104,7 +104,7 @@ var attackers = [
     survivor: 0
   },
   {
-    id: "end",
+    id: "9",
     name: "end",
     class: "end",
     quantity: 0,
