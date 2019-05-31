@@ -35,7 +35,7 @@
                   </button>
                 </template>
               </span>
-              <span v-else>"-"</span>
+              <span v-else>-</span>
             </td>
             <td>
               <button @click="setPlanet(planet)">{{ $t("Set") }}</button>

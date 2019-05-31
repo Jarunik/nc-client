@@ -26,7 +26,7 @@
               <span v-if="mission.return !== null">
                 {{ moment.unix(mission.return, "seconds").format("lll") }}
               </span>
-              <span v-else>"-"</span>
+              <span v-else>-</span>
             </td>
             <td>{{ $t(parseResult(mission.result) || "-") }}</td>
             <td>
