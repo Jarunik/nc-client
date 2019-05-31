@@ -34,7 +34,7 @@
       <select v-model="gameLanguage">
         <option value="en">{{ $t("English") }}</option>
         <option value="ko">{{ $t("Korean") }}</option>
-        <option value="ko">{{ $t("German") }}</option>
+        <option value="de">{{ $t("German") }}</option>
       </select>
     </p>
   </div>
