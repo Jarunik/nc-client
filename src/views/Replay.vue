@@ -81,17 +81,17 @@
           </td>
           <td>
             <div v-if="attacker.rocket > 0">
-              <font color="orange">{{ attacker.rocket }}</font>
+              <font color="orange">{{ attacker.rocket.toFixed(0) }}</font>
             </div>
           </td>
           <td>
             <div v-if="attacker.bullet > 0">
-              <font color="orange">{{ attacker.bullet }}</font>
+              <font color="orange">{{ attacker.bullet.toFixed(0) }}</font>
             </div>
           </td>
           <td>
             <div v-if="attacker.laser > 0">
-              <font color="orange">{{ attacker.laser }}</font>
+              <font color="orange">{{ attacker.laser.toFixed(0) }}</font>
             </div>
           </td>
           <td v-show="attacker.id !== 'end'">
@@ -175,17 +175,17 @@
           </td>
           <td>
             <div v-if="defender.rocket > 0">
-              <font color="orange">{{ defender.rocket }}</font>
+              <font color="orange">{{ defender.rocket.toFixed(0) }}</font>
             </div>
           </td>
           <td>
             <div v-if="defender.bullet > 0">
-              <font color="orange">{{ defender.bullet }}</font>
+              <font color="orange">{{ defender.bullet.toFixed(0) }}</font>
             </div>
           </td>
           <td>
             <div v-if="defender.laser > 0">
-              <font color="orange">{{ defender.laser }}</font>
+              <font color="orange">{{ defender.laser.toFixed(0) }}</font>
             </div>
           </td>
           <td>
