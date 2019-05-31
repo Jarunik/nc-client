@@ -13,7 +13,7 @@
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
-          <th>" "</th>
+          <th></th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">
@@ -26,7 +26,7 @@
               <span v-if="mission.return !== null">
                 {{ moment.unix(mission.return, "seconds").format("lll") }}
               </span>
-              <span v-else>{{ $t("-") }}</span>
+              <span v-else>"-"</span>
             </td>
             <td>{{ $t(parseResult(mission.result) || "-") }}</td>
             <td>

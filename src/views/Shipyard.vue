@@ -17,7 +17,7 @@
           <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Construct") }}
           </th>
-          <th>" "</th>
+          <th></th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedShipyard" :key="ship.longname">

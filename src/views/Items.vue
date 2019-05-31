@@ -8,7 +8,7 @@
           <th>{{ $t("Quantity") }}</th>
           <th>{{ $t("Gift") }}</th>
           <th>{{ $t("Activate") }}</th>
-          <th>" "</th>
+          <th></th>
         </thead>
         <tbody>
           <tr v-for="(item, index) in items" :key="item.uid">
@@ -34,7 +34,7 @@
                 </template>
               </span>
               <span v-else>
-                {{ $t("-") }}
+                -
               </span>
             </td>
             <td>
@@ -48,7 +48,7 @@
                 <white-balance-sunny-icon :title="$t('Activate')" />
               </button>
               <span v-else>
-                {{ $t("-") }}
+                -
               </span>
             </td>
             <td>

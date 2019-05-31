@@ -21,7 +21,7 @@
           <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Activate") }}
           </th>
-          <th>" "</th>
+          <th></th>
         </thead>
         <tbody>
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
