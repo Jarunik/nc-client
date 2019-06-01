@@ -214,15 +214,15 @@
 </template>
 
 <script>
-import ships from "@/data/ships.js";
-import attackers from "@/data/attackers.js";
-import defenders from "@/data/defenders.js";
+import simShips from "@/data/simShips.js";
+import simAttackers from "@/data/simAttackers.js";
+import simDefenders from "@/data/simDefenders.js";
 
 export default {
   name: "Simulator",
   data() {
     return {
-      ships: ships,
+      ships: simShips,
       rates: [
         { id: 1, attack: "rocket", defense: "structure", rate: 4 },
         { id: 2, attack: "rocket", defense: "armor", rate: 2 },
@@ -234,8 +234,8 @@ export default {
         { id: 8, attack: "bullet", defense: "armor", rate: 4 },
         { id: 9, attack: "bullet", defense: "shield", rate: 1 }
       ],
-      attackers: attackers,
-      defenders: defenders,
+      attackers: simAttackers,
+      defenders: simDefenders,
       turn: "Attacker",
       currentAttacker: 0,
       currentDefender: 0,
