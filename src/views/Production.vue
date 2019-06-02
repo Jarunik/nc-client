@@ -6,20 +6,13 @@
     >
       <table>
         <thead>
-          <th>{{ $t("Type") }}</th>
+          <th></th>
           <th>{{ $t("Coal") }}</th>
           <th>{{ $t("Ore") }}</th>
           <th>{{ $t("Copper") }}</th>
           <th>{{ $t("Uranium") }}</th>
         </thead>
         <tbody>
-          <tr>
-            <td>{{ $t("Depot Size") }}</td>
-            <td>{{ production.coal.depot }}</td>
-            <td>{{ production.ore.depot }}</td>
-            <td>{{ production.copper.depot }}</td>
-            <td>{{ production.uranium.depot }}</td>
-          </tr>
           <tr>
             <td>{{ $t("Daily Production") }}</td>
             <td>{{ production.coal.production }}</td>
@@ -28,18 +21,18 @@
             <td>{{ production.uranium.production }}</td>
           </tr>
           <tr>
-            <td>{{ $t("Mine Level") }}</td>
-            <td>{{ production.coal.level }}</td>
-            <td>{{ production.ore.level }}</td>
-            <td>{{ production.copper.level }}</td>
-            <td>{{ production.uranium.level }}</td>
+            <td>{{ $t("Depot Size") }}</td>
+            <td>{{ production.coal.depot }}</td>
+            <td>{{ production.ore.depot }}</td>
+            <td>{{ production.copper.depot }}</td>
+            <td>{{ production.uranium.depot }}</td>
           </tr>
           <tr>
-            <td>{{ $t("Booster Level") }}</td>
-            <td>{{ production.coal.booster }}</td>
-            <td>{{ production.ore.booster }}</td>
-            <td>{{ production.copper.booster }}</td>
-            <td>{{ production.uranium.booster }}</td>
+            <td>{{ $t("Safe") }}</td>
+            <td>{{ production.coal.safe.toFixed(0) }}</td>
+            <td>{{ production.ore.safe.toFixed(0) }}</td>
+            <td>{{ production.copper.safe.toFixed(0) }}</td>
+            <td>{{ production.uranium.safe.toFixed(0) }}</td>
           </tr>
         </tbody>
       </table>
