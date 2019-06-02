@@ -304,12 +304,12 @@ export default {
         // Save start values (will stay)
         attackerShips.forEach(ship => {
           if (ship.name === ina.longname) {
-            ship.structure = ina.structure;
-            ship.armor = ina.armor;
-            ship.shield = ina.shield;
-            ship.rocket = ina.rocket;
-            ship.bullet = ina.bullet;
-            ship.laser = ina.laser;
+            ship.structure = ina.structure / ina.n;
+            ship.armor = ina.armor / ina.n;
+            ship.shield = ina.shield / ina.n;
+            ship.rocket = ina.rocket / ina.n;
+            ship.bullet = ina.bullet / ina.n;
+            ship.laser = ina.laser / ina.n;
           }
         });
       });
@@ -330,12 +330,12 @@ export default {
         defenders[j].survivor = ina.survivor;
         defenderShips.forEach(ship => {
           if (ship.name === ina.longname) {
-            ship.structure = ina.structure;
-            ship.armor = ina.armor;
-            ship.shield = ina.shield;
-            ship.rocket = ina.rocket;
-            ship.bullet = ina.bullet;
-            ship.laser = ina.laser;
+            ship.structure = ina.structure / ina.n;
+            ship.armor = ina.armor / ina.n;
+            ship.shield = ina.shield / ina.n;
+            ship.rocket = ina.rocket / ina.n;
+            ship.bullet = ina.bullet / ina.n;
+            ship.laser = ina.laser / ina.n;
           }
         });
       });
@@ -362,7 +362,7 @@ export default {
       this.prepare();
       this.interval = setInterval(() => {
         this.battle();
-      }, 500);
+      }, 100);
       this.battle();
     },
     up(who, ship) {
