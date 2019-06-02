@@ -22,6 +22,7 @@
 import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "planetnav",
@@ -35,6 +36,12 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "game/" + types.SET_GAME_USER:
+          this.prepareComponent();
+      }
+    });
   },
   filters: {
     shorten(name) {

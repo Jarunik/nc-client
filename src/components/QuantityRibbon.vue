@@ -19,6 +19,7 @@ import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
 import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
 import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
 import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "quantityribbon",
@@ -46,6 +47,12 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
     }, 1000);
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "game/" + types.SET_GAME_USER:
+          this.prepareComponent();
+      }
+    });
   },
   computed: {
     ...mapState({
