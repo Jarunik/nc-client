@@ -37,11 +37,13 @@
       <tbody>
         <tr v-for="(attacker, index) in attackers" :key="attacker.id">
           <td v-show="attacker.id !== 'end'">
-            <div v-if="index === currentAttacker">⮞</div>
+            <div v-if="index === currentAttacker">
+              <shield-airplane-icon :title="$t('Tank')" />
+            </div>
           </td>
           <td v-show="attacker.id !== 'end'">
             <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
-              ⮞
+              <pistol-icon :title="$t('Shooter')" />
             </div>
           </td>
           <td v-show="attacker.id !== 'end'">
@@ -139,11 +141,13 @@
       <tbody>
         <tr v-for="(defender, index) in defenders" :key="defender.id">
           <td v-show="defender.id !== 'end'">
-            <div v-if="index === currentDefender">⮞</div>
+            <div v-if="index === currentDefender">
+              <shield-airplane-icon :title="$t('Tank')" />
+            </div>
           </td>
           <td v-show="defender.id !== 'end'">
             <div v-if="turn === 'Defender' && index === currentDefenderShooter">
-              ⮞
+              <pistol-icon :title="$t('Shooter')" />
             </div>
           </td>
           <td v-show="defender.id !== 'end'">
@@ -217,9 +221,15 @@
 import simShips from "@/data/simShips.js";
 import simAttackers from "@/data/simAttackers.js";
 import simDefenders from "@/data/simDefenders.js";
+import PistolIcon from "vue-material-design-icons/Pistol.vue";
+import ShieldAirplaneIcon from "vue-material-design-icons/ShieldAirplane.vue";
 
 export default {
   name: "Simulator",
+  components: {
+    PistolIcon,
+    ShieldAirplaneIcon
+  },
   data() {
     return {
       ships: simShips,

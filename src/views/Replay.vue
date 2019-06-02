@@ -30,7 +30,6 @@
       <thead>
         <th>{{ $t("Tank") }}</th>
         <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
         <th>{{ $t("Ship") }}</th>
         <th>{{ $t("Quantity") }}</th>
         <th>{{ $t("Structure") }}</th>
@@ -42,32 +41,27 @@
         <th>{{ $t("Survivor") }}</th>
       </thead>
       <tbody>
-        <tr v-for="(attacker, index) in attackers" :key="attacker.id">
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="index === currentAttacker">⮞</div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
-              ⮞
+        <tr
+          v-show="attacker.id !== 'end' && attacker.quantity !== 0"
+          v-for="(attacker, index) in attackers"
+          :key="attacker.id"
+        >
+          <td>
+            <div v-if="index === currentAttacker">
+              <shield-airplane-icon :title="$t('Tank')" />
             </div>
           </td>
-          <td v-show="attacker.id !== 'end'">
-            <button v-on:click="up('attacker', attacker)">↑</button>
-            <button v-on:click="down('attacker', attacker)">↓</button>
+          <td>
+            <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
+              <pistol-icon :title="$t('Shooter')" />
+            </div>
+            <div v-else></div>
           </td>
-          <td v-show="attacker.id !== 'end'">
-            <select v-model="attacker.name" @change="prepare">
-              <option v-for="ship in attackerShips" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
+          <td>
+            {{ attacker.name }}
           </td>
-          <td v-show="attacker.id !== 'end'">
-            <input
-              type="number"
-              v-model="attacker.quantity"
-              v-on:input="prepare"
-            />
+          <td>
+            {{ attacker.quantity === 0 ? " " : attacker.quantity }}
           </td>
           <td>
             <div v-if="attacker.structure > 0">
@@ -132,7 +126,6 @@
       <thead>
         <th>{{ $t("Tank") }}</th>
         <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
         <th>{{ $t("Ship") }}</th>
         <th>{{ $t("Quantity") }}</th>
         <th>{{ $t("Structure") }}</th>
@@ -144,28 +137,27 @@
         <th>{{ $t("Survivor") }}</th>
       </thead>
       <tbody>
-        <tr v-for="(defender, index) in defenders" :key="defender.id">
-          <td v-show="defender.id !== 'end'">
-            <div v-if="index === currentDefender">⮞</div>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <div v-if="turn === 'Defender' && index === currentDefenderShooter">
-              ⮞
+        <tr
+          v-show="defender.id !== 'end' && defender.quantity !== 0"
+          v-for="(defender, index) in defenders"
+          :key="defender.id"
+        >
+          <td>
+            <div v-if="index === currentDefender">
+              <shield-airplane-icon :title="$t('Tank')" />
             </div>
           </td>
-          <td v-show="defender.id !== 'end'">
-            <button v-on:click="up('defender', defender)">↑</button>
-            <button v-on:click="down('defender', defender)">↓</button>
+          <td>
+            <div v-if="turn === 'Defender' && index === currentDefenderShooter">
+              <pistol-icon :title="$t('Shooter')" />
+            </div>
+            <div v-else></div>
           </td>
-          <td v-show="defender.id !== 'end'">
-            <select v-model="defender.name" @change="prepare">
-              <option v-for="ship in defenderShips" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
+          <td>
+            {{ defender.name }}
           </td>
-          <td v-show="defender.id !== 'end'" v-on:input="prepare">
-            <input type="number" v-model="defender.quantity" />
+          <td>
+            {{ defender.quantity === 0 ? " " : defender.quantity }}
           </td>
           <td>
             <div v-if="defender.structure > 0">
@@ -226,10 +218,16 @@ import defenderShips from "@/data/defenderShips";
 import attackers from "@/data/attackers";
 import defenders from "@/data/defenders";
 import BattleService from "@/services/battle";
+import PistolIcon from "vue-material-design-icons/Pistol.vue";
+import ShieldAirplaneIcon from "vue-material-design-icons/ShieldAirplane.vue";
 
 export default {
   name: "Replay",
   props: ["missionId"],
+  components: {
+    PistolIcon,
+    ShieldAirplaneIcon
+  },
   data() {
     return {
       rates: [
@@ -364,54 +362,6 @@ export default {
         this.battle();
       }, 100);
       this.battle();
-    },
-    up(who, ship) {
-      if (who === "attacker") {
-        var index = this.attackers.indexOf(ship);
-        if (index === 0) {
-          return;
-        }
-        if (index === this.slots) {
-          return;
-        }
-        this.attackers[index] = this.attackers[index - 1];
-        this.attackers[index - 1] = ship;
-      } else {
-        var index2 = this.defenders.indexOf(ship);
-        if (index2 === 0) {
-          return;
-        }
-        if (index2 === this.slots) {
-          return;
-        }
-        this.defenders[index2] = this.defenders[index2 - 1];
-        this.defenders[index2 - 1] = ship;
-      }
-      this.$forceUpdate();
-    },
-    down(who, ship) {
-      if (who === "attacker") {
-        var index = this.attackers.indexOf(ship);
-        if (index === this.slots) {
-          return;
-        }
-        if (index === this.slots - 1) {
-          return;
-        }
-        this.attackers[index] = this.attackers[index + 1];
-        this.attackers[index + 1] = ship;
-      } else {
-        var index2 = this.defenders.indexOf(ship);
-        if (index2 === this.slots) {
-          return;
-        }
-        if (index2 === this.slots - 1) {
-          return;
-        }
-        this.defenders[index2] = this.defenders[index2 + 1];
-        this.defenders[index2 + 1] = ship;
-      }
-      this.$forceUpdate();
     },
     battle: function() {
       var attackerIndex = this.currentAttacker;
@@ -906,5 +856,8 @@ input {
 }
 select {
   width: 20ch;
+}
+.replay td {
+  height: 24px;
 }
 </style>
