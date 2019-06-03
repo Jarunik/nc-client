@@ -1,13 +1,25 @@
 <template>
   <div class="replay">
     <h1>{{ $t("Replay") }}</h1>
-    <div v-for="fight in report" :key="fight.battle_number">
-      <p>
-        {{ $t("Mission") }} : {{ fight.mission_id }}
-        <router-link :to="{ path: '/battle/' + fight.mission_id }">{{
-          $t("Battle Log")
-        }}</router-link>
-      </p>
+    <p v-if="report !== null">
+      {{ $t("Mission") }}: {{ report[battleIndex].mission_id }}
+    </p>
+    <p v-if="report !== null">
+      {{ $t("Battle Log") }}:
+      <router-link
+        :to="{ path: '/battle/' + report[battleIndex].mission_id }"
+        >{{ $t("Battle Log") }}</router-link
+      >
+    </p>
+    <div
+      v-for="fight in report"
+      :key="fight.battle_number"
+      @click="selectBattle(fight.battle_number - 1)"
+    >
+      <font v-if="fight.battle_number - 1 === battleIndex" color="green">
+        {{ $t("Battle") }}: {{ fight.battle_number }}</font
+      >
+      <span v-else>{{ $t("Battle") }}: {{ fight.battle_number }}</span>
     </div>
     <h3>
       {{ $t("Attacker") }}
@@ -25,7 +37,6 @@
         }}</font>
       </span>
     </h3>
-    <br />
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -263,7 +274,8 @@ export default {
       interval: null,
       report: null,
       attackerShips: attackerShips,
-      defenderShips: defenderShips
+      defenderShips: defenderShips,
+      battleIndex: 0
     };
   },
   async mounted() {
@@ -279,11 +291,16 @@ export default {
       this.prepare();
     },
     prepare: function() {
-      this.attackerArmorRep = this.report[0].attacker_armorrep;
-      this.defenderArmorRep = this.report[0].defender_armorrep;
-      this.attackerShieldRegen = this.report[0].attacker_shieldregen;
-      this.defenderShieldRegen = this.report[0].defender_shieldregen;
-      var initialAttackers = this.report[0].initial_attacker_ships;
+      this.attackerArmorRep = this.report[this.battleIndex].attacker_armorrep;
+      this.defenderArmorRep = this.report[this.battleIndex].defender_armorrep;
+      this.attackerShieldRegen = this.report[
+        this.battleIndex
+      ].attacker_shieldregen;
+      this.defenderShieldRegen = this.report[
+        this.battleIndex
+      ].defender_shieldregen;
+      var initialAttackers = this.report[this.battleIndex]
+        .initial_attacker_ships;
       this.attackers.forEach(attacker => {
         attacker.name = null;
       });
@@ -311,7 +328,8 @@ export default {
           }
         });
       });
-      var initialDefenders = this.report[0].initial_defender_ships;
+      var initialDefenders = this.report[this.battleIndex]
+        .initial_defender_ships;
       this.defenders.forEach(defender => {
         defender.name = null;
       });
@@ -362,6 +380,10 @@ export default {
         this.battle();
       }, 100);
       this.battle();
+    },
+    selectBattle(battleIndex) {
+      this.battleIndex = battleIndex;
+      this.reset();
     },
     battle: function() {
       var attackerIndex = this.currentAttacker;
