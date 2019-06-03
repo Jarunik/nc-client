@@ -2,7 +2,7 @@
   <div class="battle">
     <h1>{{ $t("Battle") }}</h1>
     <div v-if="battle !== null">
-      <div v-for="mission in battle" :key="mission.mission_id">
+      <div v-for="mission in battle" :key="mission.battle_number">
         <p>
           {{ $t("Mission") }} : {{ mission.mission_id }} {{ $t("Battle") }} :
           {{ mission.battle_number }}
