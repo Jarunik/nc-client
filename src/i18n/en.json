@@ -157,8 +157,8 @@
   "Find and colonize new planets": "Find and colonize new planets",
   "Battle for honor and resources": "Battle for honor and resources",
   "Trade digital collectibles": "Trade digital collectibles",
-  "Warning: This is alternative, experimental client and in development.":"Warning: This is alternative, experimental client and in development.",
-  "Please use the official client if you don't want to test an alpha version.": "Please use the official client if you don't want to test an alpha version.",
+  "Warning: This is alternative, experimental client which is in development.":"Warning: This is alternative, experimental client which is in development.",
+  "Please use the official client if you don't want to play with the open source version.": "Please use the official client if you don't want to play with the open source version.",
   "Official NextColony Client": "Official NextColony Client",
   "Logged in as": "Logged in as",
   "Valid Access Token": "Valid Access Token",
@@ -240,5 +240,9 @@
   "logout/login": "logout/login",
   "to switch the authorized user.": "to switch the authorized user.",
   "Play Turn": "Play Turn",
-  "German": "German"
+  "German": "German",
+  "Source Code on Github": "Source Code on Github",
+  "Destroyed": "Destroyed",
+  "Set myself": "Set myself",
+  "Safe": "Safe"
 }

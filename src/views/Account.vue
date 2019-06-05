@@ -17,23 +17,26 @@
       <i>
         {{
           $t(
-            "Warning: This is alternative, experimental client and in development."
+            "Warning: This is alternative, experimental client which is in development."
           )
         }}
       </i>
       <br />
-      <i>
-        {{
-          $t(
-            "Please use the official client if you don't want to test an alpha version."
-          )
-        }}
-      </i>
     </p>
-
+    <p>
+      <a href="https://github.com/Jarunik/nc-client">{{
+        $t("Source Code on Github")
+      }}</a>
+    </p>
+    {{
+      $t(
+        "Please use the official client if you don't want to play with the open source version."
+      )
+    }}
     <p>
       <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
+
     <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>

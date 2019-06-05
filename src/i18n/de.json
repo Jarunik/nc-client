@@ -157,8 +157,8 @@
   "Find and colonize new planets": "Finde und besiedle Planeten",
   "Battle for honor and resources": "Kämpfe führ Ehre und Rohstoffe",
   "Trade digital collectibles": "Handle digitale Sammlerstücke",
-  "Warning: This is alternative, experimental client and in development.":"Warnung: Das ist ein alternativer, expermintelles Applikation welche in Entwicklung ist.",
-  "Please use the official client if you don't want to test an alpha version.": "Bitte verwenden die offizielle Aplikation wenn du keine Alpha Version testen möchtst.",
+  "Warning: This is alternative, experimental client which is in development.":"Warnung: Das ist ein alternativer, expermintelles Applikation welche in Entwicklung ist.",
+  "Please use the official client if you don't want to play with the open source version.": "Bitte verwenden die offizielle Aplikation wenn du nicht mit der Open Source Version spielen möchtest.",
   "Official NextColony Client": "Offizielle NextColony Applikation",
   "Logged in as": "Eingeloggt als",
   "Valid Access Token": "Gültiger Zugriffs Token",
@@ -240,5 +240,9 @@
   "logout/login": "logout/login",
   "to switch the authorized user.": "um den autorisierten Benutzer zu wechseln.",
   "Play Turn": "Runde Spielen",
-  "German": "Deutsch"
+  "German": "Deutsch",
+  "Source Code on Github": "Source Code auf Github",
+  "Destroyed": "Zerstört",
+  "Set myself": "Mich selbst setzen",
+  "Safe": "Sicher"
 }

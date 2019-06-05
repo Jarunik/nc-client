@@ -12,7 +12,7 @@
       <button @click="setUser(user)">{{ $t("Set") }}</button>
     </p>
     <p>
-      <button @click="setUser(loginUser)">Set myself</button>
+      <button @click="setUser(loginUser)">{{ $t("Set myself") }}</button>
     </p>
     <p>
       <i>{{
@@ -79,7 +79,7 @@ export default {
         this.$store.dispatch("game/setLanguage", language);
         this.$i18n.locale = language;
 
-        this.$store.dispatch("ui/setLocale", language);
+        this.$store.dispatch("game/setLocale", language);
         moment.locale(language);
 
         //Refresh everything be calling page again

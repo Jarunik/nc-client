@@ -28,7 +28,7 @@
               </span>
               <span v-else>-</span>
             </td>
-            <td>{{ $t(parseResult(mission.result) || "-") }}</td>
+            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
             <td>
               <button
                 :disabled="clicked.includes(mission.id)"
