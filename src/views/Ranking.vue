@@ -112,3 +112,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.ranking .material-design-icon > .material-design-icon__svg {
+  height: 1.5em;
+  width: 1.5em;
+}
+</style>

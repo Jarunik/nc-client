@@ -200,7 +200,7 @@
       </template>
       <template v-if="gameUser !== 'null'">
         <p>
-          {{ $t("You have no ships. Buy some in the") }}
+          {{ $t("You have no ships. Build some in the") }}
           <router-link :to="'/shipyard'"> {{ $t("Shipyard") }} </router-link>.
         </p>
       </template>
