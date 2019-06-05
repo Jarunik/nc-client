@@ -2,25 +2,36 @@
   <div class="missions">
     <h1>{{ $t("Missions") }}</h1>
     <template v-if="gameUser !== 'null'">
+      <p v-if="shipString">{{ shipString }}</p>
+      <p v-else>{{ $t("Click the ship total to see details.") }}</p>
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
+          <th @click="sort('user')">{{ $t("User") }}</th>
           <th @click="sort('start_x')">{{ $t("Origin") }}</th>
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
           <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
           <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
-          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
           <th></th>
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">
             <td>{{ $t(mission.type) }}</td>
+            <td>{{ mission.user }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
-            <td>{{ mission.ships.total }}</td>
+            <td>
+              <span v-if="mission.ships !== null" @click="shipList(mission)">
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
+                <span v-else>{{ mission.ships.total }}</span></span
+              >
+            </td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
             <td>
               <span v-if="mission.return !== null">
@@ -29,18 +40,6 @@
               <span v-else>-</span>
             </td>
             <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
-            <td>
-              <button
-                :disabled="clicked.includes(mission.id)"
-                v-if="cancelPossible(mission)"
-                @click="cancel(mission)"
-              >
-                <cancel-icon :title="$t('Cancel')" />
-              </button>
-            </td>
-            <td v-if="chainResponse.includes(mission.id)">
-              <timer-sand-icon :title="$t('Transaction sent')" />
-            </td>
             <td>
               <router-link
                 v-if="
@@ -63,6 +62,18 @@
               >
                 {{ $t("Replay") }}</router-link
               >
+            </td>
+            <td>
+              <button
+                :disabled="clicked.includes(mission.id)"
+                v-if="cancelPossible(mission)"
+                @click="cancel(mission)"
+              >
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(mission.id)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>
@@ -98,7 +109,9 @@ export default {
       currentSort: "arrival",
       currentDir: "desc",
       clicked: [],
-      chainResponse: []
+      chainResponse: [],
+      shipString: "",
+      selectedShips: null
     };
   },
   async mounted() {
@@ -217,6 +230,17 @@ export default {
       if (result === "0") {
         return "Draw";
       }
+    },
+    shipList(mission) {
+      var string = "";
+      for (const key in mission.ships) {
+        let value = mission.ships[key];
+        if (value !== "undefined" && key !== "total" && value !== 0) {
+          string = string + this.$t(key) + ":" + mission.ships[key] + " ";
+        }
+      }
+      this.shipString = string;
+      this.selectedShips = mission.id;
     }
   }
 };
