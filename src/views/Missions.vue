@@ -235,8 +235,20 @@ export default {
       var string = "";
       for (const key in mission.ships) {
         let value = mission.ships[key];
-        if (value !== "undefined" && key !== "total" && value !== 0) {
+        if (
+          value !== "undefined" &&
+          key !== "total" &&
+          value !== 0 &&
+          typeof value == "number"
+        ) {
           string = string + this.$t(key) + ":" + mission.ships[key] + " ";
+        } else if (
+          value !== "undefined" &&
+          key !== "total" &&
+          value !== 0 &&
+          typeof value == "object"
+        ) {
+          string = string + this.$t(key) + ":" + mission.ships[key].n + " ";
         }
       }
       this.shipString = string;
