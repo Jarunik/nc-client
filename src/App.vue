@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="navtop">
+    <span id="navtop">
       <router-link to="/ranking"
         ><chevron-triple-up-icon :title="$t('Ranking')"
       /></router-link>
@@ -44,17 +44,17 @@
       <router-link to="/user"><account-icon :title="$t('User')"/></router-link>
       |
       <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
-    </div>
-    <div id="middle">
+    </span>
+    <span id="middle">
       <router-view />
-    </div>
-    <div id="navbottom">
+    </span>
+    <span id="navbottom">
       <PlanetNav :routeUser="gameUser" />
       <br />
       <router-link :to="'/production'">
         <QuantityRibbon />
       </router-link>
-    </div>
+    </span>
   </div>
 </template>
 
@@ -260,6 +260,7 @@ export default {
   padding: 10px;
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
   background-color: #100f1c;
   font-size: 120%;
