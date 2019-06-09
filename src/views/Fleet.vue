@@ -204,6 +204,7 @@
           {{ $t("You have no ships. Build some in the") }}
           <router-link :to="'/shipyard'"> {{ $t("Shipyard") }} </router-link>.
         </p>
+        <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       </template>
     </template>
   </div>
