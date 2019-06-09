@@ -22,6 +22,14 @@ class MissionsService {
 
     return response;
   }
+
+  async latest(user, limit = 40) {
+    const response = await ApiService.get(
+      `/loadfleetmission?user=${user}&page=0&limit=${limit}`
+    );
+
+    return response;
+  }
 }
 
 export default new MissionsService();

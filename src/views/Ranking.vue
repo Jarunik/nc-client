@@ -70,13 +70,6 @@ export default {
     await this.prepareComponent();
   },
   computed: {
-    topRanks() {
-      if (this.ranking !== null) {
-        return this.ranking.slice(0, 30);
-      } else {
-        return this.ranking;
-      }
-    },
     sortedRanking() {
       var sortedRanking = this.ranking;
       if (sortedRanking !== null) {
@@ -99,7 +92,7 @@ export default {
       await this.getRanking();
     },
     async getRanking() {
-      const response = await RankingService.all();
+      const response = await RankingService.limit(200);
       this.ranking = response;
     },
     sort(s) {

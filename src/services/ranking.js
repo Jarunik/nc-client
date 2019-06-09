@@ -6,6 +6,12 @@ class RankingService {
 
     return response;
   }
+
+  async limit(limit = 100) {
+    const response = await ApiService.get(`/loadranking?limit=${limit}`);
+
+    return response;
+  }
 }
 
 export default new RankingService();
