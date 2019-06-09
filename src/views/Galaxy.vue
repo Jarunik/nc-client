@@ -112,8 +112,8 @@ export default {
       focusY: null,
       search: null,
       planet: null,
-      areaHeight: 22,
-      areaWidth: 22
+      areaHeight: 32,
+      areaWidth: 32
     };
   },
   async mounted() {
