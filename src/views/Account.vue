@@ -57,7 +57,7 @@
     <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
-        <i>{{ $t("Secure 1-click-registration via SteemConnect:") }}</i>
+        <i>{{ $t("Secure 1-click-registration via SteemConnect") }}</i>
       </p>
       <button v-on:click="login">{{ $t("Login") }}</button>
     </template>

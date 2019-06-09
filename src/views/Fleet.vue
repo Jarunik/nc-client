@@ -226,7 +226,7 @@ export default {
   data: function() {
     return {
       fleet: null,
-      activeMissions: null,
+      activeUserMissions: null,
       skills: null,
       quantity: null,
       interval: null,
@@ -330,8 +330,8 @@ export default {
       await this.calculateAvailableMissions();
     },
     async getMissions() {
-      const response = await MissionsService.active(this.gameUser);
-      this.activeMissions = response;
+      const response = await MissionsService.activeUser(this.gameUser);
+      this.activeUserMissions = response;
     },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);
@@ -441,8 +441,8 @@ export default {
       }
 
       let runningMissions = 0;
-      if (this.activeMissions !== null) {
-        this.activeMissions.forEach(mission => {
+      if (this.activeUserMissions !== null) {
+        this.activeUserMissions.forEach(mission => {
           if (mission.user === this.gameUser) {
             runningMissions = runningMissions + 1;
           }
