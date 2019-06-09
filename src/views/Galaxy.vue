@@ -4,8 +4,8 @@
     <template v-if="this.galaxy != null">
       <table>
         <tbody>
-          <tr v-for="y in 13" :key="y">
-            <td @click="focus(x, y)" v-for="x in 21" :key="x">
+          <tr v-for="y in areaHeight" :key="y">
+            <td @click="focus(x, y)" v-for="x in areaWidth" :key="x">
               <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
                 ><font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
@@ -111,7 +111,9 @@ export default {
       focusX: null,
       focusY: null,
       search: null,
-      planet: null
+      planet: null,
+      areaHeight: 22,
+      areaWidth: 22
     };
   },
   async mounted() {
@@ -157,7 +159,12 @@ export default {
         this.focusY = yCoordinate;
         this.search = "(" + this.focusX + "/" + this.focusY + ")";
       }
-      const response = await GalaxyService.galaxy(xCoordinate, yCoordinate);
+      const response = await GalaxyService.area(
+        xCoordinate,
+        yCoordinate,
+        this.areaHeight,
+        this.areaWidth
+      );
       this.galaxy = response;
     },
     async getPlanet(planetId) {
