@@ -45,7 +45,10 @@
                   <arrow-up-bold-icon :title="$t('Enhance')" />
                 </button>
               </span>
-              <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
+              <span v-else>
+                <span v-if="skill.current > 19"
+                  ><check-outline-icon :title="$t('Maxed')" /> </span
+              ></span>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
               <timer-sand-icon :title="$t('Transaction sent')" />
