@@ -45,9 +45,9 @@
       |
       <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
     </span>
-    <span id="middle">
+    <div id="middle">
       <router-view />
-    </span>
+    </div>
     <span id="navbottom">
       <PlanetNav :routeUser="gameUser" />
       <br />
