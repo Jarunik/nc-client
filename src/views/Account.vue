@@ -28,28 +28,12 @@
       }}</a>
     </p>
     <p>
-      <i
-        ><font color="red">
-          {{
-            $t(
-              "Use Chrome and install the Steem Keychain extension for autorizing transactions."
-            )
-          }}</font
-        >
-      </i>
-      <br />
+      {{
+        $t(
+          "Please use the official client if you don't want to play with the open source version."
+        )
+      }}
     </p>
-    <p>
-      <a
-        href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm?hl=en"
-        >{{ $t("Steem Keychain Extension") }}</a
-      >
-    </p>
-    {{
-      $t(
-        "Please use the official client if you don't want to play with the open source version."
-      )
-    }}
     <p>
       <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
@@ -104,7 +88,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "overview",
-  props: ["callbackUserName", "callbackAccessTokken", "callbackExpiresIn"],
+  props: ["callbackUserName", "callbackAccessToken", "callbackExpiresIn"],
   data: function() {
     return {
       loginURL: null,
