@@ -21,10 +21,32 @@
           <tr v-for="skill in sortedSkills" :key="skill.name">
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
-            <td>{{ skill.coal === 0 ? "-" : skill.coal }}</td>
-            <td>{{ skill.ore === 0 ? "-" : skill.ore }}</td>
-            <td>{{ skill.copper === 0 ? "-" : skill.copper }}</td>
-            <td>{{ skill.uranium === 0 ? "-" : skill.uranium }}</td>
+            <td>
+              <font v-if="skill.coal > coal" color="red">{{
+                skill.coal === 0 ? "-" : skill.coal
+              }}</font>
+              <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
+            </td>
+            <td>
+              <font v-if="skill.ore > ore" color="red">{{
+                skill.ore === 0 ? "-" : skill.ore
+              }}</font
+              ><font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
+            </td>
+            <td>
+              <font v-if="skill.copper > copper" color="red">{{
+                skill.copper === 0 ? "-" : skill.copper
+              }}</font
+              ><font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
+            </td>
+            <td>
+              <font v-if="skill.uranium > uranium" color="red">{{
+                skill.uranium === 0 ? "-" : skill.uranium
+              }}</font
+              ><font v-else>{{
+                skill.uranium === 0 ? "-" : skill.uranium
+              }}</font>
+            </td>
             <td>
               {{ skill.time | timePretty }}
             </td>

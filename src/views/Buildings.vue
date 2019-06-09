@@ -5,6 +5,7 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
+          <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('current')">{{ $t("Level") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
@@ -26,11 +27,48 @@
         <tbody>
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
-            <td>{{ building.current }}</td>
-            <td>{{ building.coal === 0 ? "-" : building.coal }}</td>
-            <td>{{ building.ore === 0 ? "-" : building.ore }}</td>
-            <td>{{ building.copper === 0 ? "-" : building.copper }}</td>
-            <td>{{ building.uranium === 0 ? "-" : building.uranium }}</td>
+            <td>
+              <font v-if="building.current === building.skill" color="red">
+                {{ building.skill }}
+              </font>
+              <font v-else> {{ building.skill }}</font>
+            </td>
+            <td>
+              <font v-if="building.current === building.skill">{{
+                building.current
+              }}</font
+              ><font v-else color="green">{{ building.current }}</font>
+            </td>
+            <td>
+              <font v-if="building.coal > coal" color="red">{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
+              <font v-else>{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
+            </td>
+            <td>
+              <font v-if="building.ore > ore" color="red">{{
+                building.ore === 0 ? "-" : building.ore
+              }}</font
+              ><font v-else>{{ building.ore === 0 ? "-" : building.ore }}</font>
+            </td>
+            <td>
+              <font v-if="building.copper > copper" color="red">{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font
+              ><font v-else>{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font>
+            </td>
+            <td>
+              <font v-if="building.uranium > uranium" color="red">{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font
+              ><font v-else>{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font>
+            </td>
             <td>
               {{ building.time | timePretty }}
             </td>
@@ -45,7 +83,7 @@
               >
                 <button
                   :disabled="clicked.includes(building.name)"
-                  v-if="buildingPossible(building, index)"
+                  v-if="buildingPossible(building)"
                   @click="upgradeBuilding(building, index)"
                 >
                   <arrow-up-bold-icon :title="$t('Upgrade')" />
@@ -263,7 +301,7 @@ export default {
       if (this.uranium < building.uranium) {
         return false;
       }
-      if (this.current >= this.skill) {
+      if (building.skill <= building.current) {
         return false;
       }
       return true;

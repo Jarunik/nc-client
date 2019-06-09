@@ -6,6 +6,9 @@
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
           <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
+          <th @click="sort('min_level')">{{ $t("Needs") }}</th>
+          <th @click="sort('cur_level')">{{ $t("Shipyard") }}</th>
+          <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
@@ -23,10 +26,51 @@
           <tr v-for="ship in sortedShipyard" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ $t(ship.variant_name) }}</td>
-            <td>{{ ship.cost.coal }}</td>
-            <td>{{ ship.cost.ore }}</td>
-            <td>{{ ship.cost.copper }}</td>
-            <td>{{ ship.cost.uranium }}</td>
+            <td>{{ $t(ship.min_level) }}</td>
+            <td>
+              <font v-if="ship.cur_level < ship.min_level">{{
+                $t(ship.cur_level)
+              }}</font
+              ><font v-else color="green">{{ $t(ship.cur_level) }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cur_level_skill < ship.min_level">{{
+                $t(ship.cur_level_skill)
+              }}</font
+              ><font v-else color="green">{{ $t(ship.cur_level_skill) }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.coal > coal" color="red">{{
+                ship.cost.coal === 0 ? "-" : ship.cost.coal
+              }}</font>
+              <font v-else>{{
+                ship.cost.coal === 0 ? "-" : ship.cost.coal
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.ore > ore" color="red">{{
+                ship.cost.ore === 0 ? "-" : ship.cost.ore
+              }}</font
+              ><font v-else>{{
+                ship.cost.ore === 0 ? "-" : ship.cost.ore
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.copper > copper" color="red">{{
+                ship.cost.copper === 0 ? "-" : ship.cost.copper
+              }}</font
+              ><font v-else>{{
+                ship.cost.copper === 0 ? "-" : ship.cost.copper
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.uranium > uranium" color="red">{{
+                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+              }}</font
+              ><font v-else>{{
+                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+              }}</font>
+            </td>
             <td>
               {{ ship.cost.time | timePretty }}
             </td>
