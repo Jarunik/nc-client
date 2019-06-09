@@ -452,6 +452,8 @@ export default {
         if (this.planetId === planet.id) {
           missionBudget = missionBudget + 1;
           this.availableMissions = missionBudget - runningMissions;
+        } else {
+          this.availableMissions = missionBudget - runningMissions;
         }
       });
     },
