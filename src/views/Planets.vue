@@ -58,7 +58,7 @@
                   </button>
                 </template>
               </span>
-              <span v-else>"-"</span>
+              <span v-else>-</span>
             </td>
             <td>
               <span v-if="planet.id === planetId"
