@@ -5,8 +5,8 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
-          <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('current')">{{ $t("Level") }}</th>
+          <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
@@ -28,16 +28,13 @@
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
             <td>
+              {{ building.current }}
+            </td>
+            <td>
               <font v-if="building.current === building.skill" color="red">
                 {{ building.skill }}
               </font>
               <font v-else> {{ building.skill }}</font>
-            </td>
-            <td>
-              <font v-if="building.current === building.skill">{{
-                building.current
-              }}</font
-              ><font v-else color="green">{{ building.current }}</font>
             </td>
             <td>
               <font v-if="building.coal > coal" color="red">{{

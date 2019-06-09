@@ -27,23 +27,21 @@
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ $t(ship.variant_name) }}</td>
             <td>
-              <font
-                v-if="ship.cur_level < ship.min_level && ship.skill < 20"
-                color="red"
-                >{{ ship.min_level }}</font
-              ><font v-else>{{ ship.min_level }}</font>
+              {{ ship.min_level }}
             </td>
             <td>
-              <font v-if="ship.cur_level < ship.min_level">{{
+              <font v-if="ship.cur_level < ship.min_level" color="red">{{
                 ship.cur_level
               }}</font
-              ><font v-else color="green">{{ $t(ship.cur_level) }}</font>
+              ><font v-else>{{ $t(ship.cur_level) }}</font>
             </td>
             <td>
-              <font v-if="ship.skill === 20" color="green">{{
-                ship.skill
+              <font v-if="ship.skill < 20" color="red">{{
+                ship.skill === null ? 0 : ship.skill
               }}</font
-              ><font v-else>{{ $t(ship.skill) }}</font>
+              ><font v-else>{{
+                $t(ship.skill === null ? 0 : ship.skill)
+              }}</font>
             </td>
             <td>
               <font v-if="ship.cost.coal > coal" color="red">{{
