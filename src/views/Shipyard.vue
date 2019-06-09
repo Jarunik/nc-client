@@ -42,9 +42,7 @@
               <font v-if="ship.skill < 20" color="red">{{
                 ship.skill === null ? 0 : ship.skill
               }}</font
-              ><font v-else>{{
-                $t(ship.skill === null ? 0 : ship.skill)
-              }}</font>
+              ><font v-else>{{ ship.skill === null ? 0 : ship.skill }}</font>
             </td>
             <td>
               <font v-if="ship.cost.coal > coal" color="red">{{
