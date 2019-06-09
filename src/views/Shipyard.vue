@@ -1,6 +1,9 @@
 <template>
   <div class="shipyard">
     <h1>{{ $t("Shipyard") }}</h1>
+    <p>
+      <i>{{ $t("Ships need skill level 20 to build.") }}</i>
+    </p>
     <template v-if="gameUser !== 'null' && planetId != 'null'">
       <table>
         <thead>
@@ -33,7 +36,7 @@
               <font v-if="ship.cur_level < ship.min_level" color="red">{{
                 ship.cur_level
               }}</font
-              ><font v-else>{{ $t(ship.cur_level) }}</font>
+              ><font v-else>{{ ship.cur_level }}</font>
             </td>
             <td>
               <font v-if="ship.skill < 20" color="red">{{
