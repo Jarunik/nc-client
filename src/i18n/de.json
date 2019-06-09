@@ -271,5 +271,7 @@
   "Click the ship total to see details.":"Klick auf das Total der Schiffe für mehr Details.",
   "Available Missions": "Verfügbare Missionen",
   "Planet found": "Planet gefunden",
-  "Ships need skill level 20 to build.":"Schiffsbau benötigt Skill Level 20."
+  "Ships need skill level 20 to build.":"Schiffsbau benötigt Skill Level 20.",
+  "Use Chrome and install the Steem Keychain extension for autorizing transactions.": "Benutze Chrome und installiere die Steem Keychain Erweiterung für die Autorizierung von Transaktionen.",
+  "Steem Keychain Extension": "Steem Keychain Erweiterung"
 }

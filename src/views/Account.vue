@@ -21,12 +21,29 @@
           )
         }}
       </i>
-      <br />
     </p>
     <p>
       <a href="https://github.com/Jarunik/nc-client">{{
         $t("Source Code on Github")
       }}</a>
+    </p>
+    <p>
+      <i
+        ><font color="red">
+          {{
+            $t(
+              "Use Chrome and install the Steem Keychain extension for autorizing transactions."
+            )
+          }}</font
+        >
+      </i>
+      <br />
+    </p>
+    <p>
+      <a
+        href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm?hl=en"
+        >{{ $t("Steem Keychain Extension") }}</a
+      >
     </p>
     {{
       $t(
