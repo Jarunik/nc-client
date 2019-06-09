@@ -151,7 +151,7 @@ export default {
       await this.getMissions();
     },
     async getMissions() {
-      const response = await MissionsService.latest(this.gameUser);
+      const response = await MissionsService.latest(this.gameUser, 50);
       this.missions = response;
     },
     sort(s) {
