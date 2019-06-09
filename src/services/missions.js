@@ -6,6 +6,14 @@ class MissionsService {
 
     return response;
   }
+
+  async active(user) {
+    const response = await ApiService.get(
+      `/loadfleetmission?user=${user}&active=1`
+    );
+
+    return response;
+  }
 }
 
 export default new MissionsService();

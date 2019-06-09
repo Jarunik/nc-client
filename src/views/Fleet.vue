@@ -51,6 +51,7 @@
         </tbody>
       </table>
       <br />
+      <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       <!-- Commands -->
       <h3>
         {{ $t("Command") }}
@@ -211,6 +212,9 @@
 <script>
 import FleetService from "@/services/fleet";
 import QuantityService from "@/services/quantity";
+import MissionsService from "@/services/missions";
+import SkillsService from "@/services/skills";
+import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import moment from "moment";
 import SteemConnectService from "@/services/steemconnect";
@@ -221,6 +225,8 @@ export default {
   data: function() {
     return {
       fleet: null,
+      activeMissions: null,
+      skills: null,
       quantity: null,
       interval: null,
       coal: null,
@@ -242,7 +248,8 @@ export default {
       fuelConsumption: 0,
       slowestSpeed: null,
       pos: 0,
-      search: null
+      search: null,
+      availableMissions: 0
     };
   },
   async mounted() {
@@ -317,6 +324,17 @@ export default {
     async prepareComponent() {
       await this.getFleet();
       await this.getQuantity();
+      await this.getMissions();
+      await this.getSkills();
+      await this.calculateAvailableMissions();
+    },
+    async getMissions() {
+      const response = await MissionsService.active(this.gameUser);
+      this.activeMissions = response;
+    },
+    async getSkills() {
+      const response = await SkillsService.all(this.gameUser);
+      this.skills = response;
     },
     async getFleet() {
       const response = await FleetService.all(this.gameUser, this.planetId);
@@ -407,6 +425,35 @@ export default {
       }
       this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
     },
+    async fetchStarterPlanet(user) {
+      const response = await PlanetsService.starterPlanet(user);
+      return response.planets[0];
+    },
+    calculateAvailableMissions() {
+      let missionBudget = 0;
+      if (this.skills !== null) {
+        this.skills.forEach(skill => {
+          if (skill.name === "missioncontrol") {
+            missionBudget = skill.current * 2;
+          }
+        });
+      }
+
+      let runningMissions = 0;
+      if (this.activeMissions !== null) {
+        this.activeMissions.forEach(mission => {
+          if (mission.user === this.gameUser) {
+            runningMissions = runningMissions + 1;
+          }
+        });
+      }
+      this.fetchStarterPlanet(this.gameUser).then(planet => {
+        if (this.planetId === planet.id) {
+          missionBudget = missionBudget + 1;
+          this.availableMissions = missionBudget - runningMissions;
+        }
+      });
+    },
     commandEnabled(command) {
       let enabled = false;
       if (
@@ -417,7 +464,8 @@ export default {
         this.yCoordinate !== null &&
         this.yCoordinate !== "" &&
         this.shipFormation.count > 0 &&
-        parseFloat(this.uranium) > parseFloat(this.fuelConsumption)
+        parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
+        this.availableMissions > 0
       ) {
         if (command === "transport") {
           if (
