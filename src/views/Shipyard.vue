@@ -27,8 +27,18 @@
         </thead>
         <tbody>
           <tr v-for="ship in sortedShipyard" :key="ship.longname">
-            <td>{{ $t(ship.longname) }}</td>
-            <td>{{ $t(ship.variant_name) }}</td>
+            <td>
+              <font v-if="ship.activated === true || ship.variant === 0">{{
+                $t(ship.longname)
+              }}</font
+              ><font v-else color="grey">{{ $t(ship.longname) }}</font>
+            </td>
+            <td>
+              <font v-if="ship.activated === true || ship.variant === 0">{{
+                $t(ship.variant_name)
+              }}</font
+              ><font v-else color="grey">{{ $t(ship.variant_name) }}</font>
+            </td>
             <td>
               {{ ship.min_level }}
             </td>
@@ -295,6 +305,9 @@ export default {
         return false;
       }
       if (ship.cur_level < ship.min_level) {
+        return false;
+      }
+      if (ship.activated === false && ship.variant !== 0) {
         return false;
       }
       if (ship.skill < 20) {
