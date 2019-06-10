@@ -34,7 +34,6 @@
 
 <script>
 import BattleService from "@/services/battle";
-import moment from "moment";
 
 export default {
   name: "battlefeed",

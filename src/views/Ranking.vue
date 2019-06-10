@@ -62,8 +62,8 @@ export default {
   data: function() {
     return {
       ranking: null,
-      currentSort: "production",
-      currentSortDir: "asc"
+      currentSort: "destroyed_ships_uranium",
+      currentSortDir: "desc"
     };
   },
   async mounted() {
