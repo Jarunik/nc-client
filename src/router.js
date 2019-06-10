@@ -33,6 +33,15 @@ export default new Router({
         import(/* webpackChunkName: "ranking" */ "./views/Ranking.vue")
     },
     {
+      path: "/battlefeed",
+      name: "battlefeed",
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(/* webpackChunkName: "battlefeed" */ "./views/BattleFeed.vue")
+    },
+    {
       path: "/shop",
       name: "shop",
       // route level code-splitting

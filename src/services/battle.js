@@ -8,6 +8,12 @@ class BattleService {
 
     return response;
   }
+
+  async limit(limit = 20) {
+    const response = await ApiService.get(`/loadbattle?limit=${limit}`);
+
+    return response;
+  }
 }
 
 export default new BattleService();

@@ -4,7 +4,13 @@
       <router-link to="/ranking"
         ><chevron-triple-up-icon :title="$t('Ranking')"
       /></router-link>
-      | <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
+      |
+      <router-link to="/battlefeed">
+        <sword-cross-icon :title="$t('Recent Battles')"
+      /></router-link>
+      |
+
+      <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
       <router-link :to="'/items'">
         <package-variant-closed-icon :title="$t('Items')" />
       </router-link>
@@ -76,6 +82,7 @@ import LoginIcon from "vue-material-design-icons/Login.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
+import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 
 export default {
   name: "App",
@@ -94,7 +101,8 @@ export default {
     LoginIcon,
     AccountIcon,
     EarthIcon,
-    AnimationPlayIcon
+    AnimationPlayIcon,
+    SwordCrossIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
