@@ -428,7 +428,7 @@ export default {
     },
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
-      return response.planets[0];
+      return response;
     },
     calculateAvailableMissions() {
       let missionBudget = 0;

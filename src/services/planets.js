@@ -8,11 +8,13 @@ class PlanetsService {
   }
 
   async starterPlanet(user) {
-    const response = await ApiService.get(
-      `/loadplanets?user=${user}&from=0&to=1`
-    );
+    const response = await ApiService.get(`/loadplanets?user=${user}`);
 
-    return response;
+    const starter = response.planets.filter(planet => {
+      return planet.starter === 1;
+    });
+
+    return starter[0];
   }
 
   async byId(planetId) {
