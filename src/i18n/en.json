@@ -277,5 +277,8 @@
   "Recent Battles": "Recent Battles",
   "Date":"Date",
   "Loss": "Loss",
-  "-": "-"
+  "-": "-",
+  "Capacity": "Capacity",
+  "Active": "Active",
+  "Recent": "Recent"
 }

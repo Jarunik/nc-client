@@ -127,33 +127,63 @@
             <input
               type="number"
               v-model="transportCoal"
-              v-on:change="onResourceChange"
+              v-on:change="onResourceChange('coal')"
             />
             {{ $t("Fe") }}:
             <input
               type="number"
               v-model="transportOre"
-              v-on:change="onResourceChange"
+              v-on:change="onResourceChange('ore')"
             />
             {{ $t("Cu") }}:
             <input
               type="number"
               v-model="transportCopper"
-              v-on:change="onResourceChange"
+              v-on:change="onResourceChange('copper')"
             />
             {{ $t("U") }}:
             <input
               type="number"
               v-model="transportUranium"
-              v-on:change="onResourceChange"
+              v-on:change="onResourceChange('uranium')"
             />
           </div>
-          <br />
+          <p>{{ $t("Capacity") }}: {{ capacity }}</p>
           <div>
             <button @click="transport" :disabled="!commandEnabled('transport')">
               {{ $t("Send Transporter") }}
             </button>
           </div>
+        </div>
+        <!-- Deploy -->
+        <div v-if="command === 'deploy'">
+          <div>
+            {{ $t("C") }}:
+            <input
+              type="number"
+              v-model="transportCoal"
+              v-on:change="onDeployResource('coal')"
+            />
+            {{ $t("Fe") }}:
+            <input
+              type="number"
+              v-model="transportOre"
+              v-on:change="onDeployResource('ore')"
+            />
+            {{ $t("Cu") }}:
+            <input
+              type="number"
+              v-model="transportCopper"
+              v-on:change="onDeployResource('copper')"
+            />
+            {{ $t("U") }}:
+            <input
+              type="number"
+              v-model="transportUranium"
+              v-on:change="onDeployResource('uranium')"
+            />
+          </div>
+          <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
         <!-- Deploy / Support / Attack-->
         <div
@@ -250,7 +280,8 @@ export default {
       slowestSpeed: null,
       pos: 0,
       search: null,
-      availableMissions: 0
+      availableMissions: 0,
+      capacity: 0
     };
   },
   async mounted() {
@@ -361,7 +392,6 @@ export default {
               if (ship.longname === current.longname) {
                 ship.quantity++;
                 ship.available = ship.available + current.available;
-                ship.capacity = ship.capacity + current.capacity;
               }
             });
             return acc;
@@ -401,7 +431,7 @@ export default {
         });
       }
     },
-    onResourceChange() {
+    onResourceChange(res) {
       let sum =
         parseFloat(this.transportCoal) +
         parseFloat(this.transportOre) +
@@ -412,6 +442,45 @@ export default {
           this.add(ship, Math.ceil(sum / 100));
         }
       });
+      if (sum > this.capacity) {
+        if (res === "coal") {
+          this.transportCoal = this.transportCoal - (sum - this.capacity);
+        }
+        if (res === "ore") {
+          this.transportOre = this.transportOre - (sum - this.capacity);
+        }
+        if (res === "copper") {
+          this.transportCopper = this.transportCopper - (sum - this.capacity);
+        }
+        if (res === "uranium") {
+          this.transportUranium = this.transportUranium - (sum - this.capacity);
+        }
+      }
+    },
+    onDeployResource(res) {
+      let sumTransport =
+        parseFloat(this.transportCoal) +
+        parseFloat(this.transportOre) +
+        parseFloat(this.transportCopper) +
+        parseFloat(this.transportUranium);
+      if (sumTransport > this.capacity) {
+        if (res === "coal") {
+          this.transportCoal =
+            this.transportCoal - (sumTransport - this.capacity);
+        }
+        if (res === "ore") {
+          this.transportOre =
+            this.transportOre - (sumTransport - this.capacity);
+        }
+        if (res === "copper") {
+          this.transportCopper =
+            this.transportCopper - (sumTransport - this.capacity);
+        }
+        if (res === "uranium") {
+          this.transportUranium =
+            this.transportUranium - (sumTransport - this.capacity);
+        }
+      }
     },
     onCoordinateChange() {
       this.fuelConsumption = 0;
@@ -512,6 +581,12 @@ export default {
     resetShipFormation() {
       this.pos = 0;
       this.slowestSpeed = null;
+      this.capacity = 0;
+      this.transportCoal = 0;
+      this.transportOre = 0;
+      this.transportCopper = 0;
+      this.transportUranium = 0;
+
       this.shipFormation = {
         count: 0,
         ships: [
@@ -545,11 +620,15 @@ export default {
       // Replace existing
       this.shipFormation.ships.forEach(s => {
         if (s.type === ship.type) {
+          // Remove old Capacity
+          this.capacity = this.capacity - s.n * ship.capacity;
           s.n = Math.min(quantity, ship.available);
           s.c = ship.cons;
           s.pos = this.pos;
           s.type = ship.type;
           s.name = ship.longname;
+          // Add new Capacity
+          this.capacity = this.capacity + s.n * ship.capacity;
           existingGroup = true;
         }
       });
@@ -564,6 +643,8 @@ export default {
         this.shipFormation.ships[this.pos].pos = this.pos + 1;
         this.shipFormation.ships[this.pos].type = ship.type;
         this.shipFormation.ships[this.pos].name = ship.longname;
+        this.capacity =
+          this.capacity + this.shipFormation.ships[this.pos].n * ship.capacity;
         this.pos++;
       }
     },
@@ -697,6 +778,7 @@ export default {
             this.transportOre = 0;
             this.transportCopper = 0;
             this.transportUranium = 0;
+            this.capacity = 0;
           }
         }
       );
@@ -731,6 +813,7 @@ export default {
             this.transportOre = 0;
             this.transportCopper = 0;
             this.transportUranium = 0;
+            this.capacity = 0;
           }
         }
       );

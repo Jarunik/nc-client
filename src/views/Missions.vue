@@ -4,7 +4,11 @@
     <template v-if="gameUser !== 'null'">
       <p v-if="shipString">{{ shipString }}</p>
       <p v-else>{{ $t("Click the ship total to see details.") }}</p>
-      <h3>{{ $t("Active") }} ({{ activeMissions.length }})</h3>
+      <h3>
+        {{ $t("Active") }} ({{
+          activeMissions !== null ? activeMissions.length : 0
+        }})
+      </h3>
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
@@ -258,7 +262,7 @@ export default {
       if (mission.result != null) {
         return false;
       }
-      if (!this.isOutgoing(mission.arrival)) {
+      if (!this.isOutgoing(mission.arrival) && mission.type !== "support") {
         return false;
       }
       return true;
