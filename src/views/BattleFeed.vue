@@ -10,6 +10,7 @@
         <th>{{ $t("Fe") }}</th>
         <th>{{ $t("Cu") }}</th>
         <th>{{ $t("U") }}</th>
+        <th>{{ $t("Defense") }}</th>
         <th>{{ $t("Result") }}</th>
       </thead>
       <tbody>
@@ -21,6 +22,9 @@
           <td>{{ battle.ore.toFixed(0) }}</td>
           <td>{{ battle.copper.toFixed(0) }}</td>
           <td>{{ battle.uranium.toFixed(0) }}</td>
+          <td>
+            {{ battle.initial_defender_ships.length == 0 ? "" : "+" }}
+          </td>
           <td>
             <router-link :to="{ path: '/battle/' + battle.mission_id }">{{
               $t("Win")
