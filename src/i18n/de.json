@@ -276,5 +276,6 @@
   "Win": "Sieg",
   "Recent Battles": "Kämpfe",
   "Date":"Datum",
-  "Loss": "Niederlage"
+  "Loss": "Niederlage",
+  "-":"-"
 }

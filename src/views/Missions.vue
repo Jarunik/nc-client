@@ -4,6 +4,82 @@
     <template v-if="gameUser !== 'null'">
       <p v-if="shipString">{{ shipString }}</p>
       <p v-else>{{ $t("Click the ship total to see details.") }}</p>
+      <h3>{{ $t("Active") }}</h3>
+      <table>
+        <thead>
+          <th @click="sort('type')">{{ $t("Type") }}</th>
+          <th @click="sort('user')">{{ $t("User") }}</th>
+          <th @click="sort('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sort('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
+          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sort('return')">{{ $t("Return") }}</th>
+          <th @click="sort('result')">{{ $t("Result") }}</th>
+          <th @click="sort('id')">{{ $t("Details") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="mission in activeMissions" :key="mission.id">
+            <td>{{ $t(mission.type) }}</td>
+            <td>{{ mission.user }}</td>
+            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
+            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>
+              <span v-if="mission.ships !== null" @click="shipList(mission)">
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
+                <span v-else>{{ mission.ships.total }}</span></span
+              >
+            </td>
+            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
+            <td>
+              <span v-if="mission.return !== null">
+                {{ moment.unix(mission.return, "seconds").format("lll") }}
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
+            <td>
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/battle/' + mission.id }"
+                >{{ $t("Log") }}</router-link
+              >&nbsp;
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/replay/' + mission.id }"
+              >
+                {{ $t("Replay") }}</router-link
+              >
+            </td>
+            <td>
+              <button
+                :disabled="clicked.includes(mission.id)"
+                v-if="cancelPossible(mission)"
+                @click="cancel(mission)"
+              >
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(mission.id)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>{{ $t("Recent") }}</h3>
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
@@ -106,6 +182,7 @@ export default {
   data: function() {
     return {
       missions: null,
+      activeMissions: null,
       currentSort: "arrival",
       currentDir: "desc",
       clicked: [],
@@ -151,8 +228,18 @@ export default {
       await this.getMissions();
     },
     async getMissions() {
-      const response = await MissionsService.latest(this.gameUser, 50);
-      this.missions = response;
+      const active = await MissionsService.active(this.gameUser);
+      this.activeMissions = active;
+
+      const latest = await MissionsService.latest(this.gameUser, 30);
+
+      const inactiveMissions = latest.filter(latest => {
+        return !active.find(active => {
+          return active.id === latest.id;
+        });
+      });
+
+      this.missions = inactiveMissions;
     },
     sort(s) {
       //if s == current sort, reverse
