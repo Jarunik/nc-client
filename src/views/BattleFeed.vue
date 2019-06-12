@@ -10,7 +10,6 @@
         <th>{{ $t("Fe") }}</th>
         <th>{{ $t("Cu") }}</th>
         <th>{{ $t("U") }}</th>
-        <th>{{ $t("Defense") }}</th>
         <th>{{ $t("Result") }}</th>
       </thead>
       <tbody>
@@ -23,12 +22,29 @@
           <td>{{ battle.copper.toFixed(0) }}</td>
           <td>{{ battle.uranium.toFixed(0) }}</td>
           <td>
-            {{ battle.initial_defender_ships.length == 0 ? "" : "+" }}
-          </td>
-          <td>
-            <router-link :to="{ path: '/battle/' + battle.mission_id }">{{
-              $t("Win")
-            }}</router-link>
+            <router-link
+              v-if="battle.initial_defender_ships.length == 0"
+              :to="{ path: '/battle/' + battle.mission_id }"
+              >{{ $t("Loot") }}
+            </router-link>
+            <router-link
+              v-if="
+                battle.result === 2 &&
+                  !battle.initial_defender_ships.length == 0
+              "
+              :to="{ path: '/battle/' + battle.mission_id }"
+              >{{ $t("Victory") }}
+            </router-link>
+            <router-link
+              v-if="battle.result === 1"
+              :to="{ path: '/battle/' + battle.mission_id }"
+              >{{ $t("Defeat") }}</router-link
+            >
+            <router-link
+              v-if="battle.result === 0"
+              :to="{ path: '/battle/' + battle.mission_id }"
+              >{{ $t("Standoff") }}</router-link
+            >
           </td>
         </tr>
       </tbody>
@@ -54,7 +70,7 @@ export default {
       await this.getBattles();
     },
     async getBattles() {
-      const response = await BattleService.limit(100);
+      const response = await BattleService.limit(200);
       this.battles = response;
     }
   }
