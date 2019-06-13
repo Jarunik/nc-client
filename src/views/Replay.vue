@@ -1,40 +1,39 @@
 <template>
   <div class="replay">
     <h1>{{ $t("Replay") }}</h1>
-    <p v-if="report !== null">{{ $t("Mission") }}: {{ report[battleIndex].mission_id }}</p>
+    <p v-if="report !== null">
+      {{ $t("Mission") }}: {{ report[battleIndex].mission_id }}
+    </p>
     <p v-if="report !== null">
       {{ $t("Battle Log") }}:
       <router-link
         :to="{ path: '/battle/' + report[battleIndex].mission_id }"
-      >{{ $t("Battle Log") }}</router-link>
+        >{{ $t("Battle Log") }}</router-link
+      >
     </p>
     <div
       v-for="fight in report"
       :key="fight.battle_number"
       @click="selectBattle(fight.battle_number - 1)"
     >
-      <font
-        v-if="fight.battle_number - 1 === battleIndex"
-        color="green"
-      >{{ $t("Battle") }}: {{ fight.battle_number }}</font>
+      <font v-if="fight.battle_number - 1 === battleIndex" color="green"
+        >{{ $t("Battle") }}: {{ fight.battle_number }}</font
+      >
       <span v-else>{{ $t("Battle") }}: {{ fight.battle_number }}</span>
     </div>
     <h3>
-      {{ $t("Attacker") }}
+      {{ $t("Attacker") }} {{ report[battleIndex].attacker }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
         color="yellow"
-      >{{ $t("Draw") }}</font>
+        >{{ $t("Draw") }}</font
+      >
       <span v-else>
         <font v-if="currentDefender === this.slots" color="green">
-          {{
-          $t("Winner")
-          }}
+          {{ $t("Winner") }}
         </font>
         <font v-if="currentAttacker === this.slots" color="red">
-          {{
-          $t("Looser")
-          }}
+          {{ $t("Looser") }}
         </font>
       </span>
     </h3>
@@ -60,12 +59,12 @@
         >
           <td>
             <div v-if="index === currentAttacker">
-              <shield-airplane-icon :title="$t('Tank')"/>
+              <shield-airplane-icon :title="$t('Tank')" />
             </div>
           </td>
           <td>
             <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
-              <pistol-icon :title="$t('Shooter')"/>
+              <pistol-icon :title="$t('Shooter')" />
             </div>
             <div v-else></div>
           </td>
@@ -74,9 +73,7 @@
           <td>
             <div v-if="attacker.structure > 0">
               <font v-if="attacker.structure === 0" color="red">
-                {{
-                attacker.structure.toFixed(0)
-                }}
+                {{ attacker.structure.toFixed(0) }}
               </font>
               <font v-else>{{ attacker.structure.toFixed(0) }}</font>
             </div>
@@ -85,7 +82,9 @@
             <div v-if="attacker.armor > 0">{{ attacker.armor.toFixed(0) }}</div>
           </td>
           <td>
-            <div v-if="attacker.shield > 0">{{ attacker.shield.toFixed(0) }}</div>
+            <div v-if="attacker.shield > 0">
+              {{ attacker.shield.toFixed(0) }}
+            </div>
           </td>
           <td>
             <div v-if="attacker.rocket > 0">
@@ -105,9 +104,7 @@
           <td v-show="attacker.id !== 'end'">
             <div v-if="attacker.survivor > 0">
               <font v-if="attacker.survivor > 0" color="green">
-                {{
-                attacker.survivor
-                }}
+                {{ attacker.survivor }}
               </font>
               <div v-else>{{ attacker.survivor }}</div>
             </div>
@@ -116,25 +113,22 @@
       </tbody>
     </table>
     <h3>
-      {{ $t("Defender") }}
+      {{ $t("Defender") }} {{ report[battleIndex].defender }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
         color="yellow"
-      >{{ $t("Draw") }}</font>
+        >{{ $t("Draw") }}</font
+      >
       <span v-else>
         <font v-if="currentAttacker === slots" color="green">
-          {{
-          $t("Winner")
-          }}
+          {{ $t("Winner") }}
         </font>
         <font v-if="currentDefender === slots" color="red">
-          {{
-          $t("Looser")
-          }}
+          {{ $t("Looser") }}
         </font>
       </span>
     </h3>
-    <br>
+    <br />
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -157,12 +151,12 @@
         >
           <td>
             <div v-if="index === currentDefender">
-              <shield-airplane-icon :title="$t('Tank')"/>
+              <shield-airplane-icon :title="$t('Tank')" />
             </div>
           </td>
           <td>
             <div v-if="turn === 'Defender' && index === currentDefenderShooter">
-              <pistol-icon :title="$t('Shooter')"/>
+              <pistol-icon :title="$t('Shooter')" />
             </div>
             <div v-else></div>
           </td>
@@ -171,9 +165,7 @@
           <td>
             <div v-if="defender.structure > 0">
               <font v-if="defender.structure === 0" color="red">
-                {{
-                defender.structure.toFixed(0)
-                }}
+                {{ defender.structure.toFixed(0) }}
               </font>
               <font v-else>{{ defender.structure.toFixed(0) }}</font>
             </div>
@@ -182,7 +174,9 @@
             <div v-if="defender.armor > 0">{{ defender.armor.toFixed(0) }}</div>
           </td>
           <td>
-            <div v-if="defender.shield > 0">{{ defender.shield.toFixed(0) }}</div>
+            <div v-if="defender.shield > 0">
+              {{ defender.shield.toFixed(0) }}
+            </div>
           </td>
           <td>
             <div v-if="defender.rocket > 0">
@@ -202,9 +196,7 @@
           <td>
             <div v-if="defender.survivor > 0">
               <font v-if="defender.survivor > 0" color="green">
-                {{
-                defender.survivor
-                }}
+                {{ defender.survivor }}
               </font>
               <div v-else>{{ defender.survivor }}</div>
             </div>
