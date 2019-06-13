@@ -105,15 +105,35 @@
             v-on:change="onCoordinateChange"
           />
         </p>
-        <p>{{ $t("Distance") }}: {{ Number(distance).toFixed(2) }}</p>
-        <p>
-          {{ $t("Uranium Fuel") }}:
-          {{ Number(this.fuelConsumption).toFixed(2) }}
-        </p>
-        <p>
-          {{ $t("Outbound Travel") }}:
-          {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-        </p>
+        <table>
+          <tr>
+            <td>
+              {{ $t("Distance") }}
+            </td>
+            <td>
+              {{ Number(distance).toFixed(2) }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{ $t("Uranium Fuel") }}
+            </td>
+            <td>
+              {{ Number(this.fuelConsumption).toFixed(2) }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{ $t("Outbound Travel") }}
+            </td>
+            <td>
+              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+            </td>
+          </tr>
+        </table>
+
+        <br />
+
         <!-- Exploration -->
         <div v-if="command === 'explorespace'">
           <button @click="explore" :disabled="!commandEnabled('explorespace')">
