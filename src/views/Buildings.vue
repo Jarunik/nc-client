@@ -1,161 +1,149 @@
 <template>
   <div class="buildings">
-    <div v-if="buildings !== null">
-      <h1>{{ $t("Buildings") }}</h1>
-      <template v-if="gameUser !== 'null' && planetId != 'null'">
-        <table>
-          <thead>
-            <th @click="sort('name')">{{ $t("Building") }}</th>
-            <th @click="sort('current')">{{ $t("Level") }}</th>
-            <th @click="sort('skill')">{{ $t("Skill") }}</th>
-            <th @click="sort('coal')">{{ $t("C") }}</th>
-            <th @click="sort('ore')">{{ $t("Fe") }}</th>
-            <th @click="sort('copper')">{{ $t("Cu") }}</th>
-            <th @click="sort('uranium')">{{ $t("U") }}</th>
-            <th @click="sort('time')">{{ $t("Needs") }}</th>
-            <th @click="sort('busy')">{{ $t("Busy") }}</th>
-            <th v-if="loginUser !== null && loginUser === gameUser">
-              {{ $t("Upgrade") }}
-            </th>
-            <th v-if="loginUser !== null && loginUser === gameUser">
-              {{ $t("Charge") }}
-            </th>
-            <th v-if="loginUser !== null && loginUser === gameUser">
-              {{ $t("Activate") }}
-            </th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(building, index) in sortedBuildings"
-              :key="building.name"
-            >
-              <td>{{ $t(building.name) }}</td>
-              <td>
-                {{ building.current }}
-              </td>
-              <td>
-                <font v-if="building.current === building.skill" color="red">
-                  {{ building.skill }}
-                </font>
-                <font v-else> {{ building.skill }}</font>
-              </td>
-              <td>
-                <font v-if="building.coal > coal" color="red">{{
-                  building.coal === 0 ? "-" : building.coal
-                }}</font>
-                <font v-else>{{
-                  building.coal === 0 ? "-" : building.coal
-                }}</font>
-              </td>
-              <td>
-                <font v-if="building.ore > ore" color="red">{{
-                  building.ore === 0 ? "-" : building.ore
-                }}</font
-                ><font v-else>{{
-                  building.ore === 0 ? "-" : building.ore
-                }}</font>
-              </td>
-              <td>
-                <font v-if="building.copper > copper" color="red">{{
-                  building.copper === 0 ? "-" : building.copper
-                }}</font
-                ><font v-else>{{
-                  building.copper === 0 ? "-" : building.copper
-                }}</font>
-              </td>
-              <td>
-                <font v-if="building.uranium > uranium" color="red">{{
-                  building.uranium === 0 ? "-" : building.uranium
-                }}</font
-                ><font v-else>{{
-                  building.uranium === 0 ? "-" : building.uranium
-                }}</font>
-              </td>
-              <td>
-                {{ building.time | timePretty }}
-              </td>
-              <td>{{ building.busy | busyPretty }}</td>
-              <td>
-                <span
-                  v-if="
-                    loginUser !== null &&
-                      loginUser === gameUser &&
-                      building.current < 20
-                  "
-                >
-                  <button
-                    :disabled="clicked.includes(building.name)"
-                    v-if="buildingPossible(building)"
-                    @click="upgradeBuilding(building, index)"
-                  >
-                    <arrow-up-bold-icon :title="$t('Upgrade')" />
-                  </button>
-                </span>
-                <span v-else>
-                  <check-outline-icon :title="$t('Maxed')" />
-                </span>
-              </td>
-              <td>
+    <h1>{{ $t("Buildings") }}</h1>
+    <template v-if="gameUser !== 'null' && planetId != 'null'">
+      <table>
+        <thead>
+          <th @click="sort('name')">{{ $t("Building") }}</th>
+          <th @click="sort('current')">{{ $t("Level") }}</th>
+          <th @click="sort('skill')">{{ $t("Skill") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
+          <th @click="sort('time')">{{ $t("Needs") }}</th>
+          <th @click="sort('busy')">{{ $t("Busy") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Upgrade") }}
+          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Charge") }}
+          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Activate") }}
+          </th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="(building, index) in sortedBuildings" :key="building.name">
+            <td>{{ $t(building.name) }}</td>
+            <td>
+              {{ building.current }}
+            </td>
+            <td>
+              <font v-if="building.current === building.skill" color="red">
+                {{ building.skill }}
+              </font>
+              <font v-else> {{ building.skill }}</font>
+            </td>
+            <td>
+              <font v-if="building.coal > coal" color="red">{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
+              <font v-else>{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
+            </td>
+            <td>
+              <font v-if="building.ore > ore" color="red">{{
+                building.ore === 0 ? "-" : building.ore
+              }}</font
+              ><font v-else>{{ building.ore === 0 ? "-" : building.ore }}</font>
+            </td>
+            <td>
+              <font v-if="building.copper > copper" color="red">{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font
+              ><font v-else>{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font>
+            </td>
+            <td>
+              <font v-if="building.uranium > uranium" color="red">{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font
+              ><font v-else>{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font>
+            </td>
+            <td>
+              {{ building.time | timePretty }}
+            </td>
+            <td>{{ building.busy | busyPretty }}</td>
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.current < 20
+                "
+              >
                 <button
                   :disabled="clicked.includes(building.name)"
-                  v-if="
-                    loginUser !== null &&
-                      loginUser === gameUser &&
-                      building.name === 'shieldgenerator' &&
-                      chargePossible(building, index)
-                  "
-                  @click="charge(building, index)"
+                  v-if="buildingPossible(building)"
+                  @click="upgradeBuilding(building, index)"
                 >
-                  <refresh-icon :title="$t('Charge')" />
+                  <arrow-up-bold-icon :title="$t('Upgrade')" />
                 </button>
-              </td>
-              <td>
-                <span
-                  v-if="
-                    loginUser !== null &&
-                      loginUser === gameUser &&
-                      building.name === 'shieldgenerator' &&
-                      enablePossible(building, index)
-                  "
+              </span>
+              <span v-else> <check-outline-icon :title="$t('Maxed')" /> </span>
+            </td>
+            <td>
+              <button
+                :disabled="clicked.includes(building.name)"
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.name === 'shieldgenerator' &&
+                    chargePossible(building, index)
+                "
+                @click="charge(building, index)"
+              >
+                <refresh-icon :title="$t('Charge')" />
+              </button>
+            </td>
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    building.name === 'shieldgenerator' &&
+                    enablePossible(building, index)
+                "
+              >
+                <button
+                  :disabled="clicked.includes(building.name)"
+                  v-if="enablePossible(building, index)"
+                  @click="enable(building, index)"
                 >
-                  <button
-                    :disabled="clicked.includes(building.name)"
-                    v-if="enablePossible(building, index)"
-                    @click="enable(building, index)"
-                  >
-                    <white-balance-sunny-icon :title="$t('Enable')" />
-                  </button>
-                  <span v-if="isBusy(building.misc.shieldprotection_busy)"
-                    ><shield-icon :title="$t('Protected')"
-                  /></span>
-                </span>
-              </td>
-              <td v-if="chainResponse.includes(building.name)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <white-balance-sunny-icon :title="$t('Enable')" />
+                </button>
+                <span v-if="isBusy(building.misc.shieldprotection_busy)"
+                  ><shield-icon :title="$t('Protected')"
+                /></span>
+              </span>
+            </td>
+            <td v-if="chainResponse.includes(building.name)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template v-else>
+      <template v-if="gameUser === 'null'">
+        <p>
+          {{ $t("Please set the") }}
+          <router-link to="/user">{{ $t("user") }}</router-link>
+        </p>
       </template>
-      <template v-else>
-        <template v-if="gameUser === 'null'">
-          <p>
-            {{ $t("Please set the") }}
-            <router-link to="/user">{{ $t("user") }}</router-link>
-          </p>
-        </template>
-        <template v-if="planetId === 'null'"
-          ><p>
-            {{ $t("Please set the") }}
-            <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
-          </p>
-        </template>
+      <template v-if="planetId === 'null'"
+        ><p>
+          {{ $t("Please set the") }}
+          <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
+        </p>
       </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -172,7 +160,6 @@ import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.v
 import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
 import ShieldIcon from "vue-material-design-icons/Shield.vue";
 import * as types from "@/store/mutation-types";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "buildings",
@@ -182,8 +169,7 @@ export default {
     RefreshIcon,
     WhiteBalanceSunnyIcon,
     CheckOutlineIcon,
-    ShieldIcon,
-    Loading
+    ShieldIcon
   },
   data: function() {
     return {

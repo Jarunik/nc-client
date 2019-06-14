@@ -1,97 +1,90 @@
 <template>
   <div class="skills">
-    <div v-if="skills !== null">
-      <h1>{{ $t("Skills") }}</h1>
-      <template v-if="gameUser !== 'null'">
-        <table>
-          <thead>
-            <th @click="sort('name')">{{ $t("Skill") }}</th>
-            <th @click="sort('current')">{{ $t("Level") }}</th>
-            <th @click="sort('coal')">{{ $t("C") }}</th>
-            <th @click="sort('ore')">{{ $t("Fe") }}</th>
-            <th @click="sort('copper')">{{ $t("Cu") }}</th>
-            <th @click="sort('uranium')">{{ $t("U") }}</th>
-            <th @click="sort('time')">{{ $t("Needs") }}</th>
-            <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
-            <th v-if="loginUser !== null && loginUser === gameUser">
-              {{ $t("Enhance") }}
-            </th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr v-for="skill in sortedSkills" :key="skill.name">
-              <td>{{ $t(skill.name) }}</td>
-              <td>{{ skill.current }}</td>
-              <td>
-                <font v-if="skill.coal > coal" color="red">{{
-                  skill.coal === 0 ? "-" : skill.coal
-                }}</font>
-                <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
-              </td>
-              <td>
-                <font v-if="skill.ore > ore" color="red">{{
-                  skill.ore === 0 ? "-" : skill.ore
-                }}</font
-                ><font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
-              </td>
-              <td>
-                <font v-if="skill.copper > copper" color="red">{{
-                  skill.copper === 0 ? "-" : skill.copper
-                }}</font
-                ><font v-else>{{
-                  skill.copper === 0 ? "-" : skill.copper
-                }}</font>
-              </td>
-              <td>
-                <font v-if="skill.uranium > uranium" color="red">{{
-                  skill.uranium === 0 ? "-" : skill.uranium
-                }}</font
-                ><font v-else>{{
-                  skill.uranium === 0 ? "-" : skill.uranium
-                }}</font>
-              </td>
-              <td>
-                {{ skill.time | timePretty }}
-              </td>
-              <td>{{ skill.busy | busyPretty }}</td>
-              <td>
-                <span
-                  v-if="
-                    loginUser !== null &&
-                      loginUser === gameUser &&
-                      skill.current < 20
-                  "
+    <h1>{{ $t("Skills") }}</h1>
+    <template v-if="gameUser !== 'null'">
+      <table>
+        <thead>
+          <th @click="sort('name')">{{ $t("Skill") }}</th>
+          <th @click="sort('current')">{{ $t("Level") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
+          <th @click="sort('time')">{{ $t("Needs") }}</th>
+          <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Enhance") }}
+          </th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="skill in sortedSkills" :key="skill.name">
+            <td>{{ $t(skill.name) }}</td>
+            <td>{{ skill.current }}</td>
+            <td>
+              <font v-if="skill.coal > coal" color="red">{{
+                skill.coal === 0 ? "-" : skill.coal
+              }}</font>
+              <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
+            </td>
+            <td>
+              <font v-if="skill.ore > ore" color="red">{{
+                skill.ore === 0 ? "-" : skill.ore
+              }}</font
+              ><font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
+            </td>
+            <td>
+              <font v-if="skill.copper > copper" color="red">{{
+                skill.copper === 0 ? "-" : skill.copper
+              }}</font
+              ><font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
+            </td>
+            <td>
+              <font v-if="skill.uranium > uranium" color="red">{{
+                skill.uranium === 0 ? "-" : skill.uranium
+              }}</font
+              ><font v-else>{{
+                skill.uranium === 0 ? "-" : skill.uranium
+              }}</font>
+            </td>
+            <td>
+              {{ skill.time | timePretty }}
+            </td>
+            <td>{{ skill.busy | busyPretty }}</td>
+            <td>
+              <span
+                v-if="
+                  loginUser !== null &&
+                    loginUser === gameUser &&
+                    skill.current < 20
+                "
+              >
+                <button
+                  :disabled="clicked.includes(skill.name)"
+                  v-if="skillPossible(skill)"
+                  @click="enhanceSkill(skill)"
                 >
-                  <button
-                    :disabled="clicked.includes(skill.name)"
-                    v-if="skillPossible(skill)"
-                    @click="enhanceSkill(skill)"
-                  >
-                    <arrow-up-bold-icon :title="$t('Enhance')" />
-                  </button>
-                </span>
-                <span v-else>
-                  <span v-if="skill.current > 19"
-                    ><check-outline-icon :title="$t('Maxed')" /> </span
-                ></span>
-              </td>
-              <td v-if="chainResponse.includes(skill.name)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </template>
-      <template v-else>
-        <p>
-          {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("set a user") }}</router-link>
-        </p>
-      </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+                  <arrow-up-bold-icon :title="$t('Enhance')" />
+                </button>
+              </span>
+              <span v-else>
+                <span v-if="skill.current > 19"
+                  ><check-outline-icon :title="$t('Maxed')" /> </span
+              ></span>
+            </td>
+            <td v-if="chainResponse.includes(skill.name)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template v-else>
+      <p>
+        {{ $t("Please set the") }}
+        <router-link to="/user">{{ $t("set a user") }}</router-link>
+      </p>
+    </template>
   </div>
 </template>
 
@@ -105,15 +98,13 @@ import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
 import * as types from "@/store/mutation-types";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "skills",
   components: {
     TimerSandIcon,
     ArrowUpBoldIcon,
-    CheckOutlineIcon,
-    Loading
+    CheckOutlineIcon
   },
   data: function() {
     return {

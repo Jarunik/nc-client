@@ -1,86 +1,79 @@
 <template>
   <div class="items">
-    <div v-if="items !== null">
-      <h1>{{ $t("Items") }}</h1>
-      <template v-if="items !== null && items.length > 0">
-        <table>
-          <thead>
-            <th>{{ $t("Name") }}</th>
-            <th>{{ $t("Quantity") }}</th>
-            <th>{{ $t("Gift") }}</th>
-            <th>{{ $t("Activate") }}</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in items" :key="item.uid">
-              <td>{{ $t(item.name) }}</td>
-              <td>{{ item.total }}</td>
-              <td>
-                <span v-if="gameUser === loginUser">
-                  <button @click="toggleGift(item.id)">
-                    ...
-                  </button>
-                  <template v-if="showGift === item.id">
-                    <input
-                      v-model="recipient"
-                      :placeholder="$t(placeholderGift)"
-                    />
-                    <button
-                      :disabled="clicked.includes(item.id)"
-                      @click="giftItem(item, index)"
-                      v-if="item.total > 0"
-                    >
-                      {{ $t("Send") }}
-                    </button>
-                  </template>
-                </span>
-                <span v-else>
-                  -
-                </span>
-              </td>
-              <td>
-                <button
-                  v-if="
-                    gameUser === loginUser &&
-                      item.total > 0 &&
-                      planetId !== null
-                  "
-                  @click="activateItem(item, planetId, index)"
-                  :disabled="clicked.includes(item.id)"
-                >
-                  <white-balance-sunny-icon :title="$t('Activate')" />
+    <h1>{{ $t("Items") }}</h1>
+    <template v-if="items !== null && items.length > 0">
+      <table>
+        <thead>
+          <th>{{ $t("Name") }}</th>
+          <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Gift") }}</th>
+          <th>{{ $t("Activate") }}</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items" :key="item.uid">
+            <td>{{ $t(item.name) }}</td>
+            <td>{{ item.total }}</td>
+            <td>
+              <span v-if="gameUser === loginUser">
+                <button @click="toggleGift(item.id)">
+                  ...
                 </button>
-                <span v-else>
-                  -
-                </span>
-              </td>
-              <td>
-                <span v-if="chainResponse.includes(item.id)"
-                  ><timer-sand-icon :title="$t('Transaction sent')"
-                /></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <template v-if="showGift === item.id">
+                  <input
+                    v-model="recipient"
+                    :placeholder="$t(placeholderGift)"
+                  />
+                  <button
+                    :disabled="clicked.includes(item.id)"
+                    @click="giftItem(item, index)"
+                    v-if="item.total > 0"
+                  >
+                    {{ $t("Send") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>
+                -
+              </span>
+            </td>
+            <td>
+              <button
+                v-if="
+                  gameUser === loginUser && item.total > 0 && planetId !== null
+                "
+                @click="activateItem(item, planetId, index)"
+                :disabled="clicked.includes(item.id)"
+              >
+                <white-balance-sunny-icon :title="$t('Activate')" />
+              </button>
+              <span v-else>
+                -
+              </span>
+            </td>
+            <td>
+              <span v-if="chainResponse.includes(item.id)"
+                ><timer-sand-icon :title="$t('Transaction sent')"
+              /></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template v-else>
+      <template v-if="gameUser !== 'null'">
+        <p>
+          {{ $t("You have no items. Buy some in the") }}
+          <router-link to="/shop">{{ $t("shop") }}</router-link> .
+        </p>
       </template>
-      <template v-else>
-        <template v-if="gameUser !== 'null'">
-          <p>
-            {{ $t("You have no items. Buy some in the") }}
-            <router-link to="/shop">{{ $t("shop") }}</router-link> .
-          </p>
-        </template>
-        <template v-if="gameUser === 'null'">
-          <p>
-            {{ $t("Please set the") }}
-            <router-link to="/user">{{ $t("user") }}</router-link>
-          </p>
-        </template>
+      <template v-if="gameUser === 'null'">
+        <p>
+          {{ $t("Please set the") }}
+          <router-link to="/user">{{ $t("user") }}</router-link>
+        </p>
       </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -90,14 +83,12 @@ import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "items",
   components: {
     TimerSandIcon,
-    WhiteBalanceSunnyIcon,
-    Loading
+    WhiteBalanceSunnyIcon
   },
   data: function() {
     return {

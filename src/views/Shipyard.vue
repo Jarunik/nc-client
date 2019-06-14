@@ -1,132 +1,127 @@
 <template>
   <div class="shipyard">
-    <div v-if="shipyard !== null">
-      <h1>{{ $t("Shipyard") }}</h1>
-      <p>
-        <i>{{ $t("Ships need skill level 20 to build.") }}</i>
-      </p>
-      <template v-if="gameUser !== 'null' && planetId != 'null'">
-        <table>
-          <thead>
-            <th @click="sort('longname')">{{ $t("Ship") }}</th>
-            <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
-            <th @click="sort('min_level')">{{ $t("Needs") }}</th>
-            <th @click="sort('cur_level')">{{ $t("Shipyard") }}</th>
-            <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
-            <th @click="sort('coal')">{{ $t("C") }}</th>
-            <th @click="sort('ore')">{{ $t("Fe") }}</th>
-            <th @click="sort('copper')">{{ $t("Cu") }}</th>
-            <th @click="sort('uranium')">{{ $t("U") }}</th>
-            <th @click="sort('time')">{{ $t("Needs") }}</th>
-            <th @click="sort('attack')">{{ $t("Attack") }}</th>
-            <th @click="sort('defense')">{{ $t("Defense") }}</th>
-            <th @click="sort('busy_until')">{{ $t("Constructing") }}</th>
-            <th v-if="loginUser !== null && loginUser === gameUser">
-              {{ $t("Construct") }}
-            </th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr v-for="ship in sortedShipyard" :key="ship.longname">
-              <td>
-                <font v-if="ship.activated === true || ship.variant === 0">{{
-                  $t(ship.longname)
-                }}</font
-                ><font v-else color="grey">{{ $t(ship.longname) }}</font>
-              </td>
-              <td>
-                <font v-if="ship.activated === true || ship.variant === 0">{{
-                  $t(ship.variant_name)
-                }}</font
-                ><font v-else color="grey">{{ $t(ship.variant_name) }}</font>
-              </td>
-              <td>
-                {{ ship.min_level }}
-              </td>
-              <td>
-                <font v-if="ship.cur_level < ship.min_level" color="red">{{
-                  ship.cur_level
-                }}</font
-                ><font v-else>{{ ship.cur_level }}</font>
-              </td>
-              <td>
-                <font v-if="ship.skill < 20" color="red">{{
-                  ship.skill === null ? 0 : ship.skill
-                }}</font
-                ><font v-else>{{ ship.skill === null ? 0 : ship.skill }}</font>
-              </td>
-              <td>
-                <font v-if="ship.cost.coal > coal" color="red">{{
-                  ship.cost.coal === 0 ? "-" : ship.cost.coal
-                }}</font>
-                <font v-else>{{
-                  ship.cost.coal === 0 ? "-" : ship.cost.coal
-                }}</font>
-              </td>
-              <td>
-                <font v-if="ship.cost.ore > ore" color="red">{{
-                  ship.cost.ore === 0 ? "-" : ship.cost.ore
-                }}</font
-                ><font v-else>{{
-                  ship.cost.ore === 0 ? "-" : ship.cost.ore
-                }}</font>
-              </td>
-              <td>
-                <font v-if="ship.cost.copper > copper" color="red">{{
-                  ship.cost.copper === 0 ? "-" : ship.cost.copper
-                }}</font
-                ><font v-else>{{
-                  ship.cost.copper === 0 ? "-" : ship.cost.copper
-                }}</font>
-              </td>
-              <td>
-                <font v-if="ship.cost.uranium > uranium" color="red">{{
-                  ship.cost.uranium === 0 ? "-" : ship.cost.uranium
-                }}</font
-                ><font v-else>{{
-                  ship.cost.uranium === 0 ? "-" : ship.cost.uranium
-                }}</font>
-              </td>
-              <td>
-                {{ ship.cost.time | timePretty }}
-              </td>
-              <td>{{ (ship.rocket + ship.bullet + ship.laser) | omitZero }}</td>
-              <td>{{ ship.structure + ship.armor + ship.shield }}</td>
-              <td>{{ ship.busy_until | busyPretty }}</td>
-              <td v-if="loginUser !== null && loginUser === gameUser">
-                <button
-                  :disabled="clicked.includes(ship.longname)"
-                  v-if="shipPossible(ship)"
-                  @click="buildShip(ship)"
-                >
-                  <arrow-up-bold-icon :title="$t('Build')" />
-                </button>
-              </td>
-              <td v-if="chainResponse.includes(ship.longname)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <h1>{{ $t("Shipyard") }}</h1>
+    <p>
+      <i>{{ $t("Ships need skill level 20 to build.") }}</i>
+    </p>
+    <template v-if="gameUser !== 'null' && planetId != 'null'">
+      <table>
+        <thead>
+          <th @click="sort('longname')">{{ $t("Ship") }}</th>
+          <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
+          <th @click="sort('min_level')">{{ $t("Needs") }}</th>
+          <th @click="sort('cur_level')">{{ $t("Shipyard") }}</th>
+          <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
+          <th @click="sort('coal')">{{ $t("C") }}</th>
+          <th @click="sort('ore')">{{ $t("Fe") }}</th>
+          <th @click="sort('copper')">{{ $t("Cu") }}</th>
+          <th @click="sort('uranium')">{{ $t("U") }}</th>
+          <th @click="sort('time')">{{ $t("Needs") }}</th>
+          <th @click="sort('attack')">{{ $t("Attack") }}</th>
+          <th @click="sort('defense')">{{ $t("Defense") }}</th>
+          <th @click="sort('busy_until')">{{ $t("Constructing") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Construct") }}
+          </th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="ship in sortedShipyard" :key="ship.longname">
+            <td>
+              <font v-if="ship.activated === true || ship.variant === 0">{{
+                $t(ship.longname)
+              }}</font
+              ><font v-else color="grey">{{ $t(ship.longname) }}</font>
+            </td>
+            <td>
+              <font v-if="ship.activated === true || ship.variant === 0">{{
+                $t(ship.variant_name)
+              }}</font
+              ><font v-else color="grey">{{ $t(ship.variant_name) }}</font>
+            </td>
+            <td>
+              {{ ship.min_level }}
+            </td>
+            <td>
+              <font v-if="ship.cur_level < ship.min_level" color="red">{{
+                ship.cur_level
+              }}</font
+              ><font v-else>{{ ship.cur_level }}</font>
+            </td>
+            <td>
+              <font v-if="ship.skill < 20" color="red">{{
+                ship.skill === null ? 0 : ship.skill
+              }}</font
+              ><font v-else>{{ ship.skill === null ? 0 : ship.skill }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.coal > coal" color="red">{{
+                ship.cost.coal === 0 ? "-" : ship.cost.coal
+              }}</font>
+              <font v-else>{{
+                ship.cost.coal === 0 ? "-" : ship.cost.coal
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.ore > ore" color="red">{{
+                ship.cost.ore === 0 ? "-" : ship.cost.ore
+              }}</font
+              ><font v-else>{{
+                ship.cost.ore === 0 ? "-" : ship.cost.ore
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.copper > copper" color="red">{{
+                ship.cost.copper === 0 ? "-" : ship.cost.copper
+              }}</font
+              ><font v-else>{{
+                ship.cost.copper === 0 ? "-" : ship.cost.copper
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.uranium > uranium" color="red">{{
+                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+              }}</font
+              ><font v-else>{{
+                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+              }}</font>
+            </td>
+            <td>
+              {{ ship.cost.time | timePretty }}
+            </td>
+            <td>{{ (ship.rocket + ship.bullet + ship.laser) | omitZero }}</td>
+            <td>{{ ship.structure + ship.armor + ship.shield }}</td>
+            <td>{{ ship.busy_until | busyPretty }}</td>
+            <td v-if="loginUser !== null && loginUser === gameUser">
+              <button
+                :disabled="clicked.includes(ship.longname)"
+                v-if="shipPossible(ship)"
+                @click="buildShip(ship)"
+              >
+                <arrow-up-bold-icon :title="$t('Build')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(ship.longname)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template v-else>
+      <template v-if="gameUser === 'null'">
+        <p>
+          {{ $t("Please set the") }}
+          <router-link to="/user">{{ $t("user") }}</router-link>
+        </p>
       </template>
-      <template v-else>
-        <template v-if="gameUser === 'null'">
-          <p>
-            {{ $t("Please set the") }}
-            <router-link to="/user">{{ $t("user") }}</router-link>
-          </p>
-        </template>
-        <template v-if="planetId === 'null'"
-          ><p>
-            {{ $t("Please set the") }}
-            <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
-          </p>
-        </template>
+      <template v-if="planetId === 'null'"
+        ><p>
+          {{ $t("Please set the") }}
+          <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
+        </p>
       </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -139,14 +134,12 @@ import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import * as types from "@/store/mutation-types";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "shipyard",
   components: {
     TimerSandIcon,
-    ArrowUpBoldIcon,
-    Loading
+    ArrowUpBoldIcon
   },
   data: function() {
     return {

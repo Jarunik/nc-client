@@ -1,34 +1,13 @@
 <template>
   <div class="galaxy">
-    <div v-if="galaxy !== null">
-      <h1>{{ $t("Galaxy") }}</h1>
-      <template v-if="this.galaxy != null">
-        <table>
-          <tbody>
-            <tr v-for="y in areaHeight" :key="y">
-              <td @click="focus(x, y)" v-for="x in areaWidth" :key="x">
-                <span
-                  v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
-                  ><font color="green">
-                    <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                    <magnify-icon
-                      v-if="lookupLocation(x, y) === 'explore'"
-                      :title="$t('Exploring')"
-                    />
-                    <texture-icon
-                      v-if="lookupLocation(x, y) === 'fog'"
-                      :title="$t('Fog')"
-                    />
-                    <earth-icon
-                      v-if="lookupLocation(x, y) === 'home'"
-                      :title="$t('Home')"
-                    />
-                    <circle-icon
-                      v-if="lookupLocation(x, y) === 'planet'"
-                      :title="$t('Planet')"
-                    /> </font
-                ></span>
-                <span v-else>
+    <h1>{{ $t("Galaxy") }}</h1>
+    <template v-if="this.galaxy != null">
+      <table>
+        <tbody>
+          <tr v-for="y in areaHeight" :key="y">
+            <td @click="focus(x, y)" v-for="x in areaWidth" :key="x">
+              <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
+                ><font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
                   <magnify-icon
                     v-if="lookupLocation(x, y) === 'explore'"
@@ -38,54 +17,69 @@
                     v-if="lookupLocation(x, y) === 'fog'"
                     :title="$t('Fog')"
                   />
-                  <circle-icon
-                    v-if="lookupLocation(x, y) === 'planet'"
-                    :title="$t('Planet')"
-                  />
                   <earth-icon
                     v-if="lookupLocation(x, y) === 'home'"
                     :title="$t('Home')"
                   />
-                </span>
-              </td>
-            </tr>
-          </tbody>
+                  <circle-icon
+                    v-if="lookupLocation(x, y) === 'planet'"
+                    :title="$t('Planet')"
+                  /> </font
+              ></span>
+              <span v-else>
+                <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
+                <magnify-icon
+                  v-if="lookupLocation(x, y) === 'explore'"
+                  :title="$t('Exploring')"
+                />
+                <texture-icon
+                  v-if="lookupLocation(x, y) === 'fog'"
+                  :title="$t('Fog')"
+                />
+                <circle-icon
+                  v-if="lookupLocation(x, y) === 'planet'"
+                  :title="$t('Planet')"
+                />
+                <earth-icon
+                  v-if="lookupLocation(x, y) === 'home'"
+                  :title="$t('Home')"
+                />
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <input v-model="search" placeholder="(x/y)" />
+      <button @click="goToSearch(search)">
+        <target-variant-icon :title="$t('Focus')" />
+      </button>
+      <button @click="goTo(posX, posY)">
+        <earth-icon :title="$t('Home')" />
+      </button>
+      <button @click="goFleet(focusX, focusY)">
+        <ship-wheel-icon :title="$t('Fleet')" />
+      </button>
+      <div>
+        <br />
+        <table v-if="planet !== null">
+          <tr>
+            <td>{{ planet.planet_id }}</td>
+          </tr>
+          <tr>
+            <td>{{ $t(planet.planet_rarity) }}</td>
+          </tr>
+          <tr>
+            <td>{{ $t(planet.planet_type) }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.planet_name }}</td>
+          </tr>
+          <tr>
+            <td>{{ planet.user }}</td>
+          </tr>
         </table>
-        <input v-model="search" placeholder="(x/y)" />
-        <button @click="goToSearch(search)">
-          <target-variant-icon :title="$t('Focus')" />
-        </button>
-        <button @click="goTo(posX, posY)">
-          <earth-icon :title="$t('Home')" />
-        </button>
-        <button @click="goFleet(focusX, focusY)">
-          <ship-wheel-icon :title="$t('Fleet')" />
-        </button>
-        <div>
-          <br />
-          <table v-if="planet !== null">
-            <tr>
-              <td>{{ planet.planet_id }}</td>
-            </tr>
-            <tr>
-              <td>{{ $t(planet.planet_rarity) }}</td>
-            </tr>
-            <tr>
-              <td>{{ $t(planet.planet_type) }}</td>
-            </tr>
-            <tr>
-              <td>{{ planet.planet_name }}</td>
-            </tr>
-            <tr>
-              <td>{{ planet.user }}</td>
-            </tr>
-          </table>
-        </div>
-      </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -100,7 +94,6 @@ import EarthIcon from "vue-material-design-icons/Earth.vue";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
 import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
 import * as types from "@/store/mutation-types";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "galaxy",
@@ -110,8 +103,7 @@ export default {
     TextureIcon,
     EarthIcon,
     TargetVariantIcon,
-    ShipWheelIcon,
-    Loading
+    ShipWheelIcon
   },
   data: function() {
     return {

@@ -1,180 +1,171 @@
 <template>
   <div class="missions">
-    <div v-if="missions !== null">
-      <h1>{{ $t("Missions") }}</h1>
-      <template v-if="gameUser !== 'null'">
-        <p v-if="shipString">{{ shipString }}</p>
-        <p v-else>{{ $t("Click the ship total to see details.") }}</p>
-        <h3>
-          {{ $t("Active") }} ({{
-            activeMissions !== null ? activeMissions.length : 0
-          }})
-        </h3>
-        <table>
-          <thead>
-            <th @click="sort('type')">{{ $t("Type") }}</th>
-            <th @click="sort('user')">{{ $t("User") }}</th>
-            <th @click="sort('start_x')">{{ $t("Origin") }}</th>
-            <th @click="sort('end_x')">{{ $t("Destination") }}</th>
-            <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
-            <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
-            <th @click="sort('return')">{{ $t("Return") }}</th>
-            <th @click="sort('result')">{{ $t("Result") }}</th>
-            <th @click="sort('id')">{{ $t("Details") }}</th>
-            <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr v-for="mission in activeMissions" :key="mission.id">
-              <td>{{ $t(mission.type) }}</td>
-              <td>{{ mission.user }}</td>
-              <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
-              <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
-              <td>
-                <span v-if="mission.ships !== null" @click="shipList(mission)">
-                  <font v-if="selectedShips === mission.id" color="green">{{
-                    mission.ships.total
-                  }}</font>
-                  <span v-else>{{ mission.ships.total }}</span></span
-                >
-              </td>
-              <td>
-                {{ moment.unix(mission.arrival, "seconds").format("lll") }}
-              </td>
-              <td>
-                <span v-if="mission.return !== null">
-                  {{ moment.unix(mission.return, "seconds").format("lll") }}
-                </span>
-                <span v-else>-</span>
-              </td>
-              <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
-              <td>
-                <router-link
-                  v-if="
-                    (mission.type === 'attack' || mission.type === 'support') &&
-                      mission.result !== null &&
-                      (mission.result !== 'cancel' &&
-                        mission.result !== 'cancel_support')
-                  "
-                  :to="{ path: '/battle/' + mission.id }"
-                  >{{ $t("Log") }}</router-link
-                >&nbsp;
-                <router-link
-                  v-if="
-                    (mission.type === 'attack' || mission.type === 'support') &&
-                      mission.result !== null &&
-                      (mission.result !== 'cancel' &&
-                        mission.result !== 'cancel_support')
-                  "
-                  :to="{ path: '/replay/' + mission.id }"
-                >
-                  {{ $t("Replay") }}</router-link
-                >
-              </td>
-              <td>
-                <button
-                  :disabled="clicked.includes(mission.id)"
-                  v-if="cancelPossible(mission)"
-                  @click="cancel(mission)"
-                >
-                  <cancel-icon :title="$t('Cancel')" />
-                </button>
-              </td>
-              <td v-if="chainResponse.includes(mission.id)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <h3>{{ $t("Recent") }}</h3>
-        <table>
-          <thead>
-            <th @click="sort('type')">{{ $t("Type") }}</th>
-            <th @click="sort('user')">{{ $t("User") }}</th>
-            <th @click="sort('start_x')">{{ $t("Origin") }}</th>
-            <th @click="sort('end_x')">{{ $t("Destination") }}</th>
-            <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
-            <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
-            <th @click="sort('return')">{{ $t("Return") }}</th>
-            <th @click="sort('result')">{{ $t("Result") }}</th>
-            <th @click="sort('id')">{{ $t("Details") }}</th>
-            <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr v-for="mission in sortedMissions" :key="mission.id">
-              <td>{{ $t(mission.type) }}</td>
-              <td>{{ mission.user }}</td>
-              <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
-              <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
-              <td>
-                <span v-if="mission.ships !== null" @click="shipList(mission)">
-                  <font v-if="selectedShips === mission.id" color="green">{{
-                    mission.ships.total
-                  }}</font>
-                  <span v-else>{{ mission.ships.total }}</span></span
-                >
-              </td>
-              <td>
-                {{ moment.unix(mission.arrival, "seconds").format("lll") }}
-              </td>
-              <td>
-                <span v-if="mission.return !== null">
-                  {{ moment.unix(mission.return, "seconds").format("lll") }}
-                </span>
-                <span v-else>-</span>
-              </td>
-              <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
-              <td>
-                <router-link
-                  v-if="
-                    (mission.type === 'attack' || mission.type === 'support') &&
-                      mission.result !== null &&
-                      (mission.result !== 'cancel' &&
-                        mission.result !== 'cancel_support')
-                  "
-                  :to="{ path: '/battle/' + mission.id }"
-                  >{{ $t("Log") }}</router-link
-                >&nbsp;
-                <router-link
-                  v-if="
-                    (mission.type === 'attack' || mission.type === 'support') &&
-                      mission.result !== null &&
-                      (mission.result !== 'cancel' &&
-                        mission.result !== 'cancel_support')
-                  "
-                  :to="{ path: '/replay/' + mission.id }"
-                >
-                  {{ $t("Replay") }}</router-link
-                >
-              </td>
-              <td>
-                <button
-                  :disabled="clicked.includes(mission.id)"
-                  v-if="cancelPossible(mission)"
-                  @click="cancel(mission)"
-                >
-                  <cancel-icon :title="$t('Cancel')" />
-                </button>
-              </td>
-              <td v-if="chainResponse.includes(mission.id)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="JSON.stringify(missions) === '[]'">{{ $t("No Result") }}</p>
-      </template>
-      <template v-else>
-        <p>
-          {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("set a user") }}</router-link>
-        </p>
-      </template>
-    </div>
-    <div v-else>
-      <Loading />
-    </div>
+    <h1>{{ $t("Missions") }}</h1>
+    <template v-if="gameUser !== 'null'">
+      <p v-if="shipString">{{ shipString }}</p>
+      <p v-else>{{ $t("Click the ship total to see details.") }}</p>
+      <h3>
+        {{ $t("Active") }} ({{
+          activeMissions !== null ? activeMissions.length : 0
+        }})
+      </h3>
+      <table>
+        <thead>
+          <th @click="sort('type')">{{ $t("Type") }}</th>
+          <th @click="sort('user')">{{ $t("User") }}</th>
+          <th @click="sort('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sort('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
+          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sort('return')">{{ $t("Return") }}</th>
+          <th @click="sort('result')">{{ $t("Result") }}</th>
+          <th @click="sort('id')">{{ $t("Details") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="mission in activeMissions" :key="mission.id">
+            <td>{{ $t(mission.type) }}</td>
+            <td>{{ mission.user }}</td>
+            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
+            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>
+              <span v-if="mission.ships !== null" @click="shipList(mission)">
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
+                <span v-else>{{ mission.ships.total }}</span></span
+              >
+            </td>
+            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
+            <td>
+              <span v-if="mission.return !== null">
+                {{ moment.unix(mission.return, "seconds").format("lll") }}
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
+            <td>
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/battle/' + mission.id }"
+                >{{ $t("Log") }}</router-link
+              >&nbsp;
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/replay/' + mission.id }"
+              >
+                {{ $t("Replay") }}</router-link
+              >
+            </td>
+            <td>
+              <button
+                :disabled="clicked.includes(mission.id)"
+                v-if="cancelPossible(mission)"
+                @click="cancel(mission)"
+              >
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(mission.id)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>{{ $t("Recent") }}</h3>
+      <table>
+        <thead>
+          <th @click="sort('type')">{{ $t("Type") }}</th>
+          <th @click="sort('user')">{{ $t("User") }}</th>
+          <th @click="sort('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sort('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
+          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sort('return')">{{ $t("Return") }}</th>
+          <th @click="sort('result')">{{ $t("Result") }}</th>
+          <th @click="sort('id')">{{ $t("Details") }}</th>
+          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="mission in sortedMissions" :key="mission.id">
+            <td>{{ $t(mission.type) }}</td>
+            <td>{{ mission.user }}</td>
+            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
+            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>
+              <span v-if="mission.ships !== null" @click="shipList(mission)">
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
+                <span v-else>{{ mission.ships.total }}</span></span
+              >
+            </td>
+            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
+            <td>
+              <span v-if="mission.return !== null">
+                {{ moment.unix(mission.return, "seconds").format("lll") }}
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
+            <td>
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/battle/' + mission.id }"
+                >{{ $t("Log") }}</router-link
+              >&nbsp;
+              <router-link
+                v-if="
+                  (mission.type === 'attack' || mission.type === 'support') &&
+                    mission.result !== null &&
+                    (mission.result !== 'cancel' &&
+                      mission.result !== 'cancel_support')
+                "
+                :to="{ path: '/replay/' + mission.id }"
+              >
+                {{ $t("Replay") }}</router-link
+              >
+            </td>
+            <td>
+              <button
+                :disabled="clicked.includes(mission.id)"
+                v-if="cancelPossible(mission)"
+                @click="cancel(mission)"
+              >
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </td>
+            <td v-if="chainResponse.includes(mission.id)">
+              <timer-sand-icon :title="$t('Transaction sent')" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-if="JSON.stringify(missions) === '[]'">{{ $t("No Result") }}</p>
+    </template>
+    <template v-else>
+      <p>
+        {{ $t("Please set the") }}
+        <router-link to="/user">{{ $t("set a user") }}</router-link>
+      </p>
+    </template>
   </div>
 </template>
 
@@ -185,14 +176,12 @@ import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "missions",
   components: {
     CancelIcon,
-    TimerSandIcon,
-    Loading
+    TimerSandIcon
   },
   data: function() {
     return {
