@@ -1,13 +1,32 @@
 <template>
   <span v-if="planetId !== null">
-    {{ coal }} <alpha-c-box-icon :title="$t('Coal')" /> | {{ ore }}
-    <alpha-f-box-icon :title="$t('Ore')" /><alpha-e-box-icon
-      :title="$t('Ore')"
-    />
-    | {{ copper }} <alpha-c-box-icon :title="$t('Copper')" /><alpha-u-box-icon
-      :title="$t('Copper')"
-    />
-    | {{ uranium }} <alpha-u-box-icon :title="$t('Uranium')" />
+    {{ coal }}
+    <font v-if="quantity.coaldepot <= coal" color="red"
+      ><alpha-c-box-icon :title="$t('Coal')"
+    /></font>
+    <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
+
+    {{ ore }}
+    <font v-if="quantity.oredepot <= ore" color="red"
+      ><alpha-f-box-icon :title="$t('Ore')"/></font
+    ><font v-else><alpha-f-box-icon :title="$t('Ore')"/></font
+    ><alpha-e-box-icon :title="$t('Ore')" />
+
+    {{ copper }}
+    <font v-if="quantity.copperdepot <= copper" color="red"
+      ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+        :title="$t('Copper')"
+    /></font>
+    <font v-else>
+      <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+        :title="$t('Copper')"
+    /></font>
+
+    {{ uranium }}
+    <font v-if="quantity.oredepot <= ore" color="red"
+      ><alpha-u-box-icon :title="$t('Uranium')"
+    /></font>
+    <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
   </span>
 </template>
 
