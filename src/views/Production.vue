@@ -1,6 +1,5 @@
 <template>
   <div class="production">
-    <div v-if="production !== null">
     <h1>{{ $t("Production") }}</h1>
     <template
       v-if="gameUser !== 'null' && planetId !== 'null' && production !== null"
@@ -52,10 +51,6 @@
         </p>
       </template>
     </template>
-        </div>
-    <div v-else>
-      <Loading />
-    </div>
   </div>
 </template>
 
@@ -63,13 +58,9 @@
 import ProductionService from "@/services/production";
 import { mapState } from "vuex";
 import * as types from "@/store/mutation-types";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: "production",
-  components: {
-    Loading
-  },
   data: function() {
     return {
       production: null
