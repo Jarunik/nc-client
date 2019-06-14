@@ -84,6 +84,7 @@ import EarthIcon from "vue-material-design-icons/Earth.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 
+
 export default {
   name: "App",
   components: {
