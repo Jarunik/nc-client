@@ -1,43 +1,44 @@
 <template>
   <div class="user">
-      <h1>{{ $t("User") }}</h1>
-      <p>{{ $t("Current user") }}: {{ gameUser }}</p>
-      <p>
-        {{ $t("User") }}:
-        <input
-          v-model="user"
-          @keyup.enter="setUser(user)"
-          :placeholder="placeholder"
-        />
-        <button @click="setUser(user)">{{ $t("Set") }}</button>
-      </p>
-      <p>
-        <button @click="setUser(loginUser)">{{ $t("Set myself") }}</button>
-      </p>
-      <p>
-        <i>{{
-          $t(
-            "You can show all users but you can only issue actions for the authorized user."
-          )
-        }}</i>
-      </p>
-      <p>
-        <i
-          >{{ $t("Please") }}
-          <router-link to="/">{{ $t("logout/login") }}</router-link>
-          {{ $t("to switch the authorized user.") }}</i
-        >
-      </p>
-      <p>Authorized User: {{ loginUser }}</p>
-      <p>
-        {{ $t("Language") }}:
-        <select v-model="gameLanguage">
-          <option value="en">{{ $t("English") }}</option>
-          <option value="ko">{{ $t("Korean") }}</option>
-          <option value="de">{{ $t("German") }}</option>
-        </select>
-      </p>
-    </div>
+    <h1>{{ $t("User") }}</h1>
+    <p>{{ $t("Current user") }}: {{ gameUser }}</p>
+    <p>
+      {{ $t("User") }}:
+      <input
+        v-model="user"
+        @keyup.enter="setUser(user)"
+        :placeholder="placeholder"
+      >
+      <button @click="setUser(user)">{{ $t("Set") }}</button>
+    </p>
+    <p>
+      <button @click="setUser(loginUser)">{{ $t("Set myself") }}</button>
+    </p>
+    <p>
+      <i>
+        {{
+        $t(
+        "You can show all users but you can only issue actions for the authorized user."
+        )
+        }}
+      </i>
+    </p>
+    <p>
+      <i>
+        {{ $t("Please") }}
+        <router-link to="/">{{ $t("logout/login") }}</router-link>
+        {{ $t("to switch the authorized user.") }}
+      </i>
+    </p>
+    <p>Authorized User: {{ loginUser }}</p>
+    <p>
+      {{ $t("Language") }}:
+      <select v-model="gameLanguage">
+        <option value="en">{{ $t("English") }}</option>
+        <option value="ko">{{ $t("Korean") }}</option>
+        <option value="de">{{ $t("German") }}</option>
+      </select>
+    </p>
   </div>
 </template>
 
