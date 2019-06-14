@@ -1,5 +1,6 @@
 <template>
   <div class="user">
+    <div v-if="user !== null">
       <h1>{{ $t("User") }}</h1>
       <p>{{ $t("Current user") }}: {{ gameUser }}</p>
       <p>
@@ -38,6 +39,9 @@
         </select>
       </p>
     </div>
+    <div v-else>
+      <Loading />
+    </div>
   </div>
 </template>
 
@@ -46,9 +50,13 @@ import UserService from "@/services/user";
 import PlanetsService from "@/services/planets";
 import moment from "moment";
 import { mapState } from "vuex";
+import Loading from "@/components/Loading.vue";
 
 export default {
   name: "user",
+  components: {
+    Loading
+  },
   data: function() {
     return {
       user: null,
