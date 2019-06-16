@@ -1,6 +1,6 @@
 <template>
   <div class="planets">
-    <h1>{{ $t("Planets") }}</h1>
+    <h3>{{ $t("Planets") }}</h3>
     <template v-if="gameUser !== 'null'">
       <table>
         <thead>

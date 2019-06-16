@@ -1,6 +1,6 @@
 <template>
   <div class="battle">
-    <h1>{{ $t("Battle") }}</h1>
+    <h3>{{ $t("Battle") }}</h3>
     <div v-if="battle !== null">
       <div v-for="mission in battle" :key="mission.battle_number">
         <p>

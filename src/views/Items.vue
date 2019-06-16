@@ -1,6 +1,6 @@
 <template>
   <div class="items">
-    <h1>{{ $t("Items") }}</h1>
+    <h3>{{ $t("Items") }}</h3>
     <template v-if="items !== null && items.length > 0">
       <table>
         <thead>

@@ -1,8 +1,8 @@
 <template>
   <div class="simulator">
-    <h1>{{ $t("Simulator") }}</h1>
+    <h3>{{ $t("Simulator") }}</h3>
     <i>{{ $t("The simulator does not consider skills.") }}</i>
-    <h3>
+    <h4>
       {{ $t("Attacker") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -17,8 +17,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h3>
-    <br />
+    </h4>
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -106,7 +105,7 @@
         </tr>
       </tbody>
     </table>
-    <h3>
+    <h4>
       {{ $t("Defender") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -121,8 +120,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h3>
-    <br />
+    </h4>
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -206,11 +204,11 @@
         </tr>
       </tbody>
     </table>
-    <h2>{{ $t("Battle") }}</h2>
+    <h4>{{ $t("Battle") }}</h4>
     <button v-on:click="battle()">{{ $t("Play") }} Turn</button>
     <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
     <button v-on:click="reset()">{{ $t("Reset") }}</button>
-    <h2>{{ $t("Battle Log") }}</h2>
+    <h4>{{ $t("Battle Log") }}</h4>
     <p>{{ $t(result) }}</p>
     <p>{{ $t("Next Turn") }}: {{ turn }}</p>
     <p>{{ $t("Round") }}: {{ round }}</p>

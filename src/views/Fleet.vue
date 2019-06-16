@@ -1,6 +1,6 @@
 <template>
   <div class="fleet">
-    <h1>{{ $t("Fleet") }}</h1>
+    <h3>{{ $t("Fleet") }}</h3>
     <template
       v-if="
         gameUser !== 'null' &&
@@ -53,7 +53,7 @@
       <br />
       <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       <!-- Commands -->
-      <h3>
+      <h4>
         {{ $t("Command") }}
         <select @change="onCommand(command)" v-model="command">
           <option value="explorespace">{{ $t("Explore") }}</option>
@@ -63,7 +63,7 @@
           <option value="attack">{{ $t("Attack") }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
-      </h3>
+      </h4>
       <template v-if="command !== null && command !== 'sent'">
         <!-- Formation -->
         <table>
@@ -83,14 +83,14 @@
         <p>
           <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
-        <h3>
+        <h4>
           {{ $t("Destination") }}
           <input
             v-on:change="fillCoordinates(search)"
             v-model="search"
             placeholder="(x/y)"
           />
-        </h3>
+        </h4>
         <p>
           {{ $t("X") }}:
           <input

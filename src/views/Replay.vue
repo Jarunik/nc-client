@@ -1,6 +1,6 @@
 <template>
   <div class="replay">
-    <h1>{{ $t("Replay") }}</h1>
+    <h3>{{ $t("Replay") }}</h3>
     <p v-if="report !== null">
       {{ $t("Mission") }}: {{ report[battleIndex].mission_id }}
     </p>

@@ -1,6 +1,6 @@
 <template>
   <div class="ranking">
-    <h1>{{ $t("Ranking") }}</h1>
+    <h3>{{ $t("Ranking") }}</h3>
     <P
       ><i>{{
         $t("Click users to view the game from their perspective.")

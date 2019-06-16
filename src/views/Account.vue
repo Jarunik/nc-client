@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1><b>Next</b>Colony</h1>
+      <h3><b>Next</b>Colony</h3>
     </div>
     <p>{{ $t("Explore. Colonize. Battle. Collect.") }}</p>
     <p>

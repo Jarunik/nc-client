@@ -1,6 +1,6 @@
 <template>
   <div class="galaxy">
-    <h1>{{ $t("Galaxy") }}</h1>
+    <h3>{{ $t("Galaxy") }}</h3>
     <template v-if="this.galaxy != null">
       <table>
         <tbody>

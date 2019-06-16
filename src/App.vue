@@ -252,7 +252,7 @@ export default {
 }
 
 #middle {
-  padding-top: 80px;
+  padding-top: 40px;
   padding-bottom: 120px;
 }
 #navbottom {
@@ -262,7 +262,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 140%;
+  font-size: 130%;
 }
 #navbottom a {
   color: white;
