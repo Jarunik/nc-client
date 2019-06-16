@@ -1,6 +1,6 @@
 <template>
   <div class="shipyard">
-    <h3>{{ $t("Shipyard") }}</h3>
+    <h1>{{ $t("Shipyard") }}</h1>
     <p>
       <i>{{ $t("Ships need skill level 20 to build.") }}</i>
     </p>

@@ -1,8 +1,8 @@
 <template>
   <div class="simulator">
-    <h3>{{ $t("Simulator") }}</h3>
+    <h1>{{ $t("Simulator") }}</h1>
     <i>{{ $t("The simulator does not consider skills.") }}</i>
-    <h4>
+    <h2>
       {{ $t("Attacker") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -17,7 +17,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h4>
+    </h2>
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -105,7 +105,7 @@
         </tr>
       </tbody>
     </table>
-    <h4>
+    <h2>
       {{ $t("Defender") }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -120,7 +120,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h4>
+    </h2>
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -204,11 +204,11 @@
         </tr>
       </tbody>
     </table>
-    <h4>{{ $t("Battle") }}</h4>
+    <h2>{{ $t("Battle") }}</h2>
     <button v-on:click="battle()">{{ $t("Play") }} Turn</button>
     <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
     <button v-on:click="reset()">{{ $t("Reset") }}</button>
-    <h4>{{ $t("Battle Log") }}</h4>
+    <h2>{{ $t("Battle Log") }}</h2>
     <p>{{ $t(result) }}</p>
     <p>{{ $t("Next Turn") }}: {{ turn }}</p>
     <p>{{ $t("Round") }}: {{ round }}</p>
@@ -853,19 +853,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 table {
   margin-left: auto;
   margin-right: auto;

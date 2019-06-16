@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <h3>{{ $t("User") }}</h3>
+    <h1>{{ $t("User") }}</h1>
     <p>{{ $t("Current user") }}: {{ gameUser }}</p>
     <p>
       {{ $t("User") }}:

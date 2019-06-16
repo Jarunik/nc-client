@@ -1,6 +1,6 @@
 <template>
   <div class="skills">
-    <h3>{{ $t("Skills") }}</h3>
+    <h1>{{ $t("Skills") }}</h1>
     <template v-if="gameUser !== 'null'">
       <table>
         <thead>

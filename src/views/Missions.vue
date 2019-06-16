@@ -1,14 +1,14 @@
 <template>
   <div class="missions">
-    <h3>{{ $t("Missions") }}</h3>
+    <h1>{{ $t("Missions") }}</h1>
     <template v-if="gameUser !== 'null'">
       <p v-if="shipString">{{ shipString }}</p>
       <p v-else>{{ $t("Click the ship total to see details.") }}</p>
-      <h4>
+      <h2>
         {{ $t("Active") }} ({{
           activeMissions !== null ? activeMissions.length : 0
         }})
-      </h4>
+      </h2>
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
@@ -83,7 +83,7 @@
           </tr>
         </tbody>
       </table>
-      <h4>{{ $t("Recent") }}</h4>
+      <h2>{{ $t("Recent") }}</h2>
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>

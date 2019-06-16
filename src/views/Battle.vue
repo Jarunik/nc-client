@@ -1,13 +1,13 @@
 <template>
   <div class="battle">
-    <h3>{{ $t("Battle") }}</h3>
+    <h1>{{ $t("Battle") }}</h1>
     <div v-if="battle !== null">
       <div v-for="mission in battle" :key="mission.battle_number">
         <p>
           {{ $t("Mission") }} : {{ mission.mission_id }} {{ $t("Battle") }} :
           {{ mission.battle_number }}
         </p>
-        <h3>
+        <h2>
           {{ $t("Attacker") }} {{ mission.attacker }}
           <font v-if="mission.result === 2" color="green">{{
             $t("Winner")
@@ -18,7 +18,7 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h3>
+        </h2>
         <table>
           <thead>
             <th>Slot</th>
@@ -79,7 +79,7 @@
           </tbody>
         </table>
 
-        <h3>
+        <h2>
           {{ $t("Defender") }} {{ mission.defender }}
           <font v-if="mission.result === 2" color="red">{{
             $t("Looser")
@@ -90,7 +90,7 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h3>
+        </h2>
         <table>
           <thead>
             <th>Slot</th>
@@ -150,7 +150,7 @@
             </tr>
           </tbody>
         </table>
-        <h3>{{ $t("Loot") }}</h3>
+        <h2>{{ $t("Loot") }}</h2>
         <p>
           C:{{ Number(mission.coal).toFixed(0) }} Fe:{{
             Number(mission.ore).toFixed(0)

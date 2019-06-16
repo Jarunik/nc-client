@@ -1,6 +1,6 @@
 <template>
   <div class="replay">
-    <h3>{{ $t("Replay") }}</h3>
+    <h1>{{ $t("Replay") }}</h1>
     <p v-if="report !== null">
       {{ $t("Mission") }}: {{ report[battleIndex].mission_id }}
     </p>
@@ -21,7 +21,7 @@
       >
       <span v-else>{{ $t("Battle") }}: {{ fight.battle_number }}</span>
     </div>
-    <h3>
+    <h2>
       {{ $t("Attacker") }} {{ report[battleIndex].attacker }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -36,7 +36,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h3>
+    </h2>
     <table>
       <thead>
         <th>{{ $t("Tank") }}</th>
@@ -112,7 +112,7 @@
         </tr>
       </tbody>
     </table>
-    <h3>
+    <h2>
       {{ $t("Defender") }} {{ report[battleIndex].defender }}
       <font
         v-if="currentAttacker === this.slots && currentDefender === this.slots"
@@ -127,7 +127,7 @@
           {{ $t("Looser") }}
         </font>
       </span>
-    </h3>
+    </h2>
     <br />
     <table>
       <thead>

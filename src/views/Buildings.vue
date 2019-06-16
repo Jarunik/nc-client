@@ -1,6 +1,6 @@
 <template>
   <div class="buildings">
-    <h3>{{ $t("Buildings") }}</h3>
+    <h1>{{ $t("Buildings") }}</h1>
     <template v-if="gameUser !== 'null' && planetId != 'null'">
       <table>
         <thead>

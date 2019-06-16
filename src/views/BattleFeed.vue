@@ -1,6 +1,6 @@
 <template>
   <div class="battlefeed">
-    <h3>{{ $t("Recent Battles") }}</h3>
+    <h1>{{ $t("Recent Battles") }}</h1>
     <table>
       <thead>
         <th>{{ $t("Date") }}</th>
