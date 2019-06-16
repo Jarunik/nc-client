@@ -4,12 +4,25 @@
     <table>
       <thead>
         <th>{{ $t("Name") }}</th>
+        <th>{{ $t("Details") }}</th>
         <th>{{ $t("Available") }}</th>
         <th>{{ $t("Price") }}</th>
       </thead>
       <tbody>
         <tr v-for="item in shop" :key="item.id">
           <td>{{ $t(item.name) }}</td>
+          <td>
+            <span v-if="item.coal !== null">
+              {{ item.coal }} {{ $t("C") }} {{ item.ore }} {{ $t("Fe") }}
+              {{ item.copper }} {{ $t("Cu") }} {{ item.uranium }} {{ $t("U") }}
+            </span>
+            <span v-if="item.booster !== null">
+              {{ item.booster }} % {{ $t("Booster") }}</span
+            >
+            <span v-if="item.id.includes('blueprint')">
+              {{ $t("Battleship Blueprint") }}</span
+            >
+          </td>
           <td>{{ item.left }} / {{ item.total }}</td>
           <td>
             <button @click="buy(item)">

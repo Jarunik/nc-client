@@ -1,5 +1,5 @@
 <template>
-  <span v-if="planetId !== null">
+  <span v-if="planetId !== null && quantity != null">
     {{ coal }}
     <font v-if="quantity.coaldepot <= coal" color="red"
       ><alpha-c-box-icon :title="$t('Coal')"
@@ -8,9 +8,12 @@
 
     {{ ore }}
     <font v-if="quantity.oredepot <= ore" color="red"
-      ><alpha-f-box-icon :title="$t('Ore')"/></font
-    ><font v-else><alpha-f-box-icon :title="$t('Ore')"/></font
-    ><alpha-e-box-icon :title="$t('Ore')" />
+      ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+        :title="$t('Ore')"/></font
+    ><font v-else
+      ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+        :title="$t('Ore')"
+    /></font>
 
     {{ copper }}
     <font v-if="quantity.copperdepot <= copper" color="red"

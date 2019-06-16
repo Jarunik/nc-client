@@ -1,55 +1,50 @@
 <template>
   <div id="app">
     <span id="navtop">
-      <router-link to="/ranking"
-        ><chevron-triple-up-icon :title="$t('Ranking')"
-      /></router-link>
-      |
-      <router-link to="/battlefeed">
-        <sword-cross-icon :title="$t('Recent Battles')"
-      /></router-link>
-      |
-
-      <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
-      <router-link :to="'/items'">
-        <package-variant-closed-icon :title="$t('Items')" />
-      </router-link>
-      |
-      <router-link :to="'/skills'">
-        <school-icon :title="$t('Skills')" />
-      </router-link>
-      |
-      <router-link :to="'/buildings'">
-        <home-city-icon :title="$t('Buildings')" />
-      </router-link>
-      |
-      <router-link :to="'/shipyard'">
-        <factory-icon :title="$t('Shipyard')" />
-      </router-link>
-      |
-      <router-link :to="'/galaxy'">
-        <map-icon :title="$t('Galaxy')" />
-      </router-link>
-      |
-      <router-link :to="'/fleet'">
-        <ship-wheel-icon :title="$t('Fleet')" />
-      </router-link>
-      |
-      <router-link :to="'/simulator'">
-        <animation-play-icon :title="$t('Simulator')" />
-      </router-link>
-      |
-      <router-link :to="'/missions'">
-        <calendar-icon :title="$t('Mission')" />
-      </router-link>
-      |
-      <router-link :to="'/planets'">
-        <earth-icon :title="$t('Planets')" />
-      </router-link>
-      |
-      <router-link to="/user"><account-icon :title="$t('User')"/></router-link>
-      |
-      <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
+      <span>
+        <router-link to="/ranking"
+          ><chevron-triple-up-icon :title="$t('Ranking')"
+        /></router-link>
+        |
+        <router-link to="/battlefeed">
+          <sword-cross-icon :title="$t('Recent Battles')"
+        /></router-link>
+        |
+        <router-link :to="'/simulator'">
+          <animation-play-icon :title="$t('Simulator')" />
+        </router-link>
+        |
+        <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
+        <router-link :to="'/items'">
+          <package-variant-closed-icon :title="$t('Items')" />
+        </router-link>
+        |
+        <router-link :to="'/skills'">
+          <school-icon :title="$t('Skills')" />
+        </router-link>
+        |
+        <router-link :to="'/buildings'">
+          <home-city-icon :title="$t('Buildings')" />
+        </router-link>
+        |
+        <router-link :to="'/shipyard'">
+          <factory-icon :title="$t('Shipyard')" />
+        </router-link>
+        |
+        <router-link :to="'/galaxy'">
+          <map-icon :title="$t('Galaxy')" />
+        </router-link>
+        |
+        <router-link :to="'/fleet'">
+          <ship-wheel-icon :title="$t('Fleet')" />
+        </router-link>
+        |
+        <router-link :to="'/missions'">
+          <calendar-icon :title="$t('Mission')" />
+        </router-link>
+        |
+        <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
+      </span>
     </span>
     <div id="middle">
       <router-view />
@@ -79,8 +74,6 @@ import FactoryIcon from "vue-material-design-icons/Factory.vue";
 import MapIcon from "vue-material-design-icons/Map.vue";
 import CalendarIcon from "vue-material-design-icons/Calendar.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
-import AccountIcon from "vue-material-design-icons/Account.vue";
-import EarthIcon from "vue-material-design-icons/Earth.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 
@@ -99,8 +92,6 @@ export default {
     MapIcon,
     CalendarIcon,
     LoginIcon,
-    AccountIcon,
-    EarthIcon,
     AnimationPlayIcon,
     SwordCrossIcon
   },
@@ -242,13 +233,13 @@ export default {
   color: white;
 }
 #navtop {
-  padding: 15px;
+  padding: 10px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 150%;
+  font-size: 140%;
 }
 
 #navtop a {
@@ -261,7 +252,7 @@ export default {
 }
 
 #middle {
-  padding-top: 60px;
+  padding-top: 80px;
   padding-bottom: 120px;
 }
 #navbottom {
@@ -271,7 +262,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 120%;
+  font-size: 140%;
 }
 #navbottom a {
   color: white;

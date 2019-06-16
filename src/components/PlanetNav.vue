@@ -1,16 +1,24 @@
 <template>
   <span class="planetnav">
+    <span v-if="gameUser != null"
+      ><router-link to="/user">{{ gameUser }}</router-link></span
+    >
+    <span v-else
+      ><router-link to="/user"><account-icon :title="$t('User')"/></router-link
+    ></span>
+    |
     <router-link :to="'/planets'">
       <earth-icon :title="$t('Planets')" />
     </router-link>
     <span v-for="planet in this.planets" :key="planet.id">
+      |
       <span v-if="planet.id === planetId"
         ><font color="green"
           ><span @click="setPlanet(planet)">
             {{ planet.name | shorten }}
           </span></font
-        ></span
-      >
+        >
+      </span>
       <span class="pointer" v-else @click="setPlanet(planet)">
         {{ planet.name | shorten }}
       </span>
@@ -22,12 +30,14 @@
 import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import AccountIcon from "vue-material-design-icons/Account.vue";
 import * as types from "@/store/mutation-types";
 
 export default {
   name: "planetnav",
   components: {
-    EarthIcon
+    EarthIcon,
+    AccountIcon
   },
   data: function() {
     return {
