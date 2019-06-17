@@ -227,7 +227,10 @@
               </button>
             </div>
             <div v-if="command === 'attack'">
-              <button @click="attack" :disabled="!commandEnabled('attack')">
+              <button
+                @click="attack"
+                :disabled="!commandEnabled('attack') || clicked"
+              >
                 {{ $t("Attack Planet") }}
               </button>
             </div>
@@ -286,7 +289,7 @@ export default {
       ore: null,
       copper: null,
       uranium: null,
-      clicked: [],
+      clicked: false,
       chainResponse: [],
       currentSort: "name",
       currentSortDir: "asc",
@@ -435,6 +438,7 @@ export default {
       }
     },
     onCommand(command) {
+      this.clicked = false;
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
         (this.$route.query.y !== undefined && this.$route.query.y !== null)
@@ -758,6 +762,7 @@ export default {
     },
 
     explore() {
+      this.clicked = true;
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.explorespace(
         this.loginUser,
@@ -774,6 +779,7 @@ export default {
       );
     },
     transport() {
+      this.clicked = true;
       let transporterCount;
       this.shipFormation.ships.forEach(ship => {
         if (ship.type === "transportship") {
@@ -806,6 +812,7 @@ export default {
       );
     },
     deploy() {
+      this.clicked = true;
       // shipList = { "transportship": 2, "explorership": 1 }
       let shipList = {};
       for (let key in this.shipFormation.ships) {
@@ -841,6 +848,7 @@ export default {
       );
     },
     support() {
+      this.clicked = true;
       // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
       let shipList = {};
       for (let key in this.shipFormation.ships) {
@@ -868,6 +876,7 @@ export default {
       );
     },
     attack() {
+      this.clicked = true;
       // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
       let shipList = {};
       for (let key in this.shipFormation.ships) {
