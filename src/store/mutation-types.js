@@ -10,3 +10,4 @@ export const SET_PLANET_ID = "SET_PLANET_ID";
 export const SET_PLANET_NAME = "SET_PLANET_NAME";
 export const SET_PLANET_POSX = "SET_PLANET_POSX";
 export const SET_PLANET_POSY = "SET_PLANET_POSY";
+export const SET_PLANET_LIST = "SET_PLANET_LIST";

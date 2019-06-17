@@ -6,7 +6,8 @@ export default {
     id: null,
     name: null,
     posX: null,
-    posY: null
+    posY: null,
+    list: []
   },
   mutations: {
     [types.SET_PLANET_ID](state, payload) {
@@ -20,6 +21,9 @@ export default {
     },
     [types.SET_PLANET_POSY](state, payload) {
       state.posY = payload.value;
+    },
+    [types.SET_PLANET_LIST](state, payload) {
+      state.list = payload.value;
     }
   },
   actions: {
@@ -50,12 +54,20 @@ export default {
         type: types.SET_PLANET_POSY,
         value
       });
+    },
+    setList: ({ commit }, value) => {
+      localStorage.setItem("planetList", JSON.stringify(value));
+      commit({
+        type: types.SET_PLANET_LIST,
+        value
+      });
     }
   },
   getters: {
     id: state => state.id,
     name: state => state.name,
     posX: state => state.posX,
-    posY: state => state.posY
+    posY: state => state.posY,
+    list: state => state.list
   }
 };

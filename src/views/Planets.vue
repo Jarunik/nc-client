@@ -143,6 +143,7 @@ export default {
     async getPlanets() {
       const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
+      this.$store.dispatch("planet/setList", response.planets);
     },
     setPlanet(planet) {
       if (planet.id !== this.planetId) {

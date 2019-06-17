@@ -132,7 +132,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       posX: state => state.planet.posX,
-      posY: state => state.planet.posY
+      posY: state => state.planet.posY,
+      planetList: state => state.planet.list
     })
   },
   methods: {
@@ -218,14 +219,15 @@ export default {
       });
 
       this.galaxy.planets.forEach(planet => {
-        if (
-          planet.x === posX &&
-          planet.y === posY &&
-          planet.x === this.posX &&
-          planet.y == this.posY
-        ) {
-          icon = "home";
-        }
+        this.planetList.forEach(ownPlanet => {
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.id === ownPlanet.id
+          ) {
+            icon = "home";
+          }
+        });
       });
 
       return icon;

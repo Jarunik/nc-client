@@ -202,6 +202,11 @@ export default {
       this.$store.dispatch("planet/setPosY", JSON.parse(planetPosY));
     }
 
+    var planetList = localStorage.getItem("planetList");
+    if (planetPosY !== "undefined") {
+      this.$store.dispatch("planet/setList", JSON.parse(planetList));
+    }
+
     var gameLanguage = localStorage.getItem("gameLanguage");
     if (gameLanguage !== "undefined") {
       this.$store.dispatch(
