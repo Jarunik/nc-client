@@ -133,6 +133,7 @@ export default {
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
         case "planet/" + types.SET_PLANET_ID:
+          this.clicked = [];
           this.prepareComponent();
       }
     });
