@@ -8,20 +8,19 @@
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
-          <th @click="sort('variant_name')">{{ $t("Variant") }}</th>
-          <th @click="sort('min_level')">{{ $t("Needs") }}</th>
-          <th @click="sort('cur_level')">{{ $t("Shipyard") }}</th>
+          <th @click="sort('variant_name')">{{ $t("Type") }}</th>
+          <th @click="sort('min_level')">{{ $t("Need") }}</th>
+          <th @click="sort('cur_level')">{{ $t("Yard") }}</th>
           <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
-          <th @click="sort('attack')">{{ $t("Attack") }}</th>
-          <th @click="sort('defense')">{{ $t("Defense") }}</th>
-          <th @click="sort('busy_until')">{{ $t("Constructing") }}</th>
+          <th @click="sort('attack')">{{ $t("A/D") }}</th>
+          <th @click="sort('busy_until')">{{ $t("Busy") }}</th>
           <th v-if="loginUser !== null && loginUser === gameUser">
-            {{ $t("Construct") }}
+            {{ $t("Build") }}
           </th>
           <th></th>
         </thead>
@@ -89,8 +88,10 @@
             <td>
               {{ ship.cost.time | timePretty }}
             </td>
-            <td>{{ (ship.rocket + ship.bullet + ship.laser) | omitZero }}</td>
-            <td>{{ ship.structure + ship.armor + ship.shield }}</td>
+            <td>
+              {{ (ship.rocket + ship.bullet + ship.laser) | omitZero }} /
+              {{ ship.structure + ship.armor + ship.shield }}
+            </td>
             <td>{{ ship.busy_until | busyPretty }}</td>
             <td v-if="loginUser !== null && loginUser === gameUser">
               <button
