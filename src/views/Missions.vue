@@ -196,6 +196,7 @@ export default {
     };
   },
   async mounted() {
+    this.clicked = [];
     await this.prepareComponent();
   },
   computed: {

@@ -157,6 +157,7 @@ export default {
     };
   },
   async mounted() {
+    this.clicked = [];
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();

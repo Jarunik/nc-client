@@ -310,6 +310,7 @@ export default {
     };
   },
   async mounted() {
+    this.clicked = false;
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();
