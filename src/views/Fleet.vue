@@ -136,7 +136,10 @@
 
         <!-- Exploration -->
         <div v-if="command === 'explorespace'">
-          <button @click="explore" :disabled="!commandEnabled('explorespace')">
+          <button
+            @click="explore"
+            :disabled="!commandEnabled('explorespace') || clicked"
+          >
             {{ $t("Send Explorer") }}
           </button>
         </div>
@@ -171,7 +174,10 @@
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
           <div>
-            <button @click="transport" :disabled="!commandEnabled('transport')">
+            <button
+              @click="transport"
+              :disabled="!commandEnabled('transport') || clicked"
+            >
               {{ $t("Send Transporter") }}
             </button>
           </div>
@@ -217,12 +223,18 @@
         >
           <div>
             <div v-if="command === 'deploy'">
-              <button @click="deploy" :disabled="!commandEnabled('deploy')">
+              <button
+                @click="deploy"
+                :disabled="!commandEnabled('deploy') || clicked"
+              >
                 {{ $t("Deploy Ships") }}
               </button>
             </div>
             <div v-if="command === 'support'">
-              <button @click="support" :disabled="!commandEnabled('support')">
+              <button
+                @click="support"
+                :disabled="!commandEnabled('support') || clicked"
+              >
                 {{ $t("Support Planet") }}
               </button>
             </div>
