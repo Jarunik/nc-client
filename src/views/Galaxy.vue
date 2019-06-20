@@ -1,11 +1,19 @@
 <template>
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }}</h1>
+    <p>
+      <i>{{ $t("Click to see details. Double click to move.") }}</i>
+    </p>
     <template v-if="this.galaxy != null">
       <table>
         <tbody>
           <tr v-for="y in areaHeight" :key="y">
-            <td @click="focus(x, y)" v-for="x in areaWidth" :key="x">
+            <td
+              @click="focus(x, y)"
+              v-on:dblclick="goTo(coordinateX(x), coordinateY(y))"
+              v-for="x in areaWidth"
+              :key="x"
+            >
               <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
                 ><font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
@@ -59,6 +67,7 @@
       <button @click="goFleet(focusX, focusY)">
         <ship-wheel-icon :title="$t('Fleet')" />
       </button>
+      {{ distance().toFixed(2) }}
       <div>
         <br />
         <table v-if="planet !== null">
@@ -112,8 +121,8 @@ export default {
       focusY: null,
       search: null,
       planet: null,
-      areaHeight: 32,
-      areaWidth: 32
+      areaHeight: 22,
+      areaWidth: 22
     };
   },
   async mounted() {
@@ -254,6 +263,12 @@ export default {
         path: newPath,
         query: { x: realX, y: realY }
       });
+    },
+    distance() {
+      var a = this.posX - this.focusX;
+      var b = this.posY - this.focusY;
+
+      return Math.sqrt(a * a + b * b);
     }
   }
 };
