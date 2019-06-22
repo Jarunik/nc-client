@@ -11,7 +11,7 @@
           <th></th>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in items" :key="item.uid">
+          <tr v-for="(item, index) in groupedItems" :key="item.uid">
             <td>{{ $t(item.name) }}</td>
             <td>{{ item.total }}</td>
             <td>
@@ -110,7 +110,16 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id
-    })
+    }),
+    groupedItems() {
+      let obj = {};
+      return Object.keys(
+        this.items.reduce((prev, next) => {
+          if (!obj[next["id"]]) obj[next["id"]] = next;
+          return obj;
+        }, obj)
+      ).map(i => obj[i]);
+    }
   },
   methods: {
     async prepareComponent() {
