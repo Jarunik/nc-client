@@ -8,7 +8,6 @@
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
-          <th @click="sort('variant_name')">{{ $t("Type") }}</th>
           <th @click="sort('min_level')">{{ $t("Need") }}</th>
           <th @click="sort('cur_level')">{{ $t("Yard") }}</th>
           <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
@@ -31,12 +30,6 @@
                 $t(ship.longname)
               }}</font
               ><font v-else color="grey">{{ $t(ship.longname) }}</font>
-            </td>
-            <td>
-              <font v-if="ship.activated === true || ship.variant === 0">{{
-                $t(ship.variant_name)
-              }}</font
-              ><font v-else color="grey">{{ $t(ship.variant_name) }}</font>
             </td>
             <td>
               {{ ship.min_level }}

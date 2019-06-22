@@ -95,7 +95,6 @@
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
-          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
           <th></th>
         </thead>
         <tbody>
@@ -142,18 +141,6 @@
               >
                 {{ $t("Replay") }}</router-link
               >
-            </td>
-            <td>
-              <button
-                :disabled="clicked.includes(mission.id)"
-                v-if="cancelPossible(mission)"
-                @click="cancel(mission)"
-              >
-                <cancel-icon :title="$t('Cancel')" />
-              </button>
-            </td>
-            <td v-if="chainResponse.includes(mission.id)">
-              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>
