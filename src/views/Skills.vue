@@ -123,6 +123,7 @@ export default {
   },
   async mounted() {
     this.clicked = [];
+    this.chainResponse = [];
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();
@@ -134,6 +135,7 @@ export default {
       switch (mutation.type) {
         case "planet/" + types.SET_PLANET_ID:
           this.clicked = [];
+          this.chainResponse = [];
           this.prepareComponent();
       }
     });

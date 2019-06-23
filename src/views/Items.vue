@@ -102,6 +102,7 @@ export default {
   },
   async mounted() {
     this.clicked = [];
+    this.chainResponse = [];
     await this.prepareComponent();
   },
   computed: {

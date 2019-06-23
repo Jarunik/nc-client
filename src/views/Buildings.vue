@@ -188,6 +188,7 @@ export default {
   },
   async mounted() {
     this.clicked = [];
+    this.chainResponse = [];
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();
@@ -200,6 +201,7 @@ export default {
         case "planet/" + types.SET_PLANET_ID:
           this.prepareComponent();
           this.clicked = [];
+          this.chainResponse = [];
       }
     });
   },
