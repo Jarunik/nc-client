@@ -12,6 +12,14 @@ class RankingService {
 
     return response;
   }
+
+  async sortDestroyed(limit = 100) {
+    const response = await ApiService.get(
+      `/loadranking?limit=${limit}&sort=destroyed`
+    );
+
+    return response;
+  }
 }
 
 export default new RankingService();

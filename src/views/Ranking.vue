@@ -99,7 +99,7 @@ export default {
       await this.getRanking();
     },
     async getRanking() {
-      const response = await RankingService.limit(200);
+      const response = await RankingService.sortDestroyed(200);
       this.ranking = response;
     },
     sort(s) {
