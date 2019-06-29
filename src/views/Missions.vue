@@ -48,7 +48,9 @@
             <td>
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support')
@@ -58,7 +60,9 @@
               >&nbsp;
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support')
@@ -122,7 +126,9 @@
             <td>
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support')
@@ -132,7 +138,9 @@
               >&nbsp;
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support')
