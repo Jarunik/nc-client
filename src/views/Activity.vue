@@ -6,6 +6,29 @@
         $t("Click users to view the game from their perspective.")
       }}</i></P
     >
+    <p>
+      <select @change="onSelect(activityType)" v-model="activityType">
+        <option value="all">{{ $t("All") }}</option>
+        <option value="explorespace">{{ $t("explorespace") }}</option>
+        <option value="transport">{{ $t("transport") }}</option>
+        <option value="deploy">{{ $t("deploy") }}</option>
+        <option value="support">{{ $t("support") }}</option>
+        <option value="attack">{{ $t("attack") }}</option>
+        <option value="siege">{{ $t("siege") }}</option>
+        <option value="buildship">{{ $t("buildship") }}</option>
+        <option value="upgrade">{{ $t("upgrade") }}</option>
+        <option value="enhance">{{ $t("enhance") }}</option>
+        <option value="transport">{{ $t("transport") }}</option>
+        <option value="activate">{{ $t("activate") }}</option>
+        <option value="gitfitem">{{ $t("gitfitem") }}</option>
+        <option value="gitfplanet">{{ $t("gitfplanet") }}</option>
+        <option value="renameplanet">{{ $t("renameplanet") }}</option>
+        <option value="cancel">{{ $t("cancel") }}</option>
+        <option value="enable">{{ $t("enable") }}</option>
+        <option value="charge">{{ $t("charge") }}</option>
+        <option value="newuser">{{ $t("newuser") }}</option>
+      </select>
+    </p>
     <table>
       <thead>
         <th>{{ $t("Date") }}</th>
@@ -39,7 +62,8 @@ export default {
   name: "activity",
   data: function() {
     return {
-      activity: null
+      activity: null,
+      activityType: "all"
     };
   },
   async mounted() {
@@ -51,6 +75,10 @@ export default {
     },
     async getActivity() {
       const response = await ActivityService.all(100);
+      this.activity = response;
+    },
+    async getActivityByType(activityType) {
+      const response = await ActivityService.byType(activityType);
       this.activity = response;
     },
     baseUrl() {
@@ -79,6 +107,13 @@ export default {
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
       return response;
+    },
+    async onSelect(activityType) {
+      if (activityType === "all") {
+        await this.getActivity();
+      } else {
+        await this.getActivityByType(activityType);
+      }
     }
   }
 };
