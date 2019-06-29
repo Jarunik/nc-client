@@ -288,5 +288,9 @@
   "Need":"Need",
   "Yard": "Yard",
   "Click to see details. Double click to move.":"Click to see details. Double click to move.",
-  "siege": "Siege"
+  "siege": "Siege",
+  "Unknown": "Unknown",
+  "Activity": "Activity",
+  "Transaction": "Transaction",
+  "ID": "ID"
 }
