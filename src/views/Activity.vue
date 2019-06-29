@@ -14,11 +14,7 @@
           <td @click="setUser(rank.user)">{{ transaction.user }}</td>
           <td>{{ transaction.tr_type }}</td>
           <td>
-            <a
-              :href="
-                'https://nextcolony.io/api/loadtransaction?trx_id=' +
-                  transaction.trx
-              "
+            <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
               >{{ transaction.trx.substring(0, 8) }}...</a
             >
           </td>
@@ -51,6 +47,9 @@ export default {
     async getActivity() {
       const response = await ActivityService.all(100);
       this.activity = response;
+    },
+    baseUrl() {
+      return process.env.VUE_APP_ROOT_API;
     },
     setUser(newUser) {
       this.fetchUser(newUser).then(searchedUser => {
