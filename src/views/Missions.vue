@@ -50,11 +50,13 @@
                 v-if="
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
-                    mission.type === 'siege') &&
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege')
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
@@ -63,11 +65,13 @@
                 v-if="
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
-                    mission.type === 'siege') &&
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege')
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -130,11 +134,13 @@
                 v-if="
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
-                    mission.type === 'siege') &&
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege')
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
@@ -143,11 +149,13 @@
                 v-if="
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
-                    mission.type === 'siege') &&
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
                       mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege')
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -266,7 +274,8 @@ export default {
       if (
         !this.isOutgoing(mission.arrival) &&
         mission.type !== "support" &&
-        mission.type !== "seige"
+        mission.type !== "seige" &&
+        mission.type !== "breaksiege"
       ) {
         return false;
       }
@@ -313,6 +322,9 @@ export default {
       }
       if (result === "cancel_siege") {
         return "Cancel siege";
+      }
+      if (result === "cancel_breaksiege") {
+        return "Cancel breaksiege";
       }
       if (result === "cancel") {
         return "Cancel";

@@ -10,6 +10,7 @@
         <option value="support">{{ $t("support") }}</option>
         <option value="attack">{{ $t("attack") }}</option>
         <option value="siege">{{ $t("siege") }}</option>
+        <option value="breaksiege">{{ $t("breaksiege") }}</option>
         <option value="buildship">{{ $t("buildship") }}</option>
         <option value="upgrade">{{ $t("upgrade") }}</option>
         <option value="enhance">{{ $t("enhance") }}</option>

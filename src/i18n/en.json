@@ -302,5 +302,8 @@
   "giftplanet": "Gift Planet",
   "charge": "Charge",
   "enable": "Enable",
-  "renameplanet": "Rename Planet"
+  "renameplanet": "Rename Planet",
+  "Siege": "Siege",
+  "Break Siege": "Break Siege",
+  "breaksiege": "Break Siege"
 }
