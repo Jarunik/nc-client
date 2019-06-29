@@ -251,7 +251,11 @@ export default {
       if (mission.result != null) {
         return false;
       }
-      if (!this.isOutgoing(mission.arrival) && mission.type !== "support") {
+      if (
+        !this.isOutgoing(mission.arrival) &&
+        mission.type !== "support" &&
+        mission.type !== "seige"
+      ) {
         return false;
       }
       return true;
