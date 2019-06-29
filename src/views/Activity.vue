@@ -1,9 +1,16 @@
 <template>
   <div class="activity">
     <h1>{{ $t("Activity") }}</h1>
+
     <p>
-      <select @change="onSelect(activityType)" v-model="activityType">
-        <option value="all">{{ $t("All") }}</option>
+      <input
+        v-model="userFilter"
+        @keyup.enter="setUserFilter(userFilter)"
+        :placeholder="placeholder"
+      />
+      &nbsp;
+      <select @change="setActivityType(activityType)" v-model="activityType">
+        <option value="all">{{ $t("All Commands") }}</option>
         <option value="explorespace">{{ $t("explorespace") }}</option>
         <option value="transport">{{ $t("transport") }}</option>
         <option value="deploy">{{ $t("deploy") }}</option>
@@ -24,12 +31,7 @@
         <option value="charge">{{ $t("charge") }}</option>
         <option value="newuser">{{ $t("newuser") }}</option>
       </select>
-      &nbsp;
-      <input
-        v-model="userFilter"
-        @keyup.enter="setUserFilter(userFilter)"
-        :placeholder="placeholder"
-      />
+
       &nbsp;
       <button @click="clear()">{{ $t("Clear") }}</button>
     </p>
@@ -37,8 +39,8 @@
       <thead>
         <th>{{ $t("Date") }}</th>
         <th>{{ $t("User") }}</th>
+        <th>{{ $t("Command") }}</th>
         <th>{{ $t("Transaction") }}</th>
-        <th>{{ $t("ID") }}</th>
       </thead>
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
@@ -46,7 +48,9 @@
           <td @click="setUserFilter(transaction.user)">
             {{ transaction.user }}
           </td>
-          <td>{{ $t(transaction.tr_type) }}</td>
+          <td @click="setActivityType(transaction.tr_type)">
+            {{ $t(transaction.tr_type) }}
+          </td>
           <td>
             <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
               >{{ transaction.trx.substring(0, 8) }}...</a
@@ -97,7 +101,7 @@ export default {
     baseUrl() {
       return process.env.VUE_APP_ROOT_API;
     },
-    async onSelect(activityType) {
+    async setActivityType(activityType) {
       this.activityType = activityType;
       await this.getActivityByFilter(this.activityType, this.userFilter);
     },

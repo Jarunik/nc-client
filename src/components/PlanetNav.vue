@@ -1,16 +1,18 @@
 <template>
   <span class="planetnav">
-    <span v-if="!searchUser"
-      ><span @click="activateSearch()">{{ gameUser }}</span></span
-    >
+    <span v-if="!searchUser && loginUser !== null">
+      <span @click="activateSearch()">{{ gameUser }} | </span>
+    </span>
     <span v-show="searchUser"
       ><input
         ref="search"
         v-model="displayUser"
         @keyup.enter="setUser(displayUser)"
         :placeholder="placeholder"
-    /></span>
-    |
+      />
+      |
+    </span>
+
     <router-link :to="'/planets'">
       <earth-icon :title="$t('Planets')" />
     </router-link>
