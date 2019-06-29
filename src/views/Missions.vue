@@ -329,7 +329,9 @@ export default {
       if (result === "0") {
         return "Draw";
       }
-      return "Unknown";
+      if (result !== null) {
+        return "Unknown";
+      }
     },
     shipList(mission) {
       var string = "";
