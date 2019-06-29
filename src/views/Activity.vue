@@ -1,6 +1,11 @@
 <template>
   <div class="activity">
     <h1>{{ $t("Activity") }}</h1>
+    <P
+      ><i>{{
+        $t("Click users to view the game from their perspective.")
+      }}</i></P
+    >
     <table>
       <thead>
         <th>{{ $t("Date") }}</th>
@@ -11,7 +16,7 @@
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
           <td>{{ moment.unix(transaction.date, "seconds").format("lll") }}</td>
-          <td @click="setUser(rank.user)">{{ transaction.user }}</td>
+          <td @click="setUser(transaction.user)">{{ transaction.user }}</td>
           <td>{{ transaction.tr_type }}</td>
           <td>
             <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
@@ -31,7 +36,7 @@ import PlanetsService from "@/services/planets";
 import moment from "moment";
 
 export default {
-  name: "ranking",
+  name: "activity",
   data: function() {
     return {
       activity: null
