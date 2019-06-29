@@ -53,7 +53,8 @@
                     mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
@@ -65,7 +66,8 @@
                     mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -131,7 +133,8 @@
                     mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
@@ -143,7 +146,8 @@
                     mission.type === 'siege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -306,6 +310,9 @@ export default {
       }
       if (result === "cancel_support") {
         return "Cancel support";
+      }
+      if (result === "cancel_siege") {
+        return "Cancel siege";
       }
       if (result === "cancel") {
         return "Cancel";
