@@ -20,8 +20,8 @@
         <option value="enhance">{{ $t("enhance") }}</option>
         <option value="transport">{{ $t("transport") }}</option>
         <option value="activate">{{ $t("activate") }}</option>
-        <option value="gitfitem">{{ $t("gitfitem") }}</option>
-        <option value="gitfplanet">{{ $t("gitfplanet") }}</option>
+        <option value="giftitem">{{ $t("giftitem") }}</option>
+        <option value="giftplanet">{{ $t("giftplanet") }}</option>
         <option value="renameplanet">{{ $t("renameplanet") }}</option>
         <option value="cancel">{{ $t("cancel") }}</option>
         <option value="enable">{{ $t("enable") }}</option>
@@ -40,7 +40,7 @@
         <tr v-for="transaction in activity" :key="transaction.trx">
           <td>{{ moment.unix(transaction.date, "seconds").format("lll") }}</td>
           <td @click="setUser(transaction.user)">{{ transaction.user }}</td>
-          <td>{{ transaction.tr_type }}</td>
+          <td>{{ $t(transaction.tr_type) }}</td>
           <td>
             <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
               >{{ transaction.trx.substring(0, 8) }}...</a

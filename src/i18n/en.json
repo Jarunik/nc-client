@@ -292,5 +292,15 @@
   "Unknown": "Unknown",
   "Activity": "Activity",
   "Transaction": "Transaction",
-  "ID": "ID"
+  "ID": "ID",
+  "newuser": "New User",
+  "buildship": "Build Ship",
+  "upgrade": "Upgrade",
+  "enhance": "Enhance",
+  "activate": "Activate",
+  "giftitem": "Gift Item",
+  "giftplanet": "Gift Planet",
+  "charge": "Charge",
+  "enable": "Enable",
+  "renameplanet": "Rename Planet"
 }
