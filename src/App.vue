@@ -47,7 +47,7 @@
           <calendar-icon :title="$t('Mission')" />
         </router-link>
         |
-        <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
+        <router-link to="/"><account-icon :title="$t('Login')"/></router-link>
       </span>
     </span>
     <div id="middle">
@@ -77,7 +77,7 @@ import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
 import FactoryIcon from "vue-material-design-icons/Factory.vue";
 import MapIcon from "vue-material-design-icons/Map.vue";
 import CalendarIcon from "vue-material-design-icons/Calendar.vue";
-import LoginIcon from "vue-material-design-icons/Login.vue";
+import AccountIcon from "vue-material-design-icons/Account.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
@@ -96,7 +96,7 @@ export default {
     FactoryIcon,
     MapIcon,
     CalendarIcon,
-    LoginIcon,
+    AccountIcon,
     AnimationPlayIcon,
     SwordCrossIcon,
     NewspaperIcon
