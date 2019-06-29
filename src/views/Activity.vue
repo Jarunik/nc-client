@@ -56,7 +56,6 @@
 import ActivityService from "@/services/activity";
 import UserService from "@/services/user";
 import PlanetsService from "@/services/planets";
-import moment from "moment";
 
 export default {
   name: "activity",
