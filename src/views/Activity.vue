@@ -6,14 +6,22 @@
         <th>{{ $t("Date") }}</th>
         <th>{{ $t("User") }}</th>
         <th>{{ $t("Transaction") }}</th>
-        <th>{{ $t("Details") }}</th>
+        <th>{{ $t("ID") }}</th>
       </thead>
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
           <td>{{ moment.unix(transaction.date, "seconds").format("lll") }}</td>
           <td @click="setUser(rank.user)">{{ transaction.user }}</td>
           <td>{{ transaction.tr_type }}</td>
-          <td>{{ transaction.trx }}</td>
+          <td>
+            <a
+              :href="
+                'https://nextcolony.io/api/loadtransaction?trx_id=' +
+                  transaction.trx
+              "
+              >{{ transaction.trx.substring(0, 8) }}...</a
+            >
+          </td>
         </tr>
       </tbody>
     </table>
