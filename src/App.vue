@@ -6,6 +6,10 @@
           ><chevron-triple-up-icon :title="$t('Ranking')"
         /></router-link>
         |
+        <router-link to="/activity">
+          <newspaper-icon :title="$t('Activity')"
+        /></router-link>
+        |
         <router-link to="/battlefeed">
           <sword-cross-icon :title="$t('Recent Battles')"
         /></router-link>
@@ -76,6 +80,7 @@ import CalendarIcon from "vue-material-design-icons/Calendar.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
+import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 
 export default {
   name: "App",
@@ -93,7 +98,8 @@ export default {
     CalendarIcon,
     LoginIcon,
     AnimationPlayIcon,
-    SwordCrossIcon
+    SwordCrossIcon,
+    NewspaperIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
