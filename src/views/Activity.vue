@@ -1,11 +1,6 @@
 <template>
   <div class="activity">
     <h1>{{ $t("Activity") }}</h1>
-    <P
-      ><i>{{
-        $t("Click users to view the game from their perspective.")
-      }}</i></P
-    >
     <p>
       <select @change="onSelect(activityType)" v-model="activityType">
         <option value="all">{{ $t("All") }}</option>
@@ -28,6 +23,14 @@
         <option value="charge">{{ $t("charge") }}</option>
         <option value="newuser">{{ $t("newuser") }}</option>
       </select>
+      &nbsp;
+      <input
+        v-model="userFilter"
+        @keyup.enter="setUserFilter(userFilter)"
+        :placeholder="placeholder"
+      />
+      &nbsp;
+      <button @click="clear()">{{ $t("Clear") }}</button>
     </p>
     <table>
       <thead>
@@ -39,7 +42,9 @@
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
           <td>{{ moment.unix(transaction.date, "seconds").format("lll") }}</td>
-          <td @click="setUser(transaction.user)">{{ transaction.user }}</td>
+          <td @click="setUserFilter(transaction.user)">
+            {{ transaction.user }}
+          </td>
           <td>{{ $t(transaction.tr_type) }}</td>
           <td>
             <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
@@ -54,15 +59,15 @@
 
 <script>
 import ActivityService from "@/services/activity";
-import UserService from "@/services/user";
-import PlanetsService from "@/services/planets";
 
 export default {
   name: "activity",
   data: function() {
     return {
       activity: null,
-      activityType: "all"
+      activityType: "all",
+      userFilter: null,
+      placeholder: "Filter User"
     };
   },
   async mounted() {
@@ -76,43 +81,34 @@ export default {
       const response = await ActivityService.all(100);
       this.activity = response;
     },
-    async getActivityByType(activityType) {
-      const response = await ActivityService.byType(activityType);
-      this.activity = response;
+    async getActivityByFilter(activityType = null, userFilter = null) {
+      if (activityType === "all") {
+        const response = await ActivityService.byFilter(null, userFilter);
+        this.activity = response;
+      } else {
+        const response = await ActivityService.byFilter(
+          activityType,
+          userFilter
+        );
+        this.activity = response;
+      }
     },
     baseUrl() {
       return process.env.VUE_APP_ROOT_API;
     },
-    setUser(newUser) {
-      this.fetchUser(newUser).then(searchedUser => {
-        if (searchedUser !== null && searchedUser === newUser) {
-          this.$store.dispatch("game/setUser", newUser);
-          this.fetchStarterPlanet(newUser).then(planet => {
-            this.$store.dispatch("planet/setId", planet.id);
-            this.$store.dispatch("planet/setName", planet.name);
-            this.$store.dispatch("planet/setPosX", planet.posx);
-            this.$store.dispatch("planet/setPosY", planet.posy);
-          });
-        } else {
-          this.placeholder = "not found";
-          this.user = null;
-        }
-      });
-    },
-    async fetchUser(user) {
-      const response = await UserService.get(user);
-      return response.username;
-    },
-    async fetchStarterPlanet(user) {
-      const response = await PlanetsService.starterPlanet(user);
-      return response;
-    },
     async onSelect(activityType) {
-      if (activityType === "all") {
-        await this.getActivity();
-      } else {
-        await this.getActivityByType(activityType);
-      }
+      this.activityType = activityType;
+      await this.getActivityByFilter(this.activityType, this.userFilter);
+    },
+    async setUserFilter(userFilter) {
+      this.userFilter = userFilter;
+      await this.getActivityByFilter(this.activityType, this.userFilter);
+    },
+
+    async clear() {
+      this.userFilter = null;
+      this.activityType = "all";
+      await this.getActivityByFilter(this.activityType, this.userFilter);
     }
   }
 };

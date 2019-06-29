@@ -7,8 +7,15 @@ class ActivityService {
     return response;
   }
 
-  async byType(missionType) {
-    const response = await ApiService.get(`/transactions?type=${missionType}`);
+  async byFilter(missionType = null, filterUser = null) {
+    let query = "";
+    if (missionType !== null) {
+      query = query + "type=" + missionType + "&";
+    }
+    if (filterUser !== null) {
+      query = query + "user=" + filterUser + "&";
+    }
+    const response = await ApiService.get(`/transactions?${query}`);
     return response;
   }
 }
