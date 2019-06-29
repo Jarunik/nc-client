@@ -23,7 +23,8 @@
               command === 'deploy' ||
                 command === 'support' ||
                 command === 'attack' ||
-                command === 'siege'
+                command === 'siege' ||
+                command === 'breaksiege'
             "
             @click="sort('toSend')"
           >
@@ -43,7 +44,8 @@
                 command === 'deploy' ||
                   command === 'support' ||
                   command === 'attack' ||
-                  command === 'siege'
+                  command === 'siege' ||
+                  command === 'breaksiege'
               "
             >
               <input type="number" v-model="ship.toSend" />
@@ -64,6 +66,7 @@
           <option value="support">{{ $t("Support") }}</option>
           <option value="attack">{{ $t("Attack") }}</option>
           <option value="siege">{{ $t("Siege") }}</option>
+          <option value="breaksiege">{{ $t("Break Siege") }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </h2>
@@ -222,7 +225,8 @@
             command === 'deploy' ||
               command === 'support' ||
               command === 'attack' ||
-              command === 'siege'
+              command === 'siege' ||
+              command === 'breaksiege'
           "
         >
           <div>
@@ -256,6 +260,14 @@
                 :disabled="!commandEnabled('siege') || clicked"
               >
                 {{ $t("Siege Planet") }}
+              </button>
+            </div>
+            <div v-if="command === 'breaksiege'">
+              <button
+                @click="breaksiege"
+                :disabled="!commandEnabled('breaksiege') || clicked"
+              >
+                {{ $t("Break Siege") }}
               </button>
             </div>
           </div>
@@ -943,6 +955,34 @@ export default {
       }
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.siege(
+        this.loginUser,
+        this.planetId,
+        this.xCoordinate,
+        this.yCoordinate,
+        shipList,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
+    },
+    breaksiege() {
+      this.clicked = true;
+      // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[this.shipFormation.ships[key].type] = {
+            pos: this.shipFormation.ships[key].pos,
+            n: this.shipFormation.ships[key].n
+          };
+        }
+      }
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.breaksiege(
         this.loginUser,
         this.planetId,
         this.xCoordinate,
