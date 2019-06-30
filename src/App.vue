@@ -153,9 +153,9 @@ export default {
   mounted() {
     // Check token expiry to automaticall logout
     var expiry = moment(
-      new Date(JSON.parse(localStorage.getItem("gameExpiryDate")))
+      JSON.parse(localStorage.getItem("gameExpiryDate")),
+      moment.ISO_8601
     );
-
     if (moment.utc().isAfter(expiry) && this.loginUser !== null) {
       this.$store.dispatch("game/setLoginUser", null);
       this.$store.dispatch("game/setAccessToken", null);
