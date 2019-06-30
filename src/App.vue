@@ -6,6 +6,10 @@
           ><chevron-triple-up-icon :title="$t('Ranking')"
         /></router-link>
         |
+        <router-link to="/activity">
+          <newspaper-icon :title="$t('Activity')"
+        /></router-link>
+        |
         <router-link to="/battlefeed">
           <sword-cross-icon :title="$t('Recent Battles')"
         /></router-link>
@@ -43,7 +47,14 @@
           <calendar-icon :title="$t('Mission')" />
         </router-link>
         |
-        <router-link to="/"><login-icon :title="$t('Login')"/></router-link>
+        <router-link to="/">
+          <font v-if="loginUser == null" color="red"
+            ><login-icon :title="$t('Login')"
+          /></font>
+          <font v-else
+            ><router-link to="/"
+              ><account-icon :title="$t('Login')"/></router-link></font
+        ></router-link>
       </span>
     </span>
     <div id="middle">
@@ -73,9 +84,11 @@ import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
 import FactoryIcon from "vue-material-design-icons/Factory.vue";
 import MapIcon from "vue-material-design-icons/Map.vue";
 import CalendarIcon from "vue-material-design-icons/Calendar.vue";
-import LoginIcon from "vue-material-design-icons/Login.vue";
+import AccountIcon from "vue-material-design-icons/Account.vue";
 import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
+import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
+import LoginIcon from "vue-material-design-icons/Login.vue";
 
 export default {
   name: "App",
@@ -91,9 +104,11 @@ export default {
     FactoryIcon,
     MapIcon,
     CalendarIcon,
-    LoginIcon,
+    AccountIcon,
     AnimationPlayIcon,
-    SwordCrossIcon
+    SwordCrossIcon,
+    NewspaperIcon,
+    LoginIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -138,9 +153,9 @@ export default {
   mounted() {
     // Check token expiry to automaticall logout
     var expiry = moment(
-      new Date(JSON.parse(localStorage.getItem("gameExpiryDate")))
+      JSON.parse(localStorage.getItem("gameExpiryDate")),
+      moment.ISO_8601
     );
-
     if (moment.utc().isAfter(expiry) && this.loginUser !== null) {
       this.$store.dispatch("game/setLoginUser", null);
       this.$store.dispatch("game/setAccessToken", null);
@@ -247,19 +262,11 @@ export default {
   font-size: 140%;
 }
 
-#navtop a {
-  color: white;
-  text-decoration: none;
-}
-
-#navtop a.router-link-exact-active {
-  color: white;
-}
-
 #middle {
   padding-top: 40px;
   padding-bottom: 120px;
 }
+
 #navbottom {
   padding: 10px;
   position: fixed;
@@ -272,9 +279,6 @@ export default {
 #navbottom a {
   color: white;
   text-decoration: none;
-}
-#navbottom a.router-link-exact-active {
-  color: white;
 }
 
 body {

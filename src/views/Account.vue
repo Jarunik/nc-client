@@ -48,6 +48,14 @@
     <template v-else>
       <p>---</p>
       <p>{{ $t("Logged in as") }}: {{ loginUser }}</p>
+      <p>
+        {{ $t("Language") }}:
+        <select v-model="gameLanguage">
+          <option value="en">{{ $t("English") }}</option>
+          <option value="ko">{{ $t("Korean") }}</option>
+          <option value="de">{{ $t("German") }}</option>
+        </select>
+      </p>
       <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
       <p>
         {{ $t("Valid until") }}:
@@ -104,7 +112,22 @@ export default {
       expiresIn: state => state.game.expiresIn,
       expiryDate: state => JSON.parse(state.game.expiryDate),
       gameUser: state => state.game.user
-    })
+    }),
+    gameLanguage: {
+      get() {
+        return this.$store.state.game.language;
+      },
+      set(language) {
+        this.$store.dispatch("game/setLanguage", language);
+        this.$i18n.locale = language;
+
+        this.$store.dispatch("game/setLocale", language);
+        moment.locale(language);
+
+        //Refresh everything be calling page again
+        window.location.href = "/user";
+      }
+    }
   },
   methods: {
     login() {

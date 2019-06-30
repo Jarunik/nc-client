@@ -1,12 +1,18 @@
 <template>
   <span class="planetnav">
-    <span v-if="gameUser != null"
-      ><router-link to="/user">{{ gameUser }}</router-link></span
-    >
-    <span v-else
-      ><router-link to="/user"><account-icon :title="$t('User')"/></router-link
-    ></span>
-    |
+    <span v-if="!searchUser && loginUser !== null">
+      <span @click="activateSearch()">{{ gameUser }} | </span>
+    </span>
+    <span v-show="searchUser"
+      ><input
+        ref="search"
+        v-model="displayUser"
+        @keyup.enter="setUser(displayUser)"
+        :placeholder="placeholder"
+      />
+      |
+    </span>
+
     <router-link :to="'/planets'">
       <earth-icon :title="$t('Planets')" />
     </router-link>
@@ -28,20 +34,22 @@
 
 <script>
 import PlanetsService from "@/services/planets";
+import UserService from "@/services/user";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
-import AccountIcon from "vue-material-design-icons/Account.vue";
 import * as types from "@/store/mutation-types";
 
 export default {
   name: "planetnav",
   components: {
-    EarthIcon,
-    AccountIcon
+    EarthIcon
   },
   data: function() {
     return {
-      planets: null
+      planets: null,
+      displayUser: null,
+      searchUser: false,
+      placeholder: "Enter User"
     };
   },
   async mounted() {
@@ -88,6 +96,37 @@ export default {
       this.$store.dispatch("planet/setName", null);
       this.$store.dispatch("planet/setPosX", null);
       this.$store.dispatch("planet/setPosY", null);
+    },
+    setUser(newUser) {
+      this.fetchUser(newUser).then(searchedUser => {
+        if (searchedUser !== null && searchedUser === newUser) {
+          this.$store.dispatch("game/setUser", newUser);
+          this.searchUser = false;
+          this.fetchStarterPlanet(newUser).then(planet => {
+            this.$store.dispatch("planet/setId", planet.id);
+            this.$store.dispatch("planet/setName", planet.name);
+            this.$store.dispatch("planet/setPosX", planet.posx);
+            this.$store.dispatch("planet/setPosY", planet.posy);
+          });
+        } else {
+          this.displayUser = this.loginUser;
+        }
+      });
+    },
+    activateSearch() {
+      this.displayUser = null;
+      this.searchUser = true;
+      this.$nextTick(() => {
+        this.$refs.search.focus();
+      });
+    },
+    async fetchUser(user) {
+      const response = await UserService.get(user);
+      return response.username;
+    },
+    async fetchStarterPlanet(user) {
+      const response = await PlanetsService.starterPlanet(user);
+      return response;
     }
   }
 };

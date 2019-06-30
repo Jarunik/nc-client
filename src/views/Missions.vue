@@ -48,20 +48,30 @@
             <td>
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
               >&nbsp;
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -122,20 +132,30 @@
             <td>
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
               >&nbsp;
               <router-link
                 v-if="
-                  (mission.type === 'attack' || mission.type === 'support') &&
+                  (mission.type === 'attack' ||
+                    mission.type === 'support' ||
+                    mission.type === 'siege' ||
+                    mission.type === 'breaksiege') &&
                     mission.result !== null &&
                     (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support')
+                      mission.result !== 'cancel_support' &&
+                      mission.result !== 'cancel_siege' &&
+                      mission.result !== 'cancel_breaksiege')
                 "
                 :to="{ path: '/replay/' + mission.id }"
               >
@@ -251,7 +271,12 @@ export default {
       if (mission.result != null) {
         return false;
       }
-      if (!this.isOutgoing(mission.arrival) && mission.type !== "support") {
+      if (
+        !this.isOutgoing(mission.arrival) &&
+        mission.type !== "support" &&
+        mission.type !== "seige" &&
+        mission.type !== "breaksiege"
+      ) {
         return false;
       }
       return true;
@@ -295,6 +320,12 @@ export default {
       if (result === "cancel_support") {
         return "Cancel support";
       }
+      if (result === "cancel_siege") {
+        return "Cancel siege";
+      }
+      if (result === "cancel_breaksiege") {
+        return "Cancel breaksiege";
+      }
       if (result === "cancel") {
         return "Cancel";
       }
@@ -309,6 +340,9 @@ export default {
       }
       if (result === "0") {
         return "Draw";
+      }
+      if (result !== null) {
+        return "Unknown";
       }
     },
     shipList(mission) {

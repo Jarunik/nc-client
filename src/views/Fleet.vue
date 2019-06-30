@@ -22,7 +22,9 @@
             v-if="
               command === 'deploy' ||
                 command === 'support' ||
-                command === 'attack'
+                command === 'attack' ||
+                command === 'siege' ||
+                command === 'breaksiege'
             "
             @click="sort('toSend')"
           >
@@ -41,7 +43,9 @@
               v-if="
                 command === 'deploy' ||
                   command === 'support' ||
-                  command === 'attack'
+                  command === 'attack' ||
+                  command === 'siege' ||
+                  command === 'breaksiege'
               "
             >
               <input type="number" v-model="ship.toSend" />
@@ -61,6 +65,8 @@
           <option value="deploy">{{ $t("Deploy") }}</option>
           <option value="support">{{ $t("Support") }}</option>
           <option value="attack">{{ $t("Attack") }}</option>
+          <option value="siege">{{ $t("Siege") }}</option>
+          <option value="breaksiege">{{ $t("Break Siege") }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </h2>
@@ -213,12 +219,14 @@
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
-        <!-- Deploy / Support / Attack-->
+        <!-- Deploy / Support / Attack / Siege-->
         <div
           v-if="
             command === 'deploy' ||
               command === 'support' ||
-              command === 'attack'
+              command === 'attack' ||
+              command === 'siege' ||
+              command === 'breaksiege'
           "
         >
           <div>
@@ -244,6 +252,22 @@
                 :disabled="!commandEnabled('attack') || clicked"
               >
                 {{ $t("Attack Planet") }}
+              </button>
+            </div>
+            <div v-if="command === 'siege'">
+              <button
+                @click="siege"
+                :disabled="!commandEnabled('siege') || clicked"
+              >
+                {{ $t("Siege Planet") }}
+              </button>
+            </div>
+            <div v-if="command === 'breaksiege'">
+              <button
+                @click="breaksiege"
+                :disabled="!commandEnabled('breaksiege') || clicked"
+              >
+                {{ $t("Break Siege") }}
               </button>
             </div>
           </div>
@@ -903,6 +927,62 @@ export default {
       }
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.attack(
+        this.loginUser,
+        this.planetId,
+        this.xCoordinate,
+        this.yCoordinate,
+        shipList,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
+    },
+    siege() {
+      this.clicked = true;
+      // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[this.shipFormation.ships[key].type] = {
+            pos: this.shipFormation.ships[key].pos,
+            n: this.shipFormation.ships[key].n
+          };
+        }
+      }
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.siege(
+        this.loginUser,
+        this.planetId,
+        this.xCoordinate,
+        this.yCoordinate,
+        shipList,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.command = "sent";
+            this.xCoordinate = null;
+            this.yCoordinate = null;
+          }
+        }
+      );
+    },
+    breaksiege() {
+      this.clicked = true;
+      // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[this.shipFormation.ships[key].type] = {
+            pos: this.shipFormation.ships[key].pos,
+            n: this.shipFormation.ships[key].n
+          };
+        }
+      }
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.breaksiege(
         this.loginUser,
         this.planetId,
         this.xCoordinate,
