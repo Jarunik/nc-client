@@ -292,7 +292,6 @@
   "Unknown": "Unknown",
   "Activity": "Activity",
   "Transaction": "Transaction",
-  "ID": "ID",
   "newuser": "New User",
   "buildship": "Build Ship",
   "upgrade": "Upgrade",
@@ -306,5 +305,7 @@
   "Siege": "Siege",
   "Break Siege": "Break Siege",
   "breaksiege": "Break Siege",
-  "siegeprolongation": "Siege Prolongation"
+  "siegeprolongation": "Siege Prolongation",
+  "All Commands": "All Commands",
+  "Standoff": "Standoff"
 }
