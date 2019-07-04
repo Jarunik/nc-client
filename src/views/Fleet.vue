@@ -18,7 +18,7 @@
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('available')">{{ $t("Free") }}</th>
-          <th @click="sort('toSend')">{{ $t("Send") }}</th>
+          <th v-if="command !== null" @click="sort('toSend')">{{ $t("Send") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -28,7 +28,7 @@
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
-            <td>
+            <td v-if="command !== null">
               <input class="inputShort" type="number" v-model="ship.toSend">
               <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
             </td>
@@ -707,6 +707,7 @@ export default {
         this.planetId,
         this.xCoordinate,
         this.yCoordinate,
+        this.shipFormation.ships[0].type,
         (error, result) => {
           if (error === null && result.success) {
             this.command = "sent";

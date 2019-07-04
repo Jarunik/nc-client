@@ -132,7 +132,7 @@ class SteemConnectService extends Client {
     super.customJson([], [user], [appId], finalJson, cb);
   }
 
-  explorespace(user, originPlanetId, x, y, cb) {
+  explorespace(user, originPlanetId, x, y, shipName, cb) {
     var scJson = {};
     var scCommand = {};
     scJson["username"] = user;
@@ -140,6 +140,7 @@ class SteemConnectService extends Client {
     scCommand["tr_var1"] = originPlanetId;
     scCommand["tr_var2"] = x;
     scCommand["tr_var3"] = y;
+    scCommand["tr_var4"] = shipName;
     scJson["command"] = scCommand;
     var finalJson = JSON.stringify(scJson);
     var appId = this.appId();
