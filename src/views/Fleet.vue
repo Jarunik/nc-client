@@ -18,18 +18,7 @@
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('available')">{{ $t("Free") }}</th>
-          <th
-            v-if="
-              command === 'deploy' ||
-                command === 'support' ||
-                command === 'attack' ||
-                command === 'siege' ||
-                command === 'breaksiege'
-            "
-            @click="sort('toSend')"
-          >
-            {{ $t("Send") }}
-          </th>
+          <th v-if="command != 'transport'" @click="sort('toSend')">{{ $t("Send") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -39,22 +28,14 @@
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
-            <td
-              v-if="
-                command === 'deploy' ||
-                  command === 'support' ||
-                  command === 'attack' ||
-                  command === 'siege' ||
-                  command === 'breaksiege'
-              "
-            >
-              <input type="number" v-model="ship.toSend" />
+            <td v-if="command !== null && command !== 'transport'">
+              <input type="number" v-model="ship.toSend">
               <button @click="add(ship, ship.toSend)">{{ $t("Add") }}</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <br />
+      <br>
       <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       <!-- Commands -->
       <h2>
@@ -95,60 +76,34 @@
             v-on:change="fillCoordinates(search)"
             v-model="search"
             placeholder="(x/y)"
-          />
+          >
         </h2>
         <p>
           {{ $t("X") }}:
-          <input
-            type="number"
-            v-model="xCoordinate"
-            v-on:change="onCoordinateChange"
-          />
+          <input type="number" v-model="xCoordinate" v-on:change="onCoordinateChange">
           {{ $t("Y") }}:
           <input
             type="number"
             v-model="yCoordinate"
             v-on:change="onCoordinateChange"
-          />
+          >
         </p>
         <table>
           <tr>
-            <td>
-              {{ $t("Distance") }}
-            </td>
-            <td>
-              {{ Number(distance).toFixed(2) }}
-            </td>
+            <td>{{ $t("Distance") }}</td>
+            <td>{{ Number(distance).toFixed(2) }}</td>
           </tr>
           <tr>
-            <td>
-              {{ $t("Uranium Fuel") }}
-            </td>
-            <td>
-              {{ Number(this.fuelConsumption).toFixed(2) }}
-            </td>
+            <td>{{ $t("Uranium Fuel") }}</td>
+            <td>{{ Number(this.fuelConsumption).toFixed(2) }}</td>
           </tr>
           <tr>
-            <td>
-              {{ $t("Outbound Travel") }}
-            </td>
-            <td>
-              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-            </td>
+            <td>{{ $t("Outbound Travel") }}</td>
+            <td>{{ moment.duration(parseFloat(travelTime), "hours").humanize() }}</td>
           </tr>
         </table>
 
-        <br />
-
-        <!-- Exploration -->
-        <div v-if="command === 'explorespace'">
-          <button
-            @click="explore"
-            :disabled="!commandEnabled('explorespace') || clicked"
-          >
-            {{ $t("Send Explorer") }}
-          </button>
-        </div>
+        <br>
         <!-- Transport -->
         <div v-if="command === 'transport'">
           <h2>{{ $t("Transport") }}</h2>
@@ -158,34 +113,32 @@
               type="number"
               v-model="transportCoal"
               v-on:change="onResourceChange('coal')"
-            />
+            >
             {{ $t("Fe") }}:
             <input
               type="number"
               v-model="transportOre"
               v-on:change="onResourceChange('ore')"
-            />
+            >
             {{ $t("Cu") }}:
             <input
               type="number"
               v-model="transportCopper"
               v-on:change="onResourceChange('copper')"
-            />
+            >
             {{ $t("U") }}:
             <input
               type="number"
               v-model="transportUranium"
               v-on:change="onResourceChange('uranium')"
-            />
+            >
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
           <div>
             <button
               @click="transport"
               :disabled="!commandEnabled('transport') || clicked"
-            >
-              {{ $t("Send Transporter") }}
-            </button>
+            >{{ $t("Send Transporter") }}</button>
           </div>
         </div>
         <!-- Deploy -->
@@ -197,78 +150,65 @@
               type="number"
               v-model="transportCoal"
               v-on:change="onDeployResource('coal')"
-            />
+            >
             {{ $t("Fe") }}:
             <input
               type="number"
               v-model="transportOre"
               v-on:change="onDeployResource('ore')"
-            />
+            >
             {{ $t("Cu") }}:
             <input
               type="number"
               v-model="transportCopper"
               v-on:change="onDeployResource('copper')"
-            />
+            >
             {{ $t("U") }}:
             <input
               type="number"
               v-model="transportUranium"
               v-on:change="onDeployResource('uranium')"
-            />
+            >
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
-        <!-- Deploy / Support / Attack / Siege-->
-        <div
-          v-if="
-            command === 'deploy' ||
-              command === 'support' ||
-              command === 'attack' ||
-              command === 'siege' ||
-              command === 'breaksiege'
-          "
-        >
+        <div v-if="command != 'transport'">
           <div>
             <div v-if="command === 'deploy'">
               <button
                 @click="deploy"
                 :disabled="!commandEnabled('deploy') || clicked"
-              >
-                {{ $t("Deploy Ships") }}
-              </button>
+              >{{ $t("Deploy Ships") }}</button>
             </div>
             <div v-if="command === 'support'">
               <button
                 @click="support"
                 :disabled="!commandEnabled('support') || clicked"
-              >
-                {{ $t("Support Planet") }}
-              </button>
+              >{{ $t("Support Planet") }}</button>
             </div>
             <div v-if="command === 'attack'">
               <button
                 @click="attack"
                 :disabled="!commandEnabled('attack') || clicked"
-              >
-                {{ $t("Attack Planet") }}
-              </button>
+              >{{ $t("Attack Planet") }}</button>
             </div>
             <div v-if="command === 'siege'">
               <button
                 @click="siege"
                 :disabled="!commandEnabled('siege') || clicked"
-              >
-                {{ $t("Siege Planet") }}
-              </button>
+              >{{ $t("Siege Planet") }}</button>
             </div>
             <div v-if="command === 'breaksiege'">
               <button
                 @click="breaksiege"
                 :disabled="!commandEnabled('breaksiege') || clicked"
-              >
-                {{ $t("Break Siege") }}
-              </button>
+              >{{ $t("Break Siege") }}</button>
+            </div>
+            <div v-if="command === 'explorespace'">
+              <button
+                @click="explore"
+                :disabled="!commandEnabled('explorespace') || clicked"
+              >{{ $t("Send Explorer") }}</button>
             </div>
           </div>
         </div>
@@ -285,15 +225,13 @@
       <template v-if="planetId === 'null'">
         <p>
           {{ $t("Please set the") }}
-          <router-link :to="'/planets'">
-            {{ $t("planet") }}
-          </router-link>
+          <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
       <template v-if="gameUser !== 'null'">
         <p>
           {{ $t("You have no ships. Build some in the") }}
-          <router-link :to="'/shipyard'"> {{ $t("Shipyard") }} </router-link>.
+          <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link>.
         </p>
         <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       </template>
@@ -487,13 +425,6 @@ export default {
           "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
       }
       this.resetShipFormation();
-      if (command === "explorespace") {
-        this.sortedFleet.forEach(ship => {
-          if (ship.type === "explorership") {
-            this.add(ship, 1);
-          }
-        });
-      }
     },
     onResourceChange(res) {
       let sum =
@@ -592,6 +523,10 @@ export default {
     },
     commandEnabled(command) {
       let enabled = false;
+      console.log(this.shipFormation);
+      if (this.shipFormation.length !== 0) {
+        console.log(this.shipFormation.ships[0].type);
+      }
       if (
         this.command !== null &&
         this.command === command &&
@@ -618,12 +553,12 @@ export default {
           }
         } else if (command === "explorespace") {
           if (
-            parseFloat(this.coal) > parseFloat(this.transportCoal) &&
-            parseFloat(this.ore) > parseFloat(this.transportOre) &&
-            parseFloat(this.copper) > parseFloat(this.transportCopper) &&
             parseFloat(this.uranium) >
               parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption)
+                parseFloat(this.fuelConsumption) &&
+            this.shipFormation.count === 1 &&
+            this.shipFormation.ships[0].n === 1 &&
+            this.shipFormation.ships[0].type.includes("explorership")
           ) {
             enabled = true;
           } else {
