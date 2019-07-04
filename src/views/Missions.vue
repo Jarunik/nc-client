@@ -268,7 +268,7 @@ export default {
       if (mission.user !== this.loginUser) {
         return false;
       }
-      if (mission.result != null) {
+      if (mission.result != null && mission.type != "support") {
         return false;
       }
       if (
