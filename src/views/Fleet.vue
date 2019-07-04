@@ -70,6 +70,7 @@
         <p>
           <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
+        <!-- Destination -->
         <h2>
           {{ $t("Destination") }}
           <input
@@ -88,6 +89,7 @@
             v-on:change="onCoordinateChange"
           >
         </p>
+        <!-- Travel Information -->
         <table>
           <tr>
             <td>{{ $t("Distance") }}</td>
@@ -102,7 +104,7 @@
             <td>{{ moment.duration(parseFloat(travelTime), "hours").humanize() }}</td>
           </tr>
         </table>
-        <!-- Deploy -->
+        <!-- Resources -->
         <div v-if="command === 'deploy' || command === 'transport'">
           <h2>{{ $t("Transport") }}</h2>
           <div>
@@ -133,6 +135,7 @@
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
+        <!-- Send Transaction -->
         <div>
           <br>
           <div>
