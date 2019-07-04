@@ -29,8 +29,8 @@
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
             <td>
-              <input type="number" v-model="ship.toSend">
-              <button @click="add(ship, ship.toSend)">{{ $t("Add") }}</button>
+              <input class="inputShort" type="number" v-model="ship.toSend">
+              <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
             </td>
           </tr>
         </tbody>
@@ -74,6 +74,7 @@
         <h2>
           {{ $t("Destination") }}
           <input
+            class="inputMedium"
             v-on:change="fillCoordinates(search)"
             v-model="search"
             placeholder="(x/y)"
@@ -81,9 +82,15 @@
         </h2>
         <p>
           {{ $t("X") }}:
-          <input type="number" v-model="xCoordinate" v-on:change="onCoordinateChange">
+          <input
+            class="inputShort"
+            type="number"
+            v-model="xCoordinate"
+            v-on:change="onCoordinateChange"
+          >
           {{ $t("Y") }}:
           <input
+            class="inputShort"
             type="number"
             v-model="yCoordinate"
             v-on:change="onCoordinateChange"
@@ -110,24 +117,28 @@
           <div>
             {{ $t("C") }}:
             <input
+              class="inputMedium"
               type="number"
               v-model="transportCoal"
               v-on:change="onDeployResource('coal')"
             >
             {{ $t("Fe") }}:
             <input
+              class="inputMedium"
               type="number"
               v-model="transportOre"
               v-on:change="onDeployResource('ore')"
             >
             {{ $t("Cu") }}:
             <input
+              class="inputMedium"
               type="number"
               v-model="transportCopper"
               v-on:change="onDeployResource('copper')"
             >
             {{ $t("U") }}:
             <input
+              class="inputMedium"
               type="number"
               v-model="transportUranium"
               v-on:change="onDeployResource('uranium')"
@@ -556,6 +567,9 @@ export default {
     },
     add(ship, quantity) {
       let existingGroup = false;
+      if (this.command === null || this.command === "Sent") {
+        return;
+      }
       // There are only 8 slots
       if (this.pos > 8 || quantity < 1) {
         return;
@@ -891,8 +905,11 @@ export default {
 </script>
 
 <style>
-.fleet input {
+.fleet input.inputMedium {
   width: 10ch;
+}
+.fleet input.inputShort {
+  width: 6ch;
 }
 .fleet select {
   width: 15ch;
