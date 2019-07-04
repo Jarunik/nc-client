@@ -262,7 +262,7 @@ export default {
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
       var now = moment.utc();
-      if (busyUntil === 0) {
+      if (busyUntil === 0 || busy === null) {
         return false;
       } else {
         if (now.isAfter(busyUntil)) {
@@ -299,7 +299,7 @@ export default {
       if (this.copper < ship.cost.copper) {
         return false;
       }
-      if (this.uranium < ship.cost.copper) {
+      if (this.uranium < ship.cost.uranium) {
         return false;
       }
       if (ship.cur_level < ship.min_level) {
