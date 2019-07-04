@@ -18,7 +18,7 @@
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('available')">{{ $t("Free") }}</th>
-          <th v-if="command != 'transport'" @click="sort('toSend')">{{ $t("Send") }}</th>
+          <th @click="sort('toSend')">{{ $t("Send") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -28,7 +28,7 @@
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
-            <td v-if="command !== null && command !== 'transport'">
+            <td>
               <input type="number" v-model="ship.toSend">
               <button @click="add(ship, ship.toSend)">{{ $t("Add") }}</button>
             </td>
@@ -102,47 +102,8 @@
             <td>{{ moment.duration(parseFloat(travelTime), "hours").humanize() }}</td>
           </tr>
         </table>
-
-        <br>
-        <!-- Transport -->
-        <div v-if="command === 'transport'">
-          <h2>{{ $t("Transport") }}</h2>
-          <div>
-            {{ $t("C") }}:
-            <input
-              type="number"
-              v-model="transportCoal"
-              v-on:change="onResourceChange('coal')"
-            >
-            {{ $t("Fe") }}:
-            <input
-              type="number"
-              v-model="transportOre"
-              v-on:change="onResourceChange('ore')"
-            >
-            {{ $t("Cu") }}:
-            <input
-              type="number"
-              v-model="transportCopper"
-              v-on:change="onResourceChange('copper')"
-            >
-            {{ $t("U") }}:
-            <input
-              type="number"
-              v-model="transportUranium"
-              v-on:change="onResourceChange('uranium')"
-            >
-          </div>
-          <p>{{ $t("Capacity") }}: {{ capacity }}</p>
-          <div>
-            <button
-              @click="transport"
-              :disabled="!commandEnabled('transport') || clicked"
-            >{{ $t("Send Transporter") }}</button>
-          </div>
-        </div>
         <!-- Deploy -->
-        <div v-if="command === 'deploy'">
+        <div v-if="command === 'deploy' || command === 'transport'">
           <h2>{{ $t("Transport") }}</h2>
           <div>
             {{ $t("C") }}:
@@ -172,7 +133,8 @@
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
-        <div v-if="command != 'transport'">
+        <div>
+          <br>
           <div>
             <div v-if="command === 'deploy'">
               <button
@@ -209,6 +171,12 @@
                 @click="explore"
                 :disabled="!commandEnabled('explorespace') || clicked"
               >{{ $t("Send Explorer") }}</button>
+            </div>
+            <div v-if="command === 'transport'">
+              <button
+                @click="transport"
+                :disabled="!commandEnabled('transport') || clicked"
+              >{{ $t("Send Transporter") }}</button>
             </div>
           </div>
         </div>
@@ -426,32 +394,6 @@ export default {
       }
       this.resetShipFormation();
     },
-    onResourceChange(res) {
-      let sum =
-        parseFloat(this.transportCoal) +
-        parseFloat(this.transportOre) +
-        parseFloat(this.transportCopper) +
-        parseFloat(this.transportUranium);
-      this.sortedFleet.forEach(ship => {
-        if (ship.type === "transportship") {
-          this.add(ship, Math.ceil(sum / 100));
-        }
-      });
-      if (sum > this.capacity) {
-        if (res === "coal") {
-          this.transportCoal = this.transportCoal - (sum - this.capacity);
-        }
-        if (res === "ore") {
-          this.transportOre = this.transportOre - (sum - this.capacity);
-        }
-        if (res === "copper") {
-          this.transportCopper = this.transportCopper - (sum - this.capacity);
-        }
-        if (res === "uranium") {
-          this.transportUranium = this.transportUranium - (sum - this.capacity);
-        }
-      }
-    },
     onDeployResource(res) {
       let sumTransport =
         parseFloat(this.transportCoal) +
@@ -521,12 +463,17 @@ export default {
         }
       });
     },
+    isTransport() {
+      let isTransport = true;
+      this.shipFormation.ships.forEach(ship => {
+        if (ship.n > 0 && !ship.type.includes("transport")) {
+          isTransport = false;
+        }
+      });
+      return isTransport;
+    },
     commandEnabled(command) {
       let enabled = false;
-      console.log(this.shipFormation);
-      if (this.shipFormation.length !== 0) {
-        console.log(this.shipFormation.ships[0].type);
-      }
       if (
         this.command !== null &&
         this.command === command &&
@@ -545,7 +492,8 @@ export default {
             parseFloat(this.copper) > parseFloat(this.transportCopper) &&
             parseFloat(this.uranium) >
               parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption)
+                parseFloat(this.fuelConsumption) &&
+            this.isTransport()
           ) {
             enabled = true;
           } else {
@@ -558,7 +506,7 @@ export default {
                 parseFloat(this.fuelConsumption) &&
             this.shipFormation.count === 1 &&
             this.shipFormation.ships[0].n === 1 &&
-            this.shipFormation.ships[0].type.includes("explorership")
+            this.shipFormation.ships[0].type.includes("explore")
           ) {
             enabled = true;
           } else {
