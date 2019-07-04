@@ -18,7 +18,9 @@
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('available')">{{ $t("Free") }}</th>
-          <th v-if="command !== null" @click="sort('toSend')">{{ $t("Send") }}</th>
+          <th v-if="command !== null" @click="sort('toSend')">
+            {{ $t("Send") }}
+          </th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -29,18 +31,18 @@
             <td>{{ ship.capacity }}</td>
             <td>{{ ship.available }}</td>
             <td v-if="command !== null">
-              <input class="inputShort" type="number" v-model="ship.toSend">
+              <input class="inputShort" type="number" v-model="ship.toSend" />
               <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <br>
+      <br />
       <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       <!-- Commands -->
       <h2>
         {{ $t("Command") }}
-        <select @change="onCommand(command)" v-model="command">
+        <select @change="onCommand()" v-model="command">
           <option value="explorespace">{{ $t("Explore") }}</option>
           <option value="transport">{{ $t("Transport") }}</option>
           <option value="deploy">{{ $t("Deploy") }}</option>
@@ -78,7 +80,7 @@
             v-on:change="fillCoordinates(search)"
             v-model="search"
             placeholder="(x/y)"
-          >
+          />
         </h2>
         <p>
           {{ $t("X") }}:
@@ -87,14 +89,14 @@
             type="number"
             v-model="xCoordinate"
             v-on:change="onCoordinateChange"
-          >
+          />
           {{ $t("Y") }}:
           <input
             class="inputShort"
             type="number"
             v-model="yCoordinate"
             v-on:change="onCoordinateChange"
-          >
+          />
         </p>
         <!-- Travel Information -->
         <table>
@@ -108,9 +110,12 @@
           </tr>
           <tr>
             <td>{{ $t("Outbound Travel") }}</td>
-            <td>{{ moment.duration(parseFloat(travelTime), "hours").humanize() }}</td>
+            <td>
+              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
+            </td>
           </tr>
         </table>
+
         <!-- Resources -->
         <div v-if="command === 'deploy' || command === 'transport'">
           <h2>{{ $t("Transport") }}</h2>
@@ -121,76 +126,90 @@
               type="number"
               v-model="transportCoal"
               v-on:change="onDeployResource('coal')"
-            >
+            />
             {{ $t("Fe") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportOre"
               v-on:change="onDeployResource('ore')"
-            >
+            />
             {{ $t("Cu") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportCopper"
               v-on:change="onDeployResource('copper')"
-            >
+            />
             {{ $t("U") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportUranium"
               v-on:change="onDeployResource('uranium')"
-            >
+            />
           </div>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
         <!-- Send Transaction -->
         <div>
-          <br>
+          <br />
           <div>
             <div v-if="command === 'deploy'">
               <button
                 @click="deploy"
                 :disabled="!commandEnabled('deploy') || clicked"
-              >{{ $t("Deploy Ships") }}</button>
+              >
+                {{ $t("Deploy Ships") }}
+              </button>
             </div>
             <div v-if="command === 'support'">
               <button
                 @click="support"
                 :disabled="!commandEnabled('support') || clicked"
-              >{{ $t("Support Planet") }}</button>
+              >
+                {{ $t("Support Planet") }}
+              </button>
             </div>
             <div v-if="command === 'attack'">
               <button
                 @click="attack"
                 :disabled="!commandEnabled('attack') || clicked"
-              >{{ $t("Attack Planet") }}</button>
+              >
+                {{ $t("Attack Planet") }}
+              </button>
             </div>
             <div v-if="command === 'siege'">
               <button
                 @click="siege"
                 :disabled="!commandEnabled('siege') || clicked"
-              >{{ $t("Siege Planet") }}</button>
+              >
+                {{ $t("Siege Planet") }}
+              </button>
             </div>
             <div v-if="command === 'breaksiege'">
               <button
                 @click="breaksiege"
                 :disabled="!commandEnabled('breaksiege') || clicked"
-              >{{ $t("Break Siege") }}</button>
+              >
+                {{ $t("Break Siege") }}
+              </button>
             </div>
             <div v-if="command === 'explorespace'">
               <button
                 @click="explore"
                 :disabled="!commandEnabled('explorespace') || clicked"
-              >{{ $t("Send Explorer") }}</button>
+              >
+                {{ $t("Send Explorer") }}
+              </button>
             </div>
             <div v-if="command === 'transport'">
               <button
                 @click="transport"
                 :disabled="!commandEnabled('transport') || clicked"
-              >{{ $t("Send Transporter") }}</button>
+              >
+                {{ $t("Send Transporter") }}
+              </button>
             </div>
           </div>
         </div>
@@ -213,7 +232,8 @@
       <template v-if="gameUser !== 'null'">
         <p>
           {{ $t("You have no ships. Build some in the") }}
-          <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link>.
+          <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link
+          >.
         </p>
         <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
       </template>
@@ -395,7 +415,7 @@ export default {
         }
       }
     },
-    onCommand(command) {
+    onCommand() {
       this.clicked = false;
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
