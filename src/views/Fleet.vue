@@ -9,6 +9,21 @@
           sortedFleet.length > 0
       "
     >
+      <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
+      <!-- Commands -->
+      <p>
+        {{ $t("Command") }}
+        <select @change="onCommand()" v-model="command">
+          <option value="explorespace">{{ $t("Explore") }}</option>
+          <option value="transport">{{ $t("Transport") }}</option>
+          <option value="deploy">{{ $t("Deploy") }}</option>
+          <option value="support">{{ $t("Support") }}</option>
+          <option value="attack">{{ $t("Attack") }}</option>
+          <option value="siege">{{ $t("Siege") }}</option>
+          <option value="breaksiege">{{ $t("Break Siege") }}</option>
+          <option value="sent">{{ $t("Sent") }}</option>
+        </select>
+      </p>
       <!-- Ship List -->
       <table>
         <thead>
@@ -37,22 +52,6 @@
           </tr>
         </tbody>
       </table>
-      <br />
-      <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
-      <!-- Commands -->
-      <h2>
-        {{ $t("Command") }}
-        <select @change="onCommand()" v-model="command">
-          <option value="explorespace">{{ $t("Explore") }}</option>
-          <option value="transport">{{ $t("Transport") }}</option>
-          <option value="deploy">{{ $t("Deploy") }}</option>
-          <option value="support">{{ $t("Support") }}</option>
-          <option value="attack">{{ $t("Attack") }}</option>
-          <option value="siege">{{ $t("Siege") }}</option>
-          <option value="breaksiege">{{ $t("Break Siege") }}</option>
-          <option value="sent">{{ $t("Sent") }}</option>
-        </select>
-      </h2>
       <template v-if="command !== null && command !== 'sent'">
         <!-- Formation -->
         <table>
@@ -73,16 +72,13 @@
           <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
         <!-- Destination -->
-        <h2>
-          {{ $t("Destination") }}
+        <p>
           <input
             class="inputMedium"
             v-on:change="fillCoordinates(search)"
             v-model="search"
             placeholder="(x/y)"
           />
-        </h2>
-        <p>
           {{ $t("X") }}:
           <input
             class="inputShort"
@@ -118,8 +114,7 @@
 
         <!-- Resources -->
         <div v-if="command === 'deploy' || command === 'transport'">
-          <h2>{{ $t("Transport") }}</h2>
-          <div>
+          <p>
             {{ $t("C") }}:
             <input
               class="inputMedium"
@@ -148,12 +143,11 @@
               v-model="transportUranium"
               v-on:change="onDeployResource('uranium')"
             />
-          </div>
+          </p>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
         <!-- Send Transaction -->
         <div>
-          <br />
           <div>
             <div v-if="command === 'deploy'">
               <button
