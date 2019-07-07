@@ -310,5 +310,11 @@
   "Standoff": "Standoff",
   "+": "+",
   "Explorer II": "Explorer II",
-  "Cancel siege": "Cancel siege"
+  "Cancel siege": "Cancel siege",
+  "Latest Block Number": "Latest Block Number",
+  "Tracker Delay": "Tracker Delay",
+  "Tracker Block Number": "Tracker Block Number",
+  "Processing Delay": "Processing Delay",
+  "Processor Block Number": "Processor Block Number",
+  "Page not found": "Page not found"
 }

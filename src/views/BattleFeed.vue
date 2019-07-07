@@ -13,7 +13,7 @@
         <th>{{ $t("Result") }}</th>
       </thead>
       <tbody>
-        <tr v-for="battle in battles" :key="battle.trx_id">
+        <tr v-for="battle in battles" :key="battle.mission_id + battle.trx_id">
           <td>{{ moment.unix(battle.date, "seconds").format("lll") }}</td>
           <td @click="setUser(battle.attacker)">{{ battle.attacker }}</td>
           <td @click="setUser(battle.defender)">{{ battle.defender }}</td>

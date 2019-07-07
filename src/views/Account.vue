@@ -38,30 +38,30 @@
       <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
     <p>---</p>
-    <p v-if="apiState !== null">
+    <span v-if="apiState !== null">
       <table>
         <tr>
           <td>{{ $t("Latest Block Number") }}:</td>
-          <td>{{apiState.latest_block_num}}</td>
+          <td>{{ apiState.latest_block_num }}</td>
         </tr>
         <tr>
           <td>{{ $t("Tracker Delay") }}:</td>
-          <td>{{apiState.tracker_delay_seconds}}</td>
+          <td>{{ apiState.tracker_delay_seconds }}</td>
         </tr>
         <tr>
           <td>{{ $t("Tracker Block Number") }}:</td>
-          <td>{{apiState.tracker_block_num}}</td>
+          <td>{{ apiState.tracker_block_num }}</td>
         </tr>
-         <tr>
+        <tr>
           <td>{{ $t("Processing Delay") }}:</td>
-          <td>{{apiState.processing_delay_seconds}}</td>
+          <td>{{ apiState.processing_delay_seconds }}</td>
         </tr>
         <tr>
           <td>{{ $t("Processor Block Number") }}:</td>
-          <td>{{apiState.first_unprocessed_block_num}}</td>
+          <td>{{ apiState.first_unprocessed_block_num }}</td>
         </tr>
       </table>
-    </p>
+    </span>
     <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
@@ -152,9 +152,6 @@ export default {
 
         this.$store.dispatch("game/setLocale", language);
         moment.locale(language);
-
-        //Refresh everything be calling page again
-        window.location.href = "/user";
       }
     }
   },
