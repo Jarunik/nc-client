@@ -29,6 +29,12 @@ class ApiService {
 
     return response.data;
   }
+
+  async apiState() {
+    const response = await this.get(`/state`);
+
+    return response;
+  }
 }
 
 export default new ApiService();

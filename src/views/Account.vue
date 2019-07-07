@@ -37,7 +37,31 @@
     <p>
       <a href="https://nextcolony.io">{{ $t("Official NextColony Client") }}</a>
     </p>
-
+    <p>---</p>
+    <p v-if="apiState !== null">
+      <table>
+        <tr>
+          <td>{{ $t("Latest Block Number") }}:</td>
+          <td>{{apiState.latest_block_num}}</td>
+        </tr>
+        <tr>
+          <td>{{ $t("Tracker Delay") }}:</td>
+          <td>{{apiState.tracker_delay_seconds}}</td>
+        </tr>
+        <tr>
+          <td>{{ $t("Tracker Block Number") }}:</td>
+          <td>{{apiState.tracker_block_num}}</td>
+        </tr>
+         <tr>
+          <td>{{ $t("Processing Delay") }}:</td>
+          <td>{{apiState.processing_delay_seconds}}</td>
+        </tr>
+        <tr>
+          <td>{{ $t("Processor Block Number") }}:</td>
+          <td>{{apiState.first_unprocessed_block_num}}</td>
+        </tr>
+      </table>
+    </p>
     <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
@@ -89,6 +113,7 @@
 
 <script>
 import PlanetsService from "@/services/planets";
+import ApiService from "@/services/api";
 import SteemConnectService from "@/services/steemconnect";
 import UserService from "@/services/user";
 import moment from "moment";
@@ -102,8 +127,12 @@ export default {
       loginURL: null,
       showRegistration: false,
       registrationClicked: false,
-      registrationSuccess: false
+      registrationSuccess: false,
+      apiState: null
     };
+  },
+  async mounted() {
+    await this.prepareComponent();
   },
   computed: {
     ...mapState({
@@ -163,6 +192,13 @@ export default {
           this.registrationSuccess = true;
         }
       });
+    },
+    async prepareComponent() {
+      await this.getApiState();
+    },
+    async getApiState() {
+      const response = await ApiService.apiState();
+      this.apiState = response;
     }
   },
   created() {
