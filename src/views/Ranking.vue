@@ -6,6 +6,21 @@
         $t("Click users to view the game from their perspective.")
       }}</i></P
     >
+    <p>
+      <span @click="setLoadSort('production')"
+        ><font v-if="loadSort === 'production'" color="green">{{
+          $t("Production")
+        }}</font
+        ><font v-else>{{ $t("Production") }}</font></span
+      >
+      |
+      <span @click="setLoadSort('battle')"
+        ><font v-if="loadSort === 'battle'" color="green">{{
+          $t("Battle")
+        }}</font
+        ><font v-else>{{ $t("Battle") }}</font></span
+      >
+    </p>
     <table>
       <thead>
         <th><chevron-triple-up-icon :title="$t('Rank')" /></th>
@@ -70,7 +85,8 @@ export default {
     return {
       ranking: null,
       currentSort: "destroyed_ships_uranium",
-      currentSortDir: "desc"
+      currentSortDir: "desc",
+      loadSort: "battle"
     };
   },
   async mounted() {
@@ -100,6 +116,10 @@ export default {
     },
     async getRanking() {
       const response = await RankingService.sortDestroyed(200);
+      this.ranking = response;
+    },
+    async getProductionRanking() {
+      const response = await RankingService.limit(200);
       this.ranking = response;
     },
     sort(s) {
@@ -132,6 +152,22 @@ export default {
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
       return response;
+    },
+    async setLoadSort(loadSort) {
+      if (this.loadSort === loadSort) {
+        return;
+      }
+      this.loadSort = loadSort;
+      if (loadSort === "battle") {
+        this.currentSort = "destroyed_ships_uranium";
+        this.currentSortDir = "desc";
+        await this.getRanking();
+      }
+      if (loadSort === "production") {
+        this.currentSort = "meta_rate";
+        this.currentSortDir = "desc";
+        await this.getProductionRanking();
+      }
     }
   }
 };
