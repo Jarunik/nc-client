@@ -5,7 +5,7 @@ class SteemConnectService extends Client {
     super({
       app: process.env.VUE_APP_STEEMCONNECT_APP,
       callbackURL: location.protocol + "//" + location.host,
-      scope: ["login", "custom_json", "offline"]
+      scope: ["custom_json"]
     });
   }
 
