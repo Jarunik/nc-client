@@ -811,7 +811,7 @@ export default {
         }
 
         // Move throught Shooters
-        if (this.turn === "Attacker" && this.currentAttacker !== this.slots) {
+        if (this.turn === "Attacker") {
           if (this.currentAttackerShooter !== this.slots) {
             this.currentAttackerShooter = this.currentAttackerShooter + 1;
           }
@@ -855,6 +855,13 @@ export default {
         if (this.turn === "Attacker") {
           this.turn = "Defender";
         } else if (this.turn === "Defender") {
+          this.turn = "Attacker";
+        }
+        //Skip if already through all own shooters
+        if (this.currentAttackerShooter === this.slots) {
+          this.turn = "Defender";
+        }
+        if (this.currentDefenderShooter === this.slots) {
           this.turn = "Attacker";
         }
         this.round = this.round + 1;

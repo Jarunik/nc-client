@@ -841,6 +841,14 @@ export default {
         } else if (this.turn === "Defender") {
           this.turn = "Attacker";
         }
+
+        //Skip if already through all own shooters
+        if (this.currentAttackerShooter === this.slots) {
+          this.turn = "Defender";
+        }
+        if (this.currentDefenderShooter === this.slots) {
+          this.turn = "Attacker";
+        }
         this.round = this.round + 1;
       }
     }
