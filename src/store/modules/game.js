@@ -6,6 +6,8 @@ export default {
     user: null,
     loginUser: null,
     accessToken: null,
+    expiresIn: null,
+    expiryDate: null,
     language: "en",
     locale: "en"
   },
@@ -18,6 +20,12 @@ export default {
     },
     [types.SET_GAME_ACCESSTOKEN](state, payload) {
       state.accessToken = payload.value;
+    },
+    [types.SET_GAME_EXPIRESIN](state, payload) {
+      state.expiresIn = payload.value;
+    },
+    [types.SET_GAME_EXPIRYDATE](state, payload) {
+      state.expiryDate = payload.value;
     },
     [types.SET_GAME_LANGUAGE](state, payload) {
       state.language = payload.value;
@@ -52,6 +60,22 @@ export default {
         value
       });
     },
+    setExpiresIn: ({ commit }, value) => {
+      localStorage.setItem("gameExpiresIn", JSON.stringify(value));
+
+      commit({
+        type: types.SET_GAME_EXPIRESIN,
+        value
+      });
+    },
+    setExpiryDate: ({ commit }, value) => {
+      localStorage.setItem("gameExpiryDate", JSON.stringify(value));
+
+      commit({
+        type: types.SET_GAME_EXPIRYDATE,
+        value
+      });
+    },
     setLanguage: ({ commit }, value) => {
       localStorage.setItem("gameLanguage", JSON.stringify(value));
 
@@ -73,6 +97,8 @@ export default {
     user: state => state.user,
     loginUser: state => state.loginUser,
     accessToken: state => state.accessToken,
+    expiresIn: state => state.expriesIn,
+    expiryDate: state => state.expiryDate,
     language: state => state.language,
     locale: state => state.locale
   }

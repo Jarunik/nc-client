@@ -150,6 +150,26 @@ export default {
       }
     }
   },
+  mounted() {
+    // Check token expiry to automaticall logout
+    var expiry = moment(
+      JSON.parse(localStorage.getItem("gameExpiryDate")),
+      moment.ISO_8601
+    );
+    if (moment.utc().isAfter(expiry) && this.loginUser !== null) {
+      this.$store.dispatch("game/setLoginUser", null);
+      this.$store.dispatch("game/setAccessToken", null);
+      this.$store.dispatch("game/setExpiresIn", null);
+      this.$store.dispatch("game/setExpiryDate", null);
+      // Reset Defaults
+      this.$store.dispatch("game/setUser", null);
+      this.$store.dispatch("planet/setId", null);
+      this.$store.dispatch("planet/setName", null);
+      this.$store.dispatch("planet/setPosX", null);
+      this.$store.dispatch("planet/setPosY", null);
+      window.location.href = "/";
+    }
+  },
   created() {
     // Initialize the store from local storage of browser
     var gameUser = localStorage.getItem("gameUser");
@@ -165,6 +185,16 @@ export default {
     var gameAccessToken = localStorage.getItem("gameAccessToken");
     if (gameAccessToken !== "undefined") {
       this.$store.dispatch("game/setAccessToken", JSON.parse(gameAccessToken));
+    }
+
+    var gameExpiresIn = localStorage.getItem("gameExpiresIn");
+    if (gameExpiresIn !== "undefined") {
+      this.$store.dispatch("game/setExpiresIn", JSON.parse(gameExpiresIn));
+    }
+
+    var gameExpiryDate = localStorage.getItem("gameExpiryDate");
+    if (gameExpiryDate !== "undefined") {
+      this.$store.dispatch("game/setExpiryDate", JSON.parse(gameExpiryDate));
     }
 
     var planetId = localStorage.getItem("planetId");
