@@ -82,15 +82,6 @@
       </p>
       <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
       <p>
-        {{ $t("Valid until") }}:
-        {{
-          moment
-            .utc(expiryDate)
-            .local()
-            .format("LLL")
-        }}
-      </p>
-      <p>
         <button v-on:click="logout">{{ $t("Logout") }}</button>
       </p>
       <div v-if="showRegistration">
@@ -121,7 +112,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "overview",
-  props: ["callbackUserName", "callbackAccessToken", "callbackExpiresIn"],
+  props: ["callbackUserName", "callbackAccessToken"],
   data: function() {
     return {
       loginURL: null,
@@ -138,8 +129,6 @@ export default {
     ...mapState({
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
-      expiresIn: state => state.game.expiresIn,
-      expiryDate: state => JSON.parse(state.game.expiryDate),
       gameUser: state => state.game.user
     }),
     gameLanguage: {
@@ -163,8 +152,6 @@ export default {
     logout() {
       this.$store.dispatch("game/setLoginUser", null);
       this.$store.dispatch("game/setAccessToken", null);
-      this.$store.dispatch("game/setExpiresIn", null);
-      this.$store.dispatch("game/setExpiryDate", null);
       // Reset Defaults
       this.$store.dispatch("game/setUser", null);
       this.$store.dispatch("planet/setId", null);
@@ -203,13 +190,6 @@ export default {
     if (this.callbackUserName) {
       this.$store.dispatch("game/setLoginUser", this.callbackUserName);
       this.$store.dispatch("game/setAccessToken", this.callbackAccessToken);
-      this.$store.dispatch("game/setExpiresIn", this.callbackExpiresIn);
-      var duration = moment.duration(
-        parseInt(this.callbackExpiresIn),
-        "seconds"
-      );
-      var expiryDate = JSON.stringify(moment.utc().add(duration));
-      this.$store.dispatch("game/setExpiryDate", expiryDate);
 
       // Fill Defaults
       this.fetchUser(this.callbackUserName).then(searchedUser => {

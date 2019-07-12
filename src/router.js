@@ -18,8 +18,7 @@ export default new Router({
       component: account,
       props: route => ({
         // pass steemconnect query values as props
-        callbackAccessToken: route.query.access_token,
-        callbackExpiresIn: route.query.expires_in,
+        callbackAccessToken: route.query.code,
         callbackUserName: route.query.username
       })
     },
