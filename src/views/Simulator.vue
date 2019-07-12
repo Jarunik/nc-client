@@ -312,7 +312,7 @@ export default {
       this.prepare();
       this.interval = setInterval(() => {
         this.battle();
-      }, 500);
+      }, 100);
       this.battle();
     },
     up(who, ship) {
