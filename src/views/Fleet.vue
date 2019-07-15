@@ -491,15 +491,6 @@ export default {
         }
       });
     },
-    isTransport() {
-      let isTransport = true;
-      this.shipFormation.ships.forEach(ship => {
-        if (ship.n > 0 && !ship.type.includes("transport")) {
-          isTransport = false;
-        }
-      });
-      return isTransport;
-    },
     commandEnabled(command) {
       let enabled = false;
       if (
@@ -520,8 +511,7 @@ export default {
             parseFloat(this.copper) > parseFloat(this.transportCopper) &&
             parseFloat(this.uranium) >
               parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption) &&
-            this.isTransport()
+                parseFloat(this.fuelConsumption)
           ) {
             enabled = true;
           } else {
@@ -731,21 +721,24 @@ export default {
         }
       );
     },
+    // shipList = { "transportship": 2, "explorership": 1 }
     transport() {
       this.clicked = true;
-      let transporterCount;
-      this.shipFormation.ships.forEach(ship => {
-        if (ship.type === "transportship") {
-          transporterCount = ship.n;
+      let shipList = {};
+      for (let key in this.shipFormation.ships) {
+        if (this.shipFormation.ships[key].n > 0) {
+          shipList[
+            this.shipFormation.ships[key].type
+          ] = this.shipFormation.ships[key].n;
         }
-      });
+      }
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.transport(
         this.loginUser,
         this.planetId,
         this.xCoordinate,
         this.yCoordinate,
-        transporterCount,
+        shipList,
         this.transportCoal,
         this.transportOre,
         this.transportCopper,

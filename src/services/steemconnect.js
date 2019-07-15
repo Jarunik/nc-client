@@ -148,12 +148,13 @@ class SteemConnectService extends Client {
     super.customJson([], [user], [appId], finalJson, cb);
   }
 
+  // shipList = { "transportship": 2, "explorership": 1 }
   transport(
     user,
     originPlanetId,
     x,
     y,
-    numberOfTransporter,
+    shipList,
     coal,
     ore,
     copper,
@@ -164,7 +165,7 @@ class SteemConnectService extends Client {
     var scCommand = {};
     scJson["username"] = user;
     scJson["type"] = "transport";
-    scCommand["tr_var1"] = numberOfTransporter;
+    scCommand["tr_var1"] = shipList;
     scCommand["tr_var2"] = originPlanetId;
     scCommand["tr_var3"] = x;
     scCommand["tr_var4"] = y;
