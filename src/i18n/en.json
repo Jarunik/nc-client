@@ -316,5 +316,9 @@
   "Tracker Block Number": "Tracker Block Number",
   "Processing Delay": "Processing Delay",
   "Processor Block Number": "Processor Block Number",
-  "Page not found": "Page not found"
+  "Page not found": "Page not found",
+  "transportship1": "Transporter II",
+  "transportship2": "Transporter III",
+  "Transporter II": "Transporter II",
+  "Transporter III": "Transporter III"
 }
