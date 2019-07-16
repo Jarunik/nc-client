@@ -244,6 +244,50 @@ const ships = [
     laser: 50
   },
   {
+    id: "explorer",
+    name: "Explorer",
+    class: "Civil",
+    structure: 80,
+    armor: 20,
+    shield: 20,
+    rocket: 0,
+    bullet: 0,
+    laser: 0
+  },
+  {
+    id: "explorer1",
+    name: "Explorer II",
+    class: "Civil",
+    structure: 45,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0
+  },
+  {
+    id: "transporter1",
+    name: "Transporter II",
+    class: "Civil",
+    structure: 25,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0
+  },
+  {
+    id: "transporter2",
+    name: "Transporter III",
+    class: "Civil",
+    structure: 50,
+    armor: 0,
+    shield: 0,
+    rocket: 0,
+    bullet: 0,
+    laser: 0
+  },
+  {
     id: "wonder0",
     name: "Wondership",
     class: "Wonder",
