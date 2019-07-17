@@ -23,9 +23,12 @@
               {{ $t("Battleship Blueprint") }}</span
             >
           </td>
-          <td>{{ item.left }} / {{ item.total }}</td>
           <td>
-            <button @click="buy(item)">
+            <span v-if="item.left < 0"> 0 / 0</span>
+            <span v-else>{{ item.left }} / {{ item.total }}</span>
+          </td>
+          <td>
+            <button v-if="item.left > 0" @click="buy(item)">
               {{ item.cost }} {{ $t("Steem") }}
             </button>
           </td>
