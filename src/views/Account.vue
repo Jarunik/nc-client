@@ -67,7 +67,15 @@
       <p>
         <i>{{ $t("Secure 1-click-registration via SteemConnect") }}</i>
       </p>
-      <button v-on:click="login">{{ $t("Login") }}</button>
+      <p>
+        <button v-on:click="login">{{ $t("Login with Steemconnect") }}</button>
+      </p>
+      <p>
+        <input v-model="userName" :placeholder="placeholder" />
+        <button v-on:click="loginKeychain(userName)">
+          {{ $t("Login with Keychain") }}
+        </button>
+      </p>
     </template>
     <template v-else>
       <p>---</p>
@@ -128,7 +136,9 @@ export default {
       showRegistration: false,
       registrationClicked: false,
       registrationSuccess: false,
-      apiState: null
+      apiState: null,
+      userName: null,
+      placeholder: "Enter User Name"
     };
   },
   async mounted() {
@@ -159,6 +169,47 @@ export default {
     login() {
       this.loginURL = SteemConnectService.getLoginURL();
       window.location.href = this.loginURL;
+    },
+    loginKeychain(userName) {
+      let params = {};
+      var self = this;
+      // The "username" parameter is required prior to log in for "Steem Keychain" users.
+      if (SteemConnectService.useSteemKeychain) {
+        params = { username: userName };
+      }
+      SteemConnectService.login(params, function(err, token) {
+        if (token) {
+          self.$store.dispatch("game/setLoginUser", userName);
+          self.$store.dispatch("game/setAccessToken", token);
+
+          // Fill Defaults
+          self.fetchUser(userName).then(searchedUser => {
+            if (searchedUser) {
+              self.$store.dispatch("game/setUser", searchedUser);
+              self.fetchStarterPlanet(userName).then(searchedPlanet => {
+                if (searchedPlanet) {
+                  self.$store.dispatch("planet/setId", searchedPlanet.id);
+                  self.$store.dispatch("planet/setName", searchedPlanet.name);
+                  self.$store.dispatch("planet/setPosX", searchedPlanet.posx);
+                  self.$store.dispatch("planet/setPosY", searchedPlanet.posy);
+                } else {
+                  self.$store.dispatch("planet/setId", null);
+                  self.$store.dispatch("planet/setName", null);
+                  self.$store.dispatch("planet/setPosX", null);
+                  self.$store.dispatch("planet/setPosY", null);
+                }
+              });
+            } else {
+              self.$store.dispatch("game/setUser", null);
+              self.$store.dispatch("planet/setId", null);
+              self.$store.dispatch("planet/setName", null);
+              self.$store.dispatch("planet/setPosX", null);
+              self.$store.dispatch("planet/setPosY", null);
+              self.showRegistration = true;
+            }
+          });
+        }
+      });
     },
     logout() {
       this.$store.dispatch("game/setLoginUser", null);

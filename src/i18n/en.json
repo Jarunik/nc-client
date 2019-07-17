@@ -320,5 +320,8 @@
   "transportship1": "Transporter II",
   "transportship2": "Transporter III",
   "Transporter II": "Transporter II",
-  "Transporter III": "Transporter III"
+  "Transporter III": "Transporter III",
+  "Login with Steemconnect": "Login with Steemconnect",
+  "Login with Keychain": "Login with Keychain",
+  "Generate Starter Planet": "Generate Starter Planet"
 }

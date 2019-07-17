@@ -9,6 +9,10 @@ class SteemConnectService extends Client {
     });
   }
 
+  useSteemKeychain() {
+    return Client.useSteemKeychain;
+  }
+
   appId() {
     var appId = process.env.VUE_APP_JSON_ID;
     return appId;
