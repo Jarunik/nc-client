@@ -63,9 +63,8 @@
     <span id="navbottom">
       <PlanetNav :routeUser="gameUser" />
       <br />
-      <router-link :to="'/production'">
-        <QuantityRibbon />
-      </router-link>
+
+      <QuantityRibbon />
     </span>
   </div>
 </template>
