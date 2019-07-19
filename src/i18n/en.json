@@ -338,5 +338,6 @@
   "Transfer": "Transfer",
   "Unknown User": "Unknown User",
   "Broadcast error": "Broadcast error",
-  "transferstardust": "Transfer Stardust"
+  "transferstardust": "Transfer Stardust",
+  "issue":"Issue"
 }
