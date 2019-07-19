@@ -64,6 +64,9 @@ export default {
       if (this.recipient === null) {
         return false;
       }
+      if (this.recipient === this.loginUser) {
+        return false;
+      }
       if (this.amount > this.stardust / 100000000) {
         return false;
       }
