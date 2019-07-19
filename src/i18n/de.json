@@ -320,5 +320,15 @@
   "transportship1": "Transporter II",
   "transportship2": "Transporter III",
   "Transporter II": "Transporter II",
-  "Transporter III": "Transporter III"
+  "Transporter III": "Transporter III",
+  "Login with Steemconnect": "Login mit Steemconnect",
+  "Login with Keychain": "Login mit Keychain",
+  "Generate Starter Planet": "Start Planet erzeugen",
+  "Battlecruiser Leopard": "Battlecruiser Leopard",
+  "Carrier Centaur": "Carrier Centaur",
+  "Corvette Pimpernel": "Corvette Pimpernel",
+  "Destroyer Banshee": "Destroyer Banshee",
+  "Frigate Lasalle": "Frigate Lasalle",
+  "Cruiser Hogue": "Cruiser Hogue",
+  "Dreadnought Galactic": "Dreadnought Galactic"
 }
