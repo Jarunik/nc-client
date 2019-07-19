@@ -1,7 +1,12 @@
 <template>
   <div class="wallet">
     <h1>{{ $t("Wallet") }}</h1>
-    <p>{{ Number(stardust / 100000000).toFixed(8) }} {{ $t("Stardust") }}</p>
+    <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
+    <p>
+      {{ $t("Your Balance") }}:
+      {{ Number(wallet.stardust / 100000000).toFixed(8) }}
+      {{ $t("Stardust") }}
+    </p>
     <p>
       {{ $t("Username") }}:
       <input type="text" v-model="recipient" v-on:change="onInput()" />
@@ -33,7 +38,7 @@ export default {
   name: "wallet",
   data: function() {
     return {
-      stardust: null,
+      wallet: null,
       recipient: null,
       amount: null,
       clicked: false,
@@ -58,7 +63,7 @@ export default {
     },
     async getStardust() {
       const response = await UserService.get(this.gameUser);
-      this.stardust = response.stardust;
+      this.wallet = response;
     },
     transferEnabled() {
       if (this.recipient === null) {
