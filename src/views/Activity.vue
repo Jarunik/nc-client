@@ -30,6 +30,7 @@
         <option value="enable">{{ $t("enable") }}</option>
         <option value="charge">{{ $t("charge") }}</option>
         <option value="newuser">{{ $t("newuser") }}</option>
+        <option value="transferstardust">{{ $t("transferstardust") }}</option>
       </select>
 
       &nbsp;

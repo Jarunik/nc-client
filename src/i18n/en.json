@@ -337,5 +337,6 @@
   "Stardust Amount": "Stardust Amount",
   "Transfer": "Transfer",
   "Unknown User": "Unknown User",
-  "Broadcast error": "Broadcast error"
+  "Broadcast error": "Broadcast error",
+  "transferstardust": "Transfer Stardust"
 }
