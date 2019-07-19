@@ -15,7 +15,12 @@
         {{ $t("Transfer") }}
       </button>
     </p>
-    <p>{{ $t(transferStatus) }}</p>
+    <p>
+      <font v-if="transferStatus === 'Transaction sent'" color="green">{{
+        $t(transferStatus)
+      }}</font
+      ><font v-else> {{ $t(transferStatus) }}</font>
+    </p>
   </div>
 </template>
 
@@ -62,7 +67,7 @@ export default {
       if (this.amount > this.stardust / 100000000) {
         return false;
       }
-      if (this.amount <= 0) {
+      if (this.amount < 0.00000001) {
         return false;
       }
       return true;
