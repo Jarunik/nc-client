@@ -330,5 +330,14 @@
   "Destroyer Banshee": "Destroyer Banshee",
   "Frigate Lasalle": "Frigate Lasalle",
   "Cruiser Hogue": "Cruiser Hogue",
-  "Dreadnought Galactic": "Dreadnought Galactic"
+  "Dreadnought Galactic": "Dreadnought Galactic",
+  "Stardust": "Sternenstaub",
+  "Wallet": "Wallet",
+  "Username": "Benutzername",
+  "Stardust Amount": "Sternenstaub Betrag",
+  "Transfer": "Überweisen",
+  "Unknown User": "Unbekannter Benutzer",
+  "Broadcast error": "Übermittlungs-Fehler",
+  "transferstardust": "Sternenstaub überweisen",
+  "issue":"Ausgabe"
 }
