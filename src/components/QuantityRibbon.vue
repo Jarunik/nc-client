@@ -34,7 +34,7 @@
         <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
       </span>
     </router-link>
-    <span v-if="user !== null">
+    <span v-if="user !== null && stardust !== undefined && stardust !== null">
       |
       <router-link :to="'/wallet'"
         >{{ Number(stardust / 100000000).toFixed(1) }}
