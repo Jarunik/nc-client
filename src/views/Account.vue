@@ -86,6 +86,7 @@
           <option value="en">{{ $t("English") }}</option>
           <option value="ko">{{ $t("Korean") }}</option>
           <option value="de">{{ $t("German") }}</option>
+          <option value="es">{{ $t("Spanish") }}</option>
         </select>
       </p>
       <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
