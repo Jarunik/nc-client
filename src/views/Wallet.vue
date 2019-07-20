@@ -5,9 +5,14 @@
       <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
       <p>
         {{ $t("Your Balance") }}:
-        {{ Number(wallet.stardust / 100000000).toFixed(8) }}
+        <b
+          ><font color="green">
+            {{ Number(wallet.stardust / 100000000).toFixed(8) }}</font
+          ></b
+        >
         {{ $t("Stardust") }}
       </p>
+      <h2>{{ $t("Transfer") }}</h2>
       <p>
         {{ $t("Username") }}:
         <input type="text" v-model="recipient" v-on:change="onInput()" />
@@ -25,7 +30,7 @@
         <font v-if="transferStatus === 'Transaction sent'" color="green">{{
           $t(transferStatus)
         }}</font
-        ><font v-else> {{ $t(transferStatus) }}</font>
+        ><font v-else>{{ $t(transferStatus) }}</font>
       </p>
       <h2>{{ $t("History") }}</h2>
       <table>
@@ -81,7 +86,7 @@ export default {
       recipient: null,
       amount: null,
       clicked: false,
-      transferStatus: null
+      transferStatus: "-"
     };
   },
   async mounted() {
@@ -144,7 +149,7 @@ export default {
     },
     onInput() {
       this.clicked = false;
-      this.transferStatus = null;
+      this.transferStatus = "-";
     },
     async fetchUser(user) {
       const response = await UserService.get(user);
