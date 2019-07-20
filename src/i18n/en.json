@@ -339,5 +339,12 @@
   "Unknown User": "Unknown User",
   "Broadcast error": "Broadcast error",
   "transferstardust": "Transfer Stardust",
-  "issue":"Issue"
+  "issue":"Issue",
+  "Total Supply": "Total Supply",
+  "Your Balance": "Your Balance",
+  "Sender": "Sender",
+  "History": "History",
+  "Recipient": "Recipient",
+  "Amount": "Amount",
+  "transfer": "Transfer"
 }

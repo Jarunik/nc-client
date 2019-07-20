@@ -1,36 +1,75 @@
 <template>
   <div class="wallet">
-    <h1>{{ $t("Wallet") }}</h1>
-    <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
-    <p>
-      {{ $t("Your Balance") }}:
-      {{ Number(wallet.stardust / 100000000).toFixed(8) }}
-      {{ $t("Stardust") }}
-    </p>
-    <p>
-      {{ $t("Username") }}:
-      <input type="text" v-model="recipient" v-on:change="onInput()" />
-    </p>
-    <p>
-      {{ $t("Stardust Amount") }}:
-      <input type="number" v-model="amount" v-on:change="onInput()" />
-    </p>
-    <p>
-      <button @click="transfer" :disabled="!transferEnabled() || clicked">
-        {{ $t("Transfer") }}
-      </button>
-    </p>
-    <p>
-      <font v-if="transferStatus === 'Transaction sent'" color="green">{{
-        $t(transferStatus)
-      }}</font
-      ><font v-else> {{ $t(transferStatus) }}</font>
-    </p>
+    <div v-if="wallet !== null">
+      <h1>{{ $t("Wallet") }}</h1>
+      <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
+      <p>
+        {{ $t("Your Balance") }}:
+        {{ Number(wallet.stardust / 100000000).toFixed(8) }}
+        {{ $t("Stardust") }}
+      </p>
+      <p>
+        {{ $t("Username") }}:
+        <input type="text" v-model="recipient" v-on:change="onInput()" />
+      </p>
+      <p>
+        {{ $t("Stardust Amount") }}:
+        <input type="number" v-model="amount" v-on:change="onInput()" />
+      </p>
+      <p>
+        <button @click="transfer" :disabled="!transferEnabled() || clicked">
+          {{ $t("Transfer") }}
+        </button>
+      </p>
+      <p>
+        <font v-if="transferStatus === 'Transaction sent'" color="green">{{
+          $t(transferStatus)
+        }}</font
+        ><font v-else> {{ $t(transferStatus) }}</font>
+      </p>
+      <h2>{{ $t("History") }}</h2>
+      <table>
+        <thead>
+          <th>{{ $t("Date") }}</th>
+          <th>{{ $t("Type") }}</th>
+          <th>{{ $t("Sender") }}</th>
+          <th>{{ $t("Recipient") }}</th>
+          <th>{{ $t("Amount") }}</th>
+          <th>{{ $t("Transaction") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="transaction in wallet.transactions" :key="transaction.trx">
+            <td>
+              {{ moment.unix(transaction.date, "seconds").format("lll") }}
+            </td>
+            <td>
+              {{ $t(transaction.tr_type) }}
+            </td>
+            <td>
+              {{ transaction.from_user }}
+            </td>
+            <td>
+              {{ transaction.to_user }}
+            </td>
+            <td>
+              {{ transaction.amount / 100000000 }}
+            </td>
+            <td>
+              <a
+                :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
+                >{{ transaction.trx.substring(0, 8) }}...</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
 import UserService from "@/services/user";
+import WalletService from "@/services/wallet";
 import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
 
@@ -62,7 +101,7 @@ export default {
       this.clicked = false;
     },
     async getStardust() {
-      const response = await UserService.get(this.gameUser);
+      const response = await WalletService.get(this.gameUser);
       this.wallet = response;
     },
     transferEnabled() {
@@ -110,6 +149,9 @@ export default {
     async fetchUser(user) {
       const response = await UserService.get(user);
       return response.username;
+    },
+    baseUrl() {
+      return process.env.VUE_APP_ROOT_API;
     }
   }
 };
