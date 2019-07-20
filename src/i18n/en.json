@@ -346,5 +346,6 @@
   "History": "History",
   "Recipient": "Recipient",
   "Amount": "Amount",
-  "transfer": "Transfer"
+  "transfer": "Transfer",
+  "buy": "Buy"
 }
