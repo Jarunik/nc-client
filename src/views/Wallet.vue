@@ -116,6 +116,9 @@ export default {
       if (this.recipient === this.loginUser) {
         return false;
       }
+      if (this.loginUser !== this.gameUser) {
+        return false;
+      }
       if (this.amount > this.stardust / 100000000) {
         return false;
       }
@@ -136,7 +139,8 @@ export default {
             (error, result) => {
               if (error === null && result.success) {
                 this.transferStatus = "Transaction sent";
-                this.stardust = this.stardust - this.amount * 100000000;
+                this.wallet.stardust =
+                  this.wallet.stardust - this.amount * 100000000;
               } else {
                 this.transferStatus = "Broadcast error";
               }
