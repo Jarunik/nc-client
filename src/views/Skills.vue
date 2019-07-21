@@ -1,6 +1,40 @@
 <template>
   <div class="skills">
     <h1>{{ $t("Skills") }}</h1>
+    <div v-if="planetId !== null && quantity != null">
+      {{ coal }}
+      <font v-if="quantity.coaldepot <= coal" color="red"
+        ><alpha-c-box-icon :title="$t('Coal')"
+      /></font>
+      <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
+
+      {{ ore }}
+      <font v-if="quantity.oredepot <= ore" color="red"
+        ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+          :title="$t('Ore')"/></font
+      ><font v-else
+        ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+          :title="$t('Ore')"
+      /></font>
+
+      {{ copper }}
+      <font v-if="quantity.copperdepot <= copper" color="red"
+        ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+          :title="$t('Copper')"
+      /></font>
+      <font v-else>
+        <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+          :title="$t('Copper')"
+      /></font>
+
+      {{ uranium }}
+      <font v-if="quantity.oredepot <= ore" color="red"
+        ><alpha-u-box-icon :title="$t('Uranium')"
+      /></font>
+      <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
+      <br />
+      <br />
+    </div>
     <template v-if="gameUser !== 'null'">
       <table>
         <thead>
@@ -98,13 +132,23 @@ import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import CheckOutlineIcon from "vue-material-design-icons/CheckOutline.vue";
 import * as types from "@/store/mutation-types";
+import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
+import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
+import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
+import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
+import AlphaSBoxIcon from "vue-material-design-icons/AlphaSBox.vue";
+import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 
 export default {
   name: "skills",
   components: {
     TimerSandIcon,
     ArrowUpBoldIcon,
-    CheckOutlineIcon
+    CheckOutlineIcon,
+    AlphaCBoxIcon,
+    AlphaFBoxIcon,
+    AlphaEBoxIcon,
+    AlphaUBoxIcon
   },
   data: function() {
     return {
@@ -217,6 +261,10 @@ export default {
         (error, result) => {
           if (error === null && result.success) {
             this.chainResponse.push(skill.name);
+            this.quantity.coal = this.quantity.coal - skill.coal;
+            this.quantity.ore = this.quantity.ore - skill.ore;
+            this.quantity.copper = this.quantity.copper - skill.copper;
+            this.quantity.uranium = this.quantity.uranium - skill.uranium;
           }
         }
       );

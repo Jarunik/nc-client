@@ -112,7 +112,11 @@
         <div v-if="registrationSuccess">
           <p>{{ $t("Generating Planet ...") }}</p>
           <p>
-            {{ $t("Give it some time and then refresh the page with F5.") }}
+            {{
+              $t(
+                "Give it some time and then logout/login to see your new planet."
+              )
+            }}
           </p>
         </div>
       </div>

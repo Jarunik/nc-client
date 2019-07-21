@@ -213,9 +213,7 @@ export default {
     AlphaCBoxIcon,
     AlphaFBoxIcon,
     AlphaEBoxIcon,
-    AlphaUBoxIcon,
-    AlphaSBoxIcon,
-    AlphaDBoxIcon
+    AlphaUBoxIcon
   },
   data: function() {
     return {
