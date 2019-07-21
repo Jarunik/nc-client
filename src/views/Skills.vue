@@ -136,8 +136,6 @@ import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
 import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
 import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
 import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
-import AlphaSBoxIcon from "vue-material-design-icons/AlphaSBox.vue";
-import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 
 export default {
   name: "skills",
