@@ -316,19 +316,22 @@ export default {
     },
     upgradeBuilding(building) {
       let self = this;
-      self.clicked.push(building.name);
+      let currentBuilding = building;
+      self.clicked.push(currentBuilding.name);
       SteemConnectService.setAccessToken(self.accessToken);
       SteemConnectService.upgradeBuilding(
         self.loginUser,
         self.planetId,
-        building.name,
+        currentBuilding.name,
         (error, result) => {
           if (error === null && result.success) {
-            self.chainResponse.push(building.name);
-            self.quantity.coal = self.quantity.coal - building.coal;
-            self.quantity.ore = self.quantity.ore - building.ore;
-            self.quantity.copper = self.quantity.copper - building.copper;
-            self.quantity.uranium = self.quantity.uranium - building.uranium;
+            self.chainResponse.push(currentBuilding.name);
+            self.quantity.coal = self.quantity.coal - currentBuilding.coal;
+            self.quantity.ore = self.quantity.ore - currentBuilding.ore;
+            self.quantity.copper =
+              self.quantity.copper - currentBuilding.copper;
+            self.quantity.uranium =
+              self.quantity.uranium - currentBuilding.uranium;
           }
         }
       );
