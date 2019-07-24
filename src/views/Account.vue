@@ -65,10 +65,13 @@
     <template v-if="!loginUser">
       <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
-        <i>{{ $t("Secure 1-click-registration via SteemConnect") }}</i>
+        <i>{{ $t("Web signing with SteemConnect") }}:</i>
       </p>
       <p>
         <button v-on:click="login">{{ $t("Login with Steemconnect") }}</button>
+      </p>
+      <p>
+        <i>{{ $t("Local signing with Steem Keychain") }}:</i>
       </p>
       <p>
         <input v-model="userName" :placeholder="placeholder" />
@@ -103,24 +106,6 @@
       <p>
         <button v-on:click="logout">{{ $t("Logout") }}</button>
       </p>
-      <div v-if="showRegistration">
-        <button
-          :disabled="registrationClicked"
-          v-on:click="register(loginUser)"
-        >
-          {{ $t("Generate Starter Planet") }}
-        </button>
-        <div v-if="registrationSuccess">
-          <p>{{ $t("Generating Planet ...") }}</p>
-          <p>
-            {{
-              $t(
-                "Give it some time and then logout/login to see your new planet."
-              )
-            }}
-          </p>
-        </div>
-      </div>
     </template>
   </div>
 </template>
@@ -139,12 +124,10 @@ export default {
   data: function() {
     return {
       loginURL: null,
-      showRegistration: false,
-      registrationClicked: false,
-      registrationSuccess: false,
       apiState: null,
       userName: null,
-      placeholder: "Enter User Name"
+      placeholder: "Enter User Name",
+      pollStarterPlanetInterval: null
     };
   },
   async mounted() {
@@ -156,7 +139,8 @@ export default {
       accessToken: state => state.game.accessToken,
       expiresIn: state => state.game.expiresIn,
       expiryDate: state => JSON.parse(state.game.expiryDate),
-      gameUser: state => state.game.user
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id
     }),
     gameLanguage: {
       get() {
@@ -192,28 +176,37 @@ export default {
           self.fetchUser(userName).then(searchedUser => {
             if (searchedUser) {
               self.$store.dispatch("game/setUser", searchedUser);
-              self.fetchStarterPlanet(userName).then(searchedPlanet => {
-                if (searchedPlanet) {
-                  self.$store.dispatch("planet/setId", searchedPlanet.id);
-                  self.$store.dispatch("planet/setName", searchedPlanet.name);
-                  self.$store.dispatch("planet/setPosX", searchedPlanet.posx);
-                  self.$store.dispatch("planet/setPosY", searchedPlanet.posy);
-                } else {
-                  self.$store.dispatch("planet/setId", null);
-                  self.$store.dispatch("planet/setName", null);
-                  self.$store.dispatch("planet/setPosX", null);
-                  self.$store.dispatch("planet/setPosY", null);
-                }
-              });
+              self.loadStarterPlanet(userName);
             } else {
-              self.$store.dispatch("game/setUser", null);
-              self.$store.dispatch("planet/setId", null);
-              self.$store.dispatch("planet/setName", null);
-              self.$store.dispatch("planet/setPosX", null);
-              self.$store.dispatch("planet/setPosY", null);
-              self.showRegistration = true;
+              // New User Registration
+              self.register(userName);
+              self.$store.dispatch("game/setUser", userName);
+              self.pollStarterPlanet(userName);
             }
           });
+        }
+      });
+    },
+    pollStarterPlanet(userName) {
+      this.pollStarterPlanetInterval = setInterval(() => {
+        this.loadStarterPlanet(userName);
+        if (this.planetId !== null) {
+          clearInterval(this.pollStarterPlanetInterval);
+        }
+      }, 3000);
+    },
+    loadStarterPlanet(userName) {
+      this.fetchStarterPlanet(userName).then(searchedPlanet => {
+        if (searchedPlanet) {
+          this.$store.dispatch("planet/setId", searchedPlanet.id);
+          this.$store.dispatch("planet/setName", searchedPlanet.name);
+          this.$store.dispatch("planet/setPosX", searchedPlanet.posx);
+          this.$store.dispatch("planet/setPosY", searchedPlanet.posy);
+        } else {
+          this.$store.dispatch("planet/setId", null);
+          this.$store.dispatch("planet/setName", null);
+          this.$store.dispatch("planet/setPosX", null);
+          this.$store.dispatch("planet/setPosY", null);
         }
       });
     },
@@ -239,13 +232,8 @@ export default {
       return response;
     },
     register(user) {
-      this.registrationClicked = true;
       SteemConnectService.setAccessToken(this.accessToken);
-      SteemConnectService.newUser(user, (error, result) => {
-        if (error === null && result.success) {
-          this.registrationSuccess = true;
-        }
-      });
+      SteemConnectService.newUser(user);
     },
     async prepareComponent() {
       await this.getApiState();
@@ -272,31 +260,18 @@ export default {
       this.fetchUser(this.callbackUserName).then(searchedUser => {
         if (searchedUser) {
           this.$store.dispatch("game/setUser", searchedUser);
-          this.fetchStarterPlanet(this.callbackUserName).then(
-            searchedPlanet => {
-              if (searchedPlanet) {
-                this.$store.dispatch("planet/setId", searchedPlanet.id);
-                this.$store.dispatch("planet/setName", searchedPlanet.name);
-                this.$store.dispatch("planet/setPosX", searchedPlanet.posx);
-                this.$store.dispatch("planet/setPosY", searchedPlanet.posy);
-              } else {
-                this.$store.dispatch("planet/setId", null);
-                this.$store.dispatch("planet/setName", null);
-                this.$store.dispatch("planet/setPosX", null);
-                this.$store.dispatch("planet/setPosY", null);
-              }
-            }
-          );
+          this.loadStarterPlanet(this.callbackUserName);
         } else {
-          this.$store.dispatch("game/setUser", null);
-          this.$store.dispatch("planet/setId", null);
-          this.$store.dispatch("planet/setName", null);
-          this.$store.dispatch("planet/setPosX", null);
-          this.$store.dispatch("planet/setPosY", null);
-          this.showRegistration = true;
+          // New User Registration
+          this.register(this.callbackUserName);
+          this.$store.dispatch("game/setUser", this.callbackUserName);
+          this.pollStarterPlanet(this.callbackUserName);
         }
       });
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.pollStarterPlanetInterval);
   }
 };
 </script>

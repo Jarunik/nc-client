@@ -350,5 +350,7 @@
   "buy": "Buy",
   "shop": "Shop",
   "Spanish": "Spanish",
-  "French": "French"
+  "French": "French",
+  "Web signing with SteemConnect": "Web signing with SteemConnect",
+  "Local signing with Steem Keychain": "Local signing with Steem Keychain"
 }

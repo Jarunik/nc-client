@@ -59,6 +59,12 @@ export default {
           this.prepareComponent();
       }
     });
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.prepareComponent();
+      }
+    });
     await this.prepareComponent();
   },
   filters: {
