@@ -315,19 +315,20 @@ export default {
       }
     },
     upgradeBuilding(building) {
-      this.clicked.push(building.name);
-      SteemConnectService.setAccessToken(this.accessToken);
+      let self = this;
+      self.clicked.push(building.name);
+      SteemConnectService.setAccessToken(self.accessToken);
       SteemConnectService.upgradeBuilding(
-        this.loginUser,
-        this.planetId,
+        self.loginUser,
+        self.planetId,
         building.name,
         (error, result) => {
           if (error === null && result.success) {
-            this.chainResponse.push(building.name);
-            this.quantity.coal = this.quantity.coal - building.coal;
-            this.quantity.ore = this.quantity.ore - building.ore;
-            this.quantity.copper = this.quantity.copper - building.copper;
-            this.quantity.uranium = this.quantity.uranium - building.uranium;
+            self.chainResponse.push(building.name);
+            self.quantity.coal = self.quantity.coal - building.coal;
+            self.quantity.ore = self.quantity.ore - building.ore;
+            self.quantity.copper = self.quantity.copper - building.copper;
+            self.quantity.uranium = self.quantity.uranium - building.uranium;
           }
         }
       );
