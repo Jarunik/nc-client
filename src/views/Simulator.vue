@@ -604,7 +604,7 @@ export default {
                   defenderIndex = defenderIndex + 1;
                   this.currentDefender = defenderIndex;
                 } else {
-                  return;
+                  leftOver = { laser: 0, bullet: 0, rocket: 0 };
                 }
               }
               d = this.defenders[defenderIndex];
@@ -633,7 +633,7 @@ export default {
                   attackerIndex = attackerIndex + 1;
                   this.currentAttacker = attackerIndex;
                 } else {
-                  return;
+                  leftOver = { laser: 0, bullet: 0, rocket: 0 };
                 }
               }
               a = this.attackers[attackerIndex];
@@ -651,7 +651,7 @@ export default {
         }
 
         // Move through Attacker Shooters
-        if (this.turn === "Attacker" && this.currentAttacker !== this.slots) {
+        if (this.turn === "Attacker") {
           if (this.currentAttackerShooter !== this.slots) {
             this.currentAttackerShooter = this.currentAttackerShooter + 1;
           }
@@ -720,59 +720,91 @@ export default {
       let lolaser2 = 0;
       let lobullet2 = 0;
       let lorocket2 = 0;
+      let damageLaser = 0;
+      let damageBullet = 0;
+      let damageRocket = 0;
+      let lOver = false;
+
       let shipStats = this.ships.filter(s => {
         return s.name === tank.name;
       });
       if (leftOver.laser > 0) {
-        shooter.laser = leftOver.laser;
+        damageLaser = leftOver.laser;
+        lOver = true;
+      } else {
+        damageLaser = shooter.laser;
       }
       if (leftOver.bullet > 0) {
-        shooter.bullet = leftOver.bullet;
+        damageBullet = leftOver.bullet;
+        lOver = true;
+      } else {
+        damageBullet = shooter.bullet;
       }
       if (leftOver.rocket > 0) {
-        shooter.rocket = leftOver.rocket;
+        damageRocket = leftOver.rocket;
+        lOver = true;
+      } else {
+        damageRocket = shooter.rocket;
       }
       if (tank.shield > 0) {
-        if (shooter.laser * this.rate("laser", "shield") > tank.shield) {
+        if (damageLaser * this.rate("laser", "shield") > tank.shield) {
           lolaser =
             Math.max(
-              (shooter.laser * this.rate("laser", "shield") - tank.shield) /
+              (damageLaser * this.rate("laser", "shield") - tank.shield) /
                 this.rate("laser", "shield"),
               0
             ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
         } else {
           lolaser = 0;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
         }
-        if (shooter.bullet * this.rate("bullet", "shield") > tank.shield) {
+        if (damageBullet * this.rate("bullet", "shield") > tank.shield) {
           lobullet =
             Math.max(
-              (shooter.bullet * this.rate("bullet", "shield") - tank.shield) /
+              (damageBullet * this.rate("bullet", "shield") - tank.shield) /
                 this.rate("bullet", "shield"),
               0
             ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
         } else {
           lobullet = 0;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
         }
-        if (shooter.rocket * this.rate("rocket", "shield") > tank.shield) {
+        if (damageRocket * this.rate("rocket", "shield") > tank.shield) {
           lorocket =
             Math.max(
-              (shooter.rocket * this.rate("rocket", "shield") - tank.shield) /
+              (damageRocket * this.rate("rocket", "shield") - tank.shield) /
                 this.rate("rocket", "shield"),
               0
             ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
         } else {
           lorocket = 0;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
         }
         tank.shield = Math.max(
-          tank.shield - shooter.laser * this.rate("laser", "shield"),
+          tank.shield - damageLaser * this.rate("laser", "shield"),
           0
         );
         tank.shield = Math.max(
-          tank.shield - shooter.bullet * this.rate("bullet", "shield"),
+          tank.shield - damageBullet * this.rate("bullet", "shield"),
           0
         );
         tank.shield = Math.max(
-          tank.shield - shooter.rocket * this.rate("rocket", "shield"),
+          tank.shield - damageRocket * this.rate("rocket", "shield"),
           0
         );
         // Pierce Armor
@@ -784,8 +816,14 @@ export default {
                   this.rate("laser", "armor"),
                 0
               ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.laser = lolaser2;
+            }
           } else {
             lolaser2 = 0;
+            if (lOver) {
+              leftOver.laser = lolaser2;
+            }
           }
           if (lobullet > tank.armor) {
             lobullet2 =
@@ -794,8 +832,14 @@ export default {
                   this.rate("bullet", "armor"),
                 0
               ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.bullet = lobullet2;
+            }
           } else {
             lobullet2 = 0;
+            if (lOver) {
+              leftOver.bullet = lobullet2;
+            }
           }
           if (lorocket > tank.armor) {
             lorocket2 =
@@ -804,8 +848,14 @@ export default {
                   this.rate("rocket", "armor"),
                 0
               ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.rocket = lorocket2;
+            }
           } else {
             lorocket2 = 0;
+            if (lOver) {
+              leftOver.rocket = lorocket2;
+            }
           }
           tank.armor = Math.max(
             tank.armor - lolaser * this.rate("laser", "armor"),
@@ -869,46 +919,64 @@ export default {
           }
         }
       } else if (tank.armor > 0) {
-        if (shooter.laser * this.rate("laser", "armor") > tank.armor) {
+        if (damageLaser * this.rate("laser", "armor") > tank.armor) {
           lolaser =
             Math.max(
-              (shooter.laser * this.rate("laser", "armor") - tank.armor) /
+              (damageLaser * this.rate("laser", "armor") - tank.armor) /
                 this.rate("laser", "armor"),
               0
             ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
         } else {
           lolaser = 0;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
         }
-        if (shooter.bullet * this.rate("bullet", "armor") > tank.armor) {
+        if (damageBullet * this.rate("bullet", "armor") > tank.armor) {
           lobullet =
             Math.max(
-              (shooter.bullet * this.rate("bullet", "armor") - tank.armor) /
+              (damageBullet * this.rate("bullet", "armor") - tank.armor) /
                 this.rate("bullet", "armor"),
               0
             ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
         } else {
           lobullet = 0;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
         }
-        if (shooter.rocket * this.rate("rocket", "armor") > tank.armor) {
+        if (damageRocket * this.rate("rocket", "armor") > tank.armor) {
           lorocket =
             Math.max(
-              (shooter.rocket * this.rate("rocket", "armor") - tank.armor) /
+              (damageRocket * this.rate("rocket", "armor") - tank.armor) /
                 this.rate("rocket", "armor"),
               0
             ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
         } else {
           lorocket = 0;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
         }
         tank.armor = Math.max(
-          tank.armor - shooter.laser * this.rate("laser", "armor"),
+          tank.armor - damageLaser * this.rate("laser", "armor"),
           0
         );
         tank.armor = Math.max(
-          tank.armor - shooter.bullet * this.rate("bullet", "armor"),
+          tank.armor - damageBullet * this.rate("bullet", "armor"),
           0
         );
         tank.armor = Math.max(
-          tank.armor - shooter.rocket * this.rate("rocket", "armor"),
+          tank.armor - damageRocket * this.rate("rocket", "armor"),
           0
         );
         // Pierce structure
@@ -957,24 +1025,20 @@ export default {
           );
         }
       } else if (tank.structure > 0) {
-        if (shooter.laser * this.rate("laser", "structure") > tank.structure) {
+        if (damageLaser * this.rate("laser", "structure") > tank.structure) {
           leftOver.laser =
             Math.max(
-              (shooter.laser * this.rate("laser", "structure") -
-                tank.structure) /
+              (damageLaser * this.rate("laser", "structure") - tank.structure) /
                 this.rate("laser", "structure"),
               0
             ) * this.pierceratestructure;
         } else {
           leftOver.laser = 0;
         }
-        if (
-          shooter.bullet * this.rate("bullet", "structure") >
-          tank.structure
-        ) {
+        if (damageBullet * this.rate("bullet", "structure") > tank.structure) {
           leftOver.bullet =
             Math.max(
-              (shooter.bullet * this.rate("bullet", "structure") -
+              (damageBullet * this.rate("bullet", "structure") -
                 tank.structure) /
                 this.rate("bullet", "structure"),
               0
@@ -982,13 +1046,10 @@ export default {
         } else {
           leftOver.bullet = 0;
         }
-        if (
-          shooter.rocket * this.rate("rocket", "structure") >
-          tank.structure
-        ) {
+        if (damageRocket * this.rate("rocket", "structure") > tank.structure) {
           leftOver.rocket =
             Math.max(
-              (shooter.rocket * this.rate("rocket", "structure") -
+              (damageRocket * this.rate("rocket", "structure") -
                 tank.structure) /
                 this.rate("rocket", "structure"),
               0
@@ -997,15 +1058,15 @@ export default {
           leftOver.rocket = 0;
         }
         tank.structure = Math.max(
-          tank.structure - shooter.laser * this.rate("laser", "structure"),
+          tank.structure - damageLaser * this.rate("laser", "structure"),
           0
         );
         tank.structure = Math.max(
-          tank.structure - shooter.bullet * this.rate("bullet", "structure"),
+          tank.structure - damageBullet * this.rate("bullet", "structure"),
           0
         );
         tank.structure = Math.max(
-          tank.structure - shooter.rocket * this.rate("rocket", "structure"),
+          tank.structure - damageRocket * this.rate("rocket", "structure"),
           0
         );
       }
