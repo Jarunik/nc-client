@@ -353,5 +353,8 @@
   "Web signing with SteemConnect": "Web signing with SteemConnect",
   "Local signing with Steem Keychain": "Local signing with Steem Keychain",
   "Prepare": "Prepare",
-  "Attacker destroyed a ship": "Attacker destroyed a ship"
+  "Attacker destroyed a ship": "Attacker destroyed a ship",
+  "Defender destroyed a ship": "Defender destroyed a ship",
+  "Defender won battle. Game Over": "Defender won battle. Game Over",
+  "Attacker won battle. Game Over": "Attacker won battle. Game Over"
 }
