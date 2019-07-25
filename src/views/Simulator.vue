@@ -205,7 +205,8 @@
       </tbody>
     </table>
     <h2>{{ $t("Battle") }}</h2>
-    <button v-on:click="battle()">{{ $t("Play") }} Turn</button>
+    <button v-on:click="buildShipList()">{{ $t("Prepare") }}</button>
+    <button v-on:click="battle()">{{ $t("Play Turn") }}</button>
     <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
     <button v-on:click="reset()">{{ $t("Reset") }}</button>
     <h2>{{ $t("Battle Log") }}</h2>
@@ -219,6 +220,8 @@
 import simShips from "@/data/simShips.js";
 import simAttackers from "@/data/simAttackers.js";
 import simDefenders from "@/data/simDefenders.js";
+import simAttackerList from "@/data/simAttackerList.js";
+import simDefenderList from "@/data/simDefenderList.js";
 import PistolIcon from "vue-material-design-icons/Pistol.vue";
 import ShieldAirplaneIcon from "vue-material-design-icons/ShieldAirplane.vue";
 
@@ -244,6 +247,8 @@ export default {
       ],
       attackers: simAttackers,
       defenders: simDefenders,
+      attackerList: simAttackerList,
+      defenderList: simDefenderList,
       turn: "Attacker",
       currentAttacker: 0,
       currentDefender: 0,
@@ -258,6 +263,8 @@ export default {
       piercerateshield: 1,
       pierceratearmor: 1,
       slots: 8,
+      attackerSlots: 0,
+      defenderSlots: 0,
       prepared: false,
       interval: null
     };
@@ -265,6 +272,12 @@ export default {
   methods: {
     // Component
     prepare: function() {
+      this.attackerList = [];
+      this.defenderList = [];
+      this.attackers = simAttackers;
+      this.defenders = simDefenders;
+      this.attackerSlots = 0;
+      this.defenderSlots = 0;
       this.attackers.forEach(attacker => {
         let aship = this.ships.filter(s => {
           return s.name === attacker.name;
@@ -276,6 +289,29 @@ export default {
         attacker.bullet = attacker.quantity * aship[0].bullet;
         attacker.laser = attacker.quantity * aship[0].laser;
         attacker.survivor = attacker.quantity;
+        for (let i = 0; i < attacker.quantity; i++) {
+          let addAttacker = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: attacker.name,
+            class: attacker.class,
+            quantity: 1,
+            structure: aship[0].structure,
+            armor: aship[0].armor,
+            shield: aship[0].shield,
+            rocket: aship[0].rocket,
+            bullet: aship[0].bullet,
+            laser: aship[0].laser,
+            survivor: 1
+          };
+          this.attackerList.push(addAttacker);
+          this.attackerSlots = this.attackerSlots + 1;
+        }
       });
       this.defenders.forEach(defender => {
         let dship = this.ships.filter(s => {
@@ -288,7 +324,121 @@ export default {
         defender.bullet = defender.quantity * dship[0].bullet;
         defender.laser = defender.quantity * dship[0].laser;
         defender.survivor = defender.quantity;
+        for (let j = 0; j < defender.quantity; j++) {
+          let addDefender = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: defender.name,
+            class: defender.class,
+            quantity: 1,
+            structure: dship[0].structure,
+            armor: dship[0].armor,
+            shield: dship[0].shield,
+            rocket: dship[0].rocket,
+            bullet: dship[0].bullet,
+            laser: dship[0].laser,
+            survivor: 1
+          };
+          this.defenderList.push(addDefender);
+          this.defenderSlots = this.defenderSlots + 1;
+        }
       });
+      this.slots = Math.max(this.attackerSlots, this.defenderSlots);
+      if (this.attackerSlots > this.defenderSlots) {
+        let numberToAdd = this.attackerSlots - this.defenderSlots;
+        for (let k = 0; k < numberToAdd; k++) {
+          let addDefender = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: "end",
+            class: "end",
+            quantity: 0,
+            structure: 0,
+            armor: 0,
+            shield: 0,
+            rocket: 0,
+            bullet: 0,
+            laser: 0,
+            survivor: 0
+          };
+          this.defenderList.push(addDefender);
+        }
+      }
+      if (this.defenderSlots > this.attackerSlots) {
+        let numbertoAdd = this.defenderSlots - this.attackerSlots;
+        for (let l = 0; l < numbertoAdd; l++) {
+          let addAttacker = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: "end",
+            class: "end",
+            quantity: 0,
+            structure: 0,
+            armor: 0,
+            shield: 0,
+            rocket: 0,
+            bullet: 0,
+            laser: 0,
+            survivor: 0
+          };
+          this.attackerList.push(addAttacker);
+        }
+      }
+      let addDefender = {
+        id:
+          Math.random()
+            .toString(36)
+            .substring(2, 15) +
+          Math.random()
+            .toString(36)
+            .substring(2, 15),
+        name: "end",
+        class: "end",
+        quantity: 0,
+        structure: 0,
+        armor: 0,
+        shield: 0,
+        rocket: 0,
+        bullet: 0,
+        laser: 0,
+        survivor: 0
+      };
+      let addAttacker = {
+        id:
+          Math.random()
+            .toString(36)
+            .substring(2, 15) +
+          Math.random()
+            .toString(36)
+            .substring(2, 15),
+        name: "end",
+        class: "end",
+        quantity: 0,
+        structure: 0,
+        armor: 0,
+        shield: 0,
+        rocket: 0,
+        bullet: 0,
+        laser: 0,
+        survivor: 0
+      };
+      this.attackerList.push(addAttacker);
+      this.defenderList.push(addDefender);
       this.turn = "Attacker";
       this.round = 0;
       this.currentAttacker = 0;
@@ -302,6 +452,11 @@ export default {
       clearInterval(this.interval);
       this.prepare();
     },
+    buildShipList() {
+      this.prepare();
+      this.attackers = this.attackerList;
+      this.defenders = this.defenderList;
+    },
     rate: function(attack, defense) {
       var rate = this.rates.filter(
         r => r.attack === attack && r.defense === defense
@@ -309,7 +464,7 @@ export default {
       return rate[0].rate;
     },
     auto: function() {
-      this.prepare();
+      this.buildShipList();
       this.interval = setInterval(() => {
         this.battle();
       }, 100);
