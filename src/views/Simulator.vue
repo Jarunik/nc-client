@@ -724,8 +724,9 @@ export default {
       let damageBullet = 0;
       let damageRocket = 0;
       let lOver = false;
+      let shipStats = null;
 
-      let shipStats = this.ships.filter(s => {
+      shipStats = this.ships.filter(s => {
         return s.name === tank.name;
       });
       if (leftOver.laser > 0) {
@@ -1070,26 +1071,26 @@ export default {
           0
         );
       }
-      if (tank.structure !== "undefined") {
-        tankArray[tankIndex].survivor = Math.ceil(
-          tank.structure / shipStats[0].structure
-        );
-      }
+      tankArray[tankIndex].survivor = Math.ceil(
+        tank.structure / shipStats[0].structure
+      );
+
       tankArray[tankIndex].laser =
-        shipStats[0].laser * this.defenders[tankIndex].survivor;
+        shipStats[0].laser * tankArray[tankIndex].survivor;
       tankArray[tankIndex].bullet =
-        shipStats[0].bullet * this.defenders[tankIndex].survivor;
+        shipStats[0].bullet * tankArray[tankIndex].survivor;
       tankArray[tankIndex].rocket =
-        shipStats[0].rocket * this.defenders[tankIndex].survivor;
+        shipStats[0].rocket * tankArray[tankIndex].survivor;
       tankArray[tankIndex].structure = tank.structure;
       tankArray[tankIndex].armor = tank.armor;
+      tankArray[tankIndex].shield = tank.shield;
       if (tankArray[tankIndex].armor !== 0) {
         tankArray[tankIndex].armor = Math.min(
           tankArray[tankIndex].armor +
             shipStats[0].armor *
               Math.max(this.armorrep - this.armorregreduce * this.round, 0) *
               tankArray[tankIndex].survivor,
-          shipStats[0].armor * this.defenders[tankIndex].survivor
+          shipStats[0].armor * tankArray[tankIndex].survivor
         );
       }
       tankArray[tankIndex].shield = tank.shield;
