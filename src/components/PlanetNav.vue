@@ -118,6 +118,7 @@ export default {
           this.displayUser = this.loginUser;
         }
       });
+      this.$forceUpdate();
     },
     activateSearch() {
       this.displayUser = null;
