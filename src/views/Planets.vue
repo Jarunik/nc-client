@@ -90,6 +90,35 @@
       <p>
         <button @click="toggleGiftingLock">{{ $t("Gifting") }}</button>
       </p>
+      <h2>{{ $t("Fleet")}}</h2>
+      <table>
+        <thead>
+          <th>{{ $t("Planet") }}</th>
+          <th>{{ $t("Explorer") }}</th>
+          <th>{{ $t("Transporter") }}</th>
+          <th>{{ $t("Corvette") }}</th>
+          <th>{{ $t("Frigate") }}</th>
+          <th>{{ $t("Destroyer") }}</th>
+          <th>{{ $t("Cruiser") }}</th>
+          <th>{{ $t("Battlecruiser") }}</th>
+          <th>{{ $t("Carrier") }}</th>
+          <th>{{ $t("Dreadnought") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="pFleet in planetFleet" :key="pFleet.id">
+            <td>{{ pFleet.name }}</td>
+            <td>{{ pFleet.fleet.explorership === 0 ? "-": pFleet.fleet.explorership  }}</td>
+            <td>{{ pFleet.fleet.transportship  === 0 ? "-":pFleet.fleet.transportship  }}</td>
+            <td>{{ pFleet.fleet.corvette  === 0 ? "-": pFleet.fleet.corvette  }}</td>
+            <td>{{ pFleet.fleet.frigate  === 0 ? "-":  pFleet.fleet.frigate}}</td>
+            <td>{{ pFleet.fleet.destroyer  === 0 ? "-":  pFleet.fleet.destroye}}</td>
+            <td>{{ pFleet.fleet.cruiser  === 0 ? "-":  pFleet.fleet.cruiser  }}</td>
+            <td>{{ pFleet.fleet.battlecruiser  === 0 ? "-":  pFleet.fleet.battlecruiser }}</td>
+            <td>{{ pFleet.fleet.carrier  === 0 ? "-":  pFleet.fleet.carrier }}</td>
+            <td>{{ pFleet.fleet.dreadnought  === 0 ? "-":pFleet.fleet.dreadnought}}</td>
+          </tr>
+        </tbody>
+      </table>
     </template>
     <template v-else>
       <p>
@@ -102,6 +131,7 @@
 
 <script>
 import PlanetsService from "@/services/planets";
+import FleetService from "@/services/fleet";
 import SteemConnectService from "@/services/steemconnect";
 import UserService from "@/services/user";
 import { mapState } from "vuex";
@@ -115,6 +145,7 @@ export default {
   data: function() {
     return {
       planets: null,
+      planetFleet: [],
       newName: null,
       showRename: null,
       placeholderRename: "enter new name",
@@ -141,11 +172,20 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getPlanets();
+      await this.getPlanetFleet();
     },
     async getPlanets() {
       const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
       this.$store.dispatch("planet/setList", response.planets);
+    },
+    async getPlanetFleet() {
+      let planets = this.planets;
+      for (let i = 0; i < planets.length; i++) {
+        let fleet = await this.getFleet(planets[i]); 
+        this.planetFleet.push(fleet)
+      }
+      console.log(this.planetFleet);
     },
     setPlanet(planet) {
       if (planet.id !== this.planetId) {
@@ -228,6 +268,53 @@ export default {
           this.giftRecipient = null;
         }
       });
+    },
+    async getFleet(planet) {
+      let planetFleet = planet;
+      let fleetResponse = null;
+      planetFleet.fleet = {
+        "explorership": 0,
+        "transportship": 0,
+        "corvette": 0,
+        "frigate": 0,
+        "destroyer": 0,
+        "cruiser": 0,
+        "battlecruiser": 0,
+        "carrier": 0,
+        "dreadnought": 0,
+      }
+      const response = await FleetService.all(this.gameUser, planetFleet.id);
+      fleetResponse = response;
+      fleetResponse.forEach(ship => {
+        if (ship.type.startsWith("explorership")) {
+          planetFleet.fleet.explorership++;
+        }
+        if (ship.type.startsWith("transportship")) {
+          planetFleet.fleet.transportship++;
+        }
+        if (ship.type.startsWith("corvette")) {
+          planetFleet.fleet.corvette++;
+        } 
+        if (ship.type.startsWith("frigate")) {
+          planetFleet.fleet.frigate++;
+        } 
+        if (ship.type.startsWith("destroyer")) {
+          planetFleet.fleet.destroyer++;
+        } 
+        if (ship.type.startsWith("cruiser")) {
+          planetFleet.fleet.cruiser++;
+        }
+        if (ship.type.startsWith("battlecruiser")) {
+          planetFleet.fleet.battlecruiser++;
+        }
+        if (ship.type.startsWith("carrier")) {
+          planetFleet.fleet.carrier++;
+        }
+        if (ship.type.startsWith("dreadnought")) {
+          planetFleet.fleet.dreadnought++;
+        }
+      });
+      return planetFleet;
     },
     async fetchhUser(user) {
       const response = await UserService.get(user);
