@@ -333,13 +333,13 @@ export default {
         currentBuilding.name,
         (error, result) => {
           if (error === null && result.success) {
-            callbackHanddling(self, currentBuilding);
+            self.callbackHanddling(self, currentBuilding);
           }
         }
       );
       // For non-working callbacks
       setTimeout(function() {
-        callbackHanddling(self, currentBuilding);
+        self.callbackHanddling(self, currentBuilding);
       }, 3000);
     },
     callbackHandling(self, currentBuilding) {
