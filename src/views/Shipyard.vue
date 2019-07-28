@@ -1,9 +1,42 @@
 <template>
   <div class="shipyard">
     <h1>{{ $t("Shipyard") }}</h1>
-    <p>
-      <i>{{ $t("Ships need skill level 20 to build.") }}</i>
-    </p>
+    <div v-if="planetId !== null && quantity != null">
+      {{ coal }}
+      <font v-if="quantity.coaldepot <= coal" color="red">
+        <alpha-c-box-icon :title="$t('Coal')" />
+      </font>
+      <font v-else>
+        <alpha-c-box-icon :title="$t('Coal')" />
+      </font>
+      {{ ore }}
+      <font v-if="quantity.oredepot <= ore" color="red">
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
+      </font>
+      <font v-else>
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
+      </font>
+      {{ copper }}
+      <font v-if="quantity.copperdepot <= copper" color="red">
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
+      </font>
+      <font v-else>
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
+      </font>
+      {{ uranium }}
+      <font v-if="quantity.oredepot <= ore" color="red">
+        <alpha-u-box-icon :title="$t('Uranium')" />
+      </font>
+      <font v-else>
+        <alpha-u-box-icon :title="$t('Uranium')" />
+      </font>
+      <br />
+      <br />
+    </div>
     <template v-if="gameUser !== 'null' && planetId != 'null'">
       <table>
         <thead>
@@ -88,7 +121,7 @@
             <td>{{ ship.busy_until | busyPretty }}</td>
             <td v-if="loginUser !== null && loginUser === gameUser">
               <button
-                :disabled="clicked.includes(ship.longname)"
+                :disabled="clicked.includes(ship.longname) || processing"
                 v-if="shipPossible(ship)"
                 @click="buildShip(ship)"
               >
@@ -128,12 +161,21 @@ import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
 import * as types from "@/store/mutation-types";
+import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
+import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
+import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
+import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
+
 
 export default {
   name: "shipyard",
   components: {
     TimerSandIcon,
-    ArrowUpBoldIcon
+    ArrowUpBoldIcon,
+    AlphaCBoxIcon,
+    AlphaFBoxIcon,
+    AlphaEBoxIcon,
+    AlphaUBoxIcon
   },
   data: function() {
     return {
@@ -147,7 +189,8 @@ export default {
       clicked: [],
       chainResponse: [],
       currentSort: "longname",
-      currentSortDir: "asc"
+      currentSortDir: "asc",
+      processing: false
     };
   },
   async mounted() {
@@ -273,6 +316,8 @@ export default {
       }
     },
     buildShip(ship) {
+      let self = this
+      self.processing = true;
       this.clicked.push(ship.longname);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.buildShip(
@@ -281,10 +326,24 @@ export default {
         ship.type,
         (error, result) => {
           if (error === null && result.success) {
-            this.chainResponse.push(ship.longname);
+            self.handleCallback(self,ship)
           }
         }
       );
+      // For non-working callbacks
+      setTimeout(function() {
+        self.handleCallback(self, ship);
+      }, 3000);
+    },
+    handleCallback(self, ship) {
+      if (self.processing) {
+        self.chainResponse.push(ship.longname);
+        self.quantity.coal = self.quantity.coal - ship.cost.coal;
+        self.quantity.ore = self.quantity.ore - ship.cost.ore;
+        self.quantity.copper = self.quantity.copper - ship.cost.copper;
+        self.quantity.uranium = self.quantity.uranium - ship.cost.uranium;
+        self.processing = false;
+      }
     },
     shipPossible(ship) {
       if (this.isBusy(ship.busy_until)) {
