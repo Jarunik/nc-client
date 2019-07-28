@@ -1,6 +1,7 @@
 <template>
   <div class="simulator">
     <h1>{{ $t("Simulator") }}</h1>
+    <div v-if='!silent'>
     <i>{{ $t("The simulator does not consider skills.") }}</i>
     <h2>
       {{ $t("Attacker") }}
@@ -208,11 +209,13 @@
     <button v-on:click="buildShipList()">{{ $t("Prepare") }}</button>
     <button v-on:click="battle()">{{ $t("Play Turn") }}</button>
     <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
+    <button v-on:click="fast()">{{ $t("Fast") }}</button>
     <button v-on:click="reset()">{{ $t("Reset") }}</button>
     <h2>{{ $t("Battle Log") }}</h2>
     <p>{{ $t(result) }}</p>
     <p>{{ $t("Next Turn") }}: {{ turn }}</p>
     <p>{{ $t("Round") }}: {{ round }}</p>
+    </div>
   </div>
 </template>
 
@@ -267,7 +270,8 @@ export default {
       attackerSlots: 0,
       defenderSlots: 0,
       prepared: false,
-      interval: null
+      interval: null,
+      gameOver: false
     };
   },
   methods: {
@@ -451,9 +455,11 @@ export default {
       this.currentDefenderShooter = 0;
       this.result = "Ready";
       this.prepared = true;
+      this.gameOver = false;
     },
     reset: function() {
       clearInterval(this.interval);
+      this.gameOver = false;
       this.prepare();
     },
     buildShipList() {
@@ -472,6 +478,13 @@ export default {
       this.interval = setInterval(() => {
         this.battle();
       }, 100);
+      this.battle();
+    },
+    fast: function() {
+      this.buildShipList();
+      while (!this.gameOver) {
+        this.battle();
+      }
       this.battle();
     },
     up(who, ship) {
@@ -536,10 +549,12 @@ export default {
         if (attackerIndex === this.slots) {
           this.result = "Defender won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
         }
         if (defenderIndex === this.slots) {
           this.result = "Attacker won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
         }
 
         return;
