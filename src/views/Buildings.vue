@@ -333,17 +333,25 @@ export default {
         currentBuilding.name,
         (error, result) => {
           if (error === null && result.success) {
-            self.chainResponse.push(currentBuilding.name);
-            self.quantity.coal = self.quantity.coal - currentBuilding.coal;
-            self.quantity.ore = self.quantity.ore - currentBuilding.ore;
-            self.quantity.copper =
-              self.quantity.copper - currentBuilding.copper;
-            self.quantity.uranium =
-              self.quantity.uranium - currentBuilding.uranium;
-            self.processing = false;
+            callbackHanddling(self, currentBuilding);
           }
         }
       );
+      // For non-working callbacks
+      setTimeout(function() {
+        callbackHanddling(self, currentBuilding);
+      }, 3000);
+    },
+    callbackHandling(self, currentBuilding) {
+      // Only do it once
+      if (self.processing) {
+        self.chainResponse.push(currentBuilding.name);
+        self.quantity.coal = self.quantity.coal - currentBuilding.coal;
+        self.quantity.ore = self.quantity.ore - currentBuilding.ore;
+        self.quantity.copper = self.quantity.copper - currentBuilding.copper;
+        self.quantity.uranium = self.quantity.uranium - currentBuilding.uranium;
+        self.processing = false;
+      }
     },
     buildingPossible(building) {
       if (this.isBusy(building.busy)) {
