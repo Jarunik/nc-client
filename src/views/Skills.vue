@@ -3,35 +3,37 @@
     <h1>{{ $t("Skills") }}</h1>
     <div v-if="planetId !== null && quantity != null">
       {{ coal }}
-      <font v-if="quantity.coaldepot <= coal" color="red"
-        ><alpha-c-box-icon :title="$t('Coal')"
-      /></font>
-      <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
-
-      {{ ore }}
-      <font v-if="quantity.oredepot <= ore" color="red"
-        ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-          :title="$t('Ore')"/></font
-      ><font v-else
-        ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-          :title="$t('Ore')"
-      /></font>
-
-      {{ copper }}
-      <font v-if="quantity.copperdepot <= copper" color="red"
-        ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-          :title="$t('Copper')"
-      /></font>
+      <font v-if="quantity.coaldepot <= coal" color="red">
+        <alpha-c-box-icon :title="$t('Coal')" />
+      </font>
       <font v-else>
-        <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-          :title="$t('Copper')"
-      /></font>
-
+        <alpha-c-box-icon :title="$t('Coal')" />
+      </font>
+      {{ ore }}
+      <font v-if="quantity.oredepot <= ore" color="red">
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
+      </font>
+      <font v-else>
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
+      </font>
+      {{ copper }}
+      <font v-if="quantity.copperdepot <= copper" color="red">
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
+      </font>
+      <font v-else>
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
+      </font>
       {{ uranium }}
-      <font v-if="quantity.oredepot <= ore" color="red"
-        ><alpha-u-box-icon :title="$t('Uranium')"
-      /></font>
-      <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
+      <font v-if="quantity.oredepot <= ore" color="red">
+        <alpha-u-box-icon :title="$t('Uranium')" />
+      </font>
+      <font v-else>
+        <alpha-u-box-icon :title="$t('Uranium')" />
+      </font>
       <br />
       <br />
     </div>
@@ -46,9 +48,7 @@
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
-          <th v-if="loginUser !== null && loginUser === gameUser">
-            {{ $t("Enhance") }}
-          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Enhance") }}</th>
           <th></th>
         </thead>
         <tbody>
@@ -56,34 +56,42 @@
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
             <td>
-              <font v-if="skill.coal > coal" color="red">{{
+              <font v-if="skill.coal > coal" color="red">
+                {{
                 skill.coal === 0 ? "-" : skill.coal
-              }}</font>
+                }}
+              </font>
               <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
             </td>
             <td>
-              <font v-if="skill.ore > ore" color="red">{{
+              <font v-if="skill.ore > ore" color="red">
+                {{
                 skill.ore === 0 ? "-" : skill.ore
-              }}</font
-              ><font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
+                }}
+              </font>
+              <font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
             </td>
             <td>
-              <font v-if="skill.copper > copper" color="red">{{
+              <font v-if="skill.copper > copper" color="red">
+                {{
                 skill.copper === 0 ? "-" : skill.copper
-              }}</font
-              ><font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
+                }}
+              </font>
+              <font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
             </td>
             <td>
-              <font v-if="skill.uranium > uranium" color="red">{{
+              <font v-if="skill.uranium > uranium" color="red">
+                {{
                 skill.uranium === 0 ? "-" : skill.uranium
-              }}</font
-              ><font v-else>{{
+                }}
+              </font>
+              <font v-else>
+                {{
                 skill.uranium === 0 ? "-" : skill.uranium
-              }}</font>
+                }}
+              </font>
             </td>
-            <td>
-              {{ skill.time | timePretty }}
-            </td>
+            <td>{{ skill.time | timePretty }}</td>
             <td>{{ skill.busy | busyPretty }}</td>
             <td>
               <span
@@ -94,7 +102,7 @@
                 "
               >
                 <button
-                  :disabled="clicked.includes(skill.name)"
+                  :disabled="clicked.includes(skill.name) || processing"
                   v-if="skillPossible(skill)"
                   @click="enhanceSkill(skill)"
                 >
@@ -102,9 +110,10 @@
                 </button>
               </span>
               <span v-else>
-                <span v-if="skill.current > 19"
-                  ><check-outline-icon :title="$t('Maxed')" /> </span
-              ></span>
+                <span v-if="skill.current > 19">
+                  <check-outline-icon :title="$t('Maxed')" />
+                </span>
+              </span>
             </td>
             <td v-if="chainResponse.includes(skill.name)">
               <timer-sand-icon :title="$t('Transaction sent')" />
@@ -160,7 +169,8 @@ export default {
       clicked: [],
       chainResponse: [],
       currentSort: "name",
-      currentSortDir: "asc"
+      currentSortDir: "asc",
+      processing: false
     };
   },
   async mounted() {
@@ -250,6 +260,8 @@ export default {
       }
     },
     enhanceSkill(skill) {
+      let self = this;
+      this.processing = true;
       this.clicked.push(skill.name);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.enhanceSkill(
@@ -258,14 +270,24 @@ export default {
         skill.name,
         (error, result) => {
           if (error === null && result.success) {
-            this.chainResponse.push(skill.name);
-            this.quantity.coal = this.quantity.coal - skill.coal;
-            this.quantity.ore = this.quantity.ore - skill.ore;
-            this.quantity.copper = this.quantity.copper - skill.copper;
-            this.quantity.uranium = this.quantity.uranium - skill.uranium;
+            self.handleCallback(this,skill);
           }
         }
       );
+      // For non-working callbacks
+      setTimeout(function() {
+        self.handleCallback(self, skill);
+      }, 3000);
+    },
+    handleCallback(self, skill) {
+      if (self.processing) {
+        self.chainResponse.push(skill.name);
+        self.quantity.coal = self.quantity.coal - skill.coal;
+        self.quantity.ore = self.quantity.ore - skill.ore;
+        self.quantity.copper = self.quantity.copper - skill.copper;
+        self.quantity.uranium = self.quantity.uranium - skill.uranium;
+        self.processing = false;
+      }
     },
     skillPossible(skill) {
       if (this.isBusy(skill.busy)) {
