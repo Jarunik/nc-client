@@ -11,28 +11,6 @@ const ships = [
     laser: 0
   },
   {
-    id: "scout1",
-    name: "Scout Athene",
-    class: "Scout",
-    structure: 1,
-    armor: 1,
-    shield: 1,
-    rocket: 0,
-    bullet: 1,
-    laser: 0
-  },
-  {
-    id: "scout2",
-    name: "Scout Minerva",
-    class: "Scout",
-    structure: 1,
-    armor: 1,
-    shield: 1,
-    rocket: 0,
-    bullet: 0,
-    laser: 1
-  },
-  {
     id: "patrol",
     name: "Patrol Rocket",
     class: "Patrol",
@@ -44,28 +22,6 @@ const ships = [
     laser: 0
   },
   {
-    id: "patrol1",
-    name: "Patrol Bullet",
-    class: "Patrol",
-    structure: 2,
-    armor: 2,
-    shield: 2,
-    rocket: 0,
-    bullet: 1,
-    laser: 0
-  },
-  {
-    id: "patrol2",
-    name: "Patrol Laser",
-    class: "Patrol",
-    structure: 2,
-    armor: 2,
-    shield: 2,
-    rocket: 0,
-    bullet: 0,
-    laser: 1
-  },
-  {
     id: "cutter",
     name: "Cutter Rocket",
     class: "Cutter",
@@ -75,28 +31,6 @@ const ships = [
     rocket: 1,
     bullet: 0,
     laser: 0
-  },
-  {
-    id: "cutter1",
-    name: "Cutter Bullet",
-    class: "Cutter",
-    structure: 6,
-    armor: 4,
-    shield: 2,
-    rocket: 0,
-    bullet: 1,
-    laser: 0
-  },
-  {
-    id: "cutter2",
-    name: "Cutter Laser",
-    class: "Cutter",
-    structure: 6,
-    armor: 4,
-    shield: 2,
-    rocket: 0,
-    bullet: 0,
-    laser: 1
   },
   {
     id: "corvette",
@@ -188,6 +122,39 @@ const ships = [
   },
   // Bullet with Shield
   {
+    id: "scout1",
+    name: "Scout Athene",
+    class: "Scout",
+    structure: 1,
+    armor: 1,
+    shield: 1,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
+    id: "patrol1",
+    name: "Patrol Bullet",
+    class: "Patrol",
+    structure: 2,
+    armor: 2,
+    shield: 2,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
+    id: "cutter1",
+    name: "Cutter Bullet",
+    class: "Cutter",
+    structure: 6,
+    armor: 4,
+    shield: 2,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
     id: "corvette1",
     name: "Corvette Petunia",
     class: "Corvette",
@@ -265,6 +232,39 @@ const ships = [
     laser: 0
   },
   // Laser with Armor
+  {
+    id: "scout2",
+    name: "Scout Minerva",
+    class: "Scout",
+    structure: 1,
+    armor: 1,
+    shield: 1,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
+  },
+  {
+    id: "patrol2",
+    name: "Patrol Laser",
+    class: "Patrol",
+    structure: 2,
+    armor: 2,
+    shield: 2,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
+  },
+  {
+    id: "cutter2",
+    name: "Cutter Laser",
+    class: "Cutter",
+    structure: 6,
+    armor: 4,
+    shield: 2,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
+  },
   {
     id: "corvette2",
     name: "Corvette Pimpernel",
