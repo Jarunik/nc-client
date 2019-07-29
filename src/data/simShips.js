@@ -521,7 +521,7 @@ const ships = [
   {
     id: "one",
     name: "One",
-    class: "Mini",
+    class: "Patrol",
     structure: 1,
     armor: 1,
     shield: 1,
@@ -532,7 +532,7 @@ const ships = [
   {
     id: "demi",
     name: "Demi",
-    class: "Mini",
+    class: "Patrol",
     structure: 3,
     armor: 4,
     shield: 5,
@@ -540,6 +540,17 @@ const ships = [
     bullet: 0,
     laser: 0
   },
+  {
+    id: "demi",
+    name: "Demi",
+    class: "Patrol",
+    structure: 4,
+    armor: 4,
+    shield: 4,
+    rocket: 1,
+    bullet: 0,
+    laser: 0
+  },  
   {
     id: "end",
     name: "end",
