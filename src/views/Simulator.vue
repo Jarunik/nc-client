@@ -608,10 +608,14 @@ export default {
         this.attackers[attackerIndex].structure === 0 ||
         this.attackers[attackerIndex].quantity === 0
       ) {
+        let previousTank = this.currentAttacker;
+        let previousShooter = this.currentAttackerShooter;
         if (typeof this.attackers[attackerIndex + 1] !== "undefined") {
           attackerIndex = attackerIndex + 1;
           this.currentAttacker = attackerIndex;
-          this.currentAttackerShooter = attackerIndex;
+          if (previousTank === previousShooter) {
+            this.currentAttackerShooter = attackerIndex;
+          }
         }
       }
 
@@ -620,10 +624,14 @@ export default {
         this.defenders[defenderIndex].structure === 0 ||
         this.defenders[defenderIndex].quantity === 0
       ) {
+        let previousTank = this.currentDefender;
+        let previousShooter = this.currentDefenderShooter;
         if (typeof this.defenders[defenderIndex + 1] !== "undefined") {
           defenderIndex = defenderIndex + 1;
           this.currentDefender = defenderIndex;
-          this.currentDefenderShooter = defenderIndex;
+          if (previousTank === previousShooter) {
+            this.currentDefenderShooter = defenderIndex;
+          }
         }
       }
 
