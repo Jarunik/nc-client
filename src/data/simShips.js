@@ -521,10 +521,21 @@ const ships = [
   {
     id: "one",
     name: "One",
-    class: "Wonder",
+    class: "Mini",
     structure: 1,
     armor: 1,
     shield: 1,
+    rocket: 1,
+    bullet: 0,
+    laser: 0
+  },
+  {
+    id: "demi",
+    name: "Demi",
+    class: "Mini",
+    structure: 3,
+    armor: 4,
+    shield: 5,
     rocket: 1,
     bullet: 0,
     laser: 0
