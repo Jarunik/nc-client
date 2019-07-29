@@ -12,7 +12,7 @@ const ships = [
   },
   {
     id: "patrol",
-    name: "Patrol Rocket",
+    name: "Patrol Amaterasu",
     class: "Patrol",
     structure: 2,
     armor: 2,
@@ -23,7 +23,7 @@ const ships = [
   },
   {
     id: "cutter",
-    name: "Cutter Rocket",
+    name: "Cutter Arrow",
     class: "Cutter",
     structure: 6,
     armor: 4,
@@ -134,7 +134,7 @@ const ships = [
   },
   {
     id: "patrol1",
-    name: "Patrol Bullet",
+    name: "Patrol Hermes",
     class: "Patrol",
     structure: 2,
     armor: 2,
@@ -145,7 +145,7 @@ const ships = [
   },
   {
     id: "cutter1",
-    name: "Cutter Bullet",
+    name: "Cutter Canard",
     class: "Cutter",
     structure: 6,
     armor: 4,
@@ -245,7 +245,7 @@ const ships = [
   },
   {
     id: "patrol2",
-    name: "Patrol Laser",
+    name: "Patrol Crucal",
     class: "Patrol",
     structure: 2,
     armor: 2,
@@ -256,7 +256,7 @@ const ships = [
   },
   {
     id: "cutter2",
-    name: "Cutter Laser",
+    name: "Cutter Orchis",
     class: "Cutter",
     structure: 6,
     armor: 4,
