@@ -519,9 +519,9 @@ const ships = [
     laser: 250
   },
   {
-    id: "one",
-    name: "One",
-    class: "Patrol",
+    id: "scout",
+    name: "Scout Rocket",
+    class: "Scout",
     structure: 1,
     armor: 1,
     shield: 1,
@@ -530,15 +530,92 @@ const ships = [
     laser: 0
   },
   {
-    id: "demi",
-    name: "Demi",
+    id: "scout1",
+    name: "Scout Bullet",
+    class: "Scout",
+    structure: 1,
+    armor: 1,
+    shield: 1,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
+    id: "scout2",
+    name: "Scout Laser",
+    class: "Scout",
+    structure: 1,
+    armor: 1,
+    shield: 1,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
+  },
+  {
+    id: "patrol",
+    name: "Patrol Rocket",
     class: "Patrol",
+    structure: 2,
+    armor: 2,
+    shield: 2,
+    rocket: 1,
+    bullet: 0,
+    laser: 0
+  },
+  {
+    id: "patrol1",
+    name: "Patrol Bullet",
+    class: "Patrol",
+    structure: 2,
+    armor: 2,
+    shield: 2,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
+    id: "patrol2",
+    name: "Patrol Laser",
+    class: "Patrol",
+    structure: 2,
+    armor: 2,
+    shield: 2,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
+  },
+  {
+    id: "cutter",
+    name: "Cutter Rocket",
+    class: "Cutter",
     structure: 6,
     armor: 4,
     shield: 2,
     rocket: 1,
     bullet: 0,
     laser: 0
+  },
+  {
+    id: "cutter1",
+    name: "Cutter Bullet",
+    class: "Cutter",
+    structure: 6,
+    armor: 4,
+    shield: 2,
+    rocket: 0,
+    bullet: 1,
+    laser: 0
+  },
+  {
+    id: "cutter2",
+    name: "Cutter Laser",
+    class: "Cutter",
+    structure: 6,
+    armor: 4,
+    shield: 2,
+    rocket: 0,
+    bullet: 0,
+    laser: 1
   },
   {
     id: "end",
