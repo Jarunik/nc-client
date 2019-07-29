@@ -519,6 +519,17 @@ const ships = [
     laser: 250
   },
   {
+    id: "one",
+    name: "One",
+    class: "Wonder",
+    structure: 1,
+    armor: 1,
+    shield: 1,
+    rocket: 1,
+    bullet: 0,
+    laser: 0
+  },
+  {
     id: "end",
     name: "end",
     class: "end",
