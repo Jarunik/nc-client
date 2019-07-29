@@ -533,9 +533,9 @@ const ships = [
     id: "demi",
     name: "Demi",
     class: "Patrol",
-    structure: 4,
+    structure: 6,
     armor: 4,
-    shield: 4,
+    shield: 2,
     rocket: 1,
     bullet: 0,
     laser: 0
