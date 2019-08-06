@@ -60,22 +60,6 @@
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
-              >&nbsp;
-              <router-link
-                v-if="
-                  (mission.type === 'attack' ||
-                    mission.type === 'support' ||
-                    mission.type === 'siege' ||
-                    mission.type === 'breaksiege') &&
-                    mission.result !== null &&
-                    (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege' &&
-                      mission.result !== 'cancel_breaksiege')
-                "
-                :to="{ path: '/replay/' + mission.id }"
-              >
-                {{ $t("Replay") }}</router-link
               >
             </td>
             <td>
@@ -144,23 +128,6 @@
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
-              >&nbsp;
-              <router-link
-                v-if="
-                  (mission.type === 'attack' ||
-                    mission.type === 'support' ||
-                    mission.type === 'siege' ||
-                    mission.type === 'breaksiege') &&
-                    mission.result !== null &&
-                    (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege' &&
-                      mission.result !== 'cancel_breaksiege')
-                "
-                :to="{ path: '/replay/' + mission.id }"
-              >
-                {{ $t("Replay") }}</router-link
-              >
             </td>
           </tr>
         </tbody>
