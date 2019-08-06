@@ -472,6 +472,7 @@ export default {
       this.currentSort = s;
     },
     charge(building) {
+      this.processing = true;
       this.clicked.push("charge");
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.charge(
@@ -481,11 +482,16 @@ export default {
         (error, result) => {
           if (error === null && result.success) {
             this.chainResponse.push(building.name);
+            this.processing = false;
           }
         }
       );
+      setTimeout(function() {
+        this.processing = false;
+      }, 3000);
     },
     enable(building) {
+      this.processing = true;
       this.clicked.push("enable");
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.enable(
@@ -495,9 +501,13 @@ export default {
         (error, result) => {
           if (error === null && result.success) {
             this.chainResponse.push(building.name);
+            this.processing = false;
           }
         }
       );
+      setTimeout(function() {
+        this.processing = false;
+      }, 3000);
     }
   },
   beforeDestroy() {
