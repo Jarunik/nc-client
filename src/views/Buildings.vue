@@ -124,7 +124,7 @@
             </td>
             <td>
               <button
-                :disabled="clicked.includes(building.name)"
+                :disabled="clicked.includes('charge')"
                 v-if="
                   loginUser !== null &&
                     loginUser === gameUser &&
@@ -146,7 +146,7 @@
                 "
               >
                 <button
-                  :disabled="clicked.includes(building.name)"
+                  :disabled="clicked.includes('enable')"
                   v-if="enablePossible(building, index)"
                   @click="enable(building, index)"
                 >
@@ -359,18 +359,6 @@ export default {
     },
     chargePossible(building) {
       // TODO Check if charge possible.
-      if (this.coal < building.coal) {
-        return false;
-      }
-      if (this.ore < building.ore) {
-        return false;
-      }
-      if (this.copper < building.copper) {
-        return false;
-      }
-      if (this.uranium < building.uranium) {
-        return false;
-      }
       if (building.current === 0) {
         return false;
       }
@@ -473,7 +461,7 @@ export default {
       this.currentSort = s;
     },
     charge(building) {
-      this.clicked.push(building.name);
+      this.clicked.push("charge");
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.charge(
         this.loginUser,
@@ -487,7 +475,7 @@ export default {
       );
     },
     enable(building) {
-      this.clicked.push(building.name);
+      this.clicked.push("enable");
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.enable(
         this.loginUser,
