@@ -1,218 +1,215 @@
 <template>
   <div class="simulator">
     <h1>{{ $t("Simulator") }}</h1>
-    <i>{{ $t("The simulator does not consider skills.") }}</i>
-    <h2>
-      {{ $t("Attacker") }}
-      <font
-        v-if="currentAttacker === this.slots && currentDefender === this.slots"
-        color="yellow"
-        >{{ $t("Draw") }}</font
-      >
-      <span v-else>
-        <font v-if="currentDefender === this.slots" color="green">
-          {{ $t("Winner") }}
-        </font>
-        <font v-if="currentAttacker === this.slots" color="red">
-          {{ $t("Looser") }}
-        </font>
-      </span>
-    </h2>
-    <table>
-      <thead>
-        <th>{{ $t("Tank") }}</th>
-        <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
-        <th>{{ $t("Ship") }}</th>
-        <th>{{ $t("Quantity") }}</th>
-        <th>{{ $t("Structure") }}</th>
-        <th>{{ $t("Armor") }}</th>
-        <th>{{ $t("Shield") }}</th>
-        <th>{{ $t("Rocket") }}</th>
-        <th>{{ $t("Bullet") }}</th>
-        <th>{{ $t("Laser") }}</th>
-        <th>{{ $t("Survivor") }}</th>
-      </thead>
-      <tbody>
-        <tr v-for="(attacker, index) in attackers" :key="attacker.id">
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="index === currentAttacker">
-              <shield-airplane-icon :title="$t('Tank')" />
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
-              <pistol-icon :title="$t('Shooter')" />
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <button v-on:click="up('attacker', attacker)">↑</button>
-            <button v-on:click="down('attacker', attacker)">↓</button>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <select v-model="attacker.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <input
-              type="number"
-              v-model="attacker.quantity"
-              v-on:input="prepare"
-            />
-          </td>
-          <td>
-            <div v-if="attacker.structure > 0">
-              <font v-if="attacker.structure === 0" color="red">{{
-                attacker.structure.toFixed(0)
-              }}</font>
-              <font v-else>{{ attacker.structure.toFixed(0) }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.armor > 0">{{ attacker.armor.toFixed(0) }}</div>
-          </td>
-          <td>
-            <div v-if="attacker.shield > 0">
-              {{ attacker.shield.toFixed(0) }}
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.rocket > 0">
-              <font color="orange">{{ attacker.rocket }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.bullet > 0">
-              <font color="orange">{{ attacker.bullet }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.laser > 0">
-              <font color="orange">{{ attacker.laser }}</font>
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="attacker.survivor > 0">
-              <font v-if="attacker.survivor > 0" color="green">{{
-                attacker.survivor
-              }}</font>
-              <div v-else>{{ attacker.survivor }}</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>
-      {{ $t("Defender") }}
-      <font
-        v-if="currentAttacker === this.slots && currentDefender === this.slots"
-        color="yellow"
-        >{{ $t("Draw") }}</font
-      >
-      <span v-else>
-        <font v-if="currentAttacker === slots" color="green">
-          {{ $t("Winner") }}
-        </font>
-        <font v-if="currentDefender === slots" color="red">
-          {{ $t("Looser") }}
-        </font>
-      </span>
-    </h2>
-    <table>
-      <thead>
-        <th>{{ $t("Tank") }}</th>
-        <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
-        <th>{{ $t("Ship") }}</th>
-        <th>{{ $t("Quantity") }}</th>
-        <th>{{ $t("Structure") }}</th>
-        <th>{{ $t("Armor") }}</th>
-        <th>{{ $t("Shield") }}</th>
-        <th>{{ $t("Rocket") }}</th>
-        <th>{{ $t("Bullet") }}</th>
-        <th>{{ $t("Laser") }}</th>
-        <th>{{ $t("Survivor") }}</th>
-      </thead>
-      <tbody>
-        <tr v-for="(defender, index) in defenders" :key="defender.id">
-          <td v-show="defender.id !== 'end'">
-            <div v-if="index === currentDefender">
-              <shield-airplane-icon :title="$t('Tank')" />
-            </div>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <div v-if="turn === 'Defender' && index === currentDefenderShooter">
-              <pistol-icon :title="$t('Shooter')" />
-            </div>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <button v-on:click="up('defender', defender)">↑</button>
-            <button v-on:click="down('defender', defender)">↓</button>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <select v-model="defender.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
-          </td>
-          <td v-show="defender.id !== 'end'" v-on:input="prepare">
-            <input type="number" v-model="defender.quantity" />
-          </td>
-          <td>
-            <div v-if="defender.structure > 0">
-              <font v-if="defender.structure === 0" color="red">{{
-                defender.structure.toFixed(0)
-              }}</font>
-              <font v-else>{{ defender.structure.toFixed(0) }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.armor > 0">{{ defender.armor.toFixed(0) }}</div>
-          </td>
-          <td>
-            <div v-if="defender.shield > 0">
-              {{ defender.shield.toFixed(0) }}
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.rocket > 0">
-              <font color="orange">{{ defender.rocket }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.bullet > 0">
-              <font color="orange">{{ defender.bullet }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.laser > 0">
-              <font color="orange">{{ defender.laser }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.survivor > 0">
-              <font v-if="defender.survivor > 0" color="green">{{
-                defender.survivor
-              }}</font>
-              <div v-else>{{ defender.survivor }}</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>{{ $t("Battle") }}</h2>
-    <button v-on:click="buildShipList()">{{ $t("Prepare") }}</button>
-    <button v-on:click="battle()">{{ $t("Play Turn") }}</button>
-    <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
-    <button v-on:click="reset()">{{ $t("Reset") }}</button>
-    <h2>{{ $t("Battle Log") }}</h2>
-    <p>{{ $t(result) }}</p>
-    <p>{{ $t("Next Turn") }}: {{ turn }}</p>
-    <p>{{ $t("Round") }}: {{ round }}</p>
+    <div v-if="!silent">
+      <i>{{ $t("The simulator does not consider skills.") }}</i>
+      <h2>
+        {{ $t("Attacker") }}
+        <font
+          v-if="currentAttacker === this.slots && currentDefender === this.slots"
+          color="yellow"
+        >{{ $t("Draw") }}</font>
+        <span v-else>
+          <font v-if="currentDefender === this.slots" color="green">{{ $t("Winner") }}</font>
+          <font v-if="currentAttacker === this.slots" color="red">{{ $t("Looser") }}</font>
+        </span>
+      </h2>
+      <table>
+        <thead>
+          <th>{{ $t("Tank") }}</th>
+          <th>{{ $t("Shooter") }}</th>
+          <th>{{ $t("Order") }}</th>
+          <th>{{ $t("Ship") }}</th>
+          <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Structure") }}</th>
+          <th>{{ $t("Armor") }}</th>
+          <th>{{ $t("Shield") }}</th>
+          <th>{{ $t("Rocket") }}</th>
+          <th>{{ $t("Bullet") }}</th>
+          <th>{{ $t("Laser") }}</th>
+          <th>{{ $t("Survivor") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(attacker, index) in attackers" :key="attacker.id">
+            <td v-show="attacker.id !== 'end'">
+              <div v-if="index === currentAttacker">
+                <shield-airplane-icon :title="$t('Tank')" />
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
+                <pistol-icon :title="$t('Shooter')" />
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <button v-on:click="up('attacker', attacker)">↑</button>
+              <button v-on:click="down('attacker', attacker)">↓</button>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <select v-model="attacker.name" @change="prepare">
+                <option v-for="ship in ships" :key="ship.name">
+                  {{
+                  ship.name
+                  }}
+                </option>
+              </select>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <input type="number" v-model="attacker.quantity" v-on:input="prepare" />
+            </td>
+            <td>
+              <div v-if="attacker.structure > 0">
+                <font v-if="attacker.structure === 0" color="red">
+                  {{
+                  attacker.structure.toFixed(0)
+                  }}
+                </font>
+                <font v-else>{{ attacker.structure.toFixed(0) }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.armor > 0">{{ attacker.armor.toFixed(0) }}</div>
+            </td>
+            <td>
+              <div v-if="attacker.shield > 0">{{ attacker.shield.toFixed(0) }}</div>
+            </td>
+            <td>
+              <div v-if="attacker.rocket > 0">
+                <font color="orange">{{ attacker.rocket }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.bullet > 0">
+                <font color="orange">{{ attacker.bullet }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.laser > 0">
+                <font color="orange">{{ attacker.laser }}</font>
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <div v-if="attacker.survivor > 0">
+                <font v-if="attacker.survivor > 0" color="green">
+                  {{
+                  attacker.survivor
+                  }}
+                </font>
+                <div v-else>{{ attacker.survivor }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>
+        {{ $t("Defender") }}
+        <font
+          v-if="currentAttacker === this.slots && currentDefender === this.slots"
+          color="yellow"
+        >{{ $t("Draw") }}</font>
+        <span v-else>
+          <font v-if="currentAttacker === slots" color="green">{{ $t("Winner") }}</font>
+          <font v-if="currentDefender === slots" color="red">{{ $t("Looser") }}</font>
+        </span>
+      </h2>
+      <table>
+        <thead>
+          <th>{{ $t("Tank") }}</th>
+          <th>{{ $t("Shooter") }}</th>
+          <th>{{ $t("Order") }}</th>
+          <th>{{ $t("Ship") }}</th>
+          <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Structure") }}</th>
+          <th>{{ $t("Armor") }}</th>
+          <th>{{ $t("Shield") }}</th>
+          <th>{{ $t("Rocket") }}</th>
+          <th>{{ $t("Bullet") }}</th>
+          <th>{{ $t("Laser") }}</th>
+          <th>{{ $t("Survivor") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(defender, index) in defenders" :key="defender.id">
+            <td v-show="defender.id !== 'end'">
+              <div v-if="index === currentDefender">
+                <shield-airplane-icon :title="$t('Tank')" />
+              </div>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <div v-if="turn === 'Defender' && index === currentDefenderShooter">
+                <pistol-icon :title="$t('Shooter')" />
+              </div>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <button v-on:click="up('defender', defender)">↑</button>
+              <button v-on:click="down('defender', defender)">↓</button>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <select v-model="defender.name" @change="prepare">
+                <option v-for="ship in ships" :key="ship.name">
+                  {{
+                  ship.name
+                  }}
+                </option>
+              </select>
+            </td>
+            <td v-show="defender.id !== 'end'" v-on:input="prepare">
+              <input type="number" v-model="defender.quantity" />
+            </td>
+            <td>
+              <div v-if="defender.structure > 0">
+                <font v-if="defender.structure === 0" color="red">
+                  {{
+                  defender.structure.toFixed(0)
+                  }}
+                </font>
+                <font v-else>{{ defender.structure.toFixed(0) }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.armor > 0">{{ defender.armor.toFixed(0) }}</div>
+            </td>
+            <td>
+              <div v-if="defender.shield > 0">{{ defender.shield.toFixed(0) }}</div>
+            </td>
+            <td>
+              <div v-if="defender.rocket > 0">
+                <font color="orange">{{ defender.rocket }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.bullet > 0">
+                <font color="orange">{{ defender.bullet }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.laser > 0">
+                <font color="orange">{{ defender.laser }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.survivor > 0">
+                <font v-if="defender.survivor > 0" color="green">
+                  {{
+                  defender.survivor
+                  }}
+                </font>
+                <div v-else>{{ defender.survivor }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>{{ $t("Battle") }}</h2>
+      <button v-on:click="buildShipList()">{{ $t("Prepare") }}</button>
+      <button v-on:click="battle()">{{ $t("Play Turn") }}</button>
+      <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
+      <button v-on:click="fast()">{{ $t("Fast") }}</button>
+      <button v-on:click="reset()">{{ $t("Reset") }}</button>
+      <h2>{{ $t("Battle Log") }}</h2>
+      <p>{{ $t(result) }}</p>
+      <p>{{ $t("Next Turn") }}: {{ turn }}</p>
+      <p>{{ $t("Round") }}: {{ round }}</p>
+    </div>
   </div>
 </template>
 
@@ -267,7 +264,8 @@ export default {
       attackerSlots: 0,
       defenderSlots: 0,
       prepared: false,
-      interval: null
+      interval: null,
+      gameOver: false
     };
   },
   methods: {
@@ -451,9 +449,11 @@ export default {
       this.currentDefenderShooter = 0;
       this.result = "Ready";
       this.prepared = true;
+      this.gameOver = false;
     },
     reset: function() {
       clearInterval(this.interval);
+      this.gameOver = false;
       this.prepare();
     },
     buildShipList() {
@@ -472,6 +472,13 @@ export default {
       this.interval = setInterval(() => {
         this.battle();
       }, 100);
+      this.battle();
+    },
+    fast: function() {
+      this.buildShipList();
+      while (!this.gameOver) {
+        this.battle();
+      }
       this.battle();
     },
     up(who, ship) {
@@ -522,6 +529,53 @@ export default {
       }
       this.$forceUpdate();
     },
+    groupResult() {
+      var helper = {};
+      var attack = this.attackers.reduce(function(r, o) {
+        var key = o.name;
+
+        if (!helper[key]) {
+          helper[key] = Object.assign({}, o); // create a copy of o
+          r.push(helper[key]);
+        } else {
+          helper[key].quantity += o.quantity;
+          helper[key].survivor += o.survivor;
+          helper[key].structure += o.structure;
+          helper[key].armor += o.armor;
+          helper[key].shield += o.shield;
+          helper[key].rocket += o.rocket;
+          helper[key].laser += o.laser;
+          helper[key].bullet += o.bullet;
+          helper[key].class = o.class;
+        }
+
+        return r;
+      }, []);
+      this.attackers = attack;
+
+      helper = {};
+      var defence = this.defenders.reduce(function(r, o) {
+        var key = o.name;
+
+        if (!helper[key]) {
+          helper[key] = Object.assign({}, o); // create a copy of o
+          r.push(helper[key]);
+        } else {
+          helper[key].quantity += o.quantity;
+          helper[key].survivor += o.survivor;
+          helper[key].structure += o.structure;
+          helper[key].armor += o.armor;
+          helper[key].shield += o.shield;
+          helper[key].rocket += o.rocket;
+          helper[key].laser += o.laser;
+          helper[key].bullet += o.bullet;
+          helper[key].class = o.class;
+        }
+
+        return r;
+      }, []);
+      this.defenders = defence;
+    },
     battle: function() {
       var attackerIndex = this.currentAttacker;
       var defenderIndex = this.currentDefender;
@@ -536,10 +590,14 @@ export default {
         if (attackerIndex === this.slots) {
           this.result = "Defender won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
+          this.groupResult();
         }
         if (defenderIndex === this.slots) {
           this.result = "Attacker won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
+          this.groupResult();
         }
 
         return;
@@ -550,10 +608,14 @@ export default {
         this.attackers[attackerIndex].structure === 0 ||
         this.attackers[attackerIndex].quantity === 0
       ) {
+        let previousTank = this.currentAttacker;
+        let previousShooter = this.currentAttackerShooter;
         if (typeof this.attackers[attackerIndex + 1] !== "undefined") {
           attackerIndex = attackerIndex + 1;
           this.currentAttacker = attackerIndex;
-          this.currentAttackerShooter = attackerIndex;
+          if (previousTank === previousShooter) {
+            this.currentAttackerShooter = attackerIndex;
+          }
         }
       }
 
@@ -562,10 +624,14 @@ export default {
         this.defenders[defenderIndex].structure === 0 ||
         this.defenders[defenderIndex].quantity === 0
       ) {
+        let previousTank = this.currentDefender;
+        let previousShooter = this.currentDefenderShooter;
         if (typeof this.defenders[defenderIndex + 1] !== "undefined") {
           defenderIndex = defenderIndex + 1;
           this.currentDefender = defenderIndex;
-          this.currentDefenderShooter = defenderIndex;
+          if (previousTank === previousShooter) {
+            this.currentDefenderShooter = defenderIndex;
+          }
         }
       }
 
