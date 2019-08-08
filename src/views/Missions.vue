@@ -128,6 +128,7 @@
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
+              >
             </td>
           </tr>
         </tbody>
