@@ -11,16 +11,16 @@
       </h2>
       <table>
         <thead>
-          <th @click="sort('type')">{{ $t("Type") }}</th>
-          <th @click="sort('user')">{{ $t("User") }}</th>
-          <th @click="sort('start_x')">{{ $t("Origin") }}</th>
-          <th @click="sort('end_x')">{{ $t("Destination") }}</th>
-          <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
-          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
-          <th @click="sort('return')">{{ $t("Return") }}</th>
-          <th @click="sort('result')">{{ $t("Result") }}</th>
-          <th @click="sort('id')">{{ $t("Details") }}</th>
-          <th @click="sort('cancel_trx')">{{ $t("Cancel") }}</th>
+          <th>{{ $t("Type") }}</th>
+          <th>{{ $t("User") }}</th>
+          <th>{{ $t("Origin") }}</th>
+          <th>{{ $t("Destination") }}</th>
+          <th>{{ $t("Ships") }}</th>
+          <th>{{ $t("Arrival") }}</th>
+          <th>{{ $t("Return") }}</th>
+          <th>{{ $t("Result") }}</th>
+          <th>{{ $t("Details") }}</th>
+          <th>{{ $t("Cancel") }}</th>
           <th></th>
         </thead>
         <tbody>
