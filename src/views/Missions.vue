@@ -244,7 +244,7 @@ export default {
       const active = await MissionsService.active(this.gameUser);
       this.activeMissions = active;
 
-      const latest = await MissionsService.latest(this.gameUser, 30);
+      const latest = await MissionsService.latest(this.gameUser, 80);
 
       const inactiveMissions = latest.filter(latest => {
         return !active.find(active => {
