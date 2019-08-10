@@ -159,11 +159,6 @@
             Number(mission.uranium).toFixed(0)
           }}
         </p>
-        <p>
-          <router-link :to="{ path: '/replay/' + mission.mission_id }">
-            {{ $t("Replay") }}</router-link
-          >
-        </p>
       </div>
     </div>
   </div>

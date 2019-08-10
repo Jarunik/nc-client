@@ -79,16 +79,6 @@ export default new Router({
       props: true
     },
     {
-      path: "/replay/:missionId",
-      name: "replay",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "replay" */ "./views/Replay.vue"),
-      props: true
-    },
-    {
       path: "/skills",
       name: "skills",
       // route level code-splitting

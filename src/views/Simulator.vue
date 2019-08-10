@@ -1,217 +1,233 @@
 <template>
   <div class="simulator">
     <h1>{{ $t("Simulator") }}</h1>
-    <i>{{ $t("The simulator does not consider skills.") }}</i>
-    <h2>
-      {{ $t("Attacker") }}
-      <font
-        v-if="currentAttacker === this.slots && currentDefender === this.slots"
-        color="yellow"
-        >{{ $t("Draw") }}</font
-      >
-      <span v-else>
-        <font v-if="currentDefender === this.slots" color="green">
-          {{ $t("Winner") }}
-        </font>
-        <font v-if="currentAttacker === this.slots" color="red">
-          {{ $t("Looser") }}
-        </font>
-      </span>
-    </h2>
-    <table>
-      <thead>
-        <th>{{ $t("Tank") }}</th>
-        <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
-        <th>{{ $t("Ship") }}</th>
-        <th>{{ $t("Quantity") }}</th>
-        <th>{{ $t("Structure") }}</th>
-        <th>{{ $t("Armor") }}</th>
-        <th>{{ $t("Shield") }}</th>
-        <th>{{ $t("Rocket") }}</th>
-        <th>{{ $t("Bullet") }}</th>
-        <th>{{ $t("Laser") }}</th>
-        <th>{{ $t("Survivor") }}</th>
-      </thead>
-      <tbody>
-        <tr v-for="(attacker, index) in attackers" :key="attacker.id">
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="index === currentAttacker">
-              <shield-airplane-icon :title="$t('Tank')" />
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="turn === 'Attacker' && index === currentAttackerShooter">
-              <pistol-icon :title="$t('Shooter')" />
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <button v-on:click="up('attacker', attacker)">↑</button>
-            <button v-on:click="down('attacker', attacker)">↓</button>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <select v-model="attacker.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <input
-              type="number"
-              v-model="attacker.quantity"
-              v-on:input="prepare"
-            />
-          </td>
-          <td>
-            <div v-if="attacker.structure > 0">
-              <font v-if="attacker.structure === 0" color="red">{{
-                attacker.structure.toFixed(0)
-              }}</font>
-              <font v-else>{{ attacker.structure.toFixed(0) }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.armor > 0">{{ attacker.armor.toFixed(0) }}</div>
-          </td>
-          <td>
-            <div v-if="attacker.shield > 0">
-              {{ attacker.shield.toFixed(0) }}
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.rocket > 0">
-              <font color="orange">{{ attacker.rocket }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.bullet > 0">
-              <font color="orange">{{ attacker.bullet }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="attacker.laser > 0">
-              <font color="orange">{{ attacker.laser }}</font>
-            </div>
-          </td>
-          <td v-show="attacker.id !== 'end'">
-            <div v-if="attacker.survivor > 0">
-              <font v-if="attacker.survivor > 0" color="green">{{
-                attacker.survivor
-              }}</font>
-              <div v-else>{{ attacker.survivor }}</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>
-      {{ $t("Defender") }}
-      <font
-        v-if="currentAttacker === this.slots && currentDefender === this.slots"
-        color="yellow"
-        >{{ $t("Draw") }}</font
-      >
-      <span v-else>
-        <font v-if="currentAttacker === slots" color="green">
-          {{ $t("Winner") }}
-        </font>
-        <font v-if="currentDefender === slots" color="red">
-          {{ $t("Looser") }}
-        </font>
-      </span>
-    </h2>
-    <table>
-      <thead>
-        <th>{{ $t("Tank") }}</th>
-        <th>{{ $t("Shooter") }}</th>
-        <th>{{ $t("Order") }}</th>
-        <th>{{ $t("Ship") }}</th>
-        <th>{{ $t("Quantity") }}</th>
-        <th>{{ $t("Structure") }}</th>
-        <th>{{ $t("Armor") }}</th>
-        <th>{{ $t("Shield") }}</th>
-        <th>{{ $t("Rocket") }}</th>
-        <th>{{ $t("Bullet") }}</th>
-        <th>{{ $t("Laser") }}</th>
-        <th>{{ $t("Survivor") }}</th>
-      </thead>
-      <tbody>
-        <tr v-for="(defender, index) in defenders" :key="defender.id">
-          <td v-show="defender.id !== 'end'">
-            <div v-if="index === currentDefender">
-              <shield-airplane-icon :title="$t('Tank')" />
-            </div>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <div v-if="turn === 'Defender' && index === currentDefenderShooter">
-              <pistol-icon :title="$t('Shooter')" />
-            </div>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <button v-on:click="up('defender', defender)">↑</button>
-            <button v-on:click="down('defender', defender)">↓</button>
-          </td>
-          <td v-show="defender.id !== 'end'">
-            <select v-model="defender.name" @change="prepare">
-              <option v-for="ship in ships" :key="ship.name">{{
-                ship.name
-              }}</option>
-            </select>
-          </td>
-          <td v-show="defender.id !== 'end'" v-on:input="prepare">
-            <input type="number" v-model="defender.quantity" />
-          </td>
-          <td>
-            <div v-if="defender.structure > 0">
-              <font v-if="defender.structure === 0" color="red">{{
-                defender.structure.toFixed(0)
-              }}</font>
-              <font v-else>{{ defender.structure.toFixed(0) }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.armor > 0">{{ defender.armor.toFixed(0) }}</div>
-          </td>
-          <td>
-            <div v-if="defender.shield > 0">
-              {{ defender.shield.toFixed(0) }}
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.rocket > 0">
-              <font color="orange">{{ defender.rocket }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.bullet > 0">
-              <font color="orange">{{ defender.bullet }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.laser > 0">
-              <font color="orange">{{ defender.laser }}</font>
-            </div>
-          </td>
-          <td>
-            <div v-if="defender.survivor > 0">
-              <font v-if="defender.survivor > 0" color="green">{{
-                defender.survivor
-              }}</font>
-              <div v-else>{{ defender.survivor }}</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>{{ $t("Battle") }}</h2>
-    <button v-on:click="battle()">{{ $t("Play") }} Turn</button>
-    <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
-    <button v-on:click="reset()">{{ $t("Reset") }}</button>
-    <h2>{{ $t("Battle Log") }}</h2>
-    <p>{{ $t(result) }}</p>
-    <p>{{ $t("Next Turn") }}: {{ turn }}</p>
-    <p>{{ $t("Round") }}: {{ round }}</p>
+    <div>
+      <i>{{ $t("The simulator does not consider skills.") }}</i>
+      <h2>
+        {{ $t("Attacker") }}
+        <font
+          v-if="
+            currentAttacker === this.slots && currentDefender === this.slots
+          "
+          color="yellow"
+          >{{ $t("Draw") }}</font
+        >
+        <span v-else>
+          <font v-if="currentDefender === this.slots" color="green">{{
+            $t("Winner")
+          }}</font>
+          <font v-if="currentAttacker === this.slots" color="red">{{
+            $t("Looser")
+          }}</font>
+        </span>
+      </h2>
+      <table>
+        <thead>
+          <th>{{ $t("Tank") }}</th>
+          <th>{{ $t("Shooter") }}</th>
+          <th>{{ $t("Order") }}</th>
+          <th>{{ $t("Ship") }}</th>
+          <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Structure") }}</th>
+          <th>{{ $t("Armor") }}</th>
+          <th>{{ $t("Shield") }}</th>
+          <th>{{ $t("Rocket") }}</th>
+          <th>{{ $t("Bullet") }}</th>
+          <th>{{ $t("Laser") }}</th>
+          <th>{{ $t("Survivor") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(attacker, index) in attackers" :key="attacker.id">
+            <td v-show="attacker.id !== 'end'">
+              <div v-if="index === currentAttacker">
+                <shield-airplane-icon :title="$t('Tank')" />
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <div
+                v-if="turn === 'Attacker' && index === currentAttackerShooter"
+              >
+                <pistol-icon :title="$t('Shooter')" />
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <button v-on:click="up('attacker', attacker)">↑</button>
+              <button v-on:click="down('attacker', attacker)">↓</button>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <select v-model="attacker.name" @change="prepare">
+                <option v-for="ship in ships" :key="ship.name">
+                  {{ ship.name }}
+                </option>
+              </select>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <input
+                type="number"
+                v-model="attacker.quantity"
+                v-on:input="prepare"
+              />
+            </td>
+            <td>
+              <div v-if="attacker.structure > 0">
+                <font v-if="attacker.structure === 0" color="red">
+                  {{ attacker.structure.toFixed(0) }}
+                </font>
+                <font v-else>{{ attacker.structure.toFixed(0) }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.armor > 0">
+                {{ attacker.armor.toFixed(0) }}
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.shield > 0">
+                {{ attacker.shield.toFixed(0) }}
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.rocket > 0">
+                <font color="orange">{{ attacker.rocket }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.bullet > 0">
+                <font color="orange">{{ attacker.bullet }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="attacker.laser > 0">
+                <font color="orange">{{ attacker.laser }}</font>
+              </div>
+            </td>
+            <td v-show="attacker.id !== 'end'">
+              <div v-if="attacker.survivor > 0">
+                <font v-if="attacker.survivor > 0" color="green">
+                  {{ attacker.survivor }}
+                </font>
+                <div v-else>{{ attacker.survivor }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>
+        {{ $t("Defender") }}
+        <font
+          v-if="
+            currentAttacker === this.slots && currentDefender === this.slots
+          "
+          color="yellow"
+          >{{ $t("Draw") }}</font
+        >
+        <span v-else>
+          <font v-if="currentAttacker === slots" color="green">{{
+            $t("Winner")
+          }}</font>
+          <font v-if="currentDefender === slots" color="red">{{
+            $t("Looser")
+          }}</font>
+        </span>
+      </h2>
+      <table>
+        <thead>
+          <th>{{ $t("Tank") }}</th>
+          <th>{{ $t("Shooter") }}</th>
+          <th>{{ $t("Order") }}</th>
+          <th>{{ $t("Ship") }}</th>
+          <th>{{ $t("Quantity") }}</th>
+          <th>{{ $t("Structure") }}</th>
+          <th>{{ $t("Armor") }}</th>
+          <th>{{ $t("Shield") }}</th>
+          <th>{{ $t("Rocket") }}</th>
+          <th>{{ $t("Bullet") }}</th>
+          <th>{{ $t("Laser") }}</th>
+          <th>{{ $t("Survivor") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(defender, index) in defenders" :key="defender.id">
+            <td v-show="defender.id !== 'end'">
+              <div v-if="index === currentDefender">
+                <shield-airplane-icon :title="$t('Tank')" />
+              </div>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <div
+                v-if="turn === 'Defender' && index === currentDefenderShooter"
+              >
+                <pistol-icon :title="$t('Shooter')" />
+              </div>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <button v-on:click="up('defender', defender)">↑</button>
+              <button v-on:click="down('defender', defender)">↓</button>
+            </td>
+            <td v-show="defender.id !== 'end'">
+              <select v-model="defender.name" @change="prepare">
+                <option v-for="ship in ships" :key="ship.name">
+                  {{ ship.name }}
+                </option>
+              </select>
+            </td>
+            <td v-show="defender.id !== 'end'" v-on:input="prepare">
+              <input type="number" v-model="defender.quantity" />
+            </td>
+            <td>
+              <div v-if="defender.structure > 0">
+                <font v-if="defender.structure === 0" color="red">
+                  {{ defender.structure.toFixed(0) }}
+                </font>
+                <font v-else>{{ defender.structure.toFixed(0) }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.armor > 0">
+                {{ defender.armor.toFixed(0) }}
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.shield > 0">
+                {{ defender.shield.toFixed(0) }}
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.rocket > 0">
+                <font color="orange">{{ defender.rocket }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.bullet > 0">
+                <font color="orange">{{ defender.bullet }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.laser > 0">
+                <font color="orange">{{ defender.laser }}</font>
+              </div>
+            </td>
+            <td>
+              <div v-if="defender.survivor > 0">
+                <font v-if="defender.survivor > 0" color="green">
+                  {{ defender.survivor }}
+                </font>
+                <div v-else>{{ defender.survivor }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>{{ $t("Battle") }}</h2>
+      <button v-on:click="buildShipList()">{{ $t("Prepare") }}</button>
+      <button v-on:click="battle()">{{ $t("Play Turn") }}</button>
+      <button v-on:click="auto()">{{ $t("Play Battle") }}</button>
+      <button v-on:click="fast()">{{ $t("Fast") }}</button>
+      <button v-on:click="reset()">{{ $t("Reset") }}</button>
+      <h2>{{ $t("Battle Log") }}</h2>
+      <p>{{ $t(result) }}</p>
+      <p>{{ $t("Next Turn") }}: {{ turn }}</p>
+      <p>{{ $t("Round") }}: {{ round }}</p>
+    </div>
   </div>
 </template>
 
@@ -219,6 +235,8 @@
 import simShips from "@/data/simShips.js";
 import simAttackers from "@/data/simAttackers.js";
 import simDefenders from "@/data/simDefenders.js";
+import simAttackerList from "@/data/simAttackerList.js";
+import simDefenderList from "@/data/simDefenderList.js";
 import PistolIcon from "vue-material-design-icons/Pistol.vue";
 import ShieldAirplaneIcon from "vue-material-design-icons/ShieldAirplane.vue";
 
@@ -244,6 +262,8 @@ export default {
       ],
       attackers: simAttackers,
       defenders: simDefenders,
+      attackerList: simAttackerList,
+      defenderList: simDefenderList,
       turn: "Attacker",
       currentAttacker: 0,
       currentDefender: 0,
@@ -257,14 +277,24 @@ export default {
       armorregreduce: 0.01,
       piercerateshield: 1,
       pierceratearmor: 1,
+      pierceratestructure: 1,
       slots: 8,
+      attackerSlots: 0,
+      defenderSlots: 0,
       prepared: false,
-      interval: null
+      interval: null,
+      gameOver: false
     };
   },
   methods: {
     // Component
     prepare: function() {
+      this.attackerList = [];
+      this.defenderList = [];
+      this.attackers = simAttackers;
+      this.defenders = simDefenders;
+      this.attackerSlots = 0;
+      this.defenderSlots = 0;
       this.attackers.forEach(attacker => {
         let aship = this.ships.filter(s => {
           return s.name === attacker.name;
@@ -276,6 +306,30 @@ export default {
         attacker.bullet = attacker.quantity * aship[0].bullet;
         attacker.laser = attacker.quantity * aship[0].laser;
         attacker.survivor = attacker.quantity;
+        // Add expanded ship list to have one slot per ship
+        for (let i = 0; i < attacker.quantity; i++) {
+          let addAttacker = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: attacker.name,
+            class: attacker.class,
+            quantity: 1,
+            structure: aship[0].structure,
+            armor: aship[0].armor,
+            shield: aship[0].shield,
+            rocket: aship[0].rocket,
+            bullet: aship[0].bullet,
+            laser: aship[0].laser,
+            survivor: 1
+          };
+          this.attackerList.push(addAttacker);
+          this.attackerSlots = this.attackerSlots + 1;
+        }
       });
       this.defenders.forEach(defender => {
         let dship = this.ships.filter(s => {
@@ -288,7 +342,123 @@ export default {
         defender.bullet = defender.quantity * dship[0].bullet;
         defender.laser = defender.quantity * dship[0].laser;
         defender.survivor = defender.quantity;
+        for (let j = 0; j < defender.quantity; j++) {
+          let addDefender = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: defender.name,
+            class: defender.class,
+            quantity: 1,
+            structure: dship[0].structure,
+            armor: dship[0].armor,
+            shield: dship[0].shield,
+            rocket: dship[0].rocket,
+            bullet: dship[0].bullet,
+            laser: dship[0].laser,
+            survivor: 1
+          };
+          this.defenderList.push(addDefender);
+          this.defenderSlots = this.defenderSlots + 1;
+        }
       });
+      this.slots = Math.max(this.attackerSlots, this.defenderSlots);
+      // Add filler slots
+      if (this.attackerSlots > this.defenderSlots) {
+        let numberToAdd = this.attackerSlots - this.defenderSlots;
+        for (let k = 0; k < numberToAdd; k++) {
+          let addDefender = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: "end",
+            class: "end",
+            quantity: 0,
+            structure: 0,
+            armor: 0,
+            shield: 0,
+            rocket: 0,
+            bullet: 0,
+            laser: 0,
+            survivor: 0
+          };
+          this.defenderList.push(addDefender);
+        }
+      }
+      if (this.defenderSlots > this.attackerSlots) {
+        let numbertoAdd = this.defenderSlots - this.attackerSlots;
+        for (let l = 0; l < numbertoAdd; l++) {
+          let addAttacker = {
+            id:
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15),
+            name: "end",
+            class: "end",
+            quantity: 0,
+            structure: 0,
+            armor: 0,
+            shield: 0,
+            rocket: 0,
+            bullet: 0,
+            laser: 0,
+            survivor: 0
+          };
+          this.attackerList.push(addAttacker);
+        }
+      }
+      // Add last slot for "stop" logic
+      let addDefender = {
+        id:
+          Math.random()
+            .toString(36)
+            .substring(2, 15) +
+          Math.random()
+            .toString(36)
+            .substring(2, 15),
+        name: "end",
+        class: "end",
+        quantity: 0,
+        structure: 0,
+        armor: 0,
+        shield: 0,
+        rocket: 0,
+        bullet: 0,
+        laser: 0,
+        survivor: 0
+      };
+      let addAttacker = {
+        id:
+          Math.random()
+            .toString(36)
+            .substring(2, 15) +
+          Math.random()
+            .toString(36)
+            .substring(2, 15),
+        name: "end",
+        class: "end",
+        quantity: 0,
+        structure: 0,
+        armor: 0,
+        shield: 0,
+        rocket: 0,
+        bullet: 0,
+        laser: 0,
+        survivor: 0
+      };
+      this.attackerList.push(addAttacker);
+      this.defenderList.push(addDefender);
       this.turn = "Attacker";
       this.round = 0;
       this.currentAttacker = 0;
@@ -297,10 +467,17 @@ export default {
       this.currentDefenderShooter = 0;
       this.result = "Ready";
       this.prepared = true;
+      this.gameOver = false;
     },
     reset: function() {
       clearInterval(this.interval);
+      this.gameOver = false;
       this.prepare();
+    },
+    buildShipList() {
+      this.prepare();
+      this.attackers = this.attackerList;
+      this.defenders = this.defenderList;
     },
     rate: function(attack, defense) {
       var rate = this.rates.filter(
@@ -309,10 +486,17 @@ export default {
       return rate[0].rate;
     },
     auto: function() {
-      this.prepare();
+      this.buildShipList();
       this.interval = setInterval(() => {
         this.battle();
       }, 100);
+      this.battle();
+    },
+    fast: function() {
+      this.buildShipList();
+      while (!this.gameOver) {
+        this.battle();
+      }
       this.battle();
     },
     up(who, ship) {
@@ -363,60 +547,118 @@ export default {
       }
       this.$forceUpdate();
     },
+    groupResult() {
+      var helper = {};
+      var attack = this.attackers.reduce(function(r, o) {
+        var key = o.name;
+
+        if (!helper[key]) {
+          helper[key] = Object.assign({}, o); // create a copy of o
+          r.push(helper[key]);
+        } else {
+          helper[key].quantity += Number(o.quantity);
+          helper[key].survivor += o.survivor;
+          helper[key].structure += o.structure;
+          helper[key].armor += o.armor;
+          helper[key].shield += o.shield;
+          helper[key].rocket += o.rocket;
+          helper[key].laser += o.laser;
+          helper[key].bullet += o.bullet;
+          helper[key].class = o.class;
+        }
+
+        return r;
+      }, []);
+      this.attackers = attack;
+
+      helper = {};
+      var defence = this.defenders.reduce(function(r, o) {
+        var key = o.name;
+
+        if (!helper[key]) {
+          helper[key] = Object.assign({}, o); // create a copy of o
+          r.push(helper[key]);
+        } else {
+          helper[key].quantity += Number(o.quantity);
+          helper[key].survivor += o.survivor;
+          helper[key].structure += o.structure;
+          helper[key].armor += o.armor;
+          helper[key].shield += o.shield;
+          helper[key].rocket += o.rocket;
+          helper[key].laser += o.laser;
+          helper[key].bullet += o.bullet;
+          helper[key].class = o.class;
+        }
+
+        return r;
+      }, []);
+      this.defenders = defence;
+    },
     battle: function() {
       var attackerIndex = this.currentAttacker;
       var defenderIndex = this.currentDefender;
-      var a;
-      var d;
 
+      // Pepare if necessary
       if (!this.prepared) {
         this.prepare();
       }
 
-      attackerIndex = this.currentAttacker;
-      defenderIndex = this.currentDefender;
-
+      // Check if it is already Game Over
       if (attackerIndex === this.slots || defenderIndex === this.slots) {
         if (attackerIndex === this.slots) {
           this.result = "Defender won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
+          this.groupResult();
         }
         if (defenderIndex === this.slots) {
           this.result = "Attacker won battle. Game Over";
           clearInterval(this.interval);
+          this.gameOver = true;
+          this.groupResult();
         }
 
         return;
       }
 
-      // Move through Tanks
+      // Move through Attacker Tanks
       if (
         this.attackers[attackerIndex].structure === 0 ||
         this.attackers[attackerIndex].quantity === 0
       ) {
-        if (this.attackers[attackerIndex + 1] !== "undefined") {
+        let previousTank = this.currentAttacker;
+        let previousShooter = this.currentAttackerShooter;
+        if (typeof this.attackers[attackerIndex + 1] !== "undefined") {
           attackerIndex = attackerIndex + 1;
           this.currentAttacker = attackerIndex;
-          this.currentAttackerShooter = attackerIndex;
+          if (previousTank === previousShooter) {
+            this.currentAttackerShooter = attackerIndex;
+          }
         }
       }
 
+      // Move through Defender Tanks
       if (
         this.defenders[defenderIndex].structure === 0 ||
         this.defenders[defenderIndex].quantity === 0
       ) {
-        if (this.defenders[defenderIndex + 1] !== "undefined") {
+        let previousTank = this.currentDefender;
+        let previousShooter = this.currentDefenderShooter;
+        if (typeof this.defenders[defenderIndex + 1] !== "undefined") {
           defenderIndex = defenderIndex + 1;
           this.currentDefender = defenderIndex;
-          this.currentDefenderShooter = defenderIndex;
+          if (previousTank === previousShooter) {
+            this.currentDefenderShooter = defenderIndex;
+          }
         }
       }
 
-      a = this.attackers[attackerIndex];
-      d = this.defenders[defenderIndex];
+      var a = this.attackers[attackerIndex];
+      var d = this.defenders[defenderIndex];
       var as = this.attackers[this.currentAttackerShooter];
       var ds = this.defenders[this.currentDefenderShooter];
 
+      // Skip Empty Slots
       if (
         a.structure < 0 ||
         d.structure < 0 ||
@@ -424,418 +666,114 @@ export default {
         d.survivor === 0
       ) {
         this.battle();
+        // Fight
       } else {
-        var lolaser = 0;
-        var lobullet = 0;
-        var lorocket = 0;
-        var lolaser2 = 0;
-        var lobullet2 = 0;
-        var lorocket2 = 0;
         if (this.turn === "Attacker") {
-          // Initial stats of defender
-          let dShip = this.ships.filter(s => {
-            return s.name === d.name;
-          });
           // Attacker Shoots
           if (as.structure > 0) {
-            if (d.shield > 0) {
-              if (as.laser * this.rate("laser", "shield") > d.shield) {
-                lolaser =
-                  Math.max(
-                    as.laser * this.rate("laser", "shield") - d.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lolaser = 0;
-              }
-              if (as.bullet * this.rate("bullet", "shield") > d.shield) {
-                lobullet =
-                  Math.max(
-                    as.bullet * this.rate("bullet", "shield") - d.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lobullet = 0;
-              }
-              if (as.rocket * this.rate("rocket", "shield") > d.shield) {
-                lorocket =
-                  Math.max(
-                    as.rocket * this.rate("rocket", "shield") - d.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lorocket = 0;
-              }
-              d.shield = Math.max(
-                d.shield - as.laser * this.rate("laser", "shield"),
-                0
-              );
-              d.shield = Math.max(
-                d.shield - as.bullet * this.rate("bullet", "shield"),
-                0
-              );
-              d.shield = Math.max(
-                d.shield - as.rocket * this.rate("rocket", "shield"),
-                0
-              );
-              // Pierce Armor
-              if (d.shield === 0) {
-                if (lolaser > d.armor) {
-                  lolaser2 =
-                    Math.max(lolaser - d.armor, 0) * this.pierceratearmor;
+            let leftOver = { laser: 0, bullet: 0, rocket: 0 };
+            this.applyDamage(as, d, this.defenders, defenderIndex, leftOver);
+            // Pierce through Defenders
+            while (
+              leftOver.laser > 0 ||
+              leftOver.bullet > 0 ||
+              leftOver.rocket > 0
+            ) {
+              // Search next Defender
+              if (
+                this.defenders[defenderIndex].structure === 0 ||
+                this.defenders[defenderIndex].quantity === 0
+              ) {
+                if (typeof this.defenders[defenderIndex + 1] !== "undefined") {
+                  defenderIndex = defenderIndex + 1;
+                  this.currentDefender = defenderIndex;
                 } else {
-                  lolaser2 = 0;
-                }
-                if (lobullet > d.armor) {
-                  lobullet2 =
-                    Math.max(lobullet - d.armor, 0) * this.pierceratearmor;
-                } else {
-                  lobullet2 = 0;
-                }
-                if (lorocket > d.armor) {
-                  lorocket2 =
-                    Math.max(lorocket - d.armor, 0) * this.pierceratearmor;
-                } else {
-                  lorocket2 = 0;
-                }
-                d.armor = Math.max(d.armor - lolaser, 0);
-                d.armor = Math.max(d.armor - lobullet, 0);
-                d.armor = Math.max(d.armor - lorocket, 0);
-                // Pierce structure
-                if (d.armor === 0) {
-                  d.structure = Math.max(d.structure - lolaser2, 0);
-                  d.structure = Math.max(d.structure - lobullet2, 0);
-                  d.structure = Math.max(d.structure - lorocket2, 0);
+                  leftOver = { laser: 0, bullet: 0, rocket: 0 };
                 }
               }
-            } else if (d.armor > 0) {
-              if (as.laser * this.rate("laser", "armor") > d.armor) {
-                lolaser =
-                  Math.max(
-                    as.laser * this.rate("laser", "armor") - d.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lolaser = 0;
-              }
-              if (as.bullet * this.rate("bullet", "armor") > d.armor) {
-                lobullet =
-                  Math.max(
-                    as.bullet * this.rate("bullet", "armor") - d.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lobullet = 0;
-              }
-              if (as.rocket * this.rate("rocket", "armor") > d.armor) {
-                lorocket =
-                  Math.max(
-                    as.rocket * this.rate("rocket", "armor") - d.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lorocket = 0;
-              }
-              d.armor = Math.max(
-                d.armor - as.laser * this.rate("laser", "armor"),
-                0
-              );
-              d.armor = Math.max(
-                d.armor - as.bullet * this.rate("bullet", "armor"),
-                0
-              );
-              d.armor = Math.max(
-                d.armor - as.rocket * this.rate("rocket", "armor"),
-                0
-              );
-              // Pierce structure
-              if (d.armor === 0) {
-                d.structure = Math.max(d.structure - lolaser, 0);
-                d.structure = Math.max(d.structure - lobullet, 0);
-                d.structure = Math.max(d.structure - lorocket, 0);
-              }
-            } else if (d.structure > 0) {
-              d.structure = Math.max(
-                d.structure - as.laser * this.rate("laser", "structure"),
-                0
-              );
-              d.structure = Math.max(
-                d.structure - as.bullet * this.rate("bullet", "structure"),
-                0
-              );
-              d.structure = Math.max(
-                d.structure - as.rocket * this.rate("rocket", "structure"),
-                0
-              );
-            }
-            if (d.structure !== "undefined") {
-              this.defenders[defenderIndex].survivor = Math.ceil(
-                d.structure / dShip[0].structure
-              );
-            }
-            this.defenders[defenderIndex].laser =
-              dShip[0].laser * this.defenders[defenderIndex].survivor;
-            this.defenders[defenderIndex].bullet =
-              dShip[0].bullet * this.defenders[defenderIndex].survivor;
-            this.defenders[defenderIndex].rocket =
-              dShip[0].rocket * this.defenders[defenderIndex].survivor;
-            this.defenders[defenderIndex].structure = d.structure;
-            this.defenders[defenderIndex].armor = d.armor;
-            if (this.defenders[defenderIndex].armor !== 0) {
-              this.defenders[defenderIndex].armor = Math.min(
-                this.defenders[defenderIndex].armor +
-                  dShip[0].armor *
-                    Math.max(
-                      this.armorrep - this.armorregreduce * this.round,
-                      0
-                    ) *
-                    this.defenders[defenderIndex].survivor,
-                dShip[0].armor * this.defenders[defenderIndex].survivor
-              );
-            }
-            this.defenders[defenderIndex].shield = d.shield;
-            if (this.defenders[defenderIndex].shield !== 0) {
-              this.defenders[defenderIndex].shield = Math.min(
-                this.defenders[defenderIndex].shield +
-                  dShip[0].shield *
-                    Math.max(
-                      this.shieldregen - this.shieldregreduce * this.round,
-                      0
-                    ) *
-                    this.defenders[defenderIndex].survivor,
-                dShip[0].shield * this.defenders[defenderIndex].survivor
-              );
+              d = this.defenders[defenderIndex];
+              this.applyDamage(as, d, this.defenders, defenderIndex, leftOver);
             }
           }
         }
 
         if (this.turn === "Defender") {
-          // Initial stats of Attacker
-          let aShip = this.ships.filter(s => {
-            return s.name === a.name;
-          });
           // Defender Shoots
           if (ds.structure > 0) {
-            if (a.shield > 0) {
-              if (ds.laser * this.rate("laser", "shield") > a.shield) {
-                lolaser =
-                  Math.max(
-                    ds.laser * this.rate("laser", "shield") - a.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lolaser = 0;
-              }
-              if (ds.bullet * this.rate("bullet", "shield") > a.shield) {
-                lobullet =
-                  Math.max(
-                    ds.bullet * this.rate("bullet", "shield") - a.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lobullet = 0;
-              }
-              if (ds.rocket * this.rate("rocket", "shield") > a.shield) {
-                lorocket =
-                  Math.max(
-                    ds.rocket * this.rate("rocket", "shield") - a.shield,
-                    0
-                  ) * this.piercerateshield;
-              } else {
-                lorocket = 0;
-              }
-              a.shield = Math.max(
-                a.shield - ds.laser * this.rate("laser", "shield"),
-                0
-              );
-              a.shield = Math.max(
-                a.shield - ds.bullet * this.rate("bullet", "shield"),
-                0
-              );
-              a.shield = Math.max(
-                a.shield - ds.rocket * this.rate("rocket", "shield"),
-                0
-              );
-              // Pierce Armor
-              if (a.shield === 0) {
-                if (lolaser > a.armor) {
-                  lolaser2 =
-                    Math.max(lolaser - a.armor, 0) * this.pierceratearmor;
+            let leftOver = { laser: 0, bullet: 0, rocket: 0 };
+            this.applyDamage(ds, a, this.attackers, attackerIndex, leftOver);
+            // Pierce through Attackers
+            while (
+              leftOver.laser > 0 ||
+              leftOver.bullet > 0 ||
+              leftOver.rocket > 0
+            ) {
+              // Search next Defender
+              if (
+                this.attackers[attackerIndex].structure === 0 ||
+                this.attackers[attackerIndex].quantity === 0
+              ) {
+                if (typeof this.attackers[attackerIndex + 1] !== "undefined") {
+                  attackerIndex = attackerIndex + 1;
+                  this.currentAttacker = attackerIndex;
                 } else {
-                  lolaser2 = 0;
-                }
-                if (lobullet > a.armor) {
-                  lobullet2 =
-                    Math.max(lobullet - a.armor, 0) * this.pierceratearmor;
-                } else {
-                  lobullet2 = 0;
-                }
-                if (lorocket > a.armor) {
-                  lorocket2 =
-                    Math.max(lorocket - a.armor, 0) * this.pierceratearmor;
-                } else {
-                  lorocket2 = 0;
-                }
-                a.armor = Math.max(a.armor - lolaser, 0);
-                a.armor = Math.max(a.armor - lobullet, 0);
-                a.armor = Math.max(a.armor - lorocket, 0);
-                // Pierce structure
-                if (a.armor === 0) {
-                  a.structure = Math.max(a.structure - lolaser2, 0);
-                  a.structure = Math.max(a.structure - lobullet2, 0);
-                  a.structure = Math.max(a.structure - lorocket2, 0);
+                  leftOver = { laser: 0, bullet: 0, rocket: 0 };
                 }
               }
-            } else if (a.armor > 0) {
-              if (ds.laser * this.rate("laser", "armor") > a.armor) {
-                lolaser =
-                  Math.max(
-                    ds.laser * this.rate("laser", "armor") - a.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lolaser = 0;
-              }
-              if (ds.bullet * this.rate("bullet", "armor") > a.armor) {
-                lobullet =
-                  Math.max(
-                    ds.bullet * this.rate("bullet", "armor") - a.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lobullet = 0;
-              }
-              if (ds.rocket * this.rate("rocket", "armor") > a.armor) {
-                lorocket =
-                  Math.max(
-                    ds.rocket * this.rate("rocket", "armor") - a.armor,
-                    0
-                  ) * this.pierceratearmor;
-              } else {
-                lorocket = 0;
-              }
-              a.armor = Math.max(
-                a.armor - ds.laser * this.rate("laser", "armor"),
-                0
-              );
-              a.armor = Math.max(
-                a.armor - ds.bullet * this.rate("bullet", "armor"),
-                0
-              );
-              a.armor = Math.max(
-                a.armor - ds.rocket * this.rate("rocket", "armor"),
-                0
-              );
-              // Pierce structure
-              if (d.armor === 0) {
-                a.structure = Math.max(a.structure - lolaser, 0);
-                a.structure = Math.max(a.structure - lobullet, 0);
-                a.structure = Math.max(a.structure - lorocket, 0);
-              }
-            } else if (a.structure > 0) {
-              a.structure = Math.max(
-                a.structure - ds.laser * this.rate("laser", "structure"),
-                0
-              );
-              a.structure = Math.max(
-                a.structure - ds.bullet * this.rate("bullet", "structure"),
-                0
-              );
-              a.structure = Math.max(
-                a.structure - ds.rocket * this.rate("rocket", "structure"),
-                0
-              );
-            }
-            if (d.structure !== "undefined") {
-              this.attackers[attackerIndex].survivor = Math.ceil(
-                a.structure / aShip[0].structure
-              );
-            }
-            this.attackers[attackerIndex].laser =
-              aShip[0].laser * this.attackers[attackerIndex].survivor;
-            this.attackers[attackerIndex].bullet =
-              aShip[0].bullet * this.attackers[attackerIndex].survivor;
-            this.attackers[attackerIndex].rocket =
-              aShip[0].rocket * this.attackers[attackerIndex].survivor;
-            this.attackers[attackerIndex].structure = a.structure;
-            this.attackers[attackerIndex].armor = a.armor;
-            if (this.attackers[attackerIndex].armor !== 0) {
-              this.attackers[attackerIndex].armor = Math.min(
-                this.attackers[attackerIndex].armor +
-                  aShip[0].armor *
-                    Math.max(
-                      this.armorrep - this.armorregreduce * this.round,
-                      0
-                    ) *
-                    this.attackers[attackerIndex].survivor,
-                aShip[0].armor * this.attackers[attackerIndex].survivor
-              );
-            }
-            this.attackers[attackerIndex].shield = a.shield;
-            if (this.attackers[attackerIndex].shield !== 0) {
-              this.attackers[attackerIndex].shield = Math.min(
-                this.attackers[attackerIndex].shield +
-                  aShip[0].shield *
-                    Math.max(
-                      this.shieldregen - this.shieldregreduce * this.round,
-                      0
-                    ) *
-                    this.attackers[attackerIndex].survivor,
-                aShip[0].shield * this.attackers[attackerIndex].survivor
-              );
+              a = this.attackers[attackerIndex];
+              this.applyDamage(ds, a, this.attackers, attackerIndex, leftOver);
             }
           }
         }
 
+        // Log destroyed ship
         if (this.defenders[defenderIndex].structure === 0) {
-          this.result = "Attacker destroyed a ship group";
+          this.result = "Attacker destroyed a ship";
         }
         if (this.attackers[attackerIndex].structure === 0) {
-          this.result = "Defender destroyed a ship group";
+          this.result = "Defender destroyed a ship";
         }
 
-        // Move throught Shooters
-        if (this.turn === "Attacker" && this.currentAttacker !== this.slots) {
+        // Move through Attacker Shooters
+        if (this.turn === "Attacker") {
           if (this.currentAttackerShooter !== this.slots) {
             this.currentAttackerShooter = this.currentAttackerShooter + 1;
           }
-
-          while (
-            this.attackers[this.currentAttackerShooter].survivor === 0 &&
-            this.currentAttackerShooter !== this.slots
-          ) {
-            this.currentAttackerShooter = this.currentAttackerShooter + 1;
-          }
-
-          if (
-            this.currentAttackerShooter === this.slots &&
-            this.currentDefenderShooter === this.slots
-          ) {
-            this.currentAttackerShooter = this.currentAttacker;
-            this.currentDefenderShooter = this.currentDefender;
-          }
         }
+
+        // Move through Defender Shooters
         if (this.turn === "Defender") {
           if (this.currentDefenderShooter !== this.slots) {
             this.currentDefenderShooter = this.currentDefenderShooter + 1;
           }
-
-          while (
-            this.defenders[this.currentDefenderShooter].survivor === 0 &&
-            this.currentDefenderShooter !== this.slots
-          ) {
-            this.currentDefenderShooter = this.currentDefenderShooter + 1;
-          }
-
-          if (
-            this.currentDefenderShooter === this.slots &&
-            this.currentAttackerShooter === this.slots
-          ) {
-            this.currentDefenderShooter = this.currentDefender;
-            this.currentAttackerShooter = this.currentAttacker;
-          }
         }
 
+        // Move through dead Attackers
+        while (
+          this.attackers[this.currentAttackerShooter].survivor === 0 &&
+          this.currentAttackerShooter !== this.slots
+        ) {
+          this.currentAttackerShooter = this.currentAttackerShooter + 1;
+        }
+
+        // Move through dead Defenders
+        while (
+          this.defenders[this.currentDefenderShooter].survivor === 0 &&
+          this.currentDefenderShooter !== this.slots
+        ) {
+          this.currentDefenderShooter = this.currentDefenderShooter + 1;
+        }
+
+        // Resart at the top if both are done
+        if (
+          this.currentDefenderShooter === this.slots &&
+          this.currentAttackerShooter === this.slots
+        ) {
+          this.currentDefenderShooter = this.currentDefender;
+          this.currentAttackerShooter = this.currentAttacker;
+        }
+
+        // Switch Shooting Right
         if (this.turn === "Attacker") {
           this.turn = "Defender";
         } else if (this.turn === "Defender") {
@@ -849,7 +787,404 @@ export default {
         if (this.currentDefenderShooter === this.slots) {
           this.turn = "Attacker";
         }
+
+        //Count up Round
         this.round = this.round + 1;
+      }
+    },
+    applyDamage(shooter, tank, tankArray, tankIndex, leftOver) {
+      // Left Overs have to be in raw damage without Bonus !
+      let lolaser = 0;
+      let lobullet = 0;
+      let lorocket = 0;
+      let lolaser2 = 0;
+      let lobullet2 = 0;
+      let lorocket2 = 0;
+      let damageLaser = 0;
+      let damageBullet = 0;
+      let damageRocket = 0;
+      let lOver = false;
+      let shipStats = null;
+
+      shipStats = this.ships.filter(s => {
+        return s.name === tank.name;
+      });
+      if (leftOver.laser > 0) {
+        damageLaser = leftOver.laser;
+        lOver = true;
+      } else {
+        damageLaser = shooter.laser;
+      }
+      if (leftOver.bullet > 0) {
+        damageBullet = leftOver.bullet;
+        lOver = true;
+      } else {
+        damageBullet = shooter.bullet;
+      }
+      if (leftOver.rocket > 0) {
+        damageRocket = leftOver.rocket;
+        lOver = true;
+      } else {
+        damageRocket = shooter.rocket;
+      }
+      if (tank.shield > 0) {
+        if (damageLaser * this.rate("laser", "shield") > tank.shield) {
+          lolaser =
+            Math.max(
+              (damageLaser * this.rate("laser", "shield") - tank.shield) /
+                this.rate("laser", "shield"),
+              0
+            ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
+        } else {
+          lolaser = 0;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
+        }
+        if (damageBullet * this.rate("bullet", "shield") > tank.shield) {
+          lobullet =
+            Math.max(
+              (damageBullet * this.rate("bullet", "shield") - tank.shield) /
+                this.rate("bullet", "shield"),
+              0
+            ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
+        } else {
+          lobullet = 0;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
+        }
+        if (damageRocket * this.rate("rocket", "shield") > tank.shield) {
+          lorocket =
+            Math.max(
+              (damageRocket * this.rate("rocket", "shield") - tank.shield) /
+                this.rate("rocket", "shield"),
+              0
+            ) * this.piercerateshield;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
+        } else {
+          lorocket = 0;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
+        }
+        tank.shield = Math.max(
+          tank.shield - damageLaser * this.rate("laser", "shield"),
+          0
+        );
+        tank.shield = Math.max(
+          tank.shield - damageBullet * this.rate("bullet", "shield"),
+          0
+        );
+        tank.shield = Math.max(
+          tank.shield - damageRocket * this.rate("rocket", "shield"),
+          0
+        );
+        // Pierce Armor
+        if (tank.shield === 0) {
+          if (lolaser > tank.armor) {
+            lolaser2 =
+              Math.max(
+                (lolaser * this.rate("laser", "armor") - tank.armor) /
+                  this.rate("laser", "armor"),
+                0
+              ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.laser = lolaser2;
+            }
+          } else {
+            lolaser2 = 0;
+            if (lOver) {
+              leftOver.laser = lolaser2;
+            }
+          }
+          if (lobullet > tank.armor) {
+            lobullet2 =
+              Math.max(
+                (lobullet * this.rate("bullet", "armor") - tank.armor) /
+                  this.rate("bullet", "armor"),
+                0
+              ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.bullet = lobullet2;
+            }
+          } else {
+            lobullet2 = 0;
+            if (lOver) {
+              leftOver.bullet = lobullet2;
+            }
+          }
+          if (lorocket > tank.armor) {
+            lorocket2 =
+              Math.max(
+                (lorocket * this.rate("rocket", "armor") - tank.armor) /
+                  this.rate("rocket", "armor"),
+                0
+              ) * this.pierceratearmor;
+            if (lOver) {
+              leftOver.rocket = lorocket2;
+            }
+          } else {
+            lorocket2 = 0;
+            if (lOver) {
+              leftOver.rocket = lorocket2;
+            }
+          }
+          tank.armor = Math.max(
+            tank.armor - lolaser * this.rate("laser", "armor"),
+            0
+          );
+          tank.armor = Math.max(
+            tank.armor - lobullet * this.rate("bullet", "armor"),
+            0
+          );
+          tank.armor = Math.max(
+            tank.armor - lorocket * this.rate("rocket", "armor"),
+            0
+          );
+          // Pierce structure
+          if (tank.armor === 0) {
+            if (lolaser2 > tank.structure) {
+              leftOver.laser =
+                Math.max(
+                  (lolaser2 * this.rate("laser", "structure") -
+                    tank.structure) /
+                    this.rate("laser", "structure"),
+                  0
+                ) * this.pierceratestructure;
+            } else {
+              leftOver.laser = 0;
+            }
+            if (lobullet2 > tank.structure) {
+              leftOver.bullet =
+                Math.max(
+                  (lobullet2 * this.rate("bullet", "structure") -
+                    tank.structure) /
+                    this.rate("bullet", "structure"),
+                  0
+                ) * this.pierceratestructure;
+            } else {
+              leftOver.bullet = 0;
+            }
+            if (lorocket2 > tank.structure) {
+              leftOver.rocket =
+                Math.max(
+                  (lorocket2 * this.rate("rocket", "structure") -
+                    tank.structure) /
+                    this.rate("rocket", "structure"),
+                  0
+                ) * this.pierceratestructure;
+            } else {
+              leftOver.rocket = 0;
+            }
+            tank.structure = Math.max(
+              tank.structure - lolaser2 * this.rate("laser", "structure"),
+              0
+            );
+            tank.structure = Math.max(
+              tank.structure - lobullet2 * this.rate("laser", "structure"),
+              0
+            );
+            tank.structure = Math.max(
+              tank.structure - lorocket2 * this.rate("laser", "structure"),
+              0
+            );
+          }
+        }
+      } else if (tank.armor > 0) {
+        if (damageLaser * this.rate("laser", "armor") > tank.armor) {
+          lolaser =
+            Math.max(
+              (damageLaser * this.rate("laser", "armor") - tank.armor) /
+                this.rate("laser", "armor"),
+              0
+            ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
+        } else {
+          lolaser = 0;
+          if (lOver) {
+            leftOver.laser = lolaser;
+          }
+        }
+        if (damageBullet * this.rate("bullet", "armor") > tank.armor) {
+          lobullet =
+            Math.max(
+              (damageBullet * this.rate("bullet", "armor") - tank.armor) /
+                this.rate("bullet", "armor"),
+              0
+            ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
+        } else {
+          lobullet = 0;
+          if (lOver) {
+            leftOver.bullet = lobullet;
+          }
+        }
+        if (damageRocket * this.rate("rocket", "armor") > tank.armor) {
+          lorocket =
+            Math.max(
+              (damageRocket * this.rate("rocket", "armor") - tank.armor) /
+                this.rate("rocket", "armor"),
+              0
+            ) * this.pierceratearmor;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
+        } else {
+          lorocket = 0;
+          if (lOver) {
+            leftOver.rocket = lorocket;
+          }
+        }
+        tank.armor = Math.max(
+          tank.armor - damageLaser * this.rate("laser", "armor"),
+          0
+        );
+        tank.armor = Math.max(
+          tank.armor - damageBullet * this.rate("bullet", "armor"),
+          0
+        );
+        tank.armor = Math.max(
+          tank.armor - damageRocket * this.rate("rocket", "armor"),
+          0
+        );
+        // Pierce structure
+        if (tank.armor === 0) {
+          if (lolaser > tank.structure) {
+            leftOver.laser =
+              Math.max(
+                (lolaser * this.rate("laser", "structure") - tank.structure) /
+                  this.rate("laser", "structure"),
+                0
+              ) * this.pierceratestructure;
+          } else {
+            leftOver.laser = 0;
+          }
+          if (lobullet > tank.structure) {
+            leftOver.bullet =
+              Math.max(
+                (lobullet * this.rate("bullet", "structure") - tank.structure) /
+                  this.rate("bullet", "structure"),
+                0
+              ) * this.pierceratestructure;
+          } else {
+            leftOver.bullet = 0;
+          }
+          if (lorocket > tank.structure) {
+            leftOver.rocket =
+              Math.max(
+                (lorocket * this.rate("rocket", "structure") - tank.structure) /
+                  this.rate("rocket", "structure"),
+                0
+              ) * this.pierceratestructure;
+          } else {
+            leftOver.rocket = 0;
+          }
+          tank.structure = Math.max(
+            tank.structure - lolaser * this.rate("laser", "structure"),
+            0
+          );
+          tank.structure = Math.max(
+            tank.structure - lobullet * this.rate("bullet", "structure"),
+            0
+          );
+          tank.structure = Math.max(
+            tank.structure - lorocket * this.rate("rocket", "structure"),
+            0
+          );
+        }
+      } else if (tank.structure > 0) {
+        if (damageLaser * this.rate("laser", "structure") > tank.structure) {
+          leftOver.laser =
+            Math.max(
+              (damageLaser * this.rate("laser", "structure") - tank.structure) /
+                this.rate("laser", "structure"),
+              0
+            ) * this.pierceratestructure;
+        } else {
+          leftOver.laser = 0;
+        }
+        if (damageBullet * this.rate("bullet", "structure") > tank.structure) {
+          leftOver.bullet =
+            Math.max(
+              (damageBullet * this.rate("bullet", "structure") -
+                tank.structure) /
+                this.rate("bullet", "structure"),
+              0
+            ) * this.pierceratestructure;
+        } else {
+          leftOver.bullet = 0;
+        }
+        if (damageRocket * this.rate("rocket", "structure") > tank.structure) {
+          leftOver.rocket =
+            Math.max(
+              (damageRocket * this.rate("rocket", "structure") -
+                tank.structure) /
+                this.rate("rocket", "structure"),
+              0
+            ) * this.pierceratestructure;
+        } else {
+          leftOver.rocket = 0;
+        }
+        tank.structure = Math.max(
+          tank.structure - damageLaser * this.rate("laser", "structure"),
+          0
+        );
+        tank.structure = Math.max(
+          tank.structure - damageBullet * this.rate("bullet", "structure"),
+          0
+        );
+        tank.structure = Math.max(
+          tank.structure - damageRocket * this.rate("rocket", "structure"),
+          0
+        );
+      }
+      tankArray[tankIndex].survivor = Math.ceil(
+        tank.structure / shipStats[0].structure
+      );
+
+      tankArray[tankIndex].laser =
+        shipStats[0].laser * tankArray[tankIndex].survivor;
+      tankArray[tankIndex].bullet =
+        shipStats[0].bullet * tankArray[tankIndex].survivor;
+      tankArray[tankIndex].rocket =
+        shipStats[0].rocket * tankArray[tankIndex].survivor;
+      tankArray[tankIndex].structure = tank.structure;
+      tankArray[tankIndex].armor = tank.armor;
+      tankArray[tankIndex].shield = tank.shield;
+      if (tankArray[tankIndex].armor !== 0) {
+        tankArray[tankIndex].armor = Math.min(
+          tankArray[tankIndex].armor +
+            shipStats[0].armor *
+              Math.max(this.armorrep - this.armorregreduce * this.round, 0) *
+              tankArray[tankIndex].survivor,
+          shipStats[0].armor * tankArray[tankIndex].survivor
+        );
+      }
+      tankArray[tankIndex].shield = tank.shield;
+      if (tankArray[tankIndex].shield !== 0) {
+        tankArray[tankIndex].shield = Math.min(
+          tankArray[tankIndex].shield +
+            shipStats[0].shield *
+              Math.max(
+                this.shieldregen - this.shieldregreduce * this.round,
+                0
+              ) *
+              tankArray[tankIndex].survivor,
+          shipStats[0].shield * tankArray[tankIndex].survivor
+        );
       }
     }
   },
