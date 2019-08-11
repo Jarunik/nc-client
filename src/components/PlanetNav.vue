@@ -16,7 +16,7 @@
     <router-link :to="'/planets'">
       <earth-icon :title="$t('Planets')" />
     </router-link>
-    <span v-for="planet in this.planets" :key="planet.id">
+    <span v-for="planet in sortedPlanets" :key="planet.id">
       |
       <span v-if="planet.id === planetId"
         ><font color="green"
@@ -78,7 +78,25 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id
-    })
+    }),
+    sortedPlanets() {
+      var sortedPlanets = this.planets;
+      var currentSortDir = "asc";
+      var currentSort = "name";
+      if (sortedPlanets !== null) {
+        return sortedPlanets.sort((a, b) => {
+          let modifier = 1;
+          if (currentSortDir === "desc") modifier = -1;
+          if (a[currentSort] === null) return -1 * modifier;
+          if (b[currentSort] === null) return 1 * modifier;
+          if (a[currentSort] < b[currentSort]) return -1 * modifier;
+          if (a[currentSort] > b[currentSort]) return 1 * modifier;
+          return 0;
+        });
+      } else {
+        return sortedPlanets;
+      }
+    }
   },
   methods: {
     async prepareComponent() {
