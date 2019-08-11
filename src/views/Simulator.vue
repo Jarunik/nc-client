@@ -282,6 +282,7 @@ export default {
       attackerSlots: 0,
       defenderSlots: 0,
       prepared: false,
+      expanded: false,
       interval: null,
       gameOver: false
     };
@@ -467,6 +468,7 @@ export default {
       this.currentDefenderShooter = 0;
       this.result = "Ready";
       this.prepared = true;
+      this.expanded = false;
       this.gameOver = false;
     },
     reset: function() {
@@ -475,9 +477,9 @@ export default {
       this.prepare();
     },
     buildShipList() {
-      this.prepare();
       this.attackers = this.attackerList;
       this.defenders = this.defenderList;
+      this.expanded = true;
     },
     rate: function(attack, defense) {
       var rate = this.rates.filter(
@@ -486,6 +488,7 @@ export default {
       return rate[0].rate;
     },
     auto: function() {
+      this.prepare();
       this.buildShipList();
       this.interval = setInterval(() => {
         this.battle();
@@ -493,6 +496,7 @@ export default {
       this.battle();
     },
     fast: function() {
+      this.prepare();
       this.buildShipList();
       while (!this.gameOver) {
         this.battle();
@@ -601,6 +605,10 @@ export default {
       // Pepare if necessary
       if (!this.prepared) {
         this.prepare();
+      }
+
+      if (!this.expanded) {
+        this.buildShipList();
       }
 
       // Check if it is already Game Over
