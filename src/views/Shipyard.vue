@@ -28,7 +28,7 @@
         <alpha-u-box-icon :title="$t('Copper')" />
       </font>
       {{ uranium }}
-      <font v-if="quantity.oredepot <= ore" color="red">
+      <font v-if="quantity.uraniumdepot <= uranium" color="red">
         <alpha-u-box-icon :title="$t('Uranium')" />
       </font>
       <font v-else>
@@ -165,7 +165,6 @@ import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
 import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
 import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
 import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
-
 
 export default {
   name: "shipyard",
@@ -316,7 +315,7 @@ export default {
       }
     },
     buildShip(ship) {
-      let self = this
+      let self = this;
       self.processing = true;
       this.clicked.push(ship.longname);
       SteemConnectService.setAccessToken(this.accessToken);
@@ -326,7 +325,7 @@ export default {
         ship.type,
         (error, result) => {
           if (error === null && result.success) {
-            self.handleCallback(self,ship)
+            self.handleCallback(self, ship);
           }
         }
       );

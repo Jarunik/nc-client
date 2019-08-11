@@ -28,7 +28,7 @@
         /></font>
 
         {{ uranium }}
-        <font v-if="quantity.oredepot <= ore" color="red"
+        <font v-if="quantity.uraniumdepot <= uranium" color="red"
           ><alpha-u-box-icon :title="$t('Uranium')"
         /></font>
         <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>

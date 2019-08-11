@@ -28,7 +28,7 @@
         <alpha-u-box-icon :title="$t('Copper')" />
       </font>
       {{ uranium }}
-      <font v-if="quantity.oredepot <= ore" color="red">
+      <font v-if="quantity.uraniumdepot <= uranium" color="red">
         <alpha-u-box-icon :title="$t('Uranium')" />
       </font>
       <font v-else>
@@ -48,7 +48,9 @@
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
-          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Enhance") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Enhance") }}
+          </th>
           <th></th>
         </thead>
         <tbody>
@@ -57,38 +59,28 @@
             <td>{{ skill.current }}</td>
             <td>
               <font v-if="skill.coal > coal" color="red">
-                {{
-                skill.coal === 0 ? "-" : skill.coal
-                }}
+                {{ skill.coal === 0 ? "-" : skill.coal }}
               </font>
               <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
             </td>
             <td>
               <font v-if="skill.ore > ore" color="red">
-                {{
-                skill.ore === 0 ? "-" : skill.ore
-                }}
+                {{ skill.ore === 0 ? "-" : skill.ore }}
               </font>
               <font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
             </td>
             <td>
               <font v-if="skill.copper > copper" color="red">
-                {{
-                skill.copper === 0 ? "-" : skill.copper
-                }}
+                {{ skill.copper === 0 ? "-" : skill.copper }}
               </font>
               <font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
             </td>
             <td>
               <font v-if="skill.uranium > uranium" color="red">
-                {{
-                skill.uranium === 0 ? "-" : skill.uranium
-                }}
+                {{ skill.uranium === 0 ? "-" : skill.uranium }}
               </font>
               <font v-else>
-                {{
-                skill.uranium === 0 ? "-" : skill.uranium
-                }}
+                {{ skill.uranium === 0 ? "-" : skill.uranium }}
               </font>
             </td>
             <td>{{ skill.time | timePretty }}</td>
@@ -270,7 +262,7 @@ export default {
         skill.name,
         (error, result) => {
           if (error === null && result.success) {
-            self.handleCallback(this,skill);
+            self.handleCallback(this, skill);
           }
         }
       );
