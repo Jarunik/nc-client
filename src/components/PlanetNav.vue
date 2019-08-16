@@ -1,9 +1,9 @@
 <template>
   <span class="planetnav">
-    <span v-if="!searchUser && loginUser !== null">
+    <span v-if="!searchUser && (loginUser !== null || gameUser !== null)">
       <span @click="activateSearch()">{{ gameUser }} | </span>
     </span>
-    <span v-show="searchUser"
+    <span v-show="searchUser || gameUser === null"
       ><input
         ref="search"
         v-model="displayUser"
