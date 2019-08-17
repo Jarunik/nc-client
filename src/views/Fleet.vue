@@ -9,7 +9,10 @@
           sortedFleet.length > 0
       "
     >
-      <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
+      <p>
+        {{ $t("Available Missions") }}: {{ availableMissions }} /
+        {{ totalMissions }}
+      </p>
       <!-- Commands -->
       <p>
         {{ $t("Command") }}
@@ -229,7 +232,10 @@
           <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link
           >.
         </p>
-        <p>{{ $t("Available Missions") }}: {{ availableMissions }}</p>
+        <p>
+          {{ $t("Available Missions") }}: {{ availableMissions }} /
+          {{ totalMissions }}
+        </p>
       </template>
     </template>
   </div>
@@ -276,6 +282,7 @@ export default {
       pos: 0,
       search: null,
       availableMissions: 0,
+      totalMissions: 0,
       capacity: 0
     };
   },
@@ -473,6 +480,7 @@ export default {
           }
         });
       }
+      this.totalMissions = missionBudget;
 
       let runningMissions = 0;
       if (this.activeUserMissions !== null) {
