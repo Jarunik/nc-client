@@ -1,9 +1,12 @@
 <template>
   <span class="planetnav">
-    <span v-if="!searchUser && (loginUser !== null || gameUser !== null)">
+    <span
+      v-if="!searchUser && (loginUser !== null || gameUser !== null)"
+      v-tooltip="$t('User')"
+    >
       <span @click="activateSearch()">{{ gameUser }} | </span>
     </span>
-    <span v-show="searchUser || gameUser === null"
+    <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')"
       ><input
         ref="search"
         v-model="displayUser"
@@ -13,7 +16,7 @@
       |
     </span>
 
-    <router-link :to="'/planets'">
+    <router-link :to="'/planets'" v-tooltip="$t('Planets')">
       <earth-icon :title="$t('Planets')" />
     </router-link>
     <span v-for="planet in sortedPlanets" :key="planet.id">
