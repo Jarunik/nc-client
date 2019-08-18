@@ -7,7 +7,8 @@
       <h2>
         {{ $t("Active") }} ({{
           activeMissions !== null ? activeMissions.length : 0
-        }})
+        }}
+        / {{ totalMissions }})
       </h2>
       <table>
         <thead>
@@ -160,6 +161,7 @@
 
 <script>
 import MissionsService from "@/services/missions";
+import SkillsService from "@/services/skills";
 import { mapState } from "vuex";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
@@ -175,6 +177,7 @@ export default {
   data: function() {
     return {
       missions: null,
+      skills: null,
       activeMissions: null,
       currentSort: "arrival",
       currentDir: "desc",
@@ -183,7 +186,8 @@ export default {
       clicked: [],
       chainResponse: [],
       shipString: "",
-      selectedShips: null
+      selectedShips: null,
+      totalMissions: 0
     };
   },
   async mounted() {
@@ -246,6 +250,8 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getMissions();
+      await this.getSkills();
+      await this.calculatMissionTotal();
     },
     async getMissions() {
       const active = await MissionsService.active(this.gameUser);
@@ -260,6 +266,21 @@ export default {
       });
 
       this.missions = inactiveMissions;
+    },
+    async getSkills() {
+      const response = await SkillsService.all(this.gameUser);
+      this.skills = response;
+    },
+    calculatMissionTotal() {
+      let missionBudget = 0;
+      if (this.skills !== null) {
+        this.skills.forEach(skill => {
+          if (skill.name === "missioncontrol") {
+            missionBudget = skill.current * 2;
+          }
+        });
+      }
+      this.totalMissions = missionBudget;
     },
     sort(s) {
       //if s == current sort, reverse
