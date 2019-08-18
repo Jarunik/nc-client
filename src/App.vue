@@ -301,4 +301,7 @@ td {
 input {
   width: 15ch;
 }
+.router-link-exact-active {
+  color: green;
+}
 </style>

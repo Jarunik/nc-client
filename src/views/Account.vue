@@ -41,24 +41,34 @@
     <span v-if="apiState !== null">
       <table>
         <tr>
-          <td>{{ $t("Latest Block Number") }}:</td>
-          <td>{{ apiState.latest_block_num }}</td>
-        </tr>
-        <tr>
           <td>{{ $t("Tracker Delay") }}:</td>
-          <td>{{ apiState.tracker_delay_seconds }}</td>
-        </tr>
-        <tr>
-          <td>{{ $t("Tracker Block Number") }}:</td>
-          <td>{{ apiState.tracker_block_num }}</td>
+          <td>
+            <span v-if="apiState.tracker_delay_seconds > 3">
+              {{
+                moment
+                  .duration(apiState.tracker_delay_seconds, "seconds")
+                  .humanize()
+              }}
+            </span>
+            <span v-else
+              ><font color="green">{{ $t("live") }}</font></span
+            >
+          </td>
         </tr>
         <tr>
           <td>{{ $t("Processing Delay") }}:</td>
-          <td>{{ apiState.processing_delay_seconds }}</td>
-        </tr>
-        <tr>
-          <td>{{ $t("Processor Block Number") }}:</td>
-          <td>{{ apiState.first_unprocessed_block_num }}</td>
+          <td>
+            <span v-if="apiState.processing_delay_seconds > 3">
+              {{
+                moment
+                  .duration(apiState.processing_delay_seconds, "seconds")
+                  .humanize()
+              }}</span
+            >
+            <span v-else
+              ><font color="green">{{ $t("live") }}</font></span
+            >
+          </td>
         </tr>
       </table>
     </span>
@@ -94,15 +104,6 @@
         </select>
       </p>
       <p>{{ $t("Valid Access Token") }}: {{ accessToken !== null }}</p>
-      <p>
-        {{ $t("Valid until") }}:
-        {{
-          moment
-            .utc(expiryDate)
-            .local()
-            .format("LLL")
-        }}
-      </p>
       <p>
         <button v-on:click="logout">{{ $t("Logout") }}</button>
       </p>
