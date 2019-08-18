@@ -58,13 +58,16 @@
         </tbody>
       </table>
       <input v-model="search" placeholder="(x/y)" />
-      <button @click="goToSearch(search)">
+      <button @click="goToSearch(search)" v-tooltip="$t('Center on Selection')">
         <target-variant-icon :title="$t('Focus')" />
       </button>
-      <button @click="goTo(posX, posY)">
+      <button @click="goTo(posX, posY)" v-tooltip="$t('Center on Home')">
         <earth-icon :title="$t('Home')" />
       </button>
-      <button @click="goFleet(focusX, focusY)">
+      <button
+        @click="goFleet(focusX, focusY)"
+        v-tooltip="$t('Send Fleet to Selection')"
+      >
         <ship-wheel-icon :title="$t('Fleet')" />
       </button>
       {{ distance().toFixed(2) }}

@@ -11,8 +11,9 @@
       <table>
         <thead>
           <th @click="sortActive('type')">{{ $t("Type") }}</th>
-          <th @click="sortActive('user')">{{ $t("User") }}</th>
+          <th @click="sortActive('user')">{{ $t("From") }}</th>
           <th @click="sortActive('start_x')">{{ $t("Origin") }}</th>
+          <th>{{ $t("To") }}</th>
           <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortActive('ships.total')">{{ $t("Ships") }}</th>
           <th>{{ $t("Load") }}</th>
@@ -27,8 +28,29 @@
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
             <td>{{ $t(mission.type) }}</td>
             <td>{{ mission.user }}</td>
-            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
-            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>
+              <span v-tooltip="mission.from_planet.name">{{
+                "(" + mission.start_x + "/" + mission.start_y + ")"
+              }}</span>
+            </td>
+            <td>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span v-if="mission.to_planet !== null"
+                ><span v-tooltip="mission.to_planet.name">{{
+                  "(" + mission.end_x + "/" + mission.end_y + ")"
+                }}</span></span
+              >
+              <span v-else>
+                <span v-tooltip="'Space'">{{
+                  "(" + mission.end_x + "/" + mission.end_y + ")"
+                }}</span></span
+              >
+            </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
                 <font v-if="selectedShips === mission.id" color="green">{{
@@ -105,8 +127,9 @@
       <table>
         <thead>
           <th @click="sort('type')">{{ $t("Type") }}</th>
-          <th @click="sort('user')">{{ $t("User") }}</th>
+          <th @click="sort('user')">{{ $t("From") }}</th>
           <th @click="sort('start_x')">{{ $t("Origin") }}</th>
+          <th>{{ $t("To") }}</th>
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
           <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
           <th>{{ $t("Load") }}</th>
@@ -120,8 +143,29 @@
           <tr v-for="mission in sortedMissions" :key="mission.id">
             <td>{{ $t(mission.type) }}</td>
             <td>{{ mission.user }}</td>
-            <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
-            <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
+            <td>
+              <span v-tooltip="mission.from_planet.name">{{
+                "(" + mission.start_x + "/" + mission.start_y + ")"
+              }}</span>
+            </td>
+            <td>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span v-if="mission.to_planet !== null"
+                ><span v-tooltip="mission.to_planet.name">{{
+                  "(" + mission.end_x + "/" + mission.end_y + ")"
+                }}</span></span
+              >
+              <span v-else>
+                <span v-tooltip="'Space'">{{
+                  "(" + mission.end_x + "/" + mission.end_y + ")"
+                }}</span></span
+              >
+            </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
                 <font v-if="selectedShips === mission.id" color="green">{{

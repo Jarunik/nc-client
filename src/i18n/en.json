@@ -358,5 +358,8 @@
   "Attacker won battle. Game Over": "Attacker won battle. Game Over",
   "Fast": "Fast",
   "explorership1": "Explorer II",
-  "live": "live"
+  "live": "live",
+  "Center on Selection": "Center on Selection",
+  "Center on Home": "Center on Home",
+  "Send Fleet to Selection": "Send Fleet to Selection"
 }
