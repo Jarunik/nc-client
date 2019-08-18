@@ -151,6 +151,25 @@
           </tr>
         </tbody>
       </table>
+      <h2>{{ $t("Resources") }}</h2>
+      <table>
+        <thead>
+          <th>{{ $t("Planet") }}</th>
+          <th>{{ $t("Coal") }}</th>
+          <th>{{ $t("Ore") }}</th>
+          <th>{{ $t("Copper") }}</th>
+          <th>{{ $t("Uranium") }}</th>
+        </thead>
+        <tbody>
+          <tr v-for="pQuantity in planetQuantities" :key="pQuantity.id">
+            <td>{{ pQuantity.name }}</td>
+            <td>{{ pQuantity.coal.toFixed(0) }}</td>
+            <td>{{ pQuantity.ore.toFixed(0) }}</td>
+            <td>{{ pQuantity.copper.toFixed(0) }}</td>
+            <td>{{ pQuantity.uranium.toFixed(0) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </template>
     <template v-else>
       <p>
@@ -168,6 +187,7 @@ import SteemConnectService from "@/services/steemconnect";
 import UserService from "@/services/user";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import QuantityService from "@/services/quantity";
 
 export default {
   name: "planets",
@@ -178,6 +198,7 @@ export default {
     return {
       planets: null,
       planetFleet: [],
+      planetQuantities: [],
       newName: null,
       showRename: null,
       placeholderRename: "enter new name",
@@ -205,6 +226,7 @@ export default {
     async prepareComponent() {
       await this.getPlanets();
       await this.getPlanetFleet();
+      await this.getPlanetQuantities();
     },
     async getPlanets() {
       const response = await PlanetsService.byUser(this.gameUser);
@@ -216,6 +238,13 @@ export default {
       for (let i = 0; i < planets.length; i++) {
         let fleet = await this.getFleet(planets[i]);
         this.planetFleet.push(fleet);
+      }
+    },
+    async getPlanetQuantities() {
+      let planets = this.planets;
+      for (let i = 0; i < planets.length; i++) {
+        let qty = await this.getQuantities(planets[i]);
+        this.planetQuantities.push(qty);
       }
     },
     setPlanet(planet) {
@@ -350,6 +379,21 @@ export default {
     async fetchhUser(user) {
       const response = await UserService.get(user);
       return response.username;
+    },
+    async getQuantities(planet) {
+      let planetQuantities = planet;
+      let quantityResponse = null;
+      planetQuantities.coal = 0;
+      planetQuantities.ore = 0;
+      planetQuantities.copper = 0;
+      planetQuantities.uranium = 0;
+      const response = await QuantityService.get(planet.id);
+      quantityResponse = response;
+      planetQuantities.coal = quantityResponse.coal;
+      planetQuantities.ore = quantityResponse.ore;
+      planetQuantities.copper = quantityResponse.copper;
+      planetQuantities.uranium = quantityResponse.uranium;
+      return planetQuantities;
     }
   }
 };
