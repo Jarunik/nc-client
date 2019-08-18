@@ -84,7 +84,11 @@
         <i>{{ $t("Local signing with Steem Keychain") }}:</i>
       </p>
       <p>
-        <input v-model="userName" :placeholder="placeholder" />
+        <input
+          v-model="userName"
+          :placeholder="placeholder"
+          autocomplete="on"
+        />
         <button v-on:click="loginKeychain(userName)">
           {{ $t("Login with Keychain") }}
         </button>
