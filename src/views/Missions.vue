@@ -11,20 +11,20 @@
       </h2>
       <table>
         <thead>
-          <th>{{ $t("Type") }}</th>
-          <th>{{ $t("User") }}</th>
-          <th>{{ $t("Origin") }}</th>
-          <th>{{ $t("Destination") }}</th>
-          <th>{{ $t("Ships") }}</th>
-          <th>{{ $t("Arrival") }}</th>
-          <th>{{ $t("Return") }}</th>
-          <th>{{ $t("Result") }}</th>
-          <th>{{ $t("Details") }}</th>
+          <th @click="sortActive('type')">{{ $t("Type") }}</th>
+          <th @click="sortActive('user')">{{ $t("User") }}</th>
+          <th @click="sortActive('start_x')">{{ $t("Origin") }}</th>
+          <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
+          <th @click="sortActive('ships.total')">{{ $t("Ships") }}</th>
+          <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
+          <th @click="sortActive('return')">{{ $t("Return") }}</th>
+          <th @click="sortActive('result')">{{ $t("Result") }}</th>
+          <th @click="sortActive('id')">{{ $t("Details") }}</th>
           <th>{{ $t("Cancel") }}</th>
           <th></th>
         </thead>
         <tbody>
-          <tr v-for="mission in activeMissions" :key="mission.id">
+          <tr v-for="mission in sortedActiveMissions" :key="mission.id">
             <td>{{ $t(mission.type) }}</td>
             <td>{{ mission.user }}</td>
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
@@ -178,6 +178,8 @@ export default {
       activeMissions: null,
       currentSort: "arrival",
       currentDir: "desc",
+      currentActiveSort: "arrival",
+      currentActiveDir: "asc",
       clicked: [],
       chainResponse: [],
       shipString: "",
@@ -216,6 +218,29 @@ export default {
       } else {
         return sortedMissions;
       }
+    },
+    sortedActiveMissions() {
+      var sortedActiveMissions = this.activeMissions;
+      if (sortedActiveMissions !== null) {
+        return sortedActiveMissions.sort((a, b) => {
+          let modifier = 1;
+          if (this.currentActiveDir === "desc") modifier = -1;
+          if (a[this.currentActiveSort] === null) return -1 * modifier;
+          if (b[this.currentActiveSort] === null) return 1 * modifier;
+          if (this.currentSort === "ships.total") {
+            if (a.ships.total < b.ships.total) return -1 * modifier;
+            if (a.ships.total > b.ships.total) return 1 * modifier;
+          } else {
+            if (a[this.currentActiveSort] < b[this.currentActiveSort])
+              return -1 * modifier;
+            if (a[this.currentActiveSort] > b[this.currentActiveSort])
+              return 1 * modifier;
+          }
+          return 0;
+        });
+      } else {
+        return sortedActiveMissions;
+      }
     }
   },
   methods: {
@@ -242,6 +267,14 @@ export default {
         this.currentDir = this.currentDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    sortActive(s) {
+      //if s == current sort, reverse
+      if (s === this.currentActiveSort) {
+        this.currentActiveDir =
+          this.currentActiveDir === "asc" ? "desc" : "asc";
+      }
+      this.currentActiveSort = s;
     },
     cancelPossible(mission) {
       if (mission.cancel_trx !== null) {
