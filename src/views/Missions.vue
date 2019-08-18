@@ -37,10 +37,24 @@
                 <span v-else>{{ mission.ships.total }}</span></span
               >
             </td>
-            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
+            <td>
+              {{
+                moment
+                  .duration(
+                    moment.utc().diff(moment.unix(mission.arrival, "seconds"))
+                  )
+                  .humanize()
+              }}
+            </td>
             <td>
               <span v-if="mission.return !== null">
-                {{ moment.unix(mission.return, "seconds").format("lll") }}
+                {{
+                  moment
+                    .duration(
+                      moment.utc().diff(moment.unix(mission.return, "seconds"))
+                    )
+                    .humanize()
+                }}
               </span>
               <span v-else>-</span>
             </td>
