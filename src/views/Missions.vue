@@ -2,8 +2,6 @@
   <div class="missions">
     <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
     <template v-if="gameUser !== 'null'">
-      <p v-if="shipString">{{ shipString }}</p>
-      <p v-else>{{ $t("Click the ship total to see details.") }}</p>
       <h2>
         {{ $t("Active") }} ({{
           activeMissions !== null ? activeMissions.length : 0
@@ -17,6 +15,7 @@
           <th @click="sortActive('start_x')">{{ $t("Origin") }}</th>
           <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortActive('ships.total')">{{ $t("Ships") }}</th>
+          <th>{{ $t("Load") }}</th>
           <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortActive('return')">{{ $t("Return") }}</th>
           <th @click="sortActive('result')">{{ $t("Result") }}</th>
@@ -31,12 +30,22 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>
-              <span v-if="mission.ships !== null" @click="shipList(mission)">
+              <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
                 <font v-if="selectedShips === mission.id" color="green">{{
                   mission.ships.total
                 }}</font>
                 <span v-else>{{ mission.ships.total }}</span></span
               >
+            </td>
+            <td>
+              {{
+                Number(
+                  mission.resources.coal / 8 +
+                    mission.resources.ore / 4 +
+                    mission.resources.copper / 2 +
+                    mission.resources.uranium
+                ).toFixed(0)
+              }}
             </td>
             <td>
               {{
@@ -100,6 +109,7 @@
           <th @click="sort('start_x')">{{ $t("Origin") }}</th>
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
           <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
+          <th>{{ $t("Load") }}</th>
           <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
@@ -113,12 +123,24 @@
             <td>{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</td>
             <td>{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</td>
             <td>
-              <span v-if="mission.ships !== null" @click="shipList(mission)">
+              <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
                 <font v-if="selectedShips === mission.id" color="green">{{
                   mission.ships.total
                 }}</font>
                 <span v-else>{{ mission.ships.total }}</span></span
               >
+            </td>
+            <td>
+              <span v-tooltip="resourceList(mission)">
+                {{
+                  Number(
+                    mission.resources.coal / 8 +
+                      mission.resources.ore / 4 +
+                      mission.resources.copper / 2 +
+                      mission.resources.uranium
+                  ).toFixed(0)
+                }}
+              </span>
             </td>
             <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
             <td>
@@ -402,8 +424,15 @@ export default {
           string = string + this.$t(key) + ":" + mission.ships[key].n + " ";
         }
       }
-      this.shipString = string;
-      this.selectedShips = mission.id;
+      return string;
+    },
+    resourceList(mission) {
+      let string = "";
+      string = string + "Coal:" + mission.resources.coal;
+      string = string + " Ore:" + mission.resources.ore;
+      string = string + " Copper:" + mission.resources.copper;
+      string = string + " Uranium:" + mission.resources.uranium;
+      return string;
     }
   }
 };
