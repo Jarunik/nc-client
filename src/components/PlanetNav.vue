@@ -20,12 +20,17 @@
       |
       <span v-if="planet.id === planetId"
         ><font color="green"
-          ><span @click="setPlanet(planet)">
+          ><span @click="setPlanet(planet)" v-tooltip="planet.name">
             {{ planet.name | shorten }}
           </span></font
         >
       </span>
-      <span class="pointer" v-else @click="setPlanet(planet)">
+      <span
+        class="pointer"
+        v-else
+        @click="setPlanet(planet)"
+        v-tooltip="planet.name"
+      >
         {{ planet.name | shorten }}
       </span>
     </span>
