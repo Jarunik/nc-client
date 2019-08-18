@@ -2,52 +2,55 @@
   <div id="app">
     <span id="navtop">
       <span>
-        <router-link to="/ranking"
+        <router-link to="/ranking" v-tooltip="$t('Ranking')"
           ><chevron-triple-up-icon :title="$t('Ranking')"
         /></router-link>
         |
-        <router-link to="/activity">
+        <router-link to="/activity" v-tooltip="$t('Activity')">
           <newspaper-icon :title="$t('Activity')"
         /></router-link>
         |
-        <router-link to="/battlefeed">
+        <router-link to="/battlefeed" v-tooltip="$t('Recent Battles')">
           <sword-cross-icon :title="$t('Recent Battles')"
         /></router-link>
         |
-        <router-link :to="'/simulator'">
+        <router-link :to="'/simulator'" v-tooltip="$t('Simulator')">
           <animation-play-icon :title="$t('Simulator')" />
         </router-link>
         |
-        <router-link to="/shop"><cart-icon :title="$t('Shop')"/></router-link> |
-        <router-link :to="'/items'">
+        <router-link to="/shop" v-tooltip="$t('Shop')"
+          ><cart-icon :title="$t('Shop')"
+        /></router-link>
+        |
+        <router-link :to="'/items'" v-tooltip="$t('Items')">
           <package-variant-closed-icon :title="$t('Items')" />
         </router-link>
         |
-        <router-link :to="'/skills'">
+        <router-link :to="'/skills'" v-tooltip="$t('Skills')">
           <school-icon :title="$t('Skills')" />
         </router-link>
         |
-        <router-link :to="'/buildings'">
+        <router-link :to="'/buildings'" v-tooltip="$t('Buildings')">
           <home-city-icon :title="$t('Buildings')" />
         </router-link>
         |
-        <router-link :to="'/shipyard'">
+        <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
           <factory-icon :title="$t('Shipyard')" />
         </router-link>
         |
-        <router-link :to="'/galaxy'">
+        <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
           <map-icon :title="$t('Galaxy')" />
         </router-link>
         |
-        <router-link :to="'/fleet'">
+        <router-link :to="'/fleet'" v-tooltip="$t('Fleet')">
           <ship-wheel-icon :title="$t('Fleet')" />
         </router-link>
         |
-        <router-link :to="'/missions'">
+        <router-link :to="'/missions'" v-tooltip="$t('Missions')">
           <calendar-icon :title="$t('Mission')" />
         </router-link>
         |
-        <router-link to="/">
+        <router-link to="/" v-tooltip="$t('Login')">
           <font v-if="loginUser == null" color="red"
             ><login-icon :title="$t('Login')"
           /></font>
