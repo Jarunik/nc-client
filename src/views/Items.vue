@@ -1,6 +1,6 @@
 <template>
   <div class="items">
-    <h1>{{ $t("Items") }}</h1>
+    <h1>{{ $t("Items") }} - {{ planetName }}</h1>
     <template v-if="items !== null && items.length > 0">
       <table>
         <thead>
@@ -110,7 +110,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name
     }),
     groupedItems() {
       let obj = {};

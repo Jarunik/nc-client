@@ -1,6 +1,6 @@
 <template>
   <div class="galaxy">
-    <h1>{{ $t("Galaxy") }}</h1>
+    <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
     <p>
       <i>{{ $t("Click to see details. Double click to move.") }}</i>
     </p>
@@ -140,6 +140,7 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
+      planetName: state => state.planet.name,
       posX: state => state.planet.posX,
       posY: state => state.planet.posY,
       planetList: state => state.planet.list

@@ -87,6 +87,7 @@
         <input
           v-model="userName"
           :placeholder="placeholder"
+          type="text"
           autocomplete="on"
         />
         <button v-on:click="loginKeychain(userName)">

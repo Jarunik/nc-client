@@ -1,6 +1,6 @@
 <template>
   <div class="buildings">
-    <h1>{{ $t("Buildings") }}</h1>
+    <h1>{{ $t("Buildings") }} - {{ planetName }}</h1>
     <div v-if="planetId !== null && quantity != null">
       {{ coal }}
       <font v-if="quantity.coaldepot <= coal" color="red">
@@ -274,7 +274,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name
     }),
     sortedBuildings() {
       var sortedBuildings = this.buildings;

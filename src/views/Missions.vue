@@ -1,6 +1,6 @@
 <template>
   <div class="missions">
-    <h1>{{ $t("Missions") }}</h1>
+    <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
     <template v-if="gameUser !== 'null'">
       <p v-if="shipString">{{ shipString }}</p>
       <p v-else>{{ $t("Click the ship total to see details.") }}</p>
@@ -200,7 +200,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name
     }),
     sortedMissions() {
       var sortedMissions = this.missions;

@@ -37,7 +37,7 @@
     <span v-if="user !== null && stardust !== undefined && stardust !== null">
       |
       <router-link :to="'/wallet'"
-        >{{ Number(stardust / 100000000).toFixed(1) }}
+        >{{ Number(stardust / 100000000).toFixed(0) }}
         <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
           :title="$t('Stardust')"/></router-link
     ></span>
