@@ -128,7 +128,7 @@
               {{ pFleet.fleet.frigate === 0 ? "-" : pFleet.fleet.frigate }}
             </td>
             <td>
-              {{ pFleet.fleet.destroyer === 0 ? "-" : pFleet.fleet.destroye }}
+              {{ pFleet.fleet.destroyer === 0 ? "-" : pFleet.fleet.destroyer }}
             </td>
             <td>
               {{ pFleet.fleet.cruiser === 0 ? "-" : pFleet.fleet.cruiser }}
