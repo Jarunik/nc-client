@@ -41,6 +41,8 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Building") }}</th>
+          <th @click="sort('cur_rate')">{{ $t("Current") }}</th>
+          <th @click="sort('next_rate')">{{ $t("Next") }}</th>
           <th @click="sort('current')">{{ $t("Level") }}</th>
           <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
@@ -63,6 +65,12 @@
         <tbody>
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
+            <td>
+              {{ building.cur_rate === null ? "-" : building.cur_rate }}
+            </td>
+            <td>
+              {{ building.next_rate === null ? "-" : building.next_rate }}
+            </td>
             <td>{{ building.current }}</td>
             <td>
               <font v-if="building.current === building.skill" color="red">{{

@@ -365,5 +365,7 @@
   "From": "From",
   "To": "To",
   "Resources": "Resources",
-  "depotincrease": "Depot Increase"
+  "depotincrease": "Depot Increase",
+  "Current": "Current",
+  "Next": "Next"
 }
