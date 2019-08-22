@@ -1,6 +1,6 @@
 <template>
   <div class="production">
-    <h1>{{ $t("Production") }}</h1>
+    <h1>{{ $t("Production") }} - {{ planetName }}</h1>
     <template
       v-if="gameUser !== 'null' && planetId !== 'null' && production !== null"
     >
@@ -74,7 +74,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name
     })
   },
   methods: {
