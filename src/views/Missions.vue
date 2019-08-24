@@ -228,11 +228,13 @@
 <script>
 import MissionsService from "@/services/missions";
 import SkillsService from "@/services/skills";
+import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "missions",
@@ -260,6 +262,12 @@ export default {
     this.clicked = [];
     this.chainResponse = [];
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.prepareComponent();
+      }
+    });
   },
   computed: {
     ...mapState({
@@ -334,6 +342,10 @@ export default {
 
       this.missions = inactiveMissions;
     },
+    async fetchStarterPlanet(user) {
+      const response = await PlanetsService.starterPlanet(user);
+      return response;
+    },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);
       this.skills = response;
@@ -348,6 +360,14 @@ export default {
         });
       }
       this.totalMissions = missionBudget;
+      this.fetchStarterPlanet(this.gameUser).then(planet => {
+        if (this.planetId === planet.id) {
+          missionBudget = missionBudget + 1;
+          this.totalMissions = missionBudget;
+        } else {
+          this.totalMissions = missionBudget;
+        }
+      });
     },
     sort(s) {
       //if s == current sort, reverse

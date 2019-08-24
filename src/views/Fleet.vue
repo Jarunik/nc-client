@@ -482,7 +482,6 @@ export default {
         });
       }
       this.totalMissions = missionBudget;
-
       let runningMissions = 0;
       if (this.activeUserMissions !== null) {
         this.activeUserMissions.forEach(mission => {
@@ -494,11 +493,13 @@ export default {
       this.fetchStarterPlanet(this.gameUser).then(planet => {
         if (this.planetId === planet.id) {
           missionBudget = missionBudget + 1;
+          this.totalMissions = missionBudget;
           this.availableMissions = missionBudget - runningMissions;
         } else {
           this.availableMissions = missionBudget - runningMissions;
         }
       });
+      this.totalMissions = missionBudget;
     },
     commandEnabled(command) {
       let enabled = false;
