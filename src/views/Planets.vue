@@ -15,7 +15,7 @@
           <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
-          <tr v-for="(planet, index) in planets" :key="planet.id">
+          <tr v-for="(planet, index) in sortedPlanets" :key="planet.id">
             <td>{{ planet.id }}</td>
             <td>({{ planet.posx }}/{{ planet.posy }})</td>
             <td>{{ planet.name }}</td>
@@ -105,7 +105,7 @@
           <th>{{ $t("Dreadnought") }}</th>
         </thead>
         <tbody>
-          <tr v-for="pFleet in planetFleet" :key="pFleet.id">
+          <tr v-for="pFleet in sortedPlanetFleet" :key="pFleet.id">
             <td>{{ pFleet.name }}</td>
             <td>
               {{
@@ -161,7 +161,7 @@
           <th>{{ $t("Uranium") }}</th>
         </thead>
         <tbody>
-          <tr v-for="pQuantity in planetQuantities" :key="pQuantity.id">
+          <tr v-for="pQuantity in sortedPlanetQuantities" :key="pQuantity.id">
             <td>{{ pQuantity.name }}</td>
             <td>{{ pQuantity.coal.toFixed(0) }}</td>
             <td>{{ pQuantity.ore.toFixed(0) }}</td>
@@ -220,7 +220,16 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id
-    })
+    }),
+    sortedPlanets() {
+      return this._.orderBy(this.planets, "name");
+    },
+    sortedPlanetFleet() {
+      return this._.orderBy(this.planetFleet, "name");
+    },
+    sortedPlanetQuantities() {
+      return this._.orderBy(this.planetQuantities, "name");
+    }
   },
   methods: {
     async prepareComponent() {
