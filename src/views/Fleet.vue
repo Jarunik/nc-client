@@ -384,7 +384,7 @@ export default {
           } else {
             ship.available = 1;
           }
-          ship.toSend = 0;
+          ship.toSend = 1;
         });
         this.fleet = this.fleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
@@ -576,7 +576,7 @@ export default {
         ]
       };
       this.fleet.forEach(ship => {
-        ship.toSend = 0;
+        ship.toSend = 1;
       });
     },
     add(ship, quantity) {
@@ -585,7 +585,7 @@ export default {
         return;
       }
       // There are only 8 slots
-      if (this.pos > 8 || quantity < 1) {
+      if (this.pos > 8) {
         return;
       }
       // Recalculate Slowest
@@ -613,9 +613,9 @@ export default {
       // Add a new one
       if (!existingGroup) {
         this.shipFormation.count = this.shipFormation.count + 1;
-        this.shipFormation.ships[this.pos].n = Math.min(
-          quantity,
-          ship.available
+        this.shipFormation.ships[this.pos].n = Math.max(
+          Math.min(quantity, ship.available),
+          1
         );
         this.shipFormation.ships[this.pos].c = ship.cons;
         this.shipFormation.ships[this.pos].pos = this.pos + 1;
