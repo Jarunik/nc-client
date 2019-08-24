@@ -31,11 +31,10 @@
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Name") }}</th>
-          <th @click="sort('quantity')">{{ $t("All") }}</th>
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
-          <th @click="sort('available')">{{ $t("Free") }}</th>
+          <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
           <th v-if="command !== null" @click="sort('toSend')">
             {{ $t("Send") }}
           </th>
@@ -43,11 +42,10 @@
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
             <td>{{ $t(ship.longname) }}</td>
-            <td>{{ ship.quantity }}</td>
             <td>{{ ship.speed }}</td>
             <td>{{ ship.cons }}</td>
             <td>{{ ship.capacity }}</td>
-            <td>{{ ship.available }}</td>
+            <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
               <input class="inputShort" type="number" v-model="ship.toSend" />
               <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
@@ -379,11 +377,6 @@ export default {
       if (this.fleet !== null) {
         this.fleet.forEach(ship => {
           ship.quantity = 1;
-          if (this.isBusy(ship.busy)) {
-            ship.available = 0;
-          } else {
-            ship.available = 1;
-          }
           ship.toSend = 1;
         });
         this.fleet = this.fleet.reduce((acc, current) => {
@@ -396,7 +389,6 @@ export default {
               // count up the duplicates
               if (ship.longname === current.longname) {
                 ship.quantity++;
-                ship.available = ship.available + current.available;
               }
             });
             return acc;
@@ -600,7 +592,7 @@ export default {
         if (s.type === ship.type) {
           // Remove old Capacity
           this.capacity = this.capacity - s.n * ship.capacity;
-          s.n = Math.min(quantity, ship.available);
+          s.n = Math.min(quantity, ship.quantity);
           s.c = ship.cons;
           s.pos = this.pos;
           s.type = ship.type;
@@ -614,7 +606,7 @@ export default {
       if (!existingGroup) {
         this.shipFormation.count = this.shipFormation.count + 1;
         this.shipFormation.ships[this.pos].n = Math.max(
-          Math.min(quantity, ship.available),
+          Math.min(quantity, ship.quantity),
           1
         );
         this.shipFormation.ships[this.pos].c = ship.cons;
