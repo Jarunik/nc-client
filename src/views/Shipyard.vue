@@ -333,7 +333,7 @@ export default {
       // For non-working callbacks
       setTimeout(function() {
         self.handleCallback(self, ship);
-      }, 3000);
+      }, 700);
     },
     handleCallback(self, ship) {
       if (self.processing) {

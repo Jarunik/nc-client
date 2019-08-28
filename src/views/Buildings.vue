@@ -343,7 +343,7 @@ export default {
       // For non-working callbacks
       setTimeout(function() {
         self.callbackHandling(self, currentBuilding);
-      }, 3000);
+      }, 700);
     },
     callbackHandling(self, currentBuilding) {
       // Only do it once
@@ -497,7 +497,7 @@ export default {
       );
       setTimeout(function() {
         this.processing = false;
-      }, 3000);
+      }, 700);
     },
     enable(building) {
       this.processing = true;
@@ -516,7 +516,7 @@ export default {
       );
       setTimeout(function() {
         this.processing = false;
-      }, 3000);
+      }, 700);
     }
   },
   beforeDestroy() {

@@ -270,7 +270,7 @@ export default {
       // For non-working callbacks
       setTimeout(function() {
         self.handleCallback(self, skill);
-      }, 3000);
+      }, 700);
     },
     handleCallback(self, skill) {
       if (self.processing) {
