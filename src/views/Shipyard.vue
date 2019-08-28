@@ -34,16 +34,25 @@
       <font v-else>
         <alpha-u-box-icon :title="$t('Uranium')" />
       </font>
-      <br />
-      <br />
     </div>
+    <p>
+      <span @click="setFilter('all')"
+        ><font v-if="filter === 'all'" color="green">{{ $t("All") }}</font
+        ><font v-else>{{ $t("All") }}</font></span
+      >
+      |
+      <span @click="setFilter('active')"
+        ><font v-if="filter === 'active'" color="green">{{ $t("Active") }}</font
+        ><font v-else>{{ $t("Active") }}</font></span
+      >
+    </p>
     <template v-if="gameUser !== 'null' && planetId != 'null'">
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
           <th @click="sort('min_level')">{{ $t("Need") }}</th>
           <th @click="sort('cur_level')">{{ $t("Yard") }}</th>
-          <th @click="sort('cur_level_skill')">{{ $t("Skill") }}</th>
+          <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
@@ -189,7 +198,8 @@ export default {
       chainResponse: [],
       currentSort: "longname",
       currentSortDir: "asc",
-      processing: false
+      processing: false,
+      filter: "active"
     };
   },
   async mounted() {
@@ -246,7 +256,7 @@ export default {
     sortedShipyard() {
       var sortedShipyard = this.shipyard;
       if (sortedShipyard !== null) {
-        return sortedShipyard.sort((a, b) => {
+        sortedShipyard = sortedShipyard.sort((a, b) => {
           let modifier = 1;
           if (this.currentSortDir === "desc") modifier = -1;
           if (a[this.currentSort] === null) return -1 * modifier;
@@ -289,7 +299,15 @@ export default {
           return 0;
         });
       } else {
+        null;
+      }
+      if (this.filter === "all") {
         return sortedShipyard;
+      } else {
+        return this._.filter(
+          sortedShipyard,
+          ship => ship.activated == true || ship.variant === 0
+        );
       }
     }
   },
@@ -448,6 +466,12 @@ export default {
         this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
+    },
+    async setFilter(filter) {
+      if (this.filter === filter) {
+        return;
+      }
+      this.filter = filter;
     }
   },
   beforeDestroy() {

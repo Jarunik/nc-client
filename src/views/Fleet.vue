@@ -281,7 +281,8 @@ export default {
       search: null,
       availableMissions: 0,
       totalMissions: 0,
-      capacity: 0
+      capacity: 0,
+      processing: false
     };
   },
   async mounted() {
@@ -704,27 +705,45 @@ export default {
       }
       this.currentSort = s;
     },
-
+    callbackHandling(self) {
+      // Only do it once
+      if (self.processing) {
+        self.command = "sent";
+        self.xCoordinate = null;
+        self.yCoordinate = null;
+        self.processing = false;
+        self.transportCoal = 0;
+        self.transportOre = 0;
+        self.transportCopper = 0;
+        self.transportUranium = 0;
+        self.capacity = 0;
+      }
+    },
     explore() {
-      this.clicked = true;
-      SteemConnectService.setAccessToken(this.accessToken);
+      let self = this;
+      self.processing = true;
+      self.clicked = true;
+      SteemConnectService.setAccessToken(self.accessToken);
       SteemConnectService.explorespace(
-        this.loginUser,
-        this.planetId,
-        this.xCoordinate,
-        this.yCoordinate,
-        this.shipFormation.ships[0].type,
+        self.loginUser,
+        self.planetId,
+        self.xCoordinate,
+        self.yCoordinate,
+        self.shipFormation.ships[0].type,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     // shipList = { "transportship": 2, "explorership": 1 }
     transport() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       let shipList = {};
       for (let key in this.shipFormation.ships) {
@@ -747,19 +766,17 @@ export default {
         this.transportUranium,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
-            this.transportCoal = 0;
-            this.transportOre = 0;
-            this.transportCopper = 0;
-            this.transportUranium = 0;
-            this.capacity = 0;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     deploy() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       // shipList = { "transportship": 2, "explorership": 1 }
       let shipList = {};
@@ -783,19 +800,17 @@ export default {
         this.transportUranium,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
-            this.transportCoal = 0;
-            this.transportOre = 0;
-            this.transportCopper = 0;
-            this.transportUranium = 0;
-            this.capacity = 0;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     support() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
       let shipList = {};
@@ -816,14 +831,17 @@ export default {
         shipList,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     attack() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
       let shipList = {};
@@ -844,14 +862,17 @@ export default {
         shipList,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     siege() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       // shipList = {"corvette": { "pos": 1, "n": 2 }, "transportship": { "pos": 8, "n": 1 } }
       let shipList = {};
@@ -872,14 +893,17 @@ export default {
         shipList,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     },
     breaksiege() {
+      let self = this;
+      self.processing = true;
       this.clicked = true;
       // shipList = { "corvette": { "pos": 1, "n": 1 }, "frigate": { "pos": 2, "n": 1 }}
       let shipList = {};
@@ -900,12 +924,13 @@ export default {
         shipList,
         (error, result) => {
           if (error === null && result.success) {
-            this.command = "sent";
-            this.xCoordinate = null;
-            this.yCoordinate = null;
+            self.callbackHandling(self);
           }
         }
       );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
     }
   },
   beforeDestroy() {
