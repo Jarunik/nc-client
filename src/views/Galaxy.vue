@@ -136,6 +136,12 @@ export default {
           this.prepareComponent();
       }
     });
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SETPLANET_LIST:
+          this.prepareComponent();
+      }
+    });
   },
   computed: {
     ...mapState({

@@ -367,5 +367,6 @@
   "Resources": "Resources",
   "depotincrease": "Depot Increase",
   "Current": "Current",
-  "Next": "Next"
+  "Next": "Next",
+  "Last": "Last"
 }

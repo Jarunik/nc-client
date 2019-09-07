@@ -220,7 +220,7 @@ export default {
     }
 
     var planetList = localStorage.getItem("planetList");
-    if (planetPosY !== "undefined") {
+    if (planetList !== "undefined") {
       this.$store.dispatch("planet/setList", JSON.parse(planetList));
     }
 
@@ -276,7 +276,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 130%;
+  font-size: 120%;
 }
 #navbottom a {
   color: white;

@@ -19,24 +19,23 @@
     <router-link :to="'/planets'" v-tooltip="$t('Planets')">
       <earth-icon :title="$t('Planets')" />
     </router-link>
-    <span v-for="planet in sortedPlanets" :key="planet.id">
-      |
-      <span v-if="planet.id === planetId"
-        ><font color="green"
-          ><span @click="setPlanet(planet)" v-tooltip="planet.name">
-            {{ planet.name | shorten }}
-          </span></font
-        >
-      </span>
-      <span
-        class="pointer"
-        v-else
-        @click="setPlanet(planet)"
-        v-tooltip="planet.name"
+    |
+    <span @click="lastPlanet()"
+      ><arrow-left-circle-icon :title="$t('Last')"
+    /></span>
+    |
+    <select @change="setPlanet(planet)" v-model="planet">
+      <option
+        v-for="planet in sortedPlanets"
+        :value="planet"
+        :key="planet.id"
+        >{{ planet.name }}</option
       >
-        {{ planet.name | shorten }}
-      </span>
-    </span>
+    </select>
+    |
+    <span @click="nextPlanet()"
+      ><arrow-right-circle-icon :title="$t('Next')"
+    /></span>
   </span>
 </template>
 
@@ -46,18 +45,23 @@ import UserService from "@/services/user";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import * as types from "@/store/mutation-types";
+import ArrowLeftCircleIcon from "vue-material-design-icons/ArrowLeftCircle.vue";
+import ArrowRightCircleIcon from "vue-material-design-icons/ArrowRightCircle.vue";
 
 export default {
   name: "planetnav",
   components: {
-    EarthIcon
+    EarthIcon,
+    ArrowLeftCircleIcon,
+    ArrowRightCircleIcon
   },
   data: function() {
     return {
       planets: null,
       displayUser: null,
       searchUser: false,
-      placeholder: "Enter User"
+      placeholder: "Enter User",
+      planet: null
     };
   },
   async mounted() {
@@ -109,10 +113,16 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getPlanets();
+      this.$store.dispatch("planet/setList", this.planets);
     },
     async getPlanets() {
       const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
+      this.planets.forEach(planet => {
+        if (planet.id === this.planetId) {
+          this.planet = planet;
+        }
+      });
     },
     setPlanet(planet) {
       if (planet.id !== this.planetId) {
@@ -120,6 +130,7 @@ export default {
         this.$store.dispatch("planet/setName", planet.name);
         this.$store.dispatch("planet/setPosX", planet.posx);
         this.$store.dispatch("planet/setPosY", planet.posy);
+        this.planet = planet;
       }
     },
     resetPlanet() {
@@ -127,6 +138,31 @@ export default {
       this.$store.dispatch("planet/setName", null);
       this.$store.dispatch("planet/setPosX", null);
       this.$store.dispatch("planet/setPosY", null);
+    },
+    nextPlanet() {
+      let newPlanet = null;
+      for (let i = 0; i < this.planets.length; i++) {
+        if (i !== 0 && this.planets[i - 1].id === this.planetId) {
+          newPlanet = this.planets[i];
+        }
+      }
+      if (newPlanet !== null) {
+        this.setPlanet(newPlanet);
+      }
+    },
+    lastPlanet() {
+      let newPlanet = null;
+      for (let i = 0; i < this.planets.length; i++) {
+        if (
+          i < this.planets.length - 1 &&
+          this.planets[i + 1].id === this.planetId
+        ) {
+          newPlanet = this.planets[i];
+        }
+      }
+      if (newPlanet !== null) {
+        this.setPlanet(newPlanet);
+      }
     },
     setUser(newUser) {
       this.fetchUser(newUser).then(searchedUser => {
