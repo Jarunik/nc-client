@@ -261,7 +261,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 140%;
+  font-size: x-large;
 }
 
 #middle {
@@ -276,13 +276,18 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: 120%;
+  font-size: x-large;
 }
 #navbottom a {
   color: white;
   text-decoration: none;
 }
-
+#navbottom select {
+  font-size: large;
+}
+#navbottom input {
+  font-size: large;
+}
 body {
   background-image: url("./assets/background.jpg");
   background-repeat: repeat;
@@ -304,6 +309,7 @@ td {
 input {
   width: 15ch;
 }
+
 .router-link-exact-active {
   color: green;
 }
