@@ -251,6 +251,43 @@ export default {
 
       return icon;
     },
+    lookupRealLocation(realX, realY) {
+      let posX = realX;
+      let posY = realY;
+      let icon = "fog";
+
+      this.galaxy.explore.forEach(explore => {
+        if (explore.x === posX && explore.y === posY) {
+          icon = "explore";
+        }
+      });
+
+      this.galaxy.explored.forEach(explored => {
+        if (explored.x === posX && explored.y === posY) {
+          icon = "space";
+        }
+      });
+
+      this.galaxy.planets.forEach(planet => {
+        if (planet.x === posX && planet.y === posY) {
+          icon = "planet";
+        }
+      });
+
+      this.galaxy.planets.forEach(planet => {
+        this.planetList.forEach(ownPlanet => {
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.id === ownPlanet.id
+          ) {
+            icon = "home";
+          }
+        });
+      });
+
+      return icon;
+    },
     goTo(realX, realY) {
       let newPath = this.$route.path;
       this.$router.push({
@@ -269,10 +306,17 @@ export default {
     },
     goFleet(realX, realY) {
       let newPath = this.$route.path.replace("galaxy", "fleet");
-      this.$router.push({
-        path: newPath,
-        query: { x: realX, y: realY }
-      });
+      if (this.lookupRealLocation(realX, realY) === "fog") {
+        this.$router.push({
+          path: newPath,
+          query: { x: realX, y: realY, command: "explorespace" }
+        });
+      } else {
+        this.$router.push({
+          path: newPath,
+          query: { x: realX, y: realY }
+        });
+      }
     },
     distance() {
       var a = this.posX - this.focusX;

@@ -363,6 +363,34 @@ export default {
       await this.getMissions();
       await this.getSkills();
       await this.calculateAvailableMissions();
+      await this.fillForm();
+    },
+    async fillForm() {
+      if (this.$route.query.command === "explorespace") {
+        this.command = "explorespace";
+      }
+      if (
+        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+        (this.$route.query.y !== undefined && this.$route.query.y !== null)
+      ) {
+        this.xCoordinate = this.$route.query.x;
+        this.yCoordinate = this.$route.query.y;
+        this.search =
+          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
+      }
+      this.resetShipFormation();
+      let addShip = null;
+      this.sortedFleet.forEach(ship => {
+        if (ship.type === "explorership") {
+          addShip = ship;
+        }
+        if (ship.type === "explorership1") {
+          addShip = ship;
+        }
+      });
+      if (addShip !== null) {
+        this.add(addShip, 1);
+      }
     },
     async getMissions() {
       const response = await MissionsService.activeUser(this.gameUser);
