@@ -57,7 +57,7 @@
           </tr>
         </tbody>
       </table>
-      <input v-model="search" placeholder="(x/y)" />
+      <input :value="search" @blur="updateSearch($event)" placeholder="(x/y)" />
       <button @click="goToSearch(search)" v-tooltip="$t('Center on Selection')">
         <target-variant-icon :title="$t('Focus')" />
       </button>
@@ -190,6 +190,10 @@ export default {
     async getPlanet(planetId) {
       const response = await PlanetsService.byId(planetId);
       this.planet = response;
+    },
+    // Debounce to speed up editing of the search field (v-model was slow here)
+    updateSearch(e) {
+      this.search = e.target.value;
     },
     coordinateX(tableX) {
       return this.galaxy.area.xmin + tableX;
