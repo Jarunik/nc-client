@@ -53,6 +53,14 @@
           </tr>
         </tbody>
       </table>
+      <!-- Last Destination -->
+      <p v-if="command === 'sent'">
+        <span @click="openMap(lastX, lastY)"
+          >{{ $t("Last Destination") }}:{{
+            "(" + lastX + "/" + lastY + ")"
+          }}</span
+        >
+      </p>
       <template v-if="command !== null && command !== 'sent'">
         <!-- Formation -->
         <table>
@@ -282,7 +290,9 @@ export default {
       availableMissions: 0,
       totalMissions: 0,
       capacity: 0,
-      processing: false
+      processing: false,
+      lastX: null,
+      lastY: null
     };
   },
   async mounted() {
@@ -647,6 +657,9 @@ export default {
         this.pos++;
       }
     },
+    openMap(x, y) {
+      this.$router.push({ path: "galaxy", query: { x: x, y: y } });
+    },
     fillCoordinates(search) {
       let split = search
         .replace("(", "")
@@ -737,6 +750,8 @@ export default {
       // Only do it once
       if (self.processing) {
         self.command = "sent";
+        self.lastX = self.xCoordinate;
+        self.lastY = self.yCoordinate;
         self.xCoordinate = null;
         self.yCoordinate = null;
         self.processing = false;
