@@ -68,9 +68,9 @@
             <td>
               {{
                 Number(
-                  mission.resources.coal / 8 +
-                    mission.resources.ore / 4 +
-                    mission.resources.copper / 2 +
+                  mission.resources.coal +
+                    mission.resources.ore +
+                    mission.resources.copper +
                     mission.resources.uranium
                 ).toFixed(0)
               }}
@@ -190,9 +190,9 @@
               <span v-tooltip="resourceList(mission)">
                 {{
                   Number(
-                    mission.resources.coal / 8 +
-                      mission.resources.ore / 4 +
-                      mission.resources.copper / 2 +
+                    mission.resources.coal +
+                      mission.resources.ore +
+                      mission.resources.copper +
                       mission.resources.uranium
                   ).toFixed(0)
                 }}
