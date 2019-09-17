@@ -266,7 +266,7 @@ export default {
 
 #middle {
   padding-top: 40px;
-  padding-bottom: 120px;
+  padding-bottom: 200px;
 }
 
 #navbottom {
