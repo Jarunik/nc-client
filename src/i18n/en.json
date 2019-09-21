@@ -387,5 +387,11 @@
   "patrol2": "Patrol Crucal",
   "cutter": "Cutter Arrow",
   "cutter1": "Cutter Cancard",
-  "cutter2": "Cutter Orchis"
+  "cutter2": "Cutter Orchis",
+  "Scout": "Scout",
+  "Patrol": "Patrol",
+  "Cutter": "Cutter",
+  "scout": "Scout",
+  "patrol": "Patrol",
+  "cutter": "Cutter"
 }
