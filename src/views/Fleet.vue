@@ -165,11 +165,46 @@
         <!-- Costs -->
         <div v-if="command === 'upgradeyamato'">
           <p>
-            {{ $t("Costs") }}: {{ yamatoCoal }} {{ $t("C") }} {{ yamatoOre }}
-            {{ $t("Fe") }} {{ yamatoCopper }} {{ $t("Cu") }}
-            {{ yamatoUranium }} {{ $t("U") }}
-            {{ yamatoStardust / 100000000 }}
-            {{ $t("SD") }}
+            {{ $t("Costs") }}:
+            <font v-if="yamatoCoal > coal" color="red"
+              >{{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"/></font
+            ><font v-else
+              >{{ yamatoCoal }}<alpha-c-box-icon :title="$t('Coal')"
+            /></font>
+            <font v-if="yamatoOre > ore" color="red"
+              >{{ yamatoOre }}
+              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+                :title="$t('Ore')"/></font
+            ><font v-else
+              >{{ yamatoOre }}
+              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+                :title="$t('Ore')"
+            /></font>
+            <font v-if="yamatoCopper > copper" color="red">
+              {{ yamatoCopper }}
+              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+                :title="$t('Copper')"/></font
+            ><font v-else>
+              {{ yamatoCopper }}
+              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+                :title="$t('Copper')"
+            /></font>
+            <font v-if="yamatoUranium > uranium" color="red">
+              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
+            /></font>
+            <font v-else>
+              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
+            /></font>
+            <font v-if="yamatoStardust > stardust" color="red">
+              {{ yamatoStardust / 100000000 }}
+              <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+                :title="$t('Stardust')"
+            /></font>
+            <font v-else>
+              {{ yamatoStardust / 100000000 }}
+              <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+                :title="$t('Stardust')"
+            /></font>
           </p>
         </div>
         <!-- Send Transaction -->
@@ -284,9 +319,23 @@ import { mapState } from "vuex";
 import moment from "moment";
 import SteemConnectService from "@/services/steemconnect";
 import * as types from "@/store/mutation-types";
+import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
+import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
+import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
+import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
+import AlphaSBoxIcon from "vue-material-design-icons/AlphaSBox.vue";
+import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 
 export default {
   name: "fleet",
+  components: {
+    AlphaCBoxIcon,
+    AlphaFBoxIcon,
+    AlphaEBoxIcon,
+    AlphaUBoxIcon,
+    AlphaSBoxIcon,
+    AlphaDBoxIcon
+  },
   data: function() {
     return {
       fleet: null,
