@@ -166,17 +166,17 @@
         <div v-if="command === 'upgradeyamato'">
           <p>
             {{ $t("Costs") }}:
-            <font v-if="yamatoCoal > coal" color="red"
-              >{{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"/></font
-            ><font v-else
-              >{{ yamatoCoal }}<alpha-c-box-icon :title="$t('Coal')"
+            <font v-if="yamatoCoal > coal" color="red">
+              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"/></font
+            ><font v-else>
+              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"
             /></font>
-            <font v-if="yamatoOre > ore" color="red"
-              >{{ yamatoOre }}
+            <font v-if="yamatoOre > ore" color="red">
+              {{ yamatoOre }}
               <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
                 :title="$t('Ore')"/></font
-            ><font v-else
-              >{{ yamatoOre }}
+            ><font v-else>
+              {{ yamatoOre }}
               <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
                 :title="$t('Ore')"
             /></font>
