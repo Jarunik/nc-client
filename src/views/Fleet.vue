@@ -168,7 +168,7 @@
             {{ $t("Costs") }}: {{ yamatoCoal }} {{ $t("C") }} {{ yamatoOre }}
             {{ $t("Fe") }} {{ yamatoCopper }} {{ $t("Cu") }}
             {{ yamatoUranium }} {{ $t("U") }}
-            {{ yamatoStardust }}
+            {{ yamatoStardust / 100000000 }}
             {{ $t("SD") }}
           </p>
         </div>
@@ -411,7 +411,7 @@ export default {
       await this.fillForm();
     },
     async getStardust() {
-      const response = await UserService.get(this.user);
+      const response = await UserService.get(this.gameUser);
       this.stardust = response.stardust;
     },
     async getShipyard() {
@@ -629,12 +629,23 @@ export default {
         }
       }
       if (this.command === "upgradeyamato") {
+        console.log(
+          this.coal,
+          this.yamatoCoal,
+          this.stardust,
+          this.yamatoStardust
+        );
         if (
           this.shipFormation.count === 1 &&
           this.shipFormation.ships[0].n === 1 &&
           (typeof this.shipFormation.ships[0].type != "undefined" &&
             this.shipFormation.ships[0].type.includes("yamato")) &&
-          this.shipFormation.ships[0].type != "yamato20"
+          this.shipFormation.ships[0].type != "yamato20" &&
+          this.coal >= this.yamatoCoal &&
+          this.ore >= this.yamatoOre &&
+          this.copper >= this.yamatoCopper &&
+          this.uranium >= this.yamatoUranium &&
+          this.stardust >= this.yamatoStardust
         ) {
           enabled = true;
         } else {
@@ -751,7 +762,7 @@ export default {
             this.yamatoOre = shipCost.cost.ore;
             this.yamatoCopper = shipCost.cost.copper;
             this.yamatoUranium = shipCost.cost.uranium;
-            this.yamatoStardust = 0;
+            this.yamatoStardust = shipCost.cost.stardust;
           }
         }
       });
@@ -1108,6 +1119,6 @@ export default {
   width: 6ch;
 }
 .fleet select {
-  width: 15ch;
+  width: 20ch;
 }
 </style>
