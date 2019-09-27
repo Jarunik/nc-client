@@ -325,7 +325,8 @@ export default {
       yamatoOre: 0,
       yamatoCopper: 0,
       yamatoUranium: 0,
-      yamatoStardust: 0
+      yamatoStardust: 0,
+      buildYamato: false
     };
   },
   async mounted() {
@@ -629,12 +630,6 @@ export default {
         }
       }
       if (this.command === "upgradeyamato") {
-        console.log(
-          this.coal,
-          this.yamatoCoal,
-          this.stardust,
-          this.yamatoStardust
-        );
         if (
           this.shipFormation.count === 1 &&
           this.shipFormation.ships[0].n === 1 &&
@@ -645,7 +640,8 @@ export default {
           this.ore >= this.yamatoOre &&
           this.copper >= this.yamatoCopper &&
           this.uranium >= this.yamatoUranium &&
-          this.stardust >= this.yamatoStardust
+          this.stardust >= this.yamatoStardust &&
+          this.buildYamato
         ) {
           enabled = true;
         } else {
@@ -674,6 +670,7 @@ export default {
       this.yamatoCopper = 0;
       this.yamatoUranium = 0;
       this.yamatoStardust = 0;
+      this.buildYamato = false;
 
       this.shipFormation = {
         count: 0,
@@ -746,6 +743,7 @@ export default {
       this.yamatoCopper = 0;
       this.yamatoUranium = 0;
       this.yamatoStardust = 0;
+      this.buildYamato = false;
       this.shipFormation.ships.forEach(ship => {
         if (
           typeof ship.type !== "undefined" &&
@@ -763,6 +761,7 @@ export default {
             this.yamatoCopper = shipCost.cost.copper;
             this.yamatoUranium = shipCost.cost.uranium;
             this.yamatoStardust = shipCost.cost.stardust;
+            this.buildYamato = shipCost.cur_level >= shipCost.min_level;
           }
         }
       });
