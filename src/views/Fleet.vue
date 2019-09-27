@@ -24,6 +24,7 @@
           <option value="attack">{{ $t("Attack") }}</option>
           <option value="siege">{{ $t("Siege") }}</option>
           <option value="breaksiege">{{ $t("Break Siege") }}</option>
+          <option value="upgradeyamato">{{ $t("Upgrade Yamato") }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </p>
@@ -81,45 +82,51 @@
           <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
         <!-- Destination -->
-        <p>
-          <input
-            class="inputMedium"
-            v-on:change="fillCoordinates(search)"
-            v-model="search"
-            placeholder="(x/y)"
-          />
-          {{ $t("X") }}:
-          <input
-            class="inputShort"
-            type="number"
-            v-model="xCoordinate"
-            v-on:change="onCoordinateChange"
-          />
-          {{ $t("Y") }}:
-          <input
-            class="inputShort"
-            type="number"
-            v-model="yCoordinate"
-            v-on:change="onCoordinateChange"
-          />
-        </p>
+        <template v-if="command !== 'upgradeyamato'">
+          <p>
+            <input
+              class="inputMedium"
+              v-on:change="fillCoordinates(search)"
+              v-model="search"
+              placeholder="(x/y)"
+            />
+            {{ $t("X") }}:
+            <input
+              class="inputShort"
+              type="number"
+              v-model="xCoordinate"
+              v-on:change="onCoordinateChange"
+            />
+            {{ $t("Y") }}:
+            <input
+              class="inputShort"
+              type="number"
+              v-model="yCoordinate"
+              v-on:change="onCoordinateChange"
+            />
+          </p>
+        </template>
         <!-- Travel Information -->
-        <table>
-          <tr>
-            <td>{{ $t("Distance") }}</td>
-            <td>{{ Number(distance).toFixed(2) }}</td>
-          </tr>
-          <tr>
-            <td>{{ $t("Uranium Fuel") }}</td>
-            <td>{{ Number(this.fuelConsumption).toFixed(2) }}</td>
-          </tr>
-          <tr>
-            <td>{{ $t("Outbound Travel") }}</td>
-            <td>
-              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-            </td>
-          </tr>
-        </table>
+        <template v-if="command !== 'upgradeyamato'">
+          <table>
+            <tr>
+              <td>{{ $t("Distance") }}</td>
+              <td>{{ Number(distance).toFixed(2) }}</td>
+            </tr>
+            <tr>
+              <td>{{ $t("Uranium Fuel") }}</td>
+              <td>{{ Number(this.fuelConsumption).toFixed(2) }}</td>
+            </tr>
+            <tr>
+              <td>{{ $t("Outbound Travel") }}</td>
+              <td>
+                {{
+                  moment.duration(parseFloat(travelTime), "hours").humanize()
+                }}
+              </td>
+            </tr>
+          </table>
+        </template>
 
         <!-- Resources -->
         <div v-if="command === 'deploy' || command === 'transport'">
@@ -154,6 +161,16 @@
             />
           </p>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
+        </div>
+        <!-- Costs -->
+        <div v-if="command === 'upgradeyamato'">
+          <p>
+            {{ $t("Costs") }}: {{ yamatoCoal }} {{ $t("C") }} {{ yamatoOre }}
+            {{ $t("Fe") }} {{ yamatoCopper }} {{ $t("Cu") }}
+            {{ yamatoUranium }} {{ $t("U") }}
+            {{ yamatoStardust }}
+            {{ $t("SD") }}
+          </p>
         </div>
         <!-- Send Transaction -->
         <div>
@@ -214,6 +231,14 @@
                 {{ $t("Send Transporter") }}
               </button>
             </div>
+            <div v-if="command === 'upgradeyamato'">
+              <button
+                @click="upgradeyamato"
+                :disabled="!commandEnabled('upgradeyamato') || clicked"
+              >
+                {{ $t("Upgrade Yamato") }}
+              </button>
+            </div>
           </div>
         </div>
       </template>
@@ -253,6 +278,8 @@ import QuantityService from "@/services/quantity";
 import MissionsService from "@/services/missions";
 import SkillsService from "@/services/skills";
 import PlanetsService from "@/services/planets";
+import ShipyardService from "@/services/shipyard";
+import UserService from "@/services/user";
 import { mapState } from "vuex";
 import moment from "moment";
 import SteemConnectService from "@/services/steemconnect";
@@ -271,6 +298,7 @@ export default {
       ore: null,
       copper: null,
       uranium: null,
+      stardust: null,
       clicked: false,
       chainResponse: [],
       currentSort: "name",
@@ -292,7 +320,12 @@ export default {
       capacity: 0,
       processing: false,
       lastX: null,
-      lastY: null
+      lastY: null,
+      yamatoCoal: 0,
+      yamatoOre: 0,
+      yamatoCopper: 0,
+      yamatoUranium: 0,
+      yamatoStardust: 0
     };
   },
   async mounted() {
@@ -372,8 +405,18 @@ export default {
       await this.getQuantity();
       await this.getMissions();
       await this.getSkills();
+      await this.getStardust();
+      await this.getShipyard();
       await this.calculateAvailableMissions();
       await this.fillForm();
+    },
+    async getStardust() {
+      const response = await UserService.get(this.user);
+      this.stardust = response.stardust;
+    },
+    async getShipyard() {
+      const response = await ShipyardService.all(this.planetId);
+      this.shipyard = response;
     },
     async fillForm() {
       if (this.$route.query.command === "explorespace") {
@@ -535,44 +578,67 @@ export default {
     commandEnabled(command) {
       let enabled = false;
       if (
-        this.command !== null &&
-        this.command === command &&
-        this.xCoordinate !== null &&
-        this.xCoordinate !== "" &&
-        this.yCoordinate !== null &&
-        this.yCoordinate !== "" &&
-        this.shipFormation.count > 0 &&
-        parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
-        this.availableMissions > 0
+        this.command === "transport" ||
+        this.command === "attack" ||
+        this.command === "deploy" ||
+        this.command === "support" ||
+        this.command === "explorespace" ||
+        this.command === "siege" ||
+        this.command === "breaksiege"
       ) {
-        if (command === "transport") {
-          if (
-            parseFloat(this.coal) > parseFloat(this.transportCoal) &&
-            parseFloat(this.ore) > parseFloat(this.transportOre) &&
-            parseFloat(this.copper) > parseFloat(this.transportCopper) &&
-            parseFloat(this.uranium) >
-              parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption)
-          ) {
-            enabled = true;
+        if (
+          this.command !== null &&
+          this.command === command &&
+          this.xCoordinate !== null &&
+          this.xCoordinate !== "" &&
+          this.yCoordinate !== null &&
+          this.yCoordinate !== "" &&
+          this.shipFormation.count > 0 &&
+          parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
+          this.availableMissions > 0
+        ) {
+          if (command === "transport") {
+            if (
+              parseFloat(this.coal) > parseFloat(this.transportCoal) &&
+              parseFloat(this.ore) > parseFloat(this.transportOre) &&
+              parseFloat(this.copper) > parseFloat(this.transportCopper) &&
+              parseFloat(this.uranium) >
+                parseFloat(this.transportUranium) +
+                  parseFloat(this.fuelConsumption)
+            ) {
+              enabled = true;
+            } else {
+              enabled = false;
+            }
+          } else if (command === "explorespace") {
+            if (
+              parseFloat(this.uranium) >
+                parseFloat(this.transportUranium) +
+                  parseFloat(this.fuelConsumption) &&
+              this.shipFormation.count === 1 &&
+              this.shipFormation.ships[0].n === 1 &&
+              this.shipFormation.ships[0].type.includes("explore")
+            ) {
+              enabled = true;
+            } else {
+              enabled = false;
+            }
           } else {
-            enabled = false;
-          }
-        } else if (command === "explorespace") {
-          if (
-            parseFloat(this.uranium) >
-              parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption) &&
-            this.shipFormation.count === 1 &&
-            this.shipFormation.ships[0].n === 1 &&
-            this.shipFormation.ships[0].type.includes("explore")
-          ) {
             enabled = true;
-          } else {
-            enabled = false;
           }
-        } else {
+        }
+      }
+      if (this.command === "upgradeyamato") {
+        if (
+          this.shipFormation.count === 1 &&
+          this.shipFormation.ships[0].n === 1 &&
+          (typeof this.shipFormation.ships[0].type != "undefined" &&
+            this.shipFormation.ships[0].type.includes("yamato")) &&
+          this.shipFormation.ships[0].type != "yamato20"
+        ) {
           enabled = true;
+        } else {
+          enabled = false;
         }
       }
       return enabled;
@@ -592,6 +658,11 @@ export default {
       this.transportOre = 0;
       this.transportCopper = 0;
       this.transportUranium = 0;
+      this.yamatoCoal = 0;
+      this.yamatoOre = 0;
+      this.yamatoCopper = 0;
+      this.yamatoUranium = 0;
+      this.yamatoStardust = 0;
 
       this.shipFormation = {
         count: 0,
@@ -656,6 +727,34 @@ export default {
           this.capacity + this.shipFormation.ships[this.pos].n * ship.capacity;
         this.pos++;
       }
+      this.calculateYamatoCosts();
+    },
+    calculateYamatoCosts() {
+      this.yamatoCoal = 0;
+      this.yamatoOre = 0;
+      this.yamatoCopper = 0;
+      this.yamatoUranium = 0;
+      this.yamatoStardust = 0;
+      this.shipFormation.ships.forEach(ship => {
+        if (
+          typeof ship.type !== "undefined" &&
+          ship.type !== null &&
+          ship.type.includes("yamato")
+        ) {
+          let upgradeTo =
+            "yamato" + (Number(ship.type.replace("yamato", "")) + 1);
+          let shipCost = this.shipyard.find(obj => {
+            return obj.type === upgradeTo;
+          });
+          if (typeof shipCost !== "undefined") {
+            this.yamatoCoal = shipCost.cost.coal;
+            this.yamatoOre = shipCost.cost.ore;
+            this.yamatoCopper = shipCost.cost.copper;
+            this.yamatoUranium = shipCost.cost.uranium;
+            this.yamatoStardust = 0;
+          }
+        }
+      });
     },
     openMap(x, y) {
       this.$router.push({ path: "galaxy", query: { x: x, y: y } });
@@ -965,6 +1064,25 @@ export default {
         this.xCoordinate,
         this.yCoordinate,
         shipList,
+        (error, result) => {
+          if (error === null && result.success) {
+            self.callbackHandling(self);
+          }
+        }
+      );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
+    },
+    upgradeyamato() {
+      let self = this;
+      self.processing = true;
+      this.clicked = true;
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.upgradeYamato(
+        this.loginUser,
+        this.planetId,
+        self.shipFormation.ships[0].type,
         (error, result) => {
           if (error === null && result.success) {
             self.callbackHandling(self);

@@ -138,7 +138,7 @@ export default {
     });
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
-        case "planet/" + types.SETPLANET_LIST:
+        case "planet/" + types.SET_PLANET_LIST:
           this.prepareComponent();
       }
     });
