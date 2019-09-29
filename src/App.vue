@@ -2,6 +2,10 @@
   <div id="app">
     <span id="navtop">
       <span>
+        <router-link to="/season" v-tooltip="$t('Season')"
+          ><timer-icon :title="$t('Season')"
+        /></router-link>
+        |
         <router-link to="/ranking" v-tooltip="$t('Ranking')"
           ><chevron-triple-up-icon :title="$t('Ranking')"
         /></router-link>
@@ -91,6 +95,7 @@ import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
+import TimerIcon from "vue-material-design-icons/Timer.vue";
 
 export default {
   name: "App",
@@ -110,7 +115,8 @@ export default {
     AnimationPlayIcon,
     SwordCrossIcon,
     NewspaperIcon,
-    LoginIcon
+    LoginIcon,
+    TimerIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
