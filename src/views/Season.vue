@@ -13,13 +13,13 @@
           <th><timer-icon :title="$t('Rank')" /></th>
           <th @click="sort('user')"><account-icon :title="$t('User')" /></th>
           <th @click="sort('build_reward')">
-            <rocket-icon :title="$t('Build Reward')" />
+            <rocket-icon :title="$t('Build Reward Points')" />
           </th>
           <th @click="sort('destroy_reward')">
-            <nuke-icon :title="$t('Destroy Reward')" />
+            <nuke-icon :title="$t('Destroy Reward Points')" />
           </th>
           <th @click="sort('total_reward')">
-            <sigma-icon :title="$t('Total Reward')" />
+            <sigma-icon :title="$t('Total Reward Points')" />
           </th>
         </thead>
         <tbody>
