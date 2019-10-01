@@ -26,9 +26,9 @@
           <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
             <td>{{ index + 1 }}</td>
             <td @click="setUser(rank.user)">{{ rank.user }}</td>
-            <td>{{ rank.build_reward.toFixed(0) }}</td>
-            <td>{{ rank.destroy_reward.toFixed(0) }}</td>
-            <td>{{ rank.total_reward.toFixed(0) }}</td>
+            <td>{{ Number(rank.build_reward / 100000000).toFixed(0) }}</td>
+            <td>{{ Number(rank.destroy_reward / 100000000).toFixed(0) }}</td>
+            <td>{{ Number(rank.total_reward / 100000000).toFixed(0) }}</td>
           </tr>
         </tbody>
       </table>
