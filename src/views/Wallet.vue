@@ -60,10 +60,15 @@
               {{ transaction.amount / 100000000 }}
             </td>
             <td>
-              <a
-                :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
-                >{{ transaction.trx.substring(0, 8) }}...</a
-              >
+              <span v-if="transaction.tr_type === 'transfer'">
+                <a
+                  :href="
+                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
+                  "
+                  >{{ transaction.trx.substring(0, 8) }}...</a
+                >
+              </span>
+              <span v-else>{{ transaction.trx.substring(0, 8) }}...</span>
             </td>
           </tr>
         </tbody>
