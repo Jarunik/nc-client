@@ -32,6 +32,8 @@
         <option value="newuser">{{ $t("newuser") }}</option>
         <option value="transferstardust">{{ $t("transferstardust") }}</option>
         <option value="issue">{{ $t("issue") }}</option>
+        <option value="newseason">{{ $t("newseason") }}</option>
+        <option value="upgradeyamato">{{ $t("upgradeyamato") }}</option>
       </select>
 
       &nbsp;
