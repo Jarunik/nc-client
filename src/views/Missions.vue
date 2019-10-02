@@ -129,7 +129,7 @@
               <timer-sand-icon :title="$t('Transaction sent')"/>
             </td>
           </tr>
-        </tbody>npm
+        </tbody>
       </table>
       <h2>{{ $t("Recent") }}</h2>
       <table>
