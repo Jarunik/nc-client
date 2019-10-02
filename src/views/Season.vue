@@ -12,19 +12,19 @@
       <table>
         <thead>
           <th>
-            <timer-icon :title="$t('Rank')"/>
+            <timer-icon :title="$t('Rank')" />
           </th>
           <th @click="sort('user')">
-            <account-icon :title="$t('User')"/>
+            <account-icon :title="$t('User')" />
           </th>
           <th @click="sort('build_reward')">
-            <rocket-icon :title="$t('Build Reward Points')"/>
+            <rocket-icon :title="$t('Build Reward Points')" />
           </th>
           <th @click="sort('destroy_reward')">
-            <nuke-icon :title="$t('Destroy Reward Points')"/>
+            <nuke-icon :title="$t('Destroy Reward Points')" />
           </th>
           <th @click="sort('total_reward')">
-            <sigma-icon :title="$t('Total Reward Points')"/>
+            <sigma-icon :title="$t('Total Reward Points')" />
           </th>
         </thead>
         <tbody>
