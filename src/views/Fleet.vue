@@ -375,7 +375,8 @@ export default {
       yamatoCopper: 0,
       yamatoUranium: 0,
       yamatoStardust: 0,
-      buildYamato: false
+      buildYamato: false,
+      activeYamatoMission: false
     };
   },
   async mounted() {
@@ -458,6 +459,7 @@ export default {
       await this.getStardust();
       await this.getShipyard();
       await this.calculateAvailableMissions();
+      await this.calculateYamatoMission();
       await this.fillForm();
     },
     async getStardust() {
@@ -625,6 +627,19 @@ export default {
       });
       this.totalMissions = missionBudget;
     },
+    calculateYamatoMission() {
+      if (this.activeUserMissions !== null) {
+        this.activeUserMissions.forEach(mission => {
+          if (
+            (mission.user === this.gameUser) &
+            (mission.type === "upgradeyamato") &
+            (mission.from_planet.id === this.planetId)
+          ) {
+            this.activeYamatoMission = true;
+          }
+        });
+      }
+    },
     commandEnabled(command) {
       let enabled = false;
       if (
@@ -690,7 +705,8 @@ export default {
           this.copper >= this.yamatoCopper &&
           this.uranium >= this.yamatoUranium &&
           this.stardust >= this.yamatoStardust &&
-          this.buildYamato
+          this.buildYamato &&
+          !this.activeYamatoMission
         ) {
           enabled = true;
         } else {
@@ -907,6 +923,9 @@ export default {
     callbackHandling(self) {
       // Only do it once
       if (self.processing) {
+        if (self.command === "upgradeyamato") {
+          this.activeYamatoMission = true;
+        }
         self.command = "sent";
         self.lastX = self.xCoordinate;
         self.lastY = self.yCoordinate;
