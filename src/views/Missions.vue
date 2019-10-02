@@ -421,6 +421,9 @@ export default {
       ) {
         return false;
       }
+      if (mission.type === "upgradeyamato") {
+        return false;
+      }
       return true;
     },
     cancel(mission) {
