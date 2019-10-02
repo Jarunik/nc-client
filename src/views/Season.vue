@@ -7,7 +7,8 @@
         {{ moment(new Date(seasonRanking.start_date * 1000)).format("LLL") }} -
         {{ moment(new Date(seasonRanking.end_date * 1000)).format("LLL") }}
       </p>
-      <p>{{ seasonRanking.steem_rewards }} {{ $t("Prize Pool") }}</p>
+      <p>{{ $t("Prize Pool") }}: {{ seasonRanking.steem_rewards }}</p>
+      <p>{{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate }}</p>
       <table>
         <thead>
           <th>
