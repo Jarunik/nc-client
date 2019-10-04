@@ -37,7 +37,10 @@
               <td>{{ attacker.longname }}</td>
               <td>{{ attacker.survivor }} / {{ attacker.n }}</td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                >
                   <div
                     :style="{
                       width:
@@ -50,7 +53,10 @@
                 </div>
               </td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                >
                   <div
                     :style="{
                       width:
@@ -63,7 +69,10 @@
                 </div>
               </td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                >
                   <div
                     :style="{
                       width:
@@ -109,7 +118,10 @@
               <td>{{ defender.longname }}</td>
               <td>{{ defender.survivor }} / {{ defender.n }}</td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_defender_ships[d] !== undefined"
+                >
                   <div
                     :style="{
                       width:
@@ -122,7 +134,10 @@
                 </div>
               </td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_defender_ships[d] !== undefined"
+                >
                   <div
                     :style="{
                       width:
@@ -135,7 +150,10 @@
                 </div>
               </td>
               <td>
-                <div id="bag-health">
+                <div
+                  id="bag-health"
+                  v-if="mission.initial_defender_ships[d] !== undefined"
+                >
                   <div
                     :style="{
                       width:
