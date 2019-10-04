@@ -1,42 +1,54 @@
 <template>
   <div class="season">
-    <h1>{{ $t("Season") }}</h1>
+    <h1>
+      {{ $t("Season") }}
+    </h1>
     <template v-if="seasonRanking !== null">
-      <p>{{ seasonRanking.name }}</p>
       <p>
         {{ moment(new Date(seasonRanking.start_date * 1000)).format("LLL") }} -
         {{ moment(new Date(seasonRanking.end_date * 1000)).format("LLL") }}
       </p>
-      <p>{{ $t("Prize Pool") }}: {{ seasonRanking.steem_rewards }}</p>
-      <p>{{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate }}</p>
-      <table>
-        <thead>
-          <th>
-            <timer-icon :title="$t('Rank')" />
-          </th>
-          <th @click="sort('user')">
-            <account-icon :title="$t('User')" />
-          </th>
-          <th @click="sort('build_reward')">
-            <rocket-icon :title="$t('Build Reward Points')" />
-          </th>
-          <th @click="sort('destroy_reward')">
-            <nuke-icon :title="$t('Destroy Reward Points')" />
-          </th>
-          <th @click="sort('total_reward')">
-            <sigma-icon :title="$t('Total Reward Points')" />
-          </th>
-        </thead>
-        <tbody>
-          <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
-            <td>{{ index + 1 }}</td>
-            <td @click="setUser(rank.user)">{{ rank.user }}</td>
-            <td>{{ Number(rank.build_reward / 100000000).toFixed(0) }}</td>
-            <td>{{ Number(rank.destroy_reward / 100000000).toFixed(0) }}</td>
-            <td>{{ Number(rank.total_reward / 100000000).toFixed(0) }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <p>
+        {{ $t("Prize Pool") }}: {{ seasonRanking.steem_rewards + " STEEM" }},
+        {{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate * 100 + "%" }}
+      </p>
+      <p>
+        <font color="green">{{ seasonDuration() }}</font>
+      </p>
+      <h2>{{ seasonRanking.name }}</h2>
+      <template v-if="sortedRanking === undefined || sortedRanking.length == 0">
+        -
+      </template>
+      <template v-else>
+        <table>
+          <thead>
+            <th>
+              <timer-icon :title="$t('Rank')" />
+            </th>
+            <th @click="sort('user')">
+              <account-icon :title="$t('User')" />
+            </th>
+            <th @click="sort('build_reward')">
+              <rocket-icon :title="$t('Build Reward Points')" />
+            </th>
+            <th @click="sort('destroy_reward')">
+              <nuke-icon :title="$t('Destroy Reward Points')" />
+            </th>
+            <th @click="sort('total_reward')">
+              <sigma-icon :title="$t('Total Reward Points')" />
+            </th>
+          </thead>
+          <tbody>
+            <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
+              <td>{{ index + 1 }}</td>
+              <td @click="setUser(rank.user)">{{ rank.user }}</td>
+              <td>{{ Number(rank.build_reward / 100000000).toFixed(0) }}</td>
+              <td>{{ Number(rank.destroy_reward / 100000000).toFixed(0) }}</td>
+              <td>{{ Number(rank.total_reward / 100000000).toFixed(0) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
     </template>
   </div>
 </template>
@@ -147,6 +159,16 @@ export default {
         this.currentSort = "meta_rate";
         this.currentSortDir = "desc";
         await this.getProductionRanking();
+      }
+    },
+    seasonDuration() {
+      let end_date = this.moment(new Date(this.seasonRanking.end_date * 1000));
+      let now = this.moment();
+      let duration = this.moment.duration(end_date.diff(now));
+      if (end_date.isAfter(now)) {
+        return this.$t("Season ends in") + " " + duration.humanize();
+      } else {
+        return this.$t("No Active Season");
       }
     }
   }

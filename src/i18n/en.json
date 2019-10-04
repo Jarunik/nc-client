@@ -421,7 +421,7 @@
   "break_siege": "Break Siege",
   "upgrade_yamato": "Upgrade Yamato",
   "Season": "Season",
-  "Prize Pool": "Steem Rewards",
+  "Prize Pool": "Prize Pool",
   "Total Reward Points": "Total Reward Points",
   "Build Reward Points": "Build Reward Points",
   "Destroy Reward Points": "Destroy Reward Points",
@@ -449,5 +449,7 @@
   "yamato19": "Yamato 19",
   "yamato20": "Yamato 20",
   "Leach Rate": "Leach Rate",
-  "Yamato Upgraded": "Yamato Upgraded"
+  "Yamato Upgraded": "Yamato Upgraded",
+  "No Active Season": "No Active Season",
+  "Season ends in": "Season ends in"
 }
