@@ -303,7 +303,7 @@ export default {
       );
     },
     toggleRename(planetId) {
-      if (this.showRename !== planetId and this.stardust > 100000000000) {
+      if (this.showRename !== planetId && this.stardust > 100000000000) {
         this.showRename = planetId;
       } else {
         this.showRename = null;
