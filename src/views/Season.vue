@@ -189,11 +189,11 @@ export default {
           this.$t("Season ends in") +
           " " +
           days +
-          " : " +
+          ":" +
           hours +
-          " : " +
+          ":" +
           minutes +
-          " : " +
+          ":" +
           seconds;
       } else {
         this.seasonDuration = this.$t("No Active Season");
