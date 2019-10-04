@@ -13,7 +13,10 @@
         {{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate * 100 + "%" }}
       </p>
       <p>
-        <font color="green">{{ seasonDuration }}</font>
+        <font v-if="seasonDuration !== null" color="green"
+          >{{ seasonDuration }}
+        </font>
+        <font v-else> - </font>
       </p>
       <h2>{{ seasonRanking.name }}</h2>
       <template v-if="sortedRanking === undefined || sortedRanking.length == 0">
