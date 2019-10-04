@@ -17,7 +17,7 @@
       </p>
       <h2>{{ seasonRanking.name }}</h2>
       <template v-if="sortedRanking === undefined || sortedRanking.length == 0">
-        -
+        {{ $t("No one scored points yet. Upgrade a Yamato.") }}
       </template>
       <template v-else>
         <table>
