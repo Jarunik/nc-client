@@ -86,6 +86,13 @@
             )
           }}
         </p>
+        <p>
+          {{
+            $t(
+              "A planet transfer costs 1000 Stardust in fees and it is only possible without active outgoing missions."
+            )
+          }}
+        </p>
       </font>
       <p>
         <button @click="toggleGiftingLock">{{ $t("Gifting") }}</button>
@@ -206,7 +213,8 @@ export default {
       showGifting: null,
       giftRecipient: null,
       placeholderGifting: "enter recipient",
-      clicked: []
+      clicked: [],
+      stardust: null
     };
   },
   async mounted() {
@@ -236,6 +244,11 @@ export default {
       await this.getPlanets();
       await this.getPlanetFleet();
       await this.getPlanetQuantities();
+      await this.getStardust();
+    },
+    async getStardust() {
+      const response = await UserService.get(this.gameUser);
+      this.stardust = response.stardust;
     },
     async getPlanets() {
       const response = await PlanetsService.byUser(this.gameUser);
@@ -290,7 +303,7 @@ export default {
       );
     },
     toggleRename(planetId) {
-      if (this.showRename !== planetId) {
+      if (this.showRename !== planetId and this.stardust > 100000000000) {
         this.showRename = planetId;
       } else {
         this.showRename = null;
