@@ -486,6 +486,9 @@ export default {
       if (result === "0") {
         return "Draw";
       }
+      if (result === "yamato_upgraded") {
+        return "Yamato Upgraded";
+      }
       if (result !== null) {
         return "Unknown";
       }
