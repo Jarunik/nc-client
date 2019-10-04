@@ -13,7 +13,7 @@
         {{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate * 100 + "%" }}
       </p>
       <p>
-        <font color="green">{{ seasonDuration() }}</font>
+        <font color="green">{{ seasonDuration }}</font>
       </p>
       <h2>{{ seasonRanking.name }}</h2>
       <template v-if="sortedRanking === undefined || sortedRanking.length == 0">
@@ -77,11 +77,16 @@ export default {
       seasonRanking: null,
       currentSort: "total_reward",
       currentSortDir: "desc",
-      loadSort: "battle"
+      loadSort: "battle",
+      interval: null,
+      seasonDuration: null
     };
   },
   async mounted() {
     await this.prepareComponent();
+    this.interval = setInterval(() => {
+      this.calculateSeasonDuration();
+    }, 1000);
   },
   computed: {
     sortedRanking() {
@@ -161,16 +166,42 @@ export default {
         await this.getProductionRanking();
       }
     },
-    seasonDuration() {
+    calculateSeasonDuration() {
       let end_date = this.moment(new Date(this.seasonRanking.end_date * 1000));
       let now = this.moment();
       let duration = this.moment.duration(end_date.diff(now));
+      //Get Days and subtract from duration
+      let days = duration.days();
+      duration.subtract(this.moment.duration(days, "days"));
+
+      //Get hours and subtract from duration
+      let hours = duration.hours();
+      duration.subtract(this.moment.duration(hours, "hours"));
+
+      //Get Minutes and subtract from duration
+      let minutes = duration.minutes();
+      duration.subtract(this.moment.duration(minutes, "minutes"));
+
+      //Get seconds
+      let seconds = duration.seconds();
       if (end_date.isAfter(now)) {
-        return this.$t("Season ends in") + " " + duration.humanize();
+        this.seasonDuration =
+          this.$t("Season ends in") +
+          " " +
+          days +
+          " : " +
+          hours +
+          " : " +
+          minutes +
+          " : " +
+          seconds;
       } else {
-        return this.$t("No Active Season");
+        this.seasonDuration = this.$t("No Active Season");
       }
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 };
 </script>
