@@ -303,7 +303,7 @@ export default {
       );
     },
     toggleRename(planetId) {
-      if (this.showRename !== planetId && this.stardust > 100000000000) {
+      if (this.showRename !== planetId) {
         this.showRename = planetId;
       } else {
         this.showRename = null;
@@ -317,7 +317,7 @@ export default {
       }
     },
     toggleGifting(planetId) {
-      if (this.showGifting !== planetId) {
+      if (this.showGifting !== planetId && this.stardust > 100000000000) {
         this.showGifting = planetId;
       } else {
         this.showGifting = null;
