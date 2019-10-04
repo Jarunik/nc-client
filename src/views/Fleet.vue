@@ -471,8 +471,13 @@ export default {
       this.shipyard = response;
     },
     async fillForm() {
-      if (this.$route.query.command === "explorespace") {
+      if (
+        this.$route.query.command !== undefined &&
+        this.$route.query.command === "explorespace"
+      ) {
         this.command = "explorespace";
+      } else {
+        return;
       }
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
