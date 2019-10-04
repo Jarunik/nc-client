@@ -633,6 +633,7 @@ export default {
       this.totalMissions = missionBudget;
     },
     calculateYamatoMission() {
+      this.activeYamatoMission = false;
       if (this.activeUserMissions !== null) {
         this.activeUserMissions.forEach(mission => {
           if (
