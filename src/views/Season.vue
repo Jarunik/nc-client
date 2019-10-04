@@ -87,6 +87,7 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+    this.calculateSeasonDuration();
     this.interval = setInterval(() => {
       this.calculateSeasonDuration();
     }, 1000);
