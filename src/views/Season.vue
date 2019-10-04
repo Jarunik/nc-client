@@ -171,19 +171,19 @@ export default {
       let now = this.moment();
       let duration = this.moment.duration(end_date.diff(now));
       //Get Days and subtract from duration
-      let days = duration.days();
+      let days = ("0" + duration.days()).slice(-2);
       duration.subtract(this.moment.duration(days, "days"));
 
       //Get hours and subtract from duration
-      let hours = duration.hours();
+      let hours = ("0" + duration.hours()).slice(-2);
       duration.subtract(this.moment.duration(hours, "hours"));
 
       //Get Minutes and subtract from duration
-      let minutes = duration.minutes();
+      let minutes = ("0" + duration.minutes()).slice(-2);
       duration.subtract(this.moment.duration(minutes, "minutes"));
 
       //Get seconds
-      let seconds = duration.seconds();
+      let seconds = ("0" + duration.seconds()).slice(-2);
       if (end_date.isAfter(now)) {
         this.seasonDuration =
           this.$t("Season ends in") +
