@@ -68,7 +68,25 @@
                   >{{ transaction.trx.substring(0, 8) }}...</a
                 >
               </span>
-              <span v-else>{{ transaction.trx.substring(0, 8) }}...</span>
+              <span v-if="transaction.tr_type === 'shop'">
+                <a
+                  :href="
+                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
+                  "
+                  >{{ transaction.trx.substring(0, 8) }}...</a
+                >
+              </span>
+              <span v-if="transaction.tr_type === 'fee'">
+                <a
+                  :href="
+                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
+                  "
+                  >{{ transaction.trx.substring(0, 8) }}...</a
+                >
+              </span>
+              <span v-if="transaction.tr_type === 'yamato'">
+                {{ transaction.trx }}
+              </span>
             </td>
           </tr>
         </tbody>
