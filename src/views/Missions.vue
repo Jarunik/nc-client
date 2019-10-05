@@ -26,7 +26,9 @@
         </thead>
         <tbody>
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
-            <td>{{ $t(mission.type) }}</td>
+            <td>
+              <span v-tooltip="mission.id">{{ $t(mission.type) }}</span>
+            </td>
             <td>{{ mission.user }}</td>
             <td>
               <span v-if="mission.from_planet !== null">
@@ -70,14 +72,16 @@
               </span>
             </td>
             <td>
-              {{
-                Number(
-                  mission.resources.coal +
-                    mission.resources.ore +
-                    mission.resources.copper +
-                    mission.resources.uranium
-                ).toFixed(0)
-              }}
+              <span v-tooltip="resourceList(mission)">
+                {{
+                  Number(
+                    mission.resources.coal +
+                      mission.resources.ore +
+                      mission.resources.copper +
+                      mission.resources.uranium
+                  ).toFixed(0)
+                }}</span
+              >
             </td>
             <td>
               {{
@@ -151,7 +155,7 @@
         </thead>
         <tbody>
           <tr v-for="mission in sortedMissions" :key="mission.id">
-            <td>{{ $t(mission.type) }}</td>
+            <span v-tooltip="mission.id">{{ $t(mission.type) }}</span>
             <td>{{ mission.user }}</td>
             <td>
               <span
