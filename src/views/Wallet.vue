@@ -76,6 +76,14 @@
                   >{{ transaction.trx.substring(0, 8) }}...</a
                 >
               </span>
+              <span v-if="transaction.tr_type === 'gift'">
+                <a
+                  :href="
+                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
+                  "
+                  >{{ transaction.trx.substring(0, 8) }}...</a
+                >
+              </span>
               <span v-if="transaction.tr_type === 'fee'">
                 <a
                   :href="
