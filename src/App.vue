@@ -316,6 +316,10 @@ input {
   width: 15ch;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .router-link-exact-active {
   color: green;
 }

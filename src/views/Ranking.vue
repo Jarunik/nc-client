@@ -7,14 +7,14 @@
       }}</i></P
     >
     <p>
-      <span @click="setLoadSort('production')"
+      <span @click="setLoadSort('production')" class="pointer"
         ><font v-if="loadSort === 'production'" color="green">{{
           $t("Production")
         }}</font
         ><font v-else>{{ $t("Production") }}</font></span
       >
       |
-      <span @click="setLoadSort('battle')"
+      <span @click="setLoadSort('battle')" class="pointer"
         ><font v-if="loadSort === 'battle'" color="green">{{
           $t("Battle")
         }}</font

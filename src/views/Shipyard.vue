@@ -36,12 +36,12 @@
       </font>
     </div>
     <p>
-      <span @click="setFilter('all')"
+      <span @click="setFilter('all')" class="pointer"
         ><font v-if="filter === 'all'" color="green">{{ $t("All") }}</font
         ><font v-else>{{ $t("All") }}</font></span
       >
       |
-      <span @click="setFilter('active')"
+      <span @click="setFilter('active')" class="pointer"
         ><font v-if="filter === 'active'" color="green">{{ $t("Active") }}</font
         ><font v-else>{{ $t("Active") }}</font></span
       >
