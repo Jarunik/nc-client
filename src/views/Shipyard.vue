@@ -57,6 +57,7 @@
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
           <th @click="sort('uranium')">{{ $t("U") }}</th>
+          <th @click="sort('stardust')">{{ $t("SD") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('attack')">{{ $t("A/D") }}</th>
           <th @click="sort('busy_until')">{{ $t("Busy") }}</th>
@@ -118,6 +119,14 @@
               }}</font
               ><font v-else>{{
                 ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+              }}</font>
+            </td>
+            <td>
+              <font v-if="ship.cost.stardust > stardust" color="red">{{
+                ship.cost.stardust === 0 ? "-" : ship.cost.stardust / 100000000
+              }}</font
+              ><font v-else>{{
+                ship.cost.stardust === 0 ? "-" : ship.cost.stardust / 100000000
               }}</font>
             </td>
             <td>
