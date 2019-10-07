@@ -110,6 +110,7 @@
           <th>{{ $t("Battlecruiser") }}</th>
           <th>{{ $t("Carrier") }}</th>
           <th>{{ $t("Dreadnought") }}</th>
+          <th>{{ $t("Yamato") }}</th>
         </thead>
         <tbody>
           <tr v-for="pFleet in sortedPlanetFleet" :key="pFleet.id">
@@ -154,6 +155,9 @@
               {{
                 pFleet.fleet.dreadnought === 0 ? "-" : pFleet.fleet.dreadnought
               }}
+            </td>
+            <td>
+              {{ pFleet.fleet.yamato === 0 ? "-" : pFleet.fleet.yamato }}
             </td>
           </tr>
         </tbody>
@@ -363,7 +367,8 @@ export default {
         cruiser: 0,
         battlecruiser: 0,
         carrier: 0,
-        dreadnought: 0
+        dreadnought: 0,
+        yamato: 0
       };
       const response = await FleetService.all(this.gameUser, planetFleet.id);
       fleetResponse = response;
@@ -394,6 +399,9 @@ export default {
         }
         if (ship.type.startsWith("dreadnought")) {
           planetFleet.fleet.dreadnought++;
+        }
+        if (ship.type.startsWith("yamato")) {
+          planetFleet.fleet.yamato++;
         }
       });
       return planetFleet;
