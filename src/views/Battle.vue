@@ -90,11 +90,7 @@
           </tbody>
         </table>
         <h3>
-          {{ $t("Defender") }} {{ mission.defender }} ({{
-            mission.support_mission_id === null
-              ? $t("Planet")
-              : mission.support_mission_id
-          }})
+          {{ $t("Defender") }} {{ mission.defender }}
           <font v-if="mission.result === 2" color="red">{{
             $t("Looser")
           }}</font>
@@ -105,6 +101,14 @@
             $t("Draw")
           }}</font>
         </h3>
+        <p>
+          {{ $t("Defender Location") }}:
+          {{
+            mission.support_mission_id === null
+              ? $t("Planet")
+              : mission.support_mission_id
+          }}
+        </p>
         <table>
           <thead>
             <th>Slot</th>
