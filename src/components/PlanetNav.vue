@@ -20,7 +20,7 @@
       <earth-icon :title="$t('Planets')" />
     </router-link>
     |
-    <span @click="lastPlanet()"
+    <span @click="lastPlanet()" class="pointer"
       ><arrow-left-circle-icon :title="$t('Last')"
     /></span>
     |
@@ -33,7 +33,7 @@
       >
     </select>
     |
-    <span @click="nextPlanet()"
+    <span @click="nextPlanet()" class="pointer"
       ><arrow-right-circle-icon :title="$t('Next')"
     /></span>
   </span>
