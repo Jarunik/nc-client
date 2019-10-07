@@ -1,13 +1,15 @@
 <template>
   <div class="battle">
     <h1>{{ $t("Battle") }}</h1>
+    <i>{{ $t("Yamato only loses one tier on destruction.") }}</i>
     <div v-if="battle !== null">
       <div v-for="mission in battle" :key="mission.battle_number">
-        <p>
+        <h2>
           {{ $t("Mission") }} : {{ mission.mission_id }} {{ $t("Battle") }} :
           {{ mission.battle_number }}
-        </p>
-        <h2>
+        </h2>
+        <p>{{ moment.unix(mission.date, "seconds").format("lll") }},</p>
+        <h3>
           {{ $t("Attacker") }} {{ mission.attacker }}
           <font v-if="mission.result === 2" color="green">{{
             $t("Winner")
@@ -18,7 +20,7 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h2>
+        </h3>
         <table>
           <thead>
             <th>Slot</th>
@@ -87,9 +89,12 @@
             </tr>
           </tbody>
         </table>
-
-        <h2>
-          {{ $t("Defender") }} {{ mission.defender }}
+        <h3>
+          {{ $t("Defender") }} {{ mission.defender }} ({{
+            mission.support_mission_id === null
+              ? $t("Planet")
+              : mission.support_mission_id
+          }})
           <font v-if="mission.result === 2" color="red">{{
             $t("Looser")
           }}</font>
@@ -99,7 +104,7 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h2>
+        </h3>
         <table>
           <thead>
             <th>Slot</th>
@@ -168,7 +173,7 @@
             </tr>
           </tbody>
         </table>
-        <h2>{{ $t("Loot") }}</h2>
+        <h3>{{ $t("Loot") }}</h3>
         <p>
           C:{{ Number(mission.coal).toFixed(0) }} Fe:{{
             Number(mission.ore).toFixed(0)
@@ -177,6 +182,7 @@
             Number(mission.uranium).toFixed(0)
           }}
         </p>
+        <hr v-if="battle.length != mission.battle_number" width="20%" />
       </div>
     </div>
   </div>
