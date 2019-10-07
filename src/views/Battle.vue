@@ -102,7 +102,7 @@
           }}</font>
         </h3>
         <p>
-          {{ $t("Defender Location") }}:
+          {{ $t("Location") }}:
           {{
             mission.support_mission_id === null
               ? $t("Planet")
