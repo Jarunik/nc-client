@@ -174,6 +174,7 @@
 import ShipyardService from "@/services/shipyard";
 import QuantityService from "@/services/quantity";
 import SteemConnectService from "@/services/steemconnect";
+import UserService from "@/services/user";
 import moment from "moment";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
@@ -203,6 +204,7 @@ export default {
       ore: null,
       copper: null,
       uranium: null,
+      stardust: null,
       clicked: [],
       chainResponse: [],
       currentSort: "longname",
@@ -324,10 +326,15 @@ export default {
     async prepareComponent() {
       await this.getShipyard();
       await this.getQuantity();
+      await this.getStardust();
     },
     async getShipyard() {
       const response = await ShipyardService.all(this.planetId);
       this.shipyard = response;
+    },
+    async getStardust() {
+      const response = await UserService.get(this.gameUser);
+      this.stardust = response.stardust;
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
