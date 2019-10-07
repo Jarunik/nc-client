@@ -2,14 +2,27 @@
   <div class="topwallets">
     <table>
       <thead>
-        <th><chevron-triple-up-icon :title="$t('Rank')" /></th>
-        <th @click="sort('user')"><account-icon :title="$t('User')" /></th>
+        <th>
+          <chevron-triple-up-icon :title="$t('Rank')" v-tooltip="$t('Rank')" />
+        </th>
+        <th @click="sort('user')">
+          <account-icon :title="$t('User')" v-tooltip="$t('User')" />
+        </th>
         <th @click="sort('stardust')">
-          <alpha-s-box-icon :title="$t('Stardust')" />
-          <alpha-d-box-icon :title="$t('Stardust')" />
+          <alpha-s-box-icon
+            :title="$t('Stardust')"
+            v-tooltip="$t('Stardust')"
+          />
+          <alpha-d-box-icon
+            :title="$t('Stardust')"
+            v-tooltip="$t('Stardust')"
+          />
         </th>
         <th @click="sort('percentage')">
-          <sack-percent-icon :title="$t('Percentage')" />
+          <sack-percent-icon
+            :title="$t('Percentage')"
+            v-tooltip="$t('Percentage')"
+          />
         </th>
       </thead>
       <tbody>

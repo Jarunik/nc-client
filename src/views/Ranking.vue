@@ -31,23 +31,38 @@
     <template v-if="loadSort === 'production' || loadSort === 'battle'">
       <table>
         <thead>
-          <th><chevron-triple-up-icon :title="$t('Rank')" /></th>
-          <th @click="sort('user')"><account-icon :title="$t('User')" /></th>
+          <th>
+            <chevron-triple-up-icon
+              :title="$t('Rank')"
+              v-tooltip="$t('Rank')"
+            />
+          </th>
+          <th @click="sort('user')">
+            <account-icon :title="$t('User')" v-tooltip="$t('User')" />
+          </th>
           <th @click="sort('meta_rate')">
-            <alpha-u-box-icon :title="$t('Production')" />
+            <alpha-u-box-icon
+              :title="$t('Production')"
+              v-tooltip="$t('Production')"
+            />
           </th>
           <th @click="sort('meta_skill')">
-            <school-icon :title="$t('Skill')" />
+            <school-icon :title="$t('Skill')" v-tooltip="$t('Skill')" />
           </th>
           <th @click="sort('planets')">
-            <earth-icon :title="$t('Planets')" />
+            <earth-icon :title="$t('Planets')" v-tooltip="$t('Planets')" />
           </th>
           <th @click="sort('explorations')">
-            <magnify-icon :title="$t('Explorations')" />
+            <magnify-icon
+              :title="$t('Explorations')"
+              v-tooltip="$t('Explorations')"
+            />
           </th>
-          <th @click="sort('ships')"><rocket-icon :title="$t('Ships')" /></th>
+          <th @click="sort('ships')">
+            <rocket-icon :title="$t('Ships')" v-tooltip="$t('Ships')" />
+          </th>
           <th @click="sort('destroyed_ships_uranium')">
-            <nuke-icon :title="$t('Destroyed')" />
+            <nuke-icon :title="$t('Destroyed')" v-tooltip="$t('Destroyed')" />
           </th>
         </thead>
         <tbody>
