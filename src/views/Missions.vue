@@ -84,13 +84,16 @@
               >
             </td>
             <td>
-              {{
-                moment
-                  .duration(
-                    moment.utc().diff(moment.unix(mission.arrival, "seconds"))
-                  )
-                  .humanize()
-              }}
+              <span v-if="mission.return !== mission.arrival">
+                {{
+                  moment
+                    .duration(
+                      moment.utc().diff(moment.unix(mission.arrival, "seconds"))
+                    )
+                    .humanize()
+                }}
+              </span>
+              <span v-else>-</span>
             </td>
             <td>
               <span v-if="mission.return !== null">
@@ -147,7 +150,6 @@
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
           <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
           <th>{{ $t("Load") }}</th>
-          <th @click="sort('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
@@ -206,7 +208,6 @@
                 }}
               </span>
             </td>
-            <td>{{ moment.unix(mission.arrival, "seconds").format("lll") }}</td>
             <td>
               <span v-if="mission.return !== null">{{
                 moment.unix(mission.return, "seconds").format("lll")
