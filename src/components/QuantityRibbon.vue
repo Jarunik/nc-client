@@ -10,53 +10,36 @@
 
         {{ ore }}
         <font v-if="quantity.oredepot <= ore" color="red"
-          ><alpha-f-box-icon
-            :title="$t('Ore')"
-            v-tooltip="$t('Ore')"/><alpha-e-box-icon
-            :title="$t('Ore')"
-            v-tooltip="$t('Ore')"/></font
+          ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+            :title="$t('Ore')"/></font
         ><font v-else
-          ><alpha-f-box-icon
+          ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
             :title="$t('Ore')"
-            v-tooltip="$t('Ore')"/><alpha-e-box-icon
-            :title="$t('Ore')"
-            v-tooltip="$t('Ore')"
         /></font>
 
         {{ copper }}
         <font v-if="quantity.copperdepot <= copper" color="red"
-          ><alpha-c-box-icon
+          ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
             :title="$t('Copper')"
-            v-tooltip="$t('Copper')"/><alpha-u-box-icon
-            :title="$t('Copper')"
-            v-tooltip="$t('Copper')"
         /></font>
         <font v-else>
-          <alpha-c-box-icon
+          <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
             :title="$t('Copper')"
-            v-tooltip="$t('Copper')"/><alpha-u-box-icon
-            :title="$t('Copper')"
-            v-tooltip="$t('Copper')"
         /></font>
 
         {{ uranium }}
         <font v-if="quantity.uraniumdepot <= uranium" color="red"
-          ><alpha-u-box-icon :title="$t('Uranium')" v-tooltip="$t('Uranium')"
+          ><alpha-u-box-icon :title="$t('Uranium')"
         /></font>
-        <font v-else
-          ><alpha-u-box-icon :title="$t('Uranium')" v-tooltip="$t('Uranium')"
-        /></font>
+        <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
       </span>
     </router-link>
     <span v-if="user !== null && stardust !== undefined && stardust !== null">
       |
       <router-link :to="'/wallet'" v-tooltip="$t('Wallet')"
         >{{ Number(stardust / 100000000).toFixed(0) }}
-        <alpha-s-box-icon
-          :title="$t('Stardust')"
-          v-tooltip="$t('Stardust')"/><alpha-d-box-icon
-          :title="$t('Stardust')"
-          v-tooltip="$t('Stardust')"/></router-link
+        <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+          :title="$t('Stardust')"/></router-link
     ></span>
   </span>
 </template>
