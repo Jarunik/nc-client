@@ -11,6 +11,7 @@
       <p>
         {{ $t("Prize Pool") }}: {{ seasonRanking.steem_rewards + " STEEM" }},
         {{ $t("Leach Rate") }}: {{ seasonRanking.leach_rate * 100 + "%" }}
+        {{ $t("Deploy Rate") }}: {{ seasonRanking.deploy_rate * 100 + "%" }}
       </p>
       <p>
         <font v-if="seasonDuration !== null" color="green"
@@ -80,7 +81,6 @@ export default {
       seasonRanking: null,
       currentSort: "total_reward",
       currentSortDir: "desc",
-      loadSort: "battle",
       interval: null,
       seasonDuration: null
     };
@@ -153,22 +153,6 @@ export default {
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
       return response;
-    },
-    async setLoadSort(loadSort) {
-      if (this.loadSort === loadSort) {
-        return;
-      }
-      this.loadSort = loadSort;
-      if (loadSort === "battle") {
-        this.currentSort = "destroyed_ships_uranium";
-        this.currentSortDir = "desc";
-        await this.getRanking();
-      }
-      if (loadSort === "production") {
-        this.currentSort = "meta_rate";
-        this.currentSortDir = "desc";
-        await this.getProductionRanking();
-      }
     },
     calculateSeasonDuration() {
       let end_date = this.moment(new Date(this.seasonRanking.end_date * 1000));

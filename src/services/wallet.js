@@ -6,6 +6,11 @@ class WalletService {
 
     return response;
   }
+  async ranking(limit = 100) {
+    const response = await ApiService.get(`/wallet_ranking?limit=${limit}`);
+
+    return response;
+  }
 }
 
 export default new WalletService();
