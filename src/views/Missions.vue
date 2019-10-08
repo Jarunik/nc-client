@@ -120,12 +120,12 @@
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
                     mission.type === 'siege' ||
+                    mission.type === 'upgradeyamato' ||
                     mission.type === 'breaksiege') &&
                     mission.result !== null &&
-                    (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege' &&
-                      mission.result !== 'cancel_breaksiege')
+                    (mission.result === '0' ||
+                      mission.result === '1' ||
+                      mission.result === '2')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
@@ -233,12 +233,12 @@
                   (mission.type === 'attack' ||
                     mission.type === 'support' ||
                     mission.type === 'siege' ||
+                    mission.type === 'upgradeyamato' ||
                     mission.type === 'breaksiege') &&
                     mission.result !== null &&
-                    (mission.result !== 'cancel' &&
-                      mission.result !== 'cancel_support' &&
-                      mission.result !== 'cancel_siege' &&
-                      mission.result !== 'cancel_breaksiege')
+                    (mission.result === '0' ||
+                      mission.result === '1' ||
+                      mission.result === '2')
                 "
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
