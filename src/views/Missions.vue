@@ -90,7 +90,14 @@
               }}
             </td>
             <td>
-              <span v-if="mission.return !== mission.arrival">
+              <span
+                v-if="
+                  mission.return !== mission.arrival &&
+                    moment
+                      .unix(mission.arrival, 'seconds')
+                      .isAfter(moment.utc())
+                "
+              >
                 {{
                   moment
                     .duration(
@@ -99,7 +106,7 @@
                     .humanize()
                 }}
               </span>
-              <span v-else>-</span>
+              <span v-else>{{ $t("ok") }}</span>
             </td>
             <td>
               <span v-if="mission.return !== null">
