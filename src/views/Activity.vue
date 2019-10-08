@@ -48,7 +48,9 @@
       </thead>
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
-          <td>{{ moment.unix(transaction.date, "seconds").format("lll") }}</td>
+          <td>
+            {{ moment.unix(transaction.date, "seconds").format("MMM D HH:mm") }}
+          </td>
           <td @click="setUserFilter(transaction.user)">
             {{ transaction.user }}
           </td>

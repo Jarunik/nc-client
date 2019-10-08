@@ -449,7 +449,7 @@
   "yamato19": "Yamato 19",
   "yamato20": "Yamato 20",
   "Leach Rate": "Leach Rate",
-  "Yamato Upgraded": "Yamato Upgraded",
+  "Upgraded": "Upgraded",
   "No Active Season": "No Active Season",
   "Season ends in": "Season ends in",
   "No one scored points yet. Upgrade a Yamato.": "No one scored points yet. Upgrade a Yamato.",
@@ -458,5 +458,6 @@
   "gift": "Gift",
   "Yamato only loses one tier on destruction.": "Yamato only loses one tier on destruction.",
   "Top Wallets": "Top Wallets",
-  "Percentage": "Percentage"
+  "Percentage": "Percentage",
+  "Start": "Start"
 }

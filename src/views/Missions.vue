@@ -17,6 +17,7 @@
           <th @click="sortActive('end_x')">{{ $t("Destination") }}</th>
           <th @click="sortActive('ships.total')">{{ $t("Ships") }}</th>
           <th>{{ $t("Load") }}</th>
+          <th @click="sortActive('start_date')">{{ $t("Start") }}</th>
           <th @click="sortActive('arrival')">{{ $t("Arrival") }}</th>
           <th @click="sortActive('return')">{{ $t("Return") }}</th>
           <th @click="sortActive('result')">{{ $t("Result") }}</th>
@@ -82,6 +83,11 @@
                   ).toFixed(0)
                 }}</span
               >
+            </td>
+            <td>
+              {{
+                moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
+              }}
             </td>
             <td>
               <span v-if="mission.return !== mission.arrival">
@@ -150,6 +156,7 @@
           <th @click="sort('end_x')">{{ $t("Destination") }}</th>
           <th @click="sort('ships.total')">{{ $t("Ships") }}</th>
           <th>{{ $t("Load") }}</th>
+          <th @click="sort('start_date')">{{ $t("Start") }}</th>
           <th @click="sort('return')">{{ $t("Return") }}</th>
           <th @click="sort('result')">{{ $t("Result") }}</th>
           <th @click="sort('id')">{{ $t("Details") }}</th>
@@ -209,8 +216,13 @@
               </span>
             </td>
             <td>
+              {{
+                moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
+              }}
+            </td>
+            <td>
               <span v-if="mission.return !== null">{{
-                moment.unix(mission.return, "seconds").format("lll")
+                moment.unix(mission.return, "seconds").format("MMM D HH:mm")
               }}</span>
               <span v-else>-</span>
             </td>
@@ -492,7 +504,7 @@ export default {
         return "Draw";
       }
       if (result === "yamato_upgraded") {
-        return "Yamato Upgraded";
+        return "Upgraded";
       }
       if (result !== null) {
         return "Unknown";
