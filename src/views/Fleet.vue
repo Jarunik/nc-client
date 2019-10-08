@@ -666,7 +666,8 @@ export default {
           this.yCoordinate !== "" &&
           this.shipFormation.count > 0 &&
           parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
-          this.availableMissions > 0
+          this.availableMissions > 0 &&
+          this.loginUser === this.gameUser
         ) {
           if (command === "transport") {
             if (
@@ -712,7 +713,8 @@ export default {
           this.uranium >= this.yamatoUranium &&
           this.stardust >= this.yamatoStardust &&
           this.buildYamato &&
-          !this.activeYamatoMission
+          !this.activeYamatoMission &&
+          this.loginUser === this.gameUser
         ) {
           enabled = true;
         } else {
