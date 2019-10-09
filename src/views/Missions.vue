@@ -90,23 +90,32 @@
               }}
             </td>
             <td>
-              <span
-                v-if="
-                  mission.return !== mission.arrival &&
+              <span v-if="moment.unix(mission.arrival, 'seconds').isAfter(now)">
+                <span
+                  v-if="
+                    mission.return !== mission.arrival &&
+                      moment
+                        .unix(mission.arrival, 'seconds')
+                        .isAfter(moment.utc())
+                  "
+                >
+                  {{
                     moment
-                      .unix(mission.arrival, 'seconds')
-                      .isAfter(moment.utc())
-                "
-              >
-                {{
-                  moment
-                    .duration(
-                      moment.utc().diff(moment.unix(mission.arrival, "seconds"))
-                    )
-                    .humanize()
-                }}
+                      .duration(
+                        moment
+                          .utc()
+                          .diff(moment.unix(mission.arrival, "seconds"))
+                      )
+                      .humanize()
+                  }}
+                </span>
+                <span v-else>{{
+                  moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
+                }}</span>
               </span>
-              <span v-else>{{ $t("ok") }}</span>
+              <span v-else>{{
+                moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
+              }}</span>
             </td>
             <td>
               <span v-if="mission.return !== null">
@@ -120,7 +129,9 @@
               </span>
               <span v-else>-</span>
             </td>
-            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
+            <td>
+              {{ $t(parseResult(mission.result)) || "-" }}
+            </td>
             <td>
               <router-link
                 v-if="
@@ -295,7 +306,8 @@ export default {
       chainResponse: [],
       shipString: "",
       selectedShips: null,
-      totalMissions: 0
+      totalMissions: 0,
+      now: null
     };
   },
   async mounted() {
@@ -308,6 +320,7 @@ export default {
           this.prepareComponent();
       }
     });
+    this.now = moment.utc();
   },
   computed: {
     ...mapState({
