@@ -269,49 +269,62 @@ export default {
     }),
     sortedShipyard() {
       var sortedShipyard = this.shipyard;
+      let collator = new Intl.Collator(undefined, {
+        numeric: true,
+        sensitivity: "base"
+      });
       if (sortedShipyard !== null) {
-        sortedShipyard = sortedShipyard.sort((a, b) => {
-          let modifier = 1;
-          if (this.currentSortDir === "desc") modifier = -1;
-          if (a[this.currentSort] === null) return -1 * modifier;
-          if (b[this.currentSort] === null) return 1 * modifier;
-          // cost
-          if (
-            this.currentSort === "coal" ||
-            this.currentSort === "ore" ||
-            this.currentSort === "copper" ||
-            this.currentSort === "uranium" ||
-            this.currentSort === "time"
-          ) {
-            if (a.cost[this.currentSort] < b.cost[this.currentSort])
-              return -1 * modifier;
-            if (a.cost[this.currentSort] > b.cost[this.currentSort])
-              return 1 * modifier;
-            // attack
-          } else if (this.currentSort === "attack") {
-            if (a.rocket + a.bullet + a.laser < b.rocket + b.bullet + b.laser)
-              return -1 * modifier;
-            if (a.rocket + a.bullet + a.laser > b.rocket + b.bullet + b.laser)
-              return 1 * modifier;
-            // defense
-          } else if (this.currentSort === "defense") {
+        if (this.currentSort === "longname") {
+          sortedShipyard = sortedShipyard.sort((a, b) =>
+            collator.compare(a[this.currentSort], b[this.currentSort])
+          );
+        } else {
+          sortedShipyard = sortedShipyard.sort((a, b) => {
+            let modifier = 1;
+            if (this.currentSortDir === "desc") modifier = -1;
+            if (a[this.currentSort] === null) return -1 * modifier;
+            if (b[this.currentSort] === null) return 1 * modifier;
+            // cost
             if (
-              a.structure + a.armor + a.shield <
-              b.structure + b.armor + b.shield
-            )
-              return -1 * modifier;
-            if (
-              a.structure + a.armor + a.shield >
-              b.structure + b.armor + b.shield
-            )
-              return 1 * modifier;
-            // all the others
-          } else {
-            if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-            if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-          }
-          return 0;
-        });
+              this.currentSort === "coal" ||
+              this.currentSort === "ore" ||
+              this.currentSort === "copper" ||
+              this.currentSort === "uranium" ||
+              this.currentSort === "stardust" ||
+              this.currentSort === "time"
+            ) {
+              if (a.cost[this.currentSort] < b.cost[this.currentSort])
+                return -1 * modifier;
+              if (a.cost[this.currentSort] > b.cost[this.currentSort])
+                return 1 * modifier;
+              // attack
+            } else if (this.currentSort === "attack") {
+              if (a.rocket + a.bullet + a.laser < b.rocket + b.bullet + b.laser)
+                return -1 * modifier;
+              if (a.rocket + a.bullet + a.laser > b.rocket + b.bullet + b.laser)
+                return 1 * modifier;
+              // defense
+            } else if (this.currentSort === "defense") {
+              if (
+                a.structure + a.armor + a.shield <
+                b.structure + b.armor + b.shield
+              )
+                return -1 * modifier;
+              if (
+                a.structure + a.armor + a.shield >
+                b.structure + b.armor + b.shield
+              )
+                return 1 * modifier;
+              // all the others
+            } else {
+              if (a[this.currentSort] < b[this.currentSort])
+                return -1 * modifier;
+              if (a[this.currentSort] > b[this.currentSort])
+                return 1 * modifier;
+            }
+            return 0;
+          });
+        }
       } else {
         null;
       }
