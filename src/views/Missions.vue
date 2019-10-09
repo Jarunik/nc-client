@@ -91,14 +91,7 @@
             </td>
             <td>
               <span v-if="moment.unix(mission.arrival, 'seconds').isAfter(now)">
-                <span
-                  v-if="
-                    mission.return !== mission.arrival &&
-                      moment
-                        .unix(mission.arrival, 'seconds')
-                        .isAfter(moment.utc())
-                  "
-                >
+                <span v-if="mission.return !== mission.arrival">
                   {{
                     moment
                       .duration(
@@ -109,9 +102,7 @@
                       .humanize()
                   }}
                 </span>
-                <span v-else>{{
-                  moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
-                }}</span>
+                <span v-else>-</span>
               </span>
               <span v-else>{{
                 moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")

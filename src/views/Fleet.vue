@@ -209,7 +209,7 @@
         </div>
         <!-- Send Transaction -->
         <div>
-          <div>
+          <div v-if="this.loginUser === this.gameUser">
             <div v-if="command === 'deploy'">
               <button
                 @click="deploy"
