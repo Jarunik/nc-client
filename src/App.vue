@@ -268,6 +268,7 @@ export default {
   width: 100%;
   background-color: #100f1c;
   font-size: x-large;
+  z-index: 100;
 }
 
 #middle {
@@ -283,6 +284,7 @@ export default {
   width: 100%;
   background-color: #100f1c;
   font-size: x-large;
+  z-index: 100;
 }
 #navbottom a {
   color: white;
