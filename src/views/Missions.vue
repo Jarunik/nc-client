@@ -526,6 +526,9 @@ export default {
       if (result === "yamato_upgraded") {
         return "Upgraded";
       }
+      if (result === "already_explored") {
+        return "Already Explored";
+      }
       if (result !== null) {
         return "Unknown";
       }
