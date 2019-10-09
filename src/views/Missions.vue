@@ -1,7 +1,7 @@
 <template>
   <div class="missions">
     <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
-    <p>{{ $t("Next Event") }}: {{ nextEventDuration() || "-" }}</p>
+    <p>{{ $t("Next Event") }}: {{ nextEventDurationFormatted() || "-" }}</p>
     <template v-if="gameUser !== 'null'">
       <h2>
         {{ $t("Active") }} ({{
@@ -555,6 +555,29 @@ export default {
       string = string + " Uranium:" + mission.resources.uranium;
       return string;
     },
+    nextEventDurationFormatted() {
+      let eventDuration = this.nextEventDuration();
+      if (eventDuration !== null) {
+        let duration = this.moment.duration(eventDuration.diff(this.now));
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+        return days + ":" + hours + ":" + minutes + ":" + seconds;
+      } else {
+        return null;
+      }
+    },
     nextEventDuration() {
       let nextEvent = null;
       if (this.activeMissions !== null) {
@@ -580,23 +603,9 @@ export default {
         });
         if (nextEvent === null) {
           return null;
+        } else {
+          return nextEvent;
         }
-        let duration = this.moment.duration(nextEvent.diff(this.now));
-        //Get Days and subtract from duration
-        let days = ("0" + duration.days()).slice(-2);
-        duration.subtract(this.moment.duration(days, "days"));
-
-        //Get hours and subtract from duration
-        let hours = ("0" + duration.hours()).slice(-2);
-        duration.subtract(this.moment.duration(hours, "hours"));
-
-        //Get Minutes and subtract from duration
-        let minutes = ("0" + duration.minutes()).slice(-2);
-        duration.subtract(this.moment.duration(minutes, "minutes"));
-
-        //Get seconds
-        let seconds = ("0" + duration.seconds()).slice(-2);
-        return days + ":" + hours + ":" + minutes + ":" + seconds;
       } else {
         return null;
       }
