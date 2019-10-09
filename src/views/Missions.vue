@@ -1,6 +1,7 @@
 <template>
   <div class="missions">
     <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
+    <p>{{ $t("Next Event") }}: {{ nextEventDuration() || "-" }}</p>
     <template v-if="gameUser !== 'null'">
       <h2>
         {{ $t("Active") }} ({{
@@ -95,9 +96,7 @@
                   {{
                     moment
                       .duration(
-                        moment
-                          .utc()
-                          .diff(moment.unix(mission.arrival, "seconds"))
+                        now.diff(moment.unix(mission.arrival, "seconds"))
                       )
                       .humanize()
                   }}
@@ -112,9 +111,7 @@
               <span v-if="mission.return !== null">
                 {{
                   moment
-                    .duration(
-                      moment.utc().diff(moment.unix(mission.return, "seconds"))
-                    )
+                    .duration(now.diff(moment.unix(mission.return, "seconds")))
                     .humanize()
                 }}
               </span>
@@ -298,7 +295,8 @@ export default {
       shipString: "",
       selectedShips: null,
       totalMissions: 0,
-      now: null
+      now: moment.utc(),
+      interval: null
     };
   },
   async mounted() {
@@ -312,6 +310,9 @@ export default {
       }
     });
     this.now = moment.utc();
+    this.interval = setInterval(() => {
+      this.now = moment.utc();
+    }, 1000);
   },
   computed: {
     ...mapState({
@@ -553,7 +554,56 @@ export default {
       string = string + " Copper:" + mission.resources.copper;
       string = string + " Uranium:" + mission.resources.uranium;
       return string;
+    },
+    nextEventDuration() {
+      let nextEvent = null;
+      if (this.activeMissions !== null) {
+        this.activeMissions.forEach(mission => {
+          let busy = moment(new Date(mission.arrival * 1000));
+          let returning = moment(new Date(mission.return * 1000));
+          if (returning.isAfter(this.now) && returning.isBefore(busy)) {
+            busy = returning;
+          }
+          if (nextEvent === null) {
+            if (busy !== null && busy.isAfter(this.now)) {
+              nextEvent = busy;
+            }
+          }
+
+          if (
+            nextEvent !== null &&
+            nextEvent.isAfter(busy) &&
+            busy.isAfter(this.now)
+          ) {
+            nextEvent = moment(busy);
+          }
+        });
+        if (nextEvent === null) {
+          return null;
+        }
+        let duration = this.moment.duration(nextEvent.diff(this.now));
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+        return days + ":" + hours + ":" + minutes + ":" + seconds;
+      } else {
+        return null;
+      }
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 };
 </script>

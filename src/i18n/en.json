@@ -461,5 +461,9 @@
   "Percentage": "Percentage",
   "Start": "Start",
   "Already Explored": "Already Explored",
-  "Deploy Rate": "Deploy Rate"
+  "Deploy Rate": "Deploy Rate",
+  "Next Upgrade": "Next Upgrade",
+  "Next Enhancement": "Next Enhancement",
+  "Next ship built in": "Next ship built in",
+  "Next Event": "Next Event"
 }

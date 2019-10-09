@@ -1178,6 +1178,52 @@ export default {
       setTimeout(function() {
         self.callbackHandling(self);
       }, 700);
+    },
+    nextEventDuration() {
+      let nextEvent = null;
+      if (this.activeUserMissions !== null) {
+        this.activeUserMissions.forEach(mission => {
+          let busy = moment(new Date(mission.arrival * 1000));
+          let returning = moment(new Date(mission.return * 1000));
+          if (returning.isAfter(this.now) && returning.isBefore(busy)) {
+            busy = returning;
+          }
+          if (nextEvent === null) {
+            if (busy !== null && busy.isAfter(this.now)) {
+              nextEvent = busy;
+            }
+          }
+
+          if (
+            nextEvent !== null &&
+            nextEvent.isAfter(busy) &&
+            busy.isAfter(this.now)
+          ) {
+            nextEvent = moment(busy);
+          }
+        });
+        if (nextEvent === null) {
+          return null;
+        }
+        let duration = this.moment.duration(nextEvent.diff(this.now));
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+        return days + ":" + hours + ":" + minutes + ":" + seconds;
+      } else {
+        return null;
+      }
     }
   },
   beforeDestroy() {

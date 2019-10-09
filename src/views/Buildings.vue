@@ -1,6 +1,7 @@
 <template>
   <div class="buildings">
     <h1>{{ $t("Buildings") }} - {{ planetName }}</h1>
+    <p>{{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}</p>
     <div v-if="planetId !== null && quantity != null">
       {{ coal }}
       <font v-if="quantity.coaldepot <= coal" color="red">
@@ -109,7 +110,7 @@
               </font>
             </td>
             <td>{{ building.time | timePretty }}</td>
-            <td>{{ building.busy | busyPretty }}</td>
+            <td>{{ building.busy | busyPretty(now) }}</td>
             <td>
               <span
                 v-if="
@@ -234,18 +235,21 @@ export default {
       chainResponse: [],
       processing: false,
       currentSort: "name",
-      currentSortDir: "asc"
+      currentSortDir: "asc",
+      now: moment.utc()
     };
   },
   async mounted() {
     this.clicked = [];
     this.chainResponse = [];
     await this.prepareComponent();
+    this.now = moment.utc();
     this.interval = setInterval(() => {
       this.calculateCoal();
       this.calculateOre();
       this.calculateCopper();
       this.calculateUranium();
+      this.now = moment.utc();
     }, 1000);
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
@@ -257,9 +261,8 @@ export default {
     });
   },
   filters: {
-    busyPretty(busy) {
+    busyPretty(busy, now) {
       var busyUntil = moment(new Date(busy * 1000));
-      var now = moment.utc();
       if (busy === 0) {
         return "-";
       } else {
@@ -313,11 +316,10 @@ export default {
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
-      var now = moment.utc();
       if (busyUntil === 0) {
         return false;
       } else {
-        if (now.isAfter(busyUntil)) {
+        if (this.now.isAfter(busyUntil)) {
           return false;
         } else {
           return true;
@@ -517,6 +519,48 @@ export default {
       setTimeout(function() {
         this.processing = false;
       }, 700);
+    },
+    nextEventDuration() {
+      let nextEvent = null;
+      if (this.buildings !== null) {
+        this.buildings.forEach(building => {
+          let busy = moment(new Date(building.busy * 1000));
+          if (nextEvent === null) {
+            if (busy !== null && busy.isAfter(this.now)) {
+              nextEvent = busy;
+            }
+          }
+
+          if (
+            nextEvent !== null &&
+            nextEvent.isAfter(busy) &&
+            busy.isAfter(this.now)
+          ) {
+            nextEvent = moment(busy);
+          }
+        });
+        if (nextEvent === null) {
+          return null;
+        }
+        let duration = this.moment.duration(nextEvent.diff(this.now));
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+        return days + ":" + hours + ":" + minutes + ":" + seconds;
+      } else {
+        return null;
+      }
     }
   },
   beforeDestroy() {
