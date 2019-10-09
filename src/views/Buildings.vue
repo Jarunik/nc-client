@@ -1,7 +1,10 @@
 <template>
   <div class="buildings">
     <h1>{{ $t("Buildings") }} - {{ planetName }}</h1>
-    <p>{{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}</p>
+    <p>
+      {{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}<br />
+      {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
+    </p>
     <div v-if="planetId !== null && quantity != null">
       {{ coal }}
       <font v-if="quantity.coaldepot <= coal" color="red">
@@ -66,48 +69,46 @@
         <tbody>
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
-            <td>
-              {{ building.cur_rate === null ? "-" : building.cur_rate }}
-            </td>
+            <td>{{ building.cur_rate === null ? "-" : building.cur_rate }}</td>
             <td>
               {{ building.next_rate === null ? "-" : building.next_rate }}
             </td>
             <td>{{ building.current }}</td>
             <td>
-              <font v-if="building.current === building.skill" color="red">{{
-                building.skill
-              }}</font>
+              <font v-if="building.current === building.skill" color="red">
+                {{ building.skill }}
+              </font>
               <font v-else>{{ building.skill }}</font>
             </td>
             <td>
-              <font v-if="building.coal > coal" color="red">
-                {{ building.coal === 0 ? "-" : building.coal }}
-              </font>
-              <font v-else>
-                {{ building.coal === 0 ? "-" : building.coal }}
-              </font>
+              <font v-if="building.coal > coal" color="red">{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
+              <font v-else>{{
+                building.coal === 0 ? "-" : building.coal
+              }}</font>
             </td>
             <td>
-              <font v-if="building.ore > ore" color="red">
-                {{ building.ore === 0 ? "-" : building.ore }}
-              </font>
+              <font v-if="building.ore > ore" color="red">{{
+                building.ore === 0 ? "-" : building.ore
+              }}</font>
               <font v-else>{{ building.ore === 0 ? "-" : building.ore }}</font>
             </td>
             <td>
-              <font v-if="building.copper > copper" color="red">
-                {{ building.copper === 0 ? "-" : building.copper }}
-              </font>
-              <font v-else>
-                {{ building.copper === 0 ? "-" : building.copper }}
-              </font>
+              <font v-if="building.copper > copper" color="red">{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font>
+              <font v-else>{{
+                building.copper === 0 ? "-" : building.copper
+              }}</font>
             </td>
             <td>
-              <font v-if="building.uranium > uranium" color="red">
-                {{ building.uranium === 0 ? "-" : building.uranium }}
-              </font>
-              <font v-else>
-                {{ building.uranium === 0 ? "-" : building.uranium }}
-              </font>
+              <font v-if="building.uranium > uranium" color="red">{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font>
+              <font v-else>{{
+                building.uranium === 0 ? "-" : building.uranium
+              }}</font>
             </td>
             <td>{{ building.time | timePretty }}</td>
             <td>{{ building.busy | busyPretty(now) }}</td>
@@ -236,7 +237,8 @@ export default {
       processing: false,
       currentSort: "name",
       currentSortDir: "asc",
-      now: moment.utc()
+      now: moment.utc(),
+      nextRefresh: null
     };
   },
   async mounted() {
@@ -250,6 +252,9 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
       this.now = moment.utc();
+      if (this.nextRefresh !== null && this.nextRefresh.isBefore(this.now)) {
+        this.refreshFromApi();
+      }
     }, 1000);
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
@@ -356,6 +361,7 @@ export default {
         self.quantity.copper = self.quantity.copper - currentBuilding.copper;
         self.quantity.uranium = self.quantity.uranium - currentBuilding.uranium;
         self.processing = false;
+        this.nextRefresh = moment.utc().add(6, "seconds");
       }
     },
     buildingPossible(building) {
@@ -560,6 +566,49 @@ export default {
         return days + ":" + hours + ":" + minutes + ":" + seconds;
       } else {
         return null;
+      }
+    },
+    nextRefreshFormatted() {
+      if (this.nextRefresh != null) {
+        let duration = this.moment.duration(this.nextRefresh.diff(this.now));
+
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+
+        return minutes + ":" + seconds;
+      } else {
+        return null;
+      }
+    },
+    async refreshFromApi() {
+      let refresh = false;
+      await this.getBuildings();
+      this.buildings.forEach(building => {
+        if (this.chainResponse.includes(building.name)) {
+          if (!this.isBusy(building.busy)) {
+            refresh = true;
+          }
+        }
+      });
+      if (refresh) {
+        this.nextRefresh = moment.utc().add(6, "seconds");
+      } else {
+        this.clicked = [];
+        this.chainResponse = [];
+        await this.getQuantity();
+        this.nextRefresh = null;
       }
     }
   },
