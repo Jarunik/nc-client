@@ -1,7 +1,10 @@
 <template>
   <div class="shipyard">
     <h1>{{ $t("Shipyard") }} - {{ planetName }}</h1>
-    <p>{{ $t("Next ship built in") }}: {{ nextEventDuration() || "-" }}</p>
+    <p>
+      {{ $t("Next ship built in") }}: {{ nextEventDuration() || "-" }}<br />
+      {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
+    </p>
     <div v-if="planetId !== null && quantity != null">
       {{ coal }}
       <font v-if="quantity.coaldepot <= coal" color="red">
@@ -212,7 +215,8 @@ export default {
       currentSortDir: "asc",
       processing: false,
       filter: "active",
-      now: moment.utc()
+      now: moment.utc(),
+      nextRefresh: null
     };
   },
   async mounted() {
@@ -226,6 +230,9 @@ export default {
       this.calculateCopper();
       this.calculateUranium();
       this.now = moment.utc();
+      if (this.nextRefresh !== null && this.nextRefresh.isBefore(this.now)) {
+        this.refreshFromApi();
+      }
     }, 1000);
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
@@ -393,6 +400,7 @@ export default {
         self.quantity.copper = self.quantity.copper - ship.cost.copper;
         self.quantity.uranium = self.quantity.uranium - ship.cost.uranium;
         self.processing = false;
+        this.nextRefresh = moment.utc().add(6, "seconds");
       }
     },
     shipPossible(ship) {
@@ -545,6 +553,53 @@ export default {
         return days + ":" + hours + ":" + minutes + ":" + seconds;
       } else {
         return null;
+      }
+    },
+    nextRefreshFormatted() {
+      if (this.nextRefresh != null) {
+        let duration = this.moment.duration(this.nextRefresh.diff(this.now));
+
+        //Get Days and subtract from duration
+        let days = ("0" + duration.days()).slice(-2);
+        duration.subtract(this.moment.duration(days, "days"));
+
+        //Get hours and subtract from duration
+        let hours = ("0" + duration.hours()).slice(-2);
+        duration.subtract(this.moment.duration(hours, "hours"));
+
+        //Get Minutes and subtract from duration
+        let minutes = ("0" + duration.minutes()).slice(-2);
+        duration.subtract(this.moment.duration(minutes, "minutes"));
+
+        //Get seconds
+        let seconds = ("0" + duration.seconds()).slice(-2);
+
+        if (seconds < 0) {
+          seconds = "00";
+        }
+        return minutes + ":" + seconds;
+      } else {
+        return null;
+      }
+    },
+    async refreshFromApi() {
+      let refresh = false;
+      await this.getShipyard();
+      this.shipyard.forEach(ship => {
+        if (this.chainResponse.includes(ship.name)) {
+          if (!this.isBusy(ship.busy)) {
+            refresh = true;
+          }
+        }
+      });
+      if (refresh) {
+        this.nextRefresh = moment.utc().add(6, "seconds");
+      } else {
+        this.clicked = [];
+        this.chainResponse = [];
+        await this.getQuantity();
+        await this.getStardust();
+        this.nextRefresh = null;
       }
     }
   },

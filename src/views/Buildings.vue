@@ -586,7 +586,9 @@ export default {
 
         //Get seconds
         let seconds = ("0" + duration.seconds()).slice(-2);
-
+        if (seconds < 0) {
+          seconds = "00";
+        }
         return minutes + ":" + seconds;
       } else {
         return null;
