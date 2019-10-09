@@ -145,7 +145,7 @@ const ships = [
   },
   {
     id: "cutter1",
-    name: "Cutter Cancard",
+    name: "Cutter Canard",
     class: "Cutter",
     structure: 6,
     armor: 4,
