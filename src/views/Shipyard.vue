@@ -140,7 +140,12 @@
               {{ (ship.rocket + ship.bullet + ship.laser) | omitZero }} /
               {{ ship.structure + ship.armor + ship.shield }}
             </td>
-            <td>{{ ship.busy_until | busyPretty(now) }}</td>
+            <td>
+              <span v-if="chainResponse.includes(ship.longname)">
+                <timer-sand-icon :title="$t('Transaction sent')" />
+                {{ nextRefreshFormatted() }} </span
+              ><span v-else>{{ ship.busy_until | busyPretty(now) }}</span>
+            </td>
             <td v-if="loginUser !== null && loginUser === gameUser">
               <button
                 :disabled="clicked.includes(ship.longname) || processing"
@@ -149,10 +154,6 @@
               >
                 <arrow-up-bold-icon :title="$t('Build')" />
               </button>
-            </td>
-            <td v-if="chainResponse.includes(ship.longname)">
-              <timer-sand-icon :title="$t('Transaction sent')" />
-              {{ nextRefreshFormatted() }}
             </td>
           </tr>
         </tbody>
@@ -588,15 +589,9 @@ export default {
       this.shipyard.forEach(ship => {
         if (this.chainResponse.includes(ship.longname)) {
           if (this.isBusy(ship.busy_until)) {
-            console.log(
-              "before",
-              this.isBusy(ship.busy_until),
-              this.chainResponse
-            );
             this.chainResponse = this.chainResponse.filter(value => {
               return value !== ship.longname;
             });
-            console.log("after", this.chainResponse);
           }
         }
       });

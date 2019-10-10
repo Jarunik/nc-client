@@ -111,7 +111,12 @@
               }}</font>
             </td>
             <td>{{ building.time | timePretty }}</td>
-            <td>{{ building.busy | busyPretty(now) }}</td>
+            <td>
+              <span v-if="chainResponse.includes(building.name)">
+                <timer-sand-icon :title="$t('Transaction sent')" />
+                {{ nextRefreshFormatted() }} </span
+              ><span v-else>{{ building.busy | busyPretty(now) }}</span>
+            </td>
             <td>
               <span
                 v-if="
@@ -166,10 +171,6 @@
                   <shield-icon :title="$t('Protected')" />
                 </span>
               </span>
-            </td>
-            <td v-if="chainResponse.includes(building.name)">
-              <timer-sand-icon :title="$t('Transaction sent')" />
-              {{ nextRefreshFormatted() }}
             </td>
           </tr>
         </tbody>
@@ -596,20 +597,20 @@ export default {
       }
     },
     async refreshFromApi() {
-      let refresh = false;
       await this.getBuildings();
       this.buildings.forEach(building => {
         if (this.chainResponse.includes(building.name)) {
-          if (!this.isBusy(building.busy)) {
-            refresh = true;
+          if (this.isBusy(building.busy)) {
+            this.chainResponse = this.chainResponse.filter(value => {
+              return value !== building.name;
+            });
           }
         }
       });
-      if (refresh) {
+      if (this.chainResponse.length > 0) {
         this.nextRefresh = moment.utc().add(6, "seconds");
       } else {
         this.clicked = [];
-        this.chainResponse = [];
         await this.getQuantity();
         this.nextRefresh = null;
       }

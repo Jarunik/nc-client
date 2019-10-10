@@ -88,7 +88,13 @@
               </font>
             </td>
             <td>{{ skill.time | timePretty }}</td>
-            <td>{{ skill.busy | busyPretty(now) }}</td>
+            <td>
+              <span v-if="chainResponse.includes(skill.name)">
+                <timer-sand-icon :title="$t('Transaction sent')" />
+                {{ nextRefreshFormatted() }}
+              </span>
+              <span v-else>{{ skill.busy | busyPretty(now) }}</span>
+            </td>
             <td>
               <span
                 v-if="
@@ -110,10 +116,6 @@
                   <check-outline-icon :title="$t('Maxed')" />
                 </span>
               </span>
-            </td>
-            <td v-if="chainResponse.includes(skill.name)">
-              <timer-sand-icon :title="$t('Transaction sent')" />
-              {{ nextRefreshFormatted() }}
             </td>
           </tr>
         </tbody>
@@ -459,20 +461,20 @@ export default {
       }
     },
     async refreshFromApi() {
-      let refresh = false;
       await this.getSkills();
       this.skills.forEach(skill => {
         if (this.chainResponse.includes(skill.name)) {
-          if (!this.isBusy(skill.busy)) {
-            refresh = true;
+          if (this.isBusy(skill.busy)) {
+            this.chainResponse = this.chainResponse.filter(value => {
+              return value !== skill.name;
+            });
           }
         }
       });
-      if (refresh) {
+      if (this.chainResponse.length > 0) {
         this.nextRefresh = moment.utc().add(6, "seconds");
       } else {
         this.clicked = [];
-        this.chainResponse = [];
         await this.getQuantity();
         this.nextRefresh = null;
       }
