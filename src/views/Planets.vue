@@ -167,17 +167,65 @@
         <thead>
           <th>{{ $t("Planet") }}</th>
           <th>{{ $t("Coal") }}</th>
+          <th>{{ $t("Depot") }}</th>
           <th>{{ $t("Ore") }}</th>
+          <th>{{ $t("Depot") }}</th>
           <th>{{ $t("Copper") }}</th>
+          <th>{{ $t("Depot") }}</th>
           <th>{{ $t("Uranium") }}</th>
+          <th>{{ $t("Depot") }}</th>
         </thead>
         <tbody>
           <tr v-for="pQuantity in sortedPlanetQuantities" :key="pQuantity.id">
             <td>{{ pQuantity.name }}</td>
-            <td>{{ pQuantity.coal.toFixed(0) }}</td>
-            <td>{{ pQuantity.ore.toFixed(0) }}</td>
-            <td>{{ pQuantity.copper.toFixed(0) }}</td>
-            <td>{{ pQuantity.uranium.toFixed(0) }}</td>
+            <td>
+              <span>{{ pQuantity.coal.toFixed(0) }}</span>
+            </td>
+            <td>
+              <span
+                :style="{
+                  color: pQuantity.coal >= pQuantity.coaldepot ? 'red' : 'white'
+                }"
+                >{{ pQuantity.coaldepot.toFixed(0) }}</span
+              >
+            </td>
+            <td>
+              <span>{{ pQuantity.ore.toFixed(0) }}</span>
+            </td>
+            <td>
+              <span
+                :style="{
+                  color: pQuantity.ore >= pQuantity.oredepot ? 'red' : 'white'
+                }"
+                >{{ pQuantity.oredepot.toFixed(0) }}</span
+              >
+            </td>
+            <td>
+              <span>{{ pQuantity.copper.toFixed(0) }}</span>
+            </td>
+            <td>
+              <span
+                :style="{
+                  color:
+                    pQuantity.copper >= pQuantity.copperdepot ? 'red' : 'white'
+                }"
+                >{{ pQuantity.copperdepot.toFixed(0) }}</span
+              >
+            </td>
+            <td>
+              <span>{{ pQuantity.uranium.toFixed(0) }}</span>
+            </td>
+            <td>
+              <span
+                :style="{
+                  color:
+                    pQuantity.uranium >= pQuantity.uraniumdepot
+                      ? 'red'
+                      : 'white'
+                }"
+                >{{ pQuantity.uraniumdepot.toFixed(0) }}</span
+              >
+            </td>
           </tr>
         </tbody>
       </table>
@@ -417,12 +465,20 @@ export default {
       planetQuantities.ore = 0;
       planetQuantities.copper = 0;
       planetQuantities.uranium = 0;
+      planetQuantities.coaldepot = 0;
+      planetQuantities.oredepot = 0;
+      planetQuantities.copperdepot = 0;
+      planetQuantities.uraniumdepot = 0;
       const response = await QuantityService.get(planet.id);
       quantityResponse = response;
       planetQuantities.coal = quantityResponse.coal;
       planetQuantities.ore = quantityResponse.ore;
       planetQuantities.copper = quantityResponse.copper;
       planetQuantities.uranium = quantityResponse.uranium;
+      planetQuantities.coaldepot = quantityResponse.coaldepot;
+      planetQuantities.oredepot = quantityResponse.oredepot;
+      planetQuantities.copperdepot = quantityResponse.copperdepot;
+      planetQuantities.uraniumdepot = quantityResponse.uraniumdepot;
       return planetQuantities;
     }
   }
