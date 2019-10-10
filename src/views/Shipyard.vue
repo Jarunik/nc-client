@@ -152,6 +152,7 @@
             </td>
             <td v-if="chainResponse.includes(ship.longname)">
               <timer-sand-icon :title="$t('Transaction sent')" />
+              {{ nextRefreshFormatted() }}
             </td>
           </tr>
         </tbody>

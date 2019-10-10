@@ -169,6 +169,7 @@
             </td>
             <td v-if="chainResponse.includes(building.name)">
               <timer-sand-icon :title="$t('Transaction sent')" />
+              {{ nextRefreshFormatted() }}
             </td>
           </tr>
         </tbody>
