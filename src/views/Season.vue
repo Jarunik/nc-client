@@ -34,14 +34,14 @@
             </th>
             <th @click="sort('build_reward')">
               <rocket-icon
-                :title="$t('Build Reward Points')"
-                v-tooltip="$t('Build Reward Points')"
+                :title="$t('Upgrade Reward Points')"
+                v-tooltip="$t('Upgrade Reward Points')"
               />
             </th>
             <th @click="sort('destroy_reward')">
               <nuke-icon
-                :title="$t('Destroy Reward Points')"
-                v-tooltip="$t('Destroy Reward Points')"
+                :title="$t('Downgrade Reward Points')"
+                v-tooltip="$t('Downgrade Reward Points')"
               />
             </th>
             <th @click="sort('total_reward')">
