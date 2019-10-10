@@ -584,20 +584,26 @@ export default {
       }
     },
     async refreshFromApi() {
-      let refresh = false;
       await this.getShipyard();
       this.shipyard.forEach(ship => {
-        if (this.chainResponse.includes(ship.name)) {
-          if (!this.isBusy(ship.busy)) {
-            refresh = true;
+        if (this.chainResponse.includes(ship.longname)) {
+          if (this.isBusy(ship.busy_until)) {
+            console.log(
+              "before",
+              this.isBusy(ship.busy_until),
+              this.chainResponse
+            );
+            this.chainResponse = this.chainResponse.filter(value => {
+              return value !== ship.longname;
+            });
+            console.log("after", this.chainResponse);
           }
         }
       });
-      if (refresh) {
+      if (this.chainResponse.length > 0) {
         this.nextRefresh = moment.utc().add(6, "seconds");
       } else {
         this.clicked = [];
-        this.chainResponse = [];
         await this.getQuantity();
         await this.getStardust();
         this.nextRefresh = null;
