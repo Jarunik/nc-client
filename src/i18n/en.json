@@ -469,5 +469,8 @@
   "Next Refresh": "Next Refresh",
   "Status": "Status",
   "Me": "Me",
-  "Depot": "Depot"
+  "Depot": "Depot",
+  "Stardust found": "Stardust found",
+  "Blueprint found": "Blueprint found",
+  "exploration": "Exploration"
 }
