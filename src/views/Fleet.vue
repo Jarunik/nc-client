@@ -104,22 +104,38 @@
           />
         </p>
         <!-- Travel Information -->
-        <table>
-          <tr>
-            <td>{{ $t("Distance") }}</td>
-            <td>{{ Number(distance).toFixed(2) }}</td>
-          </tr>
-          <tr>
-            <td>{{ $t("Uranium Fuel") }}</td>
-            <td>{{ Number(this.fuelConsumption).toFixed(2) }}</td>
-          </tr>
-          <tr>
-            <td>{{ $t("Outbound Travel") }}</td>
-            <td>
-              {{ moment.duration(parseFloat(travelTime), "hours").humanize() }}
-            </td>
-          </tr>
-        </table>
+        <template v-if="command !== 'upgradeyamato'">
+          <table>
+            <tr>
+              <td>{{ $t("Distance") }}</td>
+              <td>{{ Number(distance).toFixed(2) }}</td>
+            </tr>
+            <tr>
+              <td>{{ $t("Uranium Fuel") }}</td>
+              <td>
+                <span
+                  :style="{
+                    color:
+                      parseFloat(this.uranium - this.transportUranium) <
+                      parseFloat(this.fuelConsumption)
+                        ? 'red'
+                        : 'white'
+                  }"
+                >
+                  {{ Number(this.fuelConsumption).toFixed(4) }}</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>{{ $t("Outbound Travel") }}</td>
+              <td>
+                {{
+                  moment.duration(parseFloat(travelTime), "hours").humanize()
+                }}
+              </td>
+            </tr>
+          </table>
+        </template>
 
         <!-- Resources -->
         <div v-if="command === 'deploy' || command === 'transport'">
@@ -486,7 +502,7 @@ export default {
         }
       }
     },
-    onCoordinateChange() {
+    calculateConsumption() {
       this.fuelConsumption = 0;
       for (var ship in this.shipFormation.ships) {
         if (this.shipFormation.ships[ship].n > 0) {
@@ -497,6 +513,9 @@ export default {
               this.distance;
         }
       }
+    },
+    onCoordinateChange() {
+      this.calculateConsumption();
       this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
     },
     async fetchStarterPlanet(user) {
@@ -592,6 +611,13 @@ export default {
       this.transportOre = 0;
       this.transportCopper = 0;
       this.transportUranium = 0;
+      this.yamatoCoal = 0;
+      this.yamatoOre = 0;
+      this.yamatoCopper = 0;
+      this.yamatoUranium = 0;
+      this.yamatoStardust = 0;
+      this.buildYamato = false;
+      this.fuelConsumption = 0;
 
       this.shipFormation = {
         count: 0,
@@ -656,6 +682,7 @@ export default {
           this.capacity + this.shipFormation.ships[this.pos].n * ship.capacity;
         this.pos++;
       }
+      this.calculateConsumption();
     },
     openMap(x, y) {
       this.$router.push({ path: "galaxy", query: { x: x, y: y } });
