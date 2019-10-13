@@ -115,7 +115,19 @@
             </tr>
             <tr>
               <td>{{ $t("Uranium Fuel") }}</td>
-              <td>{{ Number(this.fuelConsumption).toFixed(2) }}</td>
+              <td>
+                <span
+                  :style="{
+                    color:
+                      parseFloat(this.uranium - this.transportUranium) <
+                      parseFloat(this.fuelConsumption)
+                        ? 'red'
+                        : 'white'
+                  }"
+                >
+                  {{ Number(this.fuelConsumption).toFixed(4) }}</span
+                >
+              </td>
             </tr>
             <tr>
               <td>{{ $t("Outbound Travel") }}</td>
@@ -586,7 +598,7 @@ export default {
         }
       }
     },
-    onCoordinateChange() {
+    calculateConsumption() {
       this.fuelConsumption = 0;
       for (var ship in this.shipFormation.ships) {
         if (this.shipFormation.ships[ship].n > 0) {
@@ -597,6 +609,9 @@ export default {
               this.distance;
         }
       }
+    },
+    onCoordinateChange() {
+      this.calculateConsumption();
       this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
     },
     async fetchStarterPlanet(user) {
@@ -665,7 +680,8 @@ export default {
           this.yCoordinate !== null &&
           this.yCoordinate !== "" &&
           this.shipFormation.count > 0 &&
-          parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
+          parseFloat(this.uranium - this.transportUranium) >
+            parseFloat(this.fuelConsumption) &&
           this.availableMissions > 0 &&
           this.loginUser === this.gameUser
         ) {
@@ -744,6 +760,7 @@ export default {
       this.yamatoUranium = 0;
       this.yamatoStardust = 0;
       this.buildYamato = false;
+      this.fuelConsumption = 0;
 
       this.shipFormation = {
         count: 0,
@@ -809,6 +826,7 @@ export default {
         this.pos++;
       }
       this.calculateYamatoCosts();
+      this.calculateConsumption();
     },
     calculateYamatoCosts() {
       this.yamatoCoal = 0;
