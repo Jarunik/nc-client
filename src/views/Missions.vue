@@ -136,6 +136,17 @@
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
               >
+              <span v-if="mission.type === 'explorespace'">
+                <span v-if="mission.new_planet_id !== null">
+                  {{ mission.new_planet_id }}</span
+                >
+                <span v-if="mission.new_item_id !== null">
+                  {{ mission.new_item_id }}</span
+                >
+                <span v-if="mission.new_stardust > 0">
+                  {{ mission.new_stardust / 100000000 }}</span
+                >
+              </span>
             </td>
             <td>
               <button
@@ -249,6 +260,20 @@
                 :to="{ path: '/battle/' + mission.id }"
                 >{{ $t("Log") }}</router-link
               >
+              <span v-if="mission.type === 'explorespace'">
+                <span v-if="mission.new_planet_id !== null">
+                  {{ mission.new_planet_id }}</span
+                >
+                <span v-if="mission.new_item_id !== null">
+                  {{ $t(mission.new_item_id) }}
+                  {{ mission.new_stardust / 100000000 }}</span
+                >
+                <span
+                  v-if="mission.new_stardust > 0 && mission.new_item_id == null"
+                >
+                  {{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                >
+              </span>
             </td>
           </tr>
         </tbody>
