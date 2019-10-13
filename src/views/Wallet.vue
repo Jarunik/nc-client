@@ -95,6 +95,9 @@
               <span v-if="transaction.tr_type === 'yamato'">
                 {{ transaction.trx }}
               </span>
+              <span v-if="transaction.tr_type === 'exploration'">
+                {{ transaction.trx }}
+              </span>
             </td>
           </tr>
         </tbody>
