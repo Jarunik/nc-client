@@ -522,10 +522,10 @@ export default {
         return "Already Explored";
       }
       if (result === "stardust_found") {
-        return "Stardust Found";
+        return "Stardust found";
       }
       if (result === "blueprint_found") {
-        return "Blueprint Found";
+        return "Blueprint found";
       }
       if (result !== null) {
         return "Unknown";
