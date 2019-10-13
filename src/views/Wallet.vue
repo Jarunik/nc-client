@@ -41,6 +41,7 @@
           <th>{{ $t("Recipient") }}</th>
           <th>{{ $t("Amount") }}</th>
           <th>{{ $t("Transaction") }}</th>
+          <th>{{ $t("Mission") }}</th>
         </thead>
         <tbody>
           <tr v-for="transaction in wallet.transactions" :key="transaction.trx">
@@ -60,44 +61,15 @@
               {{ transaction.amount / 100000000 }}
             </td>
             <td>
-              <span v-if="transaction.tr_type === 'transfer'">
-                <a
-                  :href="
-                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
-                  "
-                  >{{ transaction.trx.substring(0, 8) }}...</a
-                >
-              </span>
-              <span v-if="transaction.tr_type === 'shop'">
-                <a
-                  :href="
-                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
-                  "
-                  >{{ transaction.trx.substring(0, 8) }}...</a
-                >
-              </span>
-              <span v-if="transaction.tr_type === 'gift'">
-                <a
-                  :href="
-                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
-                  "
-                  >{{ transaction.trx.substring(0, 8) }}...</a
-                >
-              </span>
-              <span v-if="transaction.tr_type === 'fee'">
-                <a
-                  :href="
-                    baseUrl() + '/loadtransaction?trx_id=' + transaction.trx
-                  "
-                  >{{ transaction.trx.substring(0, 8) }}...</a
-                >
-              </span>
-              <span v-if="transaction.tr_type === 'yamato'">
+              <span v-if="transaction.mission_id !== null">
                 {{ transaction.trx }}
               </span>
-              <span v-if="transaction.tr_type === 'exploration'">
-                {{ transaction.trx }}
-              </span>
+            </td>
+            <td>
+              <a
+                :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
+                >{{ transaction.trx.substring(0, 8) }}...</a
+              >
             </td>
           </tr>
         </tbody>
