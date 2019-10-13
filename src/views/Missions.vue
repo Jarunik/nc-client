@@ -266,7 +266,7 @@
                 >
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
-                  {{ mission.new_stardust / 100000000 }}</span
+                  {{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
                 >
                 <span
                   v-if="mission.new_stardust > 0 && mission.new_item_id == null"
