@@ -40,8 +40,8 @@
           <th>{{ $t("Sender") }}</th>
           <th>{{ $t("Recipient") }}</th>
           <th>{{ $t("Amount") }}</th>
-          <th>{{ $t("Transaction") }}</th>
           <th>{{ $t("Mission") }}</th>
+          <th>{{ $t("Transaction") }}</th>
         </thead>
         <tbody>
           <tr v-for="transaction in wallet.transactions" :key="transaction.trx">
@@ -62,7 +62,7 @@
             </td>
             <td>
               <span v-if="transaction.mission_id !== null">
-                {{ transaction.trx }}
+                {{ transaction.mission_id }}
               </span>
             </td>
             <td>
