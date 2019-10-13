@@ -9,7 +9,7 @@
         <th>{{ $t("Price") }}</th>
       </thead>
       <tbody>
-        <tr v-for="item in shop" :key="item.id">
+        <tr v-for="item in availableShop" :key="item.id">
           <td>{{ $t(item.name) }}</td>
           <td>
             <span v-if="item.coal !== null">
@@ -24,7 +24,7 @@
             >
           </td>
           <td>
-            <span v-if="item.left < 0"> 0 / 0</span>
+            <span v-if="item.left < 0"> - </span>
             <span v-else>{{ item.left }} / {{ item.total }}</span>
           </td>
           <td>
@@ -58,7 +58,16 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id
-    })
+    }),
+    availableShop() {
+      if (this.shop !== null) {
+        return this.shop.filter(item => {
+          return item.buyable === 1;
+        });
+      } else {
+        return null;
+      }
+    }
   },
   methods: {
     async prepareComponent() {
