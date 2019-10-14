@@ -2,15 +2,20 @@
   <div class="wallet">
     <div v-if="wallet !== null">
       <h1>{{ $t("Wallet") }}</h1>
-      <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
+      <p>
+        {{ $t("Total Supply") }}:
+        <span :style="{ color: '#72bcd4' }"
+          >{{ wallet.supply / 100000000 }} {{ $t("Stardust") }}</span
+        >
+      </p>
       <p>
         {{ $t("Your Balance") }}:
         <b
-          ><font color="green">
+          ><font color="#72bcd4">
             {{ Number(wallet.stardust / 100000000).toFixed(8) }}</font
           ></b
-        >
-        {{ $t("Stardust") }}
+        >&nbsp;
+        <span :style="{ color: '#72bcd4' }">{{ $t("Stardust") }}</span>
       </p>
       <h2>{{ $t("Transfer") }}</h2>
       <p>
@@ -58,7 +63,9 @@
               {{ transaction.to_user }}
             </td>
             <td>
-              {{ transaction.amount / 100000000 }}
+              <span :style="{ color: '#72bcd4' }">{{
+                transaction.amount / 100000000
+              }}</span>
             </td>
             <td>
               <span v-if="transaction.mission_id !== null">

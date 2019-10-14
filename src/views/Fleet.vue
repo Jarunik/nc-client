@@ -213,10 +213,11 @@
                 :title="$t('Stardust')"
             /></font>
             <font v-else>
-              {{ yamatoStardust / 100000000 }}
-              <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
-                :title="$t('Stardust')"
-            /></font>
+              <span :style="{ color: '#72bcd4' }">
+                {{ yamatoStardust / 100000000 }}
+                <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+                  :title="$t('Stardust')"/></span
+            ></font>
           </p>
         </div>
         <!-- Send Transaction -->

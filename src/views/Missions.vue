@@ -141,10 +141,17 @@
                   {{ mission.new_planet_id }}</span
                 >
                 <span v-if="mission.new_item_id !== null">
-                  {{ mission.new_item_id }}</span
+                  {{ $t(mission.new_item_id) }}
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  ></span
                 >
-                <span v-if="mission.new_stardust > 0">
-                  {{ mission.new_stardust / 100000000 }}</span
+                <span
+                  v-if="mission.new_stardust > 0 && mission.new_item_id == null"
+                >
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  ></span
                 >
               </span>
             </td>
@@ -266,12 +273,16 @@
                 >
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
-                  {{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  ></span
                 >
                 <span
                   v-if="mission.new_stardust > 0 && mission.new_item_id == null"
                 >
-                  {{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  ></span
                 >
               </span>
             </td>

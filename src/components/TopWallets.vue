@@ -9,14 +9,16 @@
           <account-icon :title="$t('User')" v-tooltip="$t('User')" />
         </th>
         <th @click="sort('stardust')">
-          <alpha-s-box-icon
-            :title="$t('Stardust')"
-            v-tooltip="$t('Stardust')"
-          />
-          <alpha-d-box-icon
-            :title="$t('Stardust')"
-            v-tooltip="$t('Stardust')"
-          />
+          <span :style="{ color: '#72bcd4' }">
+            <alpha-s-box-icon
+              :title="$t('Stardust')"
+              v-tooltip="$t('Stardust')"
+            />
+            <alpha-d-box-icon
+              :title="$t('Stardust')"
+              v-tooltip="$t('Stardust')"
+            />
+          </span>
         </th>
         <th @click="sort('percentage')">
           <sack-percent-icon
@@ -29,7 +31,11 @@
         <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
           <td>{{ index + 1 }}</td>
           <td @click="setUser(rank.user)">{{ rank.user }}</td>
-          <td>{{ (rank.stardust / 100000000).toFixed(0) }}</td>
+          <td>
+            <span :style="{ color: '#72bcd4' }">{{
+              (rank.stardust / 100000000).toFixed(0)
+            }}</span>
+          </td>
           <td>{{ (rank.percentage * 100).toFixed(2) + "%" }}</td>
         </tr>
       </tbody>

@@ -36,7 +36,10 @@
     </router-link>
     <span v-if="user !== null && stardust !== undefined && stardust !== null">
       |
-      <router-link :to="'/wallet'" v-tooltip="$t('Wallet')"
+      <router-link
+        :to="'/wallet'"
+        v-tooltip="$t('Wallet')"
+        :style="{ color: '#72bcd4' }"
         >{{ Number(stardust / 100000000).toFixed(0) }}
         <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
           :title="$t('Stardust')"/></router-link
