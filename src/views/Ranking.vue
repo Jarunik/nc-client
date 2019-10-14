@@ -69,12 +69,51 @@
           <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
             <td>{{ index + 1 }}</td>
             <td @click="setUser(rank.user)">{{ rank.user }}</td>
-            <td>{{ rank.meta_rate.toFixed(0) }}</td>
-            <td>{{ rank.meta_skill.toFixed(0) }}</td>
-            <td>{{ rank.planets }}</td>
-            <td>{{ rank.explorations }}</td>
-            <td>{{ rank.ships }}</td>
-            <td>{{ rank.destroyed_ships_uranium.toFixed(0) }}</td>
+            <td>
+              {{
+                Number(rank.meta_rate).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.meta_skill).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.planets).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.explorations).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.ships).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.destroyed_ships_uranium).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -96,6 +135,7 @@ import RocketIcon from "vue-material-design-icons/Rocket.vue";
 import SchoolIcon from "vue-material-design-icons/School.vue";
 import NukeIcon from "vue-material-design-icons/Nuke.vue";
 import TopWallets from "@/components/TopWallets.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "ranking",
@@ -122,6 +162,14 @@ export default {
     await this.prepareComponent();
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
+    }),
     sortedRanking() {
       var sortedRanking = this.ranking;
       if (sortedRanking !== null) {

@@ -45,7 +45,13 @@
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ ship.speed }}</td>
             <td>{{ ship.cons }}</td>
-            <td>{{ ship.capacity }}</td>
+            <td>
+              {{
+                Number(ship.capacity).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
               <input class="inputShort" type="number" v-model="ship.toSend" />
@@ -435,7 +441,8 @@ export default {
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
       planetPosX: state => state.planet.posX,
-      planetPosY: state => state.planet.posY
+      planetPosY: state => state.planet.posY,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedFleet() {
       var sortedFleet = this.fleet;

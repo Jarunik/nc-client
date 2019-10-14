@@ -69,11 +69,31 @@
         <tbody>
           <tr v-for="(building, index) in sortedBuildings" :key="building.name">
             <td>{{ $t(building.name) }}</td>
-            <td>{{ building.cur_rate === null ? "-" : building.cur_rate }}</td>
             <td>
-              {{ building.next_rate === null ? "-" : building.next_rate }}
+              {{
+                building.cur_rate === null
+                  ? "-"
+                  : Number(building.cur_rate).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}
             </td>
-            <td>{{ building.current }}</td>
+            <td>
+              {{
+                building.next_rate === null
+                  ? "-"
+                  : Number(building.next_rate).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}
+            </td>
+            <td>
+              {{
+                Number(building.current).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
             <td>
               <font v-if="building.current === building.skill" color="red">
                 {{ building.skill }}
@@ -82,32 +102,66 @@
             </td>
             <td>
               <font v-if="building.coal > coal" color="red">{{
-                building.coal === 0 ? "-" : building.coal
+                building.coal === 0
+                  ? "-"
+                  : Number(building.coal).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
               <font v-else>{{
-                building.coal === 0 ? "-" : building.coal
+                building.coal === 0
+                  ? "-"
+                  : Number(building.coal).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="building.ore > ore" color="red">{{
-                building.ore === 0 ? "-" : building.ore
+                building.ore === 0
+                  ? "-"
+                  : Number(building.ore).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
-              <font v-else>{{ building.ore === 0 ? "-" : building.ore }}</font>
+              <font v-else>{{
+                building.ore === 0
+                  ? "-"
+                  : Number(building.ore).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}</font>
             </td>
             <td>
               <font v-if="building.copper > copper" color="red">{{
-                building.copper === 0 ? "-" : building.copper
+                building.copper === 0
+                  ? "-"
+                  : Number(building.copper).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
               <font v-else>{{
-                building.copper === 0 ? "-" : building.copper
+                building.copper === 0
+                  ? "-"
+                  : Number(building.copper).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="building.uranium > uranium" color="red">{{
-                building.uranium === 0 ? "-" : building.uranium
+                building.uranium === 0
+                  ? "-"
+                  : Number(building.uranium).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
               <font v-else>{{
-                building.uranium === 0 ? "-" : building.uranium
+                building.uranium === 0
+                  ? "-"
+                  : Number(building.uranium).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>{{ building.time | timePretty }}</td>
@@ -293,7 +347,8 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
-      planetName: state => state.planet.name
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedBuildings() {
       var sortedBuildings = this.buildings;

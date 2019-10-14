@@ -65,26 +65,56 @@
               <font v-if="skill.coal > coal" color="red">
                 {{ skill.coal === 0 ? "-" : skill.coal }}
               </font>
-              <font v-else>{{ skill.coal === 0 ? "-" : skill.coal }}</font>
+              <font v-else>{{
+                skill.coal === 0
+                  ? "-"
+                  : Number(skill.coal).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}</font>
             </td>
             <td>
               <font v-if="skill.ore > ore" color="red">
                 {{ skill.ore === 0 ? "-" : skill.ore }}
               </font>
-              <font v-else>{{ skill.ore === 0 ? "-" : skill.ore }}</font>
+              <font v-else>{{
+                skill.ore === 0
+                  ? "-"
+                  : Number(skill.ore).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}</font>
             </td>
             <td>
               <font v-if="skill.copper > copper" color="red">
                 {{ skill.copper === 0 ? "-" : skill.copper }}
               </font>
-              <font v-else>{{ skill.copper === 0 ? "-" : skill.copper }}</font>
+              <font v-else>{{
+                skill.copper === 0
+                  ? "-"
+                  : Number(skill.copper).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
+              }}</font>
             </td>
             <td>
               <font v-if="skill.uranium > uranium" color="red">
-                {{ skill.uranium === 0 ? "-" : skill.uranium }}
+                {{
+                  skill.uranium === 0
+                    ? "-"
+                    : Number(skill.uranium).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
+                }}
               </font>
               <font v-else>
-                {{ skill.uranium === 0 ? "-" : skill.uranium }}
+                {{
+                  skill.uranium === 0
+                    ? "-"
+                    : Number(skill.uranium).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
+                }}
               </font>
             </td>
             <td>{{ skill.time | timePretty }}</td>
@@ -224,7 +254,8 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
-      planetName: state => state.planet.name
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedSkills() {
       var sortedSkills = this.skills;

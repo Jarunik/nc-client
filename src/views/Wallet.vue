@@ -5,14 +5,23 @@
       <p>
         {{ $t("Total Supply") }}:
         <span :style="{ color: '#72bcd4' }"
-          >{{ wallet.supply / 100000000 }} {{ $t("Stardust") }}</span
+          >{{
+            Number(wallet.supply / 100000000).toLocaleString(gameLocale, {
+              style: "decimal"
+            })
+          }}
+          {{ $t("Stardust") }}</span
         >
       </p>
       <p>
         {{ $t("Your Balance") }}:
         <b
           ><font color="#72bcd4">
-            {{ Number(wallet.stardust / 100000000).toFixed(8) }}</font
+            {{
+              Number(wallet.stardust / 100000000).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}</font
           ></b
         >&nbsp;
         <span :style="{ color: '#72bcd4' }">{{ $t("Stardust") }}</span>
@@ -64,7 +73,12 @@
             </td>
             <td>
               <span :style="{ color: '#72bcd4' }">{{
-                transaction.amount / 100000000
+                Number(transaction.amount / 100000000).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
               }}</span>
             </td>
             <td>
@@ -118,7 +132,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      gameLocale: state => state.game.gameLocale
     })
   },
   methods: {

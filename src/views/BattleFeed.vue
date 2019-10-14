@@ -17,10 +17,34 @@
           <td>{{ moment.unix(battle.date, "seconds").format("lll") }}</td>
           <td @click="setUser(battle.attacker)">{{ battle.attacker }}</td>
           <td @click="setUser(battle.defender)">{{ battle.defender }}</td>
-          <td>{{ battle.coal.toFixed(0) }}</td>
-          <td>{{ battle.ore.toFixed(0) }}</td>
-          <td>{{ battle.copper.toFixed(0) }}</td>
-          <td>{{ battle.uranium.toFixed(0) }}</td>
+          <td>
+            {{
+              Number(battle.coal).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}
+          </td>
+          <td>
+            {{
+              Number(battle.ore).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}
+          </td>
+          <td>
+            {{
+              Number(battle.copper).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}
+          </td>
+          <td>
+            {{
+              Number(battle.uranium).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}
+          </td>
           <td>
             <router-link
               v-if="battle.initial_defender_ships.length == 0"
@@ -56,6 +80,7 @@
 import BattleService from "@/services/battle";
 import UserService from "@/services/user";
 import PlanetsService from "@/services/planets";
+import { mapState } from "vuex";
 
 export default {
   name: "battlefeed",
@@ -66,6 +91,15 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+  },
+  computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id,
+      gameLocale: state => state.game.gameLocale
+    })
   },
   methods: {
     async prepareComponent() {

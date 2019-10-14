@@ -95,42 +95,88 @@
             </td>
             <td>
               <font v-if="ship.cost.coal > coal" color="red">{{
-                ship.cost.coal === 0 ? "-" : ship.cost.coal
+                ship.cost.coal === 0
+                  ? "-"
+                  : Number(ship.cost.coal).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
               <font v-else>{{
-                ship.cost.coal === 0 ? "-" : ship.cost.coal
+                ship.cost.coal === 0
+                  ? "-"
+                  : Number(ship.cost.coal).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="ship.cost.ore > ore" color="red">{{
-                ship.cost.ore === 0 ? "-" : ship.cost.ore
+                ship.cost.ore === 0
+                  ? "-"
+                  : Number(ship.cost.ore).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font
               ><font v-else>{{
-                ship.cost.ore === 0 ? "-" : ship.cost.ore
+                ship.cost.ore === 0
+                  ? "-"
+                  : Number(ship.cost.ore).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="ship.cost.copper > copper" color="red">{{
-                ship.cost.copper === 0 ? "-" : ship.cost.copper
+                ship.cost.copper === 0
+                  ? "-"
+                  : Number(ship.cost.copper).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font
               ><font v-else>{{
-                ship.cost.copper === 0 ? "-" : ship.cost.copper
+                ship.cost.copper === 0
+                  ? "-"
+                  : Number(ship.cost.copper).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="ship.cost.uranium > uranium" color="red">{{
-                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+                ship.cost.uranium === 0
+                  ? "-"
+                  : Number(ship.cost.uranium).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font
               ><font v-else>{{
-                ship.cost.uranium === 0 ? "-" : ship.cost.uranium
+                ship.cost.uranium === 0
+                  ? "-"
+                  : Number(ship.cost.uranium).toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
               }}</font>
             </td>
             <td>
               <font v-if="ship.cost.stardust > stardust" color="red">{{
-                ship.cost.stardust === 0 ? "-" : ship.cost.stardust / 100000000
+                ship.cost.stardust === 0
+                  ? "-"
+                  : Number(ship.cost.stardust / 100000000).toLocaleString(
+                      gameLocale,
+                      {
+                        style: "decimal"
+                      }
+                    )
               }}</font
               ><font v-else>{{
-                ship.cost.stardust === 0 ? "-" : ship.cost.stardust / 100000000
+                ship.cost.stardust === 0
+                  ? "-"
+                  : Number(ship.cost.stardust / 100000000).toLocaleString(
+                      gameLocale,
+                      {
+                        style: "decimal"
+                      }
+                    )
               }}</font>
             </td>
             <td>
@@ -274,7 +320,8 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
-      planetName: state => state.planet.name
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedShipyard() {
       var sortedShipyard = this.shipyard;

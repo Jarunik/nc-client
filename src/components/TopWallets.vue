@@ -33,10 +33,18 @@
           <td @click="setUser(rank.user)">{{ rank.user }}</td>
           <td>
             <span :style="{ color: '#72bcd4' }">{{
-              (rank.stardust / 100000000).toFixed(0)
+              Number(rank.stardust / 100000000).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
             }}</span>
           </td>
-          <td>{{ (rank.percentage * 100).toFixed(2) + "%" }}</td>
+          <td>
+            {{
+              Number(rank.percentage).toLocaleString(gameLocale, {
+                style: "percent"
+              })
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -52,6 +60,7 @@ import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 import ChevronTripleUpIcon from "vue-material-design-icons/ChevronTripleUp.vue";
 import SackPercentIcon from "vue-material-design-icons/SackPercent.vue";
 import AccountIcon from "vue-material-design-icons/Account.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "topwallets",
@@ -73,6 +82,14 @@ export default {
     await this.prepareComponent();
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
+    }),
     sortedRanking() {
       var sortedRanking = this.ranking;
       if (sortedRanking !== null) {
