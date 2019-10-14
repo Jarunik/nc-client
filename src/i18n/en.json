@@ -484,5 +484,8 @@
   "blueprint_21": "Eceza",
   "blueprint_22": "Dejah",
   "blueprint_23": "Bhun'il",
-  "blueprint_24": "Zaneel"
+  "blueprint_24": "Zaneel",
+  "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location.": "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location.",
+  "Respawn": "Respawn",
+  "Really?": "Really?"
 }

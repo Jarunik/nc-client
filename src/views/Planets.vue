@@ -1,7 +1,7 @@
 <template>
   <div class="planets">
     <h1>{{ $t("Planets") }}</h1>
-    <template v-if="gameUser !== 'null'">
+    <template v-if="gameUser !== null">
       <table>
         <thead>
           <th>{{ $t("Planet Identifier") }}</th>
@@ -10,7 +10,10 @@
           <th>{{ $t("Rename") }}</th>
           <th>{{ $t("Context") }}</th>
           <th v-if="!giftingLock">
-            <font color="red">{{ $t("Gift Planet") }}</font>
+            <font color="red">{{ $t("Gift") }}</font>
+          </th>
+          <th v-if="!giftingLock">
+            <font color="red">{{ $t("Respawn") }}</font>
           </th>
           <th>{{ $t("Selected") }}</th>
         </thead>
@@ -60,6 +63,23 @@
               </span>
               <span v-else>-</span>
             </td>
+            <td v-if="!giftingLock">
+              <span v-if="gameUser === loginUser && planet.starter == 1">
+                <button @click="toggleGifting(planet.id)">...</button>
+                <template
+                  v-if="planet.id !== null && showGifting === planet.id"
+                >
+                  {{ $t("Really?") }}
+                  <button
+                    :disabled="clicked.includes(planet.id)"
+                    @click="respawnPlanet(planet, index)"
+                  >
+                    {{ $t("Respawn") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
+            </td>
             <td>
               <span v-if="planet.id === planetId"
                 ><earth-icon :title="$t('Home')"
@@ -82,6 +102,13 @@
         <p>
           {{
             $t(
+              "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location."
+            )
+          }}
+        </p>
+        <p>
+          {{
+            $t(
               "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
             )
           }}
@@ -95,7 +122,9 @@
         </p>
       </font>
       <p>
-        <button @click="toggleGiftingLock">{{ $t("Gifting") }}</button>
+        <button @click="toggleGiftingLock">
+          {{ $t("Gifting") }}/{{ $t("Respawn") }}
+        </button>
       </p>
       <h2>{{ $t("Fleet") }}</h2>
       <table>
@@ -232,8 +261,8 @@
     </template>
     <template v-else>
       <p>
-        {{ $t("Please set the") }}
-        <router-link to="/user">{{ $t("user") }}</router-link>
+        {{ $t("Please set a") }}
+        <router-link to="/">{{ $t("user") }}</router-link>
       </p>
     </template>
   </div>
@@ -402,6 +431,22 @@ export default {
           this.giftRecipient = null;
         }
       });
+    },
+    respawnPlanet(planet, index) {
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.respawnPlanet(
+        this.loginUser,
+        planet.id,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.$store.dispatch("planet/setId", null);
+            this.planets[index].id = null;
+            this.placeholderGifting = "Success";
+          } else {
+            this.placeholderGifting = "Broadcast error";
+          }
+        }
+      );
     },
     async getFleet(planet) {
       let planetFleet = planet;
