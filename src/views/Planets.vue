@@ -107,7 +107,11 @@
           }}
         </p>
         <p>
-          {{ $t("Respawn needs a base of level 10 or higher to suceed.") }}
+          {{
+            $t(
+              "Respawn costs 1000 Stardust in fees and it is only possible without active outgoing missions."
+            )
+          }}
         </p>
         <p>
           {{
