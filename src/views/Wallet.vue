@@ -1,7 +1,7 @@
 <template>
   <div class="wallet">
     <div v-if="wallet !== null">
-      <h1>{{ $t("Wallet") }}</h1>
+      <h1>{{ $t("Wallet") }} - {{ gameUser }}</h1>
       <p>
         {{ $t("Total Supply") }}:
         <span :style="{ color: '#72bcd4' }"
@@ -90,6 +90,7 @@ import UserService from "@/services/user";
 import WalletService from "@/services/wallet";
 import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "wallet",
@@ -104,6 +105,13 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "game/" + types.SET_GAME_USER:
+          this.prepareComponent();
+          this.clicked = [];
+      }
+    });
   },
   computed: {
     ...mapState({
