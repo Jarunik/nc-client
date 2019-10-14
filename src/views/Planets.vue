@@ -416,7 +416,6 @@ export default {
             recipient,
             (error, result) => {
               if (error === null && result.success) {
-                this.$store.dispatch("planet/setId", null);
                 this.giftRecipient = null;
                 this.planets[index].id = null;
                 this.placeholderGifting = "Success";
@@ -433,17 +432,14 @@ export default {
       });
     },
     respawnPlanet(planet, index) {
+      this.clicked.push(planet.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.respawnPlanet(
         this.loginUser,
         planet.id,
         (error, result) => {
           if (error === null && result.success) {
-            this.$store.dispatch("planet/setId", null);
-            this.planets[index].id = null;
-            this.placeholderGifting = "Success";
-          } else {
-            this.placeholderGifting = "Broadcast error";
+            console.log(planet.id);
           }
         }
       );
