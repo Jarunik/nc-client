@@ -15,6 +15,9 @@
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Respawn") }}</font>
           </th>
+          <th v-if="!giftingLock">
+            <font color="red">{{ $t("Burn") }}</font>
+          </th>
           <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
@@ -80,6 +83,21 @@
               </span>
               <span v-else>-</span>
             </td>
+            <td v-if="!giftingLock">
+              <span v-if="gameUser === loginUser && planet.starter != 1">
+                <button @click="toggleBurn(planet.id)">...</button>
+                <template v-if="planet.id !== null && showBurn === planet.id">
+                  {{ $t("Really?") }}
+                  <button
+                    :disabled="clicked.includes(planet.id)"
+                    @click="burnPlanet(planet, index)"
+                  >
+                    {{ $t("Burn") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
+            </td>
             <td>
               <span v-if="planet.id === planetId"
                 ><earth-icon :title="$t('Home')"
@@ -116,6 +134,13 @@
         <p>
           {{
             $t(
+              "If you burn a (non-starter) planet with all ships on it then you will receive stardust for it."
+            )
+          }}
+        </p>
+        <p>
+          {{
+            $t(
               "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
             )
           }}
@@ -130,7 +155,7 @@
       </font>
       <p>
         <button @click="toggleGiftingLock">
-          {{ $t("Gifting") }}/{{ $t("Respawn") }}
+          {{ $t("Gifting") }}/{{ $t("Respawn") }}/{{ $t("Burn") }}
         </button>
       </p>
       <h2>{{ $t("Fleet") }}</h2>
@@ -302,7 +327,8 @@ export default {
       giftRecipient: null,
       placeholderGifting: "enter recipient",
       clicked: [],
-      stardust: null
+      stardust: null,
+      showBurn: null
     };
   },
   async mounted() {
@@ -411,6 +437,13 @@ export default {
         this.showGifting = null;
       }
     },
+    toggleBurn(planetId) {
+      if (this.showBurn !== planetId) {
+        this.showBurn = planetId;
+      } else {
+        this.showBurn = null;
+      }
+    },
     giftPlanet(planet, recipient, index) {
       this.fetchhUser(recipient).then(searchedUser => {
         if (searchedUser !== null && searchedUser === recipient) {
@@ -442,6 +475,19 @@ export default {
       this.clicked.push(planet.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.respawnPlanet(
+        this.loginUser,
+        planet.id,
+        (error, result) => {
+          if (error === null && result.success) {
+            console.log(planet.id);
+          }
+        }
+      );
+    },
+    burnPlanet(planet, index) {
+      this.clicked.push(planet.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.burnPlanet(
         this.loginUser,
         planet.id,
         (error, result) => {

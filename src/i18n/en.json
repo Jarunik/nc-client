@@ -489,5 +489,8 @@
   "Respawn": "Respawn",
   "Really?": "Really?",
   "Respawn costs 1000 Stardust in fees and it is only possible without active outgoing missions.": "Respawn costs 1000 Stardust in fees and it is only possible without active outgoing missions.",
-  "Abandoned": "Abandoned"
+  "Abandoned": "Abandoned",
+  "If you burn a (non-starter) planet with all ships on it then you will receive stardust for it.": "If you burn a (non-starter) planet with all ships on it then you will receive stardust for it.",
+  "Burn": "Burn",
+  "enter recipient": "enter recipient"
 }
