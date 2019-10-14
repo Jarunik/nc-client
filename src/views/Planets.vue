@@ -405,7 +405,7 @@ export default {
       }
     },
     toggleGifting(planetId) {
-      if (this.showGifting !== planetId && this.stardust > 100000000000) {
+      if (this.showGifting !== planetId && this.stardust >= 100000000000) {
         this.showGifting = planetId;
       } else {
         this.showGifting = null;
