@@ -19,20 +19,19 @@
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
                   <magnify-icon
                     v-if="lookupLocation(x, y) === 'explore'"
-                    :title="$t('Exploring')"
-                  />
+                    :title="$t('Exploring')"/>
                   <texture-icon
                     v-if="lookupLocation(x, y) === 'fog'"
-                    :title="$t('Fog')"
-                  />
+                    :title="$t('Fog')"/>
                   <earth-icon
                     v-if="lookupLocation(x, y) === 'home'"
-                    :title="$t('Home')"
-                  />
+                    :title="$t('Home')"/>
                   <circle-icon
                     v-if="lookupLocation(x, y) === 'planet'"
-                    :title="$t('Planet')"
-                  /> </font
+                    :title="$t('Planet')"/>
+                  <skull-icon
+                    v-if="lookupLocation(x, y) === 'abandoned'"
+                    :title="$t('Abandoned')"/></font
               ></span>
               <span v-else>
                 <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
@@ -51,6 +50,10 @@
                 <earth-icon
                   v-if="lookupLocation(x, y) === 'home'"
                   :title="$t('Home')"
+                />
+                <skull-icon
+                  v-if="lookupLocation(x, y) === 'abandoned'"
+                  :title="$t('Abandoned')"
                 />
               </span>
             </td>
@@ -105,6 +108,7 @@ import TextureIcon from "vue-material-design-icons/Texture.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
 import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
+import SkullIcon from "vue-material-design-icons/Skull.vue";
 import * as types from "@/store/mutation-types";
 
 export default {
@@ -115,7 +119,8 @@ export default {
     TextureIcon,
     EarthIcon,
     TargetVariantIcon,
-    ShipWheelIcon
+    ShipWheelIcon,
+    SkullIcon
   },
   data: function() {
     return {
@@ -250,6 +255,13 @@ export default {
           ) {
             icon = "home";
           }
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.abandoned === 1
+          ) {
+            icon = "abandoned";
+          }
         });
       });
 
@@ -286,6 +298,13 @@ export default {
             planet.id === ownPlanet.id
           ) {
             icon = "home";
+          }
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.abandoned === 1
+          ) {
+            icon = "abandoned";
           }
         });
       });
