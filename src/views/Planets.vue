@@ -107,6 +107,9 @@
           }}
         </p>
         <p>
+          {{ $t("Respawn needs a base of level 10 or higher to suceed.") }}
+        </p>
+        <p>
           {{
             $t(
               "Gifting will hand over ownership of your planet to someone else and you can't claim it back."

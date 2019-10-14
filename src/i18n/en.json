@@ -487,5 +487,6 @@
   "blueprint_24": "Zaneel",
   "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location.": "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location.",
   "Respawn": "Respawn",
-  "Really?": "Really?"
+  "Really?": "Really?",
+  "Respawn needs a base of level 10 or higher to suceed.": "Respawn needs a base of level 10 or higher to suceed."
 }
