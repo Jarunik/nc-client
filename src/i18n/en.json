@@ -505,5 +505,6 @@
   "planet-type-3": "Ore",
   "planet-type-2": "Coal",
   "planet-type-1": "Atmosphere",
-  "Bonus": "Bonus"
+  "Bonus": "Bonus",
+  "issuestardust": "Issue Stardust"
 }
