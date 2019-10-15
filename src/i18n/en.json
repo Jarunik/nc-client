@@ -495,5 +495,14 @@
   "burn": "Burning",
   "enter recipient": "enter recipient",
   "respawn": "Respawn",
-  "Siege Planet": "Siege Planet"
+  "Siege Planet": "Siege Planet",
+  "planet-bonus-4": "Legendary",
+  "planet-bonus-3": "Rare",
+  "planet-bonus-2": "Uncommon",
+  "planet-bonus-1": "Common",
+  "planet-type-5": "Uranium",
+  "planet-type-4": "Copper",
+  "planet-type-3": "Ore",
+  "planet-type-2": "Coal",
+  "planet-type-1": "Atmosphere"
 }

@@ -7,8 +7,9 @@
           <th>{{ $t("Planet Identifier") }}</th>
           <th>{{ $t("Location") }}</th>
           <th>{{ $t("Name") }}</th>
+          <th>{{ $t("Bonus") }}</th>
+          <th>{{ $t("Type") }}</th>
           <th>{{ $t("Rename") }}</th>
-          <th>{{ $t("Context") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift") }}</font>
           </th>
@@ -18,6 +19,10 @@
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Burn") }}</font>
           </th>
+          <th>
+            <font color="#72bcd4">{{ $t("SD") }}</font>
+          </th>
+          <th>{{ $t("Context") }}</th>
           <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
@@ -25,6 +30,8 @@
             <td>{{ planet.id }}</td>
             <td>({{ planet.posx }}/{{ planet.posy }})</td>
             <td>{{ planet.name }}</td>
+            <td>{{ $t("planet-bonus-" + planet.bonus) }}</td>
+            <td>{{ $t("planet-type-" + planet.planet_type) }}</td>
             <td>
               <span v-if="gameUser === loginUser">
                 <button @click="toggleRename(planet.id)">...</button>
@@ -42,9 +49,6 @@
                 </template>
               </span>
               <span v-else>-</span>
-            </td>
-            <td>
-              <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td v-if="!giftingLock">
               <span v-if="gameUser === loginUser && planet.starter !== 1">
@@ -97,6 +101,16 @@
                 </template>
               </span>
               <span v-else>-</span>
+            </td>
+            <td>
+              <font color="#72bcd4">{{
+                Number(
+                  burnRate(planet.bonus, planet.planet_type) / 100000000
+                ).toLocaleString(gameLocale, { style: "decimal" })
+              }}</font>
+            </td>
+            <td>
+              <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td>
               <span v-if="planet.id === planetId"
@@ -240,29 +254,49 @@
           <tr v-for="pQuantity in sortedPlanetQuantities" :key="pQuantity.id">
             <td>{{ pQuantity.name }}</td>
             <td>
-              <span>{{ pQuantity.coal.toFixed(0) }}</span>
+              <span>{{
+                Number(pQuantity.coal).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}</span>
             </td>
             <td>
               <span
                 :style="{
                   color: pQuantity.coal >= pQuantity.coaldepot ? 'red' : 'white'
                 }"
-                >{{ pQuantity.coaldepot.toFixed(0) }}</span
+                >{{
+                  Number(pQuantity.coaldepot).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}</span
               >
             </td>
             <td>
-              <span>{{ pQuantity.ore.toFixed(0) }}</span>
+              <span>{{
+                Number(pQuantity.ore).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}</span>
             </td>
             <td>
               <span
                 :style="{
                   color: pQuantity.ore >= pQuantity.oredepot ? 'red' : 'white'
                 }"
-                >{{ pQuantity.oredepot.toFixed(0) }}</span
+                >{{
+                  Number(pQuantity.oredepot).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}</span
               >
             </td>
             <td>
-              <span>{{ pQuantity.copper.toFixed(0) }}</span>
+              <span>{{
+                Number(pQuantity.copper).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}</span>
             </td>
             <td>
               <span
@@ -270,11 +304,19 @@
                   color:
                     pQuantity.copper >= pQuantity.copperdepot ? 'red' : 'white'
                 }"
-                >{{ pQuantity.copperdepot.toFixed(0) }}</span
+                >{{
+                  Number(pQuantity.copperdepot).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}</span
               >
             </td>
             <td>
-              <span>{{ pQuantity.uranium.toFixed(0) }}</span>
+              <span>{{
+                Number(pQuantity.uranium).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}</span>
             </td>
             <td>
               <span
@@ -284,7 +326,11 @@
                       ? 'red'
                       : 'white'
                 }"
-                >{{ pQuantity.uraniumdepot.toFixed(0) }}</span
+                >{{
+                  Number(pQuantity.uraniumdepot).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}</span
               >
             </td>
           </tr>
@@ -328,7 +374,8 @@ export default {
       placeholderGifting: "enter recipient",
       clicked: [],
       stardust: null,
-      showBurn: null
+      showBurn: null,
+      burnRates: null
     };
   },
   async mounted() {
@@ -341,7 +388,8 @@ export default {
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedPlanets() {
       return this._.orderBy(this.planets, "name");
@@ -356,6 +404,7 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getPlanets();
+      await this.getBurnRates();
       await this.getPlanetFleet();
       await this.getPlanetQuantities();
       await this.getStardust();
@@ -368,6 +417,10 @@ export default {
       const response = await PlanetsService.byUser(this.gameUser);
       this.planets = response.planets;
       this.$store.dispatch("planet/setList", response.planets);
+    },
+    async getBurnRates() {
+      const response = await PlanetsService.burnRates();
+      this.burnRates = response;
     },
     async getPlanetFleet() {
       let planets = this.planets;
@@ -574,6 +627,16 @@ export default {
       planetQuantities.copperdepot = quantityResponse.copperdepot;
       planetQuantities.uraniumdepot = quantityResponse.uraniumdepot;
       return planetQuantities;
+    },
+    burnRate(bonus, planetType) {
+      if (this.burnRates !== null) {
+        let rate = this.burnRates.filter(item => {
+          return item.bonus == bonus && item.planet_type == planetType;
+        });
+        return rate[0].burnrate;
+      } else {
+        return 0;
+      }
     }
   }
 };
