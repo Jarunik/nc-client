@@ -66,10 +66,10 @@
               {{ $t(transaction.tr_type) }}
             </td>
             <td>
-              {{ transaction.from_user }}
+              {{ transaction.from_user || "-" }}
             </td>
             <td>
-              {{ transaction.to_user }}
+              {{ transaction.to_user || "-" }}
             </td>
             <td>
               <span
@@ -87,9 +87,7 @@
               >
             </td>
             <td>
-              <span v-if="transaction.mission_id !== null">
-                {{ transaction.mission_id }}
-              </span>
+              {{ transaction.mission_id || "-" }}
             </td>
             <td>
               <a
