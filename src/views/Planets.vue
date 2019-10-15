@@ -354,6 +354,7 @@ import UserService from "@/services/user";
 import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import QuantityService from "@/services/quantity";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "planets",
@@ -382,6 +383,12 @@ export default {
     this.clicked = [];
     this.chainResponse = [];
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "game/" + types.SET_GAME_USER:
+          this.prepareComponent();
+      }
+    });
   },
   computed: {
     ...mapState({

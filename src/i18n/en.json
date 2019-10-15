@@ -504,5 +504,6 @@
   "planet-type-4": "Copper",
   "planet-type-3": "Ore",
   "planet-type-2": "Coal",
-  "planet-type-1": "Atmosphere"
+  "planet-type-1": "Atmosphere",
+  "Bonus": "Bonus"
 }
