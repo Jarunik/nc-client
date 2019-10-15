@@ -569,6 +569,10 @@ export default {
       }
     },
     onCommand() {
+      if (this.command == "upgradeyamato") {
+        this.xCoordinate = this.planetPosX;
+        this.yCoordinate = this.planetPosY;
+      }
       this.clicked = false;
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
