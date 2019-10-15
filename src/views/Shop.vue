@@ -80,7 +80,8 @@ export default {
     },
     buy(item) {
       let url = null;
-      if (this.SteemConnectService.appId() == "nextcolony.test") {
+      SteemConnectService.setAccessToken(this.accessToken);
+      if (SteemConnectService.appId() == "nextcolony.test") {
         url =
           "https://app.steemconnect.com/sign/transfer?to=nextcolony&amount=" +
           item.cost +
