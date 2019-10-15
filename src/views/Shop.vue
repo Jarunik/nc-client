@@ -41,6 +41,7 @@
 <script>
 import ShopService from "@/services/shop";
 import { mapState } from "vuex";
+import SteemConnectService from "@/services/steemconnect";
 
 export default {
   name: "shop",
@@ -78,16 +79,30 @@ export default {
       this.shop = response;
     },
     buy(item) {
-      var url =
-        "https://app.steemconnect.com/sign/transfer?to=nextcolony&amount=" +
-        item.cost +
-        "%20STEEM&memo=" +
-        "nc" +
-        "@{'type':'buy','command':{'user':'" +
-        this.loginUser +
-        "','itemid':'" +
-        item.id +
-        "','qty':'1'}}";
+      let url = null;
+      if (this.SteemConnectService.appId() == "nextcolony.test") {
+        url =
+          "https://app.steemconnect.com/sign/transfer?to=nextcolony&amount=" +
+          item.cost +
+          "%20STEEM&memo=" +
+          "nc-test" +
+          "@{'type':'buy','command':{'user':'" +
+          this.loginUser +
+          "','itemid':'" +
+          item.id +
+          "','qty':'1'}}";
+      } else {
+        url =
+          "https://app.steemconnect.com/sign/transfer?to=nextcolony&amount=" +
+          item.cost +
+          "%20STEEM&memo=" +
+          "nc" +
+          "@{'type':'buy','command':{'user':'" +
+          this.loginUser +
+          "','itemid':'" +
+          item.id +
+          "','qty':'1'}}";
+      }
       window.open(url);
     }
   }
