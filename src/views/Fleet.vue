@@ -13,18 +13,35 @@
         {{ $t("Available Missions") }}: {{ availableMissions }} /
         {{ totalMissions }}
       </p>
+      <p v-if="isUnderSiege()" style="color:red">
+        {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
+      </p>
       <!-- Commands -->
       <p>
         {{ $t("Command") }}
         <select @change="onCommand()" v-model="command">
-          <option value="explorespace">{{ $t("Explore") }}</option>
-          <option value="transport">{{ $t("Transport") }}</option>
-          <option value="deploy">{{ $t("Deploy") }}</option>
-          <option value="support">{{ $t("Support") }}</option>
-          <option value="attack">{{ $t("Attack") }}</option>
-          <option value="siege">{{ $t("Siege") }}</option>
+          <option v-if="!isUnderSiege()" value="explorespace">{{
+            $t("Explore")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="transport">{{
+            $t("Transport")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="deploy">{{
+            $t("Deploy")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="support">{{
+            $t("Support")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="attack">{{
+            $t("Attack")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="siege">{{
+            $t("Siege")
+          }}</option>
           <option value="breaksiege">{{ $t("Break Siege") }}</option>
-          <option value="upgradeyamato">{{ $t("Upgrade Yamato") }}</option>
+          <option v-if="!isUnderSiege()" value="upgradeyamato">{{
+            $t("Upgrade Yamato")
+          }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </p>
@@ -359,6 +376,7 @@ export default {
     return {
       fleet: null,
       activeUserMissions: null,
+      activeMissions: null,
       skills: null,
       quantity: null,
       interval: null,
@@ -525,6 +543,8 @@ export default {
     async getMissions() {
       const response = await MissionsService.activeUser(this.gameUser);
       this.activeUserMissions = response;
+      const response2 = await MissionsService.active(this.gameUser);
+      this.activeMissions = response2;
     },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);
@@ -1209,51 +1229,20 @@ export default {
         self.callbackHandling(self);
       }, 700);
     },
-    nextEventDuration() {
-      let nextEvent = null;
-      if (this.activeUserMissions !== null) {
-        this.activeUserMissions.forEach(mission => {
-          let busy = moment(new Date(mission.arrival * 1000));
-          let returning = moment(new Date(mission.return * 1000));
-          if (returning.isAfter(this.now) && returning.isBefore(busy)) {
-            busy = returning;
-          }
-          if (nextEvent === null) {
-            if (busy !== null && busy.isAfter(this.now)) {
-              nextEvent = busy;
+    isUnderSiege() {
+      let underSiege = false;
+      if (this.activeMissions !== null) {
+        this.activeMissions.forEach(mission => {
+          if (mission.type == "siege") {
+            if (mission.to_planet != null) {
+              if (mission.to_planet.id == this.planetId) {
+                underSiege = true;
+              }
             }
           }
-
-          if (
-            nextEvent !== null &&
-            nextEvent.isAfter(busy) &&
-            busy.isAfter(this.now)
-          ) {
-            nextEvent = moment(busy);
-          }
         });
-        if (nextEvent === null) {
-          return null;
-        }
-        let duration = this.moment.duration(nextEvent.diff(this.now));
-        //Get Days and subtract from duration
-        let days = ("0" + duration.days()).slice(-2);
-        duration.subtract(this.moment.duration(days, "days"));
-
-        //Get hours and subtract from duration
-        let hours = ("0" + duration.hours()).slice(-2);
-        duration.subtract(this.moment.duration(hours, "hours"));
-
-        //Get Minutes and subtract from duration
-        let minutes = ("0" + duration.minutes()).slice(-2);
-        duration.subtract(this.moment.duration(minutes, "minutes"));
-
-        //Get seconds
-        let seconds = ("0" + duration.seconds()).slice(-2);
-        return days + ":" + hours + ":" + minutes + ":" + seconds;
-      } else {
-        return null;
       }
+      return underSiege;
     }
   },
   beforeDestroy() {
