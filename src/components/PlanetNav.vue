@@ -170,10 +170,12 @@ export default {
           this.$store.dispatch("game/setUser", newUser);
           this.searchUser = false;
           this.fetchStarterPlanet(newUser).then(planet => {
-            this.$store.dispatch("planet/setId", planet.id);
-            this.$store.dispatch("planet/setName", planet.name);
-            this.$store.dispatch("planet/setPosX", planet.posx);
-            this.$store.dispatch("planet/setPosY", planet.posy);
+            if (planet !== undefined && planet !== null) {
+              this.$store.dispatch("planet/setId", planet.id);
+              this.$store.dispatch("planet/setName", planet.name);
+              this.$store.dispatch("planet/setPosX", planet.posx);
+              this.$store.dispatch("planet/setPosY", planet.posy);
+            }
           });
         } else {
           this.displayUser = this.loginUser;
