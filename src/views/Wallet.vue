@@ -72,14 +72,19 @@
               {{ transaction.to_user }}
             </td>
             <td>
-              <span :style="{ color: '#72bcd4' }">{{
-                Number(transaction.amount / 100000000).toLocaleString(
-                  gameLocale,
-                  {
-                    style: "decimal"
-                  }
-                )
-              }}</span>
+              <span
+                :style="{
+                  color: transaction.from_user == gameUser ? 'red' : 'green'
+                }"
+                >{{
+                  Number(transaction.amount / 100000000).toLocaleString(
+                    gameLocale,
+                    {
+                      style: "decimal"
+                    }
+                  )
+                }}</span
+              >
             </td>
             <td>
               <span v-if="transaction.mission_id !== null">
