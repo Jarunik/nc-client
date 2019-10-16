@@ -6,14 +6,22 @@
       {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
     </p>
     <div v-if="planetId !== null && quantity != null">
-      {{ coal }}
+      {{
+        Number(coal).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
+      }}
       <font v-if="quantity.coaldepot <= coal" color="red">
         <alpha-c-box-icon :title="$t('Coal')" />
       </font>
       <font v-else>
         <alpha-c-box-icon :title="$t('Coal')" />
       </font>
-      {{ ore }}
+      {{
+        Number(ore).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
+      }}
       <font v-if="quantity.oredepot <= ore" color="red">
         <alpha-f-box-icon :title="$t('Ore')" />
         <alpha-e-box-icon :title="$t('Ore')" />
@@ -22,7 +30,11 @@
         <alpha-f-box-icon :title="$t('Ore')" />
         <alpha-e-box-icon :title="$t('Ore')" />
       </font>
-      {{ copper }}
+      {{
+        Number(copper).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
+      }}
       <font v-if="quantity.copperdepot <= copper" color="red">
         <alpha-c-box-icon :title="$t('Copper')" />
         <alpha-u-box-icon :title="$t('Copper')" />
@@ -31,7 +43,11 @@
         <alpha-c-box-icon :title="$t('Copper')" />
         <alpha-u-box-icon :title="$t('Copper')" />
       </font>
-      {{ uranium }}
+      {{
+        Number(uranium).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
+      }}
       <font v-if="quantity.uraniumdepot <= uranium" color="red">
         <alpha-u-box-icon :title="$t('Uranium')" />
       </font>

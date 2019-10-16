@@ -62,6 +62,20 @@
             ><router-link to="/"
               ><account-icon :title="$t('Login')"/></router-link></font
         ></router-link>
+        <span
+          v-if="
+            loginUser == 'jarunik' ||
+              loginUser == 'oliverschmid' ||
+              loginUser == 'nextcolony' ||
+              loginUser == 'rondras'
+          "
+        >
+          |
+          <router-link to="/administration" v-tooltip="$t('Login')">
+            <font color="red"
+              ><settings-icon
+                :title="$t('Administration')"/></font></router-link
+        ></span>
       </span>
     </span>
     <div id="middle">
@@ -96,6 +110,7 @@ import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import TimerIcon from "vue-material-design-icons/Timer.vue";
+import SettingsIcon from "vue-material-design-icons/Settings.vue";
 
 export default {
   name: "App",
@@ -116,7 +131,8 @@ export default {
     SwordCrossIcon,
     NewspaperIcon,
     LoginIcon,
-    TimerIcon
+    TimerIcon,
+    SettingsIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
