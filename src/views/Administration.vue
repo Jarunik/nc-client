@@ -59,42 +59,6 @@
             <option value="blueprint_09"
               >{{ $t("Blueprint") }} {{ $t("Transporter II") }}</option
             >
-            <option value="blueprint_10"
-              >{{ $t("Blueprint") }}{{ $t("Transporter III") }}</option
-            >
-            <option value="blueprint_14"
-              >{{ $t("Blueprint") }} {{ $t("Yamato") }}</option
-            >
-            <option value="blueprint_15"
-              >{{ $t("Blueprint") }} {{ $t("Scout Minerva") }}</option
-            >
-            <option value="blueprint_16"
-              >{{ $t("Blueprint") }} {{ $t("Patrol Cruqal") }}</option
-            >
-            <option value="blueprint_17"
-              >{{ $t("Blueprint") }} {{ $t("Cutter Orchis") }}</option
-            >
-            <option value="blueprint_18"
-              >{{ $t("Blueprint") }} {{ $t("Corvette Najtar") }}</option
-            >
-            <option value="blueprint_19"
-              >{{ $t("Blueprint") }} {{ $t("Frigate Droeel") }}</option
-            >
-            <option value="blueprint_20"
-              >{{ $t("Blueprint") }} {{ $t("Destroyer Halgoin") }}</option
-            >
-            <option value="blueprint_21"
-              >{{ $t("Blueprint") }} {{ $t("Cruiser Eceza") }}</option
-            >
-            <option value="blueprint_22"
-              >{{ $t("Blueprint") }} {{ $t("Battlecruiser Dejah") }}</option
-            >
-            <option value="blueprint_23"
-              >{{ $t("Blueprint") }} {{ $t("Carrier Bhun'il") }}</option
-            >
-            <option value="blueprint_24"
-              >{{ $t("Blueprint") }} {{ $t("Dreadnought Zaneel") }}</option
-            >
           </select>
           &nbsp;
           <input v-model="shopItem" />
