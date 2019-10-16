@@ -109,9 +109,6 @@
             <option value="ore">{{ $t("Ore") }}</option>
             <option value="copper">{{ $t("Copper") }}</option>
             <option value="uranium">{{ $t("Uranium") }}</option>
-            <option value="name">{{ $t("Name") }}</option>
-            <option value="buyable">{{ $t("Buyable") }}</option>
-            <option value="issueable">{{ $t("Issueable") }}</option>
           </select>
           &nbsp;
           <input v-model="shopParameter" />
