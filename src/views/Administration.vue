@@ -95,7 +95,7 @@
         </p>
         <p v-if="result != null">
           <font color="green">{{ $t("Result") }}:</font>
-          {{ JSON.stringify(result) }}
+          {{ result.message }}
         </p>
       </template>
       <!-- Issue Item -->
@@ -156,7 +156,7 @@
         </p>
         <p v-if="result != null">
           <font color="green">{{ $t("Result") }}:</font>
-          {{ JSON.stringify(result) }}
+          {{ result.message }}
         </p>
       </template>
 
@@ -175,7 +175,7 @@
         </p>
         <p v-if="result != null">
           <font color="green">{{ $t("Result") }}:</font>
-          {{ JSON.stringify(result) }}
+          {{ result.message }}
         </p>
       </template>
       <!-- New Season -->
@@ -206,7 +206,7 @@
         </p>
         <p v-if="result != null">
           <font color="green">{{ $t("Result") }}:</font>
-          {{ JSON.stringify(result) }}
+          {{ result.message }}
         </p>
       </template>
     </template>
