@@ -105,10 +105,6 @@
             <option value="sales_per_day">{{ $t("Sales per Day") }}</option>
             <option value="max_supply">{{ $t("Maximal Supply") }}</option>
             <option value="price">{{ $t("Price") }}</option>
-            <option value="coal">{{ $t("Coal") }}</option>
-            <option value="ore">{{ $t("Ore") }}</option>
-            <option value="copper">{{ $t("Copper") }}</option>
-            <option value="uranium">{{ $t("Uranium") }}</option>
           </select>
           &nbsp;
           <input v-model="shopParameter" />
