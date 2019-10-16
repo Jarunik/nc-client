@@ -103,9 +103,6 @@
         <p>
           {{ $t("Item") }}:
           <select v-model="issueItem">
-            <option value="chest_01">{{ $t("Chest") }}</option>
-            <option value="chest_02">{{ $t("Huge Chest") }}</option>
-            <option value="chest_03">{{ $t("Imperium Chest") }}</option>
             <option value="blueprint_10"
               >{{ $t("Blueprint") }}{{ $t("Transporter III") }}</option
             >
