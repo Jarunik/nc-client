@@ -1,6 +1,6 @@
 <template>
   <div class="administration">
-    <h1>{{ $t("Administration") }} - {{ planetName }}</h1>
+    <h1>{{ $t("Administration") }} - {{ loginUser }}</h1>
     <template v-if="gameUser !== 'null'">
       <!-- Commands -->
       <p>
