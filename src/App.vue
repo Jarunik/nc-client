@@ -71,10 +71,8 @@
           "
         >
           |
-          <router-link to="/administration" v-tooltip="$t('Login')">
-            <font color="red"
-              ><settings-icon
-                :title="$t('Administration')"/></font></router-link
+          <router-link to="/administration" v-tooltip="$t('Administration')">
+            <settings-icon :title="$t('Administration')"/></router-link
         ></span>
       </span>
     </span>
