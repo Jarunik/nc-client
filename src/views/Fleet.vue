@@ -116,7 +116,8 @@
                 <span
                   :style="{
                     color:
-                      parseFloat(this.uranium - this.transportUranium) <
+                      parseFloat(this.uranium) -
+                        parseFloat(this.transportUranium) <
                       parseFloat(this.fuelConsumption)
                         ? 'red'
                         : 'white'
