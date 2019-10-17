@@ -26,7 +26,7 @@
             <th>Slot</th>
             <th>Ship</th>
             <th>Survivor</th>
-            <th>Structure</th>
+            <th>Struct</th>
             <th>Armor</th>
             <th>Shield</th>
           </thead>
@@ -40,8 +40,16 @@
               <td>{{ attacker.survivor }} / {{ attacker.n }}</td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.structure ==
+                    mission.initial_attacker_ships[a].structure
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].structure != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_attacker_ships[a].structure != 0"
@@ -63,8 +71,15 @@
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.armor == mission.initial_attacker_ships[a].armor
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].armor != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_attacker_ships[a].armor != 0"
@@ -86,8 +101,15 @@
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.shield == mission.initial_attacker_ships[a].shield
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].shield != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_attacker_ships[a].shield != 0"
@@ -135,7 +157,7 @@
             <th>Slot</th>
             <th>Ship</th>
             <th>Survivor</th>
-            <th>Structure</th>
+            <th>Struct</th>
             <th>Armor</th>
             <th>Shield</th>
           </thead>
@@ -149,8 +171,16 @@
               <td>{{ defender.survivor }} / {{ defender.n }}</td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.structure ==
+                    mission.initial_defender_ships[d].structure
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].structure != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_defender_ships[d].structure != 0"
@@ -172,8 +202,15 @@
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.armor == mission.initial_defender_ships[d].armor
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].armor != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_defender_ships[d].armor != 0"
@@ -195,8 +232,15 @@
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.shield == mission.initial_defender_ships[d].shield
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].shield != 0
+                  "
                 >
                   <div
                     v-if="mission.initial_defender_ships[d].shield != 0"
@@ -274,8 +318,16 @@ export default {
   width: 50px;
   border: 2px solid white;
 }
+#bag-health-damaged {
+  width: 50px;
+  border: 2px solid red;
+}
 #bag-health div {
   height: 10px;
   background: white;
+}
+#bag-health-damaged div {
+  height: 10px;
+  background: red;
 }
 </style>
