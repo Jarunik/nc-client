@@ -111,7 +111,7 @@
               class="inputMedium"
               v-on:change="fillCoordinates(search)"
               v-model="search"
-              placeholder="(x/y)"
+              placeholder="x/y"
             />
             {{ $t("X") }}:
             <input
@@ -523,8 +523,7 @@ export default {
       ) {
         this.xCoordinate = this.$route.query.x;
         this.yCoordinate = this.$route.query.y;
-        this.search =
-          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
+        this.search = this.$route.query.x + "/" + this.$route.query.y;
       }
       this.resetShipFormation();
       let addShip = null;
@@ -600,8 +599,7 @@ export default {
       ) {
         this.xCoordinate = this.$route.query.x;
         this.yCoordinate = this.$route.query.y;
-        this.search =
-          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
+        this.search = this.$route.query.x + "/" + this.$route.query.y;
       }
       this.resetShipFormation();
     },
@@ -644,7 +642,7 @@ export default {
     },
     onCoordinateChange() {
       this.calculateConsumption();
-      this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
+      this.search = this.xCoordinate + "/" + this.yCoordinate;
     },
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
@@ -893,11 +891,7 @@ export default {
       this.$router.push({ path: "galaxy", query: { x: x, y: y } });
     },
     fillCoordinates(search) {
-      let split = search
-        .replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "")
-        .split("/");
+      let split = search.replace(/\s+/g, "").split("/");
       this.xCoordinate = split[0];
       this.yCoordinate = split[1];
     },

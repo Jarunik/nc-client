@@ -28,7 +28,7 @@
         <tbody>
           <tr v-for="(planet, index) in sortedPlanets" :key="planet.id">
             <td>{{ planet.id }}</td>
-            <td>({{ planet.posx }}/{{ planet.posy }})</td>
+            <td>{{ planet.posx }}/{{ planet.posy }}</td>
             <td>{{ planet.name }}</td>
             <td>{{ $t("planet-bonus-" + planet.bonus) }}</td>
             <td>{{ $t("planet-type-" + planet.planet_type) }}</td>

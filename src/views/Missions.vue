@@ -37,9 +37,7 @@
                 <span
                   v-tooltip="mission.from_planet.name"
                   @click="openMap(mission.start_x, mission.start_y)"
-                  >{{
-                    "(" + mission.start_x + "/" + mission.start_y + ")"
-                  }}</span
+                  >{{ mission.start_x + "/" + mission.start_y }}</span
                 >
               </span>
             </td>
@@ -54,14 +52,14 @@
                 <span
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
-                  >{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</span
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
                 >
               </span>
               <span v-else>
                 <span
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
-                  >{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</span
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
                 >
               </span>
             </td>
@@ -194,7 +192,7 @@
               <span
                 v-tooltip="mission.from_planet.name"
                 @click="openMap(mission.start_x, mission.start_y)"
-                >{{ "(" + mission.start_x + "/" + mission.start_y + ")" }}</span
+                >{{ mission.start_x + "/" + mission.start_y }}</span
               >
             </td>
             <td>
@@ -208,14 +206,14 @@
                 <span
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
-                  >{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</span
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
                 >
               </span>
               <span v-else>
                 <span
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
-                  >{{ "(" + mission.end_x + "/" + mission.end_y + ")" }}</span
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
                 >
               </span>
             </td>

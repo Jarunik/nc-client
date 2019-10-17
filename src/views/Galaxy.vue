@@ -60,7 +60,7 @@
           </tr>
         </tbody>
       </table>
-      <input :value="search" @blur="updateSearch($event)" placeholder="(x/y)" />
+      <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
       <button @click="goToSearch(search)" v-tooltip="$t('Center on Selection')">
         <target-variant-icon :title="$t('Focus')" />
       </button>
@@ -172,7 +172,7 @@ export default {
         yCoordinate = this.posY;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
-        this.search = "(" + this.focusX + "/" + this.focusY + ")";
+        this.search = this.focusX + "/" + this.focusY;
       }
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
@@ -182,7 +182,7 @@ export default {
         yCoordinate = this.$route.query.y;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
-        this.search = "(" + this.focusX + "/" + this.focusY + ")";
+        this.search = this.focusX + "/" + this.focusY;
       }
       const response = await GalaxyService.area(
         xCoordinate,
@@ -209,7 +209,7 @@ export default {
     focus(tableX, tableY) {
       this.focusX = this.coordinateX(tableX);
       this.focusY = this.coordinateY(tableY);
-      this.search = "(" + this.focusX + "/" + this.focusY + ")";
+      this.search = this.focusX + "/" + this.focusY;
       this.locationDetail(tableX, tableY);
     },
     locationDetail(tableX, tableY) {
@@ -320,11 +320,7 @@ export default {
       this.getGalaxy();
     },
     goToSearch(search) {
-      let split = search
-        .replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "")
-        .split("/");
+      let split = search.replace(/\s+/g, "").split("/");
       this.goTo(split[0], split[1]);
     },
     goFleet(realX, realY) {
