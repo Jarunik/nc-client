@@ -62,18 +62,6 @@
             ><router-link to="/"
               ><account-icon :title="$t('Login')"/></router-link></font
         ></router-link>
-        <span
-          v-if="
-            loginUser == 'jarunik' ||
-              loginUser == 'oliverschmid' ||
-              loginUser == 'nextcolony' ||
-              loginUser == 'rondras'
-          "
-        >
-          |
-          <router-link to="/administration" v-tooltip="$t('Administration')">
-            <settings-icon :title="$t('Administration')"/></router-link
-        ></span>
       </span>
     </span>
     <div id="middle">
@@ -84,6 +72,18 @@
       <br />
 
       <QuantityRibbon />
+      <span
+        v-if="
+          loginUser == 'jarunik' ||
+            loginUser == 'oliverschmid' ||
+            loginUser == 'nextcolony' ||
+            loginUser == 'rondras'
+        "
+      >
+        |
+        <router-link to="/administration" v-tooltip="$t('Administration')">
+          <settings-icon :title="$t('Administration')"/></router-link
+      ></span>
     </span>
   </div>
 </template>
