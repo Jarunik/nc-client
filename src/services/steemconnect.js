@@ -418,7 +418,7 @@ class SteemConnectService extends Client {
     super.customJson([], [user], [appId], finalJson, cb);
   }
 
-  newSeason(user, name, duration, reward, killRate, deployRate) {
+  newSeason(user, name, duration, reward, killRate, deployRate, cb) {
     var scJson = {};
     var scCommand = {};
     // Create Command
