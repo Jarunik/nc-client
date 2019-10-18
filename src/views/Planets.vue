@@ -468,9 +468,7 @@ export default {
         newName,
         (error, result) => {
           if (error === null && result.success) {
-            this.planets[index].name = newName;
             this.$store.dispatch("planet/setName", newName);
-            this.newName = null;
             this.placeholderRename = "Success";
           }
         }
@@ -517,7 +515,6 @@ export default {
             (error, result) => {
               if (error === null && result.success) {
                 this.giftRecipient = null;
-                this.planets[index].id = null;
                 this.placeholderGifting = "Success";
               } else {
                 this.placeholderGifting = "Broadcast error";
