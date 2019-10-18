@@ -66,7 +66,7 @@
         ><font v-else>{{ $t("Active") }}</font></span
       >
     </p>
-    <template v-if="gameUser !== 'null' && planetId != 'null'">
+    <template v-if="gameUser !== null && planetId != null">
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
@@ -222,13 +222,13 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="gameUser === 'null'">
+      <template v-if="gameUser === null">
         <p>
           {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
+          {{ $t("user") }}
         </p>
       </template>
-      <template v-if="planetId === 'null'"
+      <template v-if="planetId === null"
         ><p>
           {{ $t("Please set the") }}
           <router-link :to="'/planets'">{{ $t("planet") }}</router-link>

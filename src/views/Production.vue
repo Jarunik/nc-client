@@ -2,7 +2,7 @@
   <div class="production">
     <h1>{{ $t("Production") }} - {{ planetName }}</h1>
     <template
-      v-if="gameUser !== 'null' && planetId !== 'null' && production !== null"
+      v-if="gameUser !== null && planetId !== null && production !== null"
     >
       <table>
         <thead>
@@ -116,13 +116,10 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="gameUser === 'null'">
-        <p>
-          {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
-        </p>
+      <template v-if="gameUser === null">
+        <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
       </template>
-      <template v-if="planetId == 'null'">
+      <template v-if="planetId == null">
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/planets'">{{ $t("planet") }}</router-link>

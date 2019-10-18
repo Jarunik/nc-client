@@ -1,7 +1,7 @@
 <template>
   <div class="administration">
     <h1>{{ $t("Administration") }} - {{ loginUser }}</h1>
-    <template v-if="gameUser !== 'null'">
+    <template v-if="gameUser !== null">
       <!-- Commands -->
       <p>
         {{ $t("Command") }}
@@ -204,10 +204,10 @@
       </template>
     </template>
     <template v-else>
-      <template v-if="gameUser === 'null'">
+      <template v-if="gameUser === null">
         <p>
           {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
+          {{ $t("user") }}
         </p>
       </template>
     </template>

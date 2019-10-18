@@ -3,8 +3,8 @@
     <h1>{{ $t("Fleet") }} - {{ planetName }}</h1>
     <template
       v-if="
-        gameUser !== 'null' &&
-          planetId != 'null' &&
+        gameUser !== null &&
+          planetId != null &&
           sortedFleet !== null &&
           sortedFleet.length > 0
       "
@@ -316,19 +316,19 @@
     </template>
     <!-- Not enough Context -->
     <template v-else>
-      <template v-if="gameUser === 'null'">
+      <template v-if="gameUser === null">
         <p>
           {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
+          {{ $t("user") }}
         </p>
       </template>
-      <template v-if="planetId === 'null'">
+      <template v-if="planetId === null">
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
-      <template v-if="gameUser !== 'null'">
+      <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no ships. Build some in the") }}
           <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link

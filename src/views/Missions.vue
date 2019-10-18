@@ -2,7 +2,7 @@
   <div class="missions">
     <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
     <p>{{ $t("Next Event") }}: {{ nextEventDurationFormatted() || "-" }}</p>
-    <template v-if="gameUser !== 'null'">
+    <template v-if="gameUser !== null">
       <h2>
         {{ $t("Active") }} ({{
           activeMissions !== null ? activeMissions.length : 0
@@ -290,10 +290,7 @@
       <p v-if="JSON.stringify(missions) === '[]'">{{ $t("No Result") }}</p>
     </template>
     <template v-else>
-      <p>
-        {{ $t("Please set the") }}
-        <router-link to="/user">{{ $t("set a user") }}</router-link>
-      </p>
+      <p>{{ $t("Please set the") }} {{ $t("set a user") }}</p>
     </template>
   </div>
 </template>

@@ -57,7 +57,7 @@
       <br />
       <br />
     </div>
-    <template v-if="gameUser !== 'null'">
+    <template v-if="gameUser !== null">
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Skill") }}</th>
@@ -168,10 +168,7 @@
       </table>
     </template>
     <template v-else>
-      <p>
-        {{ $t("Please set the") }}
-        <router-link to="/user">{{ $t("set a user") }}</router-link>
-      </p>
+      <p>{{ $t("Please set the") }} {{ $t("set a user") }}</p>
     </template>
   </div>
 </template>
