@@ -595,9 +595,9 @@ const ships = [
     structure: 36000,
     armor: 36000,
     shield: 36000,
-    rocket: 2600,
-    bullet: 2600,
-    laser: 2600
+    rocket: 3600,
+    bullet: 3600,
+    laser: 3600
   },
   {
     id: "yamato19",
