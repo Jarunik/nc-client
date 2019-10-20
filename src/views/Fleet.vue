@@ -514,6 +514,9 @@ export default {
               this.distance;
         }
       }
+      if (this.command != "deploy") {
+        this.fuelConsumption = 2 * this.fuelConsumption;
+      }
     },
     onCoordinateChange() {
       this.calculateConsumption();
