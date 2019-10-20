@@ -33,7 +33,6 @@ export default {
       minY: 0,
       maxY: 0,
       height: 0,
-      mapTable: null,
       ctx: null,
       size: 1331
     };
@@ -75,6 +74,7 @@ export default {
             this.prepareComponent();
         }
       });
+      this.draw();
     },
     async getMap() {
       const response = await MapService.all();
@@ -104,7 +104,6 @@ export default {
         this.minY = minY;
         this.maxY = maxY;
         this.height = Math.abs(minY) + Math.abs(maxY) + 2;
-        this.draw();
       }
     },
     draw() {
