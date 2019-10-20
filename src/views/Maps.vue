@@ -25,7 +25,6 @@
     <button @click="zoomIn()" v-tooltip="$t('Zoom In')">
       +
     </button>
-    {{ size }}
   </div>
 </template>
 
@@ -51,12 +50,15 @@ export default {
       height: 0,
       canvas: null,
       ctx: null,
-      size: 1400,
+      size: 9000,
       focusX: 0,
       focusY: 0,
       centerX: 0,
       centerY: 0,
-      search: null
+      search: null,
+      spacing: 6,
+      planetSize: 4,
+      galaxy: 1400
     };
   },
   async mounted() {
@@ -94,16 +96,16 @@ export default {
         let maxY = 0;
         this.planets.forEach(planet => {
           if (planet.x < minX) {
-            minX = planet.x;
+            minX = planet.x * this.spacing;
           }
           if (planet.x > maxX) {
-            maxX = planet.x;
+            maxX = planet.x * this.spacing;
           }
           if (planet.y < minY) {
-            minY = planet.y;
+            minY = planet.y * this.spacing;
           }
           if (planet.y > maxY) {
-            maxY = planet.y;
+            maxY = planet.y * this.spacing;
           }
         });
         this.minX = minX;
@@ -120,20 +122,26 @@ export default {
         this.clearCanvas();
         if (this.planets !== null) {
           this.planets.forEach(planet => {
-            let x = -this.centerX + this.size / 2 + planet.x;
-            let y = this.centerY + this.size / 2 - planet.y;
-            let planetSize = (1 / 800) * (this.size / 2);
+            let x = -this.centerX + this.size / 2 + planet.x * this.spacing;
+            let y = this.centerY + this.size / 2 - planet.y * this.spacing;
+            let planetSize = this.planetSize;
             if (planet.user == this.gameUser) {
+              this.ctx.globalAlpha = 0.2;
+              this.ctx.globalCompositeOperation = "destination-over";
               this.ctx.fillStyle = "#008000"; //green
               this.ctx.beginPath();
-              this.ctx.arc(x, y, 3 * planetSize, 0, 2 * Math.PI);
-              this.ctx.fillRect(x, y, 1, 1);
+              this.ctx.arc(x, y, 12 * planetSize, 0, 2 * Math.PI);
+              this.ctx.fill();
+              this.ctx.globalCompositeOperation = "source-over";
+              this.ctx.globalAlpha = 1;
+              this.ctx.fillStyle = "#008000"; //green
+              this.ctx.beginPath();
+              this.ctx.arc(x, y, planetSize, 0, 2 * Math.PI);
               this.ctx.fill();
             } else {
               this.ctx.fillStyle = "#FFFFFF"; //white
               this.ctx.beginPath();
               this.ctx.arc(x, y, planetSize, 0, 2 * Math.PI);
-              this.ctx.fillRect(x, y, 1, 1);
               this.ctx.fill();
             }
           });
@@ -144,14 +152,17 @@ export default {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     zoomIn() {
-      this.size = this.size - 200;
+      this.size = this.size - (this.galaxy / 7) * this.spacing;
       if (this.size <= 0) {
-        this.size = 100;
+        this.size = (this.galaxy / 14) * this.spacing;
       }
       this.draw();
     },
     zoomOut() {
-      this.size = this.size + 200;
+      this.size = this.size + (this.galaxy / 7) * this.spacing;
+      if (this.size > ((this.galaxy * 9) / 7) * this.spacing) {
+        this.size = ((this.galaxy * 9) / 7) * this.spacing;
+      }
       this.draw();
     },
     updateSearch(e) {
@@ -159,17 +170,20 @@ export default {
     },
     centerSearch(search) {
       let split = search.replace(/\s+/g, "").split("/");
-      this.centerX = parseInt(split[0]);
-      this.centerY = parseInt(split[1]);
+      this.centerX = parseInt(split[0] * this.spacing);
+      this.centerY = parseInt(split[1] * this.spacing);
       this.draw();
     },
     focusCoordinate(event) {
       let rect = this.canvas.getBoundingClientRect();
       this.focusX =
-        this.centerX +
-        (event.clientX - rect.left - 800 / 2) * (this.size / 800);
+        this.centerX / this.spacing +
+        ((event.clientX - rect.left - 800 / 2) * (this.size / 800)) /
+          this.spacing;
       this.focusY =
-        this.centerY + (rect.top - event.clientY + 800 / 2) * (this.size / 800);
+        this.centerY / this.spacing +
+        ((rect.top - event.clientY + 800 / 2) * (this.size / 800)) /
+          this.spacing;
       this.search = parseInt(this.focusX) + "/" + parseInt(this.focusY);
     },
     centerCoordinate(event) {
