@@ -88,7 +88,7 @@ export default {
     async getMap() {
       let planets = null;
       if (this.mapsPlanets != null) {
-        let planets = this.mapsPlanets.slice(); //slice to make a shallow copy
+        planets = this.mapsPlanets.slice(); //slice to make a shallow copy
       }
       let updatedPlanets = null;
       if (planets !== null && this.lastUpdate !== null && !this.forceFullLoad) {
