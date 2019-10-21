@@ -2,7 +2,7 @@
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
     <p>
-      <router-link to="/maps">{{ $t("Overview Map") }}</router-link>
+      <router-link to="/maps">{{ $t("Maps") }}</router-link>
     </p>
     <template v-if="this.galaxy != null">
       <table>

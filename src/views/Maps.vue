@@ -1,6 +1,9 @@
 <template>
   <div class="maps">
     <h1>{{ $t("Maps") }}</h1>
+    <p>
+      <router-link to="/galaxy">{{ $t("Galaxy") }}</router-link>
+    </p>
     <div>
       <canvas
         ref="canvas"
