@@ -14,15 +14,21 @@
         style="width: 800px; height: 800px;"
       ></canvas>
     </div>
-    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
-    <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
-      <target-variant-icon :title="$t('Focus')" />
-    </button>
     <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">
       -
     </button>
     <button @click="zoomIn()" v-tooltip="$t('Zoom In')">
       +
+    </button>
+    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
+    <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
+      <target-variant-icon :title="$t('Focus')" />
+    </button>
+    <button @click="centerHome()" v-tooltip="$t('Center on Home')">
+      <earth-icon :title="$t('Home')" />
+    </button>
+    <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
+      <ship-wheel-icon :title="$t('Fleet')" />
     </button>
   </div>
 </template>
@@ -32,11 +38,15 @@ import MapService from "@/services/maps";
 import { mapState } from "vuex";
 import * as types from "@/store/mutation-types";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
+import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
 
 export default {
   name: "maps",
   components: {
-    TargetVariantIcon
+    TargetVariantIcon,
+    EarthIcon,
+    ShipWheelIcon
   },
   data: function() {
     return {
@@ -73,6 +83,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale,
       mapsPlanets: state => state.maps.planets,
       lastUpdate: state => state.maps.lastUpdate
@@ -86,30 +98,44 @@ export default {
           case "planet/" + types.SET_PLANET_ID:
             this.prepareComponent();
         }
+        this.centerHome();
       });
     },
     async getMap() {
+      let now = this.moment.utc();
+      let lastUpdateDate = this.moment(new Date(this.lastUpdate * 1000));
       let planets = null;
       if (this.mapsPlanets != null) {
         planets = this.mapsPlanets.slice(); //slice to make a shallow copy
       }
       let updatedPlanets = null;
-      if (planets !== null && this.lastUpdate !== null && !this.forceFullLoad) {
-        const response = await MapService.after(this.lastUpdate);
-        updatedPlanets = response;
-        if (updatedPlanets !== undefined && updatedPlanets.length > 0) {
-          updatedPlanets.forEach(newPlanet => {
-            let index = planets.findIndex(obj => obj.id == newPlanet.id);
-            if (index !== -1) {
-              planets[index] = newPlanet;
-            } else {
-              planets.push(newPlanet);
-            }
-          });
-        }
-      } else {
+      let outdatedFull = now.subtract(7, "days");
+      let outdatedDelta = now.subtract(5, "minutes");
+      // Full Refresh (initial or after 7 days wihtout update)
+      if (
+        outdatedFull.isAfter(lastUpdateDate) ||
+        this.lastUpdate == null ||
+        this.forceFullLoad ||
+        planets == null
+      ) {
         const response = await MapService.all();
         planets = response;
+      } else {
+        // Delta Load (max every 5 minutes)
+        if (outdatedDelta.isAfter(lastUpdateDate)) {
+          const response = await MapService.after(this.lastUpdate);
+          updatedPlanets = response;
+          if (updatedPlanets !== undefined && updatedPlanets.length > 0) {
+            updatedPlanets.forEach(newPlanet => {
+              let index = planets.findIndex(obj => obj.id == newPlanet.id);
+              if (index !== -1) {
+                planets[index] = newPlanet;
+              } else {
+                planets.push(newPlanet);
+              }
+            });
+          }
+        }
       }
       if (planets !== null) {
         let minX = 0;
@@ -203,19 +229,36 @@ export default {
     },
     focusCoordinate(event) {
       let rect = this.canvas.getBoundingClientRect();
-      this.focusX =
+      this.focusX = parseInt(
         this.centerX / this.spacing +
-        ((event.clientX - rect.left - 800 / 2) * (this.size / 800)) /
-          this.spacing;
-      this.focusY =
+          ((event.clientX - rect.left - 800 / 2) * (this.size / 800)) /
+            this.spacing
+      );
+      this.focusY = parseInt(
         this.centerY / this.spacing +
-        ((rect.top - event.clientY + 800 / 2) * (this.size / 800)) /
-          this.spacing;
-      this.search = parseInt(this.focusX) + "/" + parseInt(this.focusY);
+          ((rect.top - event.clientY + 800 / 2) * (this.size / 800)) /
+            this.spacing
+      );
+      this.search = this.focusX + "/" + this.focusY;
     },
     centerCoordinate(event) {
       this.focusCoordinate(event);
       this.centerSearch(this.search);
+    },
+    centerHome() {
+      this.focusX = this.posX;
+      this.focusY = this.posY;
+      this.search = this.focusX + "/" + this.focusY;
+      this.centerX = this.focusX * this.spacing;
+      this.centerY = this.focusY * this.spacing;
+      this.draw();
+    },
+    goFleet() {
+      let newPath = this.$route.path.replace("maps", "fleet");
+      this.$router.push({
+        path: newPath,
+        query: { x: this.focusX, y: this.focusY }
+      });
     }
   }
 };
