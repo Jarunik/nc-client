@@ -6,6 +6,11 @@ class MapsService {
 
     return response;
   }
+  async after(lastUpdate) {
+    const response = await ApiService.get(`/galaxyplanets?after=${lastUpdate}`);
+
+    return response;
+  }
 }
 
 export default new MapsService();

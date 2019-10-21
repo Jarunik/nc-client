@@ -170,6 +170,11 @@ export default {
       get() {
         return this.$store.state.planet.posY;
       }
+    },
+    mapsPlanets: {
+      get() {
+        return this.$store.state.maps.planets;
+      }
     }
   },
   mounted() {
@@ -258,6 +263,16 @@ export default {
         "game/setLocale",
         JSON.parse(gameLocale) || navigator.language || "en"
       );
+    }
+
+    var mapsPlanets = localStorage.getItem("mapsPlanets");
+    if (mapsPlanets !== "undefined") {
+      this.$store.dispatch("maps/setPlanets", JSON.parse(mapsPlanets));
+    }
+
+    var lastUpdate = localStorage.getItem("lastUpdate");
+    if (lastUpdate !== "undefined") {
+      this.$store.dispatch("maps/setLastUpdate", JSON.parse(lastUpdate));
     }
 
     this.$i18n.locale = this.language;

@@ -2,10 +2,6 @@
   <div class="maps">
     <h1>{{ $t("Maps") }}</h1>
     <div>
-      {{ minX }} / {{ minY }} to {{ maxX }} / {{ maxY }} with {{ width }} x
-      {{ height }}
-    </div>
-    <div>
       <canvas
         ref="canvas"
         :width="size"
@@ -58,7 +54,8 @@ export default {
       search: null,
       spacing: 6,
       planetSize: 4,
-      galaxy: 1400
+      galaxy: 1400,
+      forceFullLoad: false
     };
   },
   async mounted() {
@@ -73,7 +70,9 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
-      gameLocale: state => state.game.gameLocale
+      gameLocale: state => state.game.gameLocale,
+      mapsPlanets: state => state.maps.planets,
+      lastUpdate: state => state.maps.lastUpdate
     })
   },
   methods: {
@@ -87,14 +86,32 @@ export default {
       });
     },
     async getMap() {
-      const response = await MapService.all();
-      this.planets = response;
-      if (this.planets !== undefined && this.planets !== null) {
+      let planets = this.mapsPlanets.slice(); //slice to make a shallow copy
+      let updatedPlanets = null;
+      if (planets !== null && this.lastUpdate !== null && !this.forceFullLoad) {
+        const response = await MapService.after(this.lastUpdate);
+        updatedPlanets = response;
+        if (updatedPlanets !== undefined && updatedPlanets.length > 0) {
+          updatedPlanets.forEach(newPlanet => {
+            let index = planets.findIndex(obj => obj.id == newPlanet.id);
+            if (index !== -1) {
+              planets[index] = newPlanet;
+            } else {
+              planets.push(newPlanet);
+            }
+          });
+        }
+      } else {
+        const response = await MapService.all();
+        planets = response;
+      }
+      if (planets !== null) {
         let minX = 0;
         let maxX = 0;
         let minY = 0;
         let maxY = 0;
-        this.planets.forEach(planet => {
+        let lastUpdate = 0;
+        planets.forEach(planet => {
           if (planet.x < minX) {
             minX = planet.x * this.spacing;
           }
@@ -107,6 +124,9 @@ export default {
           if (planet.y > maxY) {
             maxY = planet.y * this.spacing;
           }
+          if (planet.update > lastUpdate) {
+            lastUpdate = planet.update;
+          }
         });
         this.minX = minX;
         this.maxX = maxX;
@@ -114,6 +134,9 @@ export default {
         this.minY = minY;
         this.maxY = maxY;
         this.height = Math.abs(minY) + Math.abs(maxY) + 2;
+        this.$store.dispatch("maps/setLastUpdate", lastUpdate);
+        this.$store.dispatch("maps/setPlanets", planets);
+        this.planets = planets;
         this.draw();
       }
     },
@@ -126,15 +149,13 @@ export default {
             let y = this.centerY + this.size / 2 - planet.y * this.spacing;
             let planetSize = this.planetSize;
             if (planet.user == this.gameUser) {
-              this.ctx.globalAlpha = 0.2;
               this.ctx.globalCompositeOperation = "destination-over";
-              this.ctx.fillStyle = "#008000"; //green
+              this.ctx.fillStyle = "#008000"; //yellow
               this.ctx.beginPath();
               this.ctx.arc(x, y, 12 * planetSize, 0, 2 * Math.PI);
               this.ctx.fill();
               this.ctx.globalCompositeOperation = "source-over";
-              this.ctx.globalAlpha = 1;
-              this.ctx.fillStyle = "#008000"; //green
+              this.ctx.fillStyle = "#ffff00"; //green
               this.ctx.beginPath();
               this.ctx.arc(x, y, planetSize, 0, 2 * Math.PI);
               this.ctx.fill();
