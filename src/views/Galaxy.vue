@@ -5,7 +5,7 @@
       <router-link to="/maps">{{ $t("Maps") }}</router-link>
     </p>
     <template v-if="this.galaxy != null">
-      <table>
+      <table id="galaxy-map">
         <tbody>
           <tr v-for="y in areaHeight" :key="y">
             <td
@@ -346,3 +346,10 @@ export default {
   }
 };
 </script>
+<style>
+#galaxy-map {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+</style>

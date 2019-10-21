@@ -30,6 +30,7 @@
     <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
       <ship-wheel-icon :title="$t('Fleet')" />
     </button>
+    {{ this.size / this.spacing }}
   </div>
 </template>
 
@@ -65,8 +66,8 @@ export default {
       centerX: 0,
       centerY: 0,
       search: null,
-      spacing: 6,
-      planetSize: 4,
+      spacing: 7,
+      planetSize: 3.5,
       galaxy: 1400,
       forceFullLoad: false
     };
@@ -98,7 +99,6 @@ export default {
           case "planet/" + types.SET_PLANET_ID:
             this.prepareComponent();
         }
-        this.centerHome();
       });
     },
     async getMap() {
@@ -197,6 +197,16 @@ export default {
               this.ctx.arc(x, y, planetSize, 0, 2 * Math.PI);
               this.ctx.fill();
             }
+            if (
+              (planet.x == this.centerX / this.spacing &&
+                planet.y == this.centerY / this.spacing) ||
+              (planet.x == this.focusX && planet.y == this.focusY)
+            ) {
+              this.ctx.fillStyle = "#ff0000"; //red
+              this.ctx.beginPath();
+              this.ctx.arc(x, y, planetSize, 0, 2 * Math.PI);
+              this.ctx.fill();
+            }
           });
         }
       });
@@ -205,16 +215,16 @@ export default {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     zoomIn() {
-      this.size = this.size - (this.galaxy / 7) * this.spacing;
+      this.size = this.size - (this.galaxy / 10) * this.spacing;
       if (this.size <= 0) {
-        this.size = (this.galaxy / 14) * this.spacing;
+        this.size = (this.galaxy / 20) * this.spacing;
       }
       this.draw();
     },
     zoomOut() {
-      this.size = this.size + (this.galaxy / 7) * this.spacing;
-      if (this.size > ((this.galaxy * 9) / 7) * this.spacing) {
-        this.size = ((this.galaxy * 9) / 7) * this.spacing;
+      this.size = this.size + (this.galaxy / 10) * this.spacing;
+      if (this.size > this.galaxy * this.spacing) {
+        this.size = this.galaxy * this.spacing;
       }
       this.draw();
     },
@@ -240,6 +250,7 @@ export default {
             this.spacing
       );
       this.search = this.focusX + "/" + this.focusY;
+      this.draw();
     },
     centerCoordinate(event) {
       this.focusCoordinate(event);
@@ -251,6 +262,7 @@ export default {
       this.search = this.focusX + "/" + this.focusY;
       this.centerX = this.focusX * this.spacing;
       this.centerY = this.focusY * this.spacing;
+      this.size = (this.galaxy / 20) * this.spacing;
       this.draw();
     },
     goFleet() {
@@ -266,5 +278,8 @@ export default {
 <style>
 canvas {
   background-color: black;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 </style>
