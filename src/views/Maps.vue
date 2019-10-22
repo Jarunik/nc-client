@@ -236,19 +236,18 @@ export default {
     },
     focusCoordinate(event) {
       let rect = this.canvas.getBoundingClientRect();
-      console.log(event.clientX, rect.left);
-      this.focusX = parseInt(
-        this.centerX / displaySpacing +
-          ((event.clientX - rect.left - displaySize / 2 - displaySpacing) *
-            (this.gameSize / displaySize)) /
-            displaySpacing
-      );
-      this.focusY = parseInt(
-        this.centerY / displaySpacing +
-          ((-event.clientY + rect.top + displaySize / 2 - displaySpacing) *
-            (this.gameSize / displaySize)) /
-            displaySpacing
-      );
+      let scale = this.gameSize / displaySize / displaySpacing;
+
+      let gameCenterX = this.centerX / displaySpacing;
+      let clickedCanvasX =
+        event.clientX - rect.left - displaySize / 2 - displaySpacing;
+      this.focusX = parseInt(gameCenterX + clickedCanvasX * scale);
+
+      let gameCenterY = this.centerY / displaySpacing;
+      let clickedCanvasY =
+        -event.clientY + rect.top + displaySize / 2 - displaySpacing;
+
+      this.focusY = parseInt(gameCenterY + clickedCanvasY * scale);
       this.search = this.focusX + "/" + this.focusY;
       this.draw();
     },
