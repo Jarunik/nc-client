@@ -7,8 +7,8 @@
     <div>
       <canvas
         ref="canvas"
-        :width="size"
-        :height="size"
+        :width="gameSize"
+        :height="gameSize"
         @click="focusCoordinate($event)"
         v-on:dblclick="centerCoordinate($event)"
         style="width: 800px; height: 800px;"
@@ -16,17 +16,17 @@
     </div>
     <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">-</button>
     <button @click="zoomIn()" v-tooltip="$t('Zoom In')">+</button>
-    <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
+    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
     <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
-      <target-variant-icon :title="$t('Focus')"/>
+      <target-variant-icon :title="$t('Focus')" />
     </button>
     <button @click="centerHome()" v-tooltip="$t('Center on Home')">
-      <earth-icon :title="$t('Home')"/>
+      <earth-icon :title="$t('Home')" />
     </button>
     <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
-      <ship-wheel-icon :title="$t('Fleet')"/>
+      <ship-wheel-icon :title="$t('Fleet')" />
     </button>
-    {{ this.size / this.spacing }}
+    {{ zoomLevel }}
   </div>
 </template>
 
@@ -37,6 +37,12 @@ import * as types from "@/store/mutation-types";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
+
+const displaySpacing = 10;
+const gameGalaxy = 1331;
+const displaySize = 800;
+const displayPlanetRadius = 4;
+const zoomStep = 121;
 
 export default {
   name: "maps",
@@ -56,15 +62,13 @@ export default {
       height: 0,
       canvas: null,
       ctx: null,
-      size: 8000,
+      gameSize: 1331,
+      zoomLevel: 0,
       focusX: 0,
       focusY: 0,
       centerX: 0,
       centerY: 0,
       search: null,
-      spacing: 10,
-      planetSize: 8,
-      galaxy: 1400,
       forceFullLoad: false
     };
   },
@@ -134,37 +138,16 @@ export default {
         }
       }
       if (planets !== null) {
-        let minX = 0;
-        let maxX = 0;
-        let minY = 0;
-        let maxY = 0;
         let lastUpdate = 0;
         planets.forEach(planet => {
-          if (planet.x < minX) {
-            minX = planet.x * this.spacing;
-          }
-          if (planet.x > maxX) {
-            maxX = planet.x * this.spacing;
-          }
-          if (planet.y < minY) {
-            minY = planet.y * this.spacing;
-          }
-          if (planet.y > maxY) {
-            maxY = planet.y * this.spacing;
-          }
           if (planet.update > lastUpdate) {
             lastUpdate = planet.update;
           }
         });
-        this.minX = minX;
-        this.maxX = maxX;
-        this.width = Math.abs(minX) + Math.abs(maxX) + 2;
-        this.minY = minY;
-        this.maxY = maxY;
-        this.height = Math.abs(minY) + Math.abs(maxY) + 2;
         this.$store.dispatch("maps/setLastUpdate", lastUpdate);
         this.$store.dispatch("maps/setPlanets", planets);
         this.planets = planets;
+        this.gameSize = gameGalaxy * displaySpacing;
         this.draw();
       }
     },
@@ -173,9 +156,11 @@ export default {
         this.clearCanvas();
         if (this.planets !== null) {
           this.planets.forEach(planet => {
-            let x = -this.centerX + this.size / 2 + planet.x * this.spacing;
-            let y = this.centerY + this.size / 2 - planet.y * this.spacing;
-            let planetSize = this.planetSize / 2;
+            let x =
+              -this.centerX + this.gameSize / 2 + planet.x * displaySpacing;
+            let y =
+              this.centerY + this.gameSize / 2 - planet.y * displaySpacing;
+            let planetSize = displayPlanetRadius;
             if (planet.user == this.gameUser) {
               this.ctx.globalCompositeOperation = "destination-over";
               this.ctx.fillStyle = "#008000"; //yellow
@@ -194,8 +179,7 @@ export default {
               this.ctx.fill();
             }
             if (
-              (planet.x == this.centerX / this.spacing &&
-                planet.y == this.centerY / this.spacing) ||
+              (planet.x == this.centerX && planet.y == this.centerY) ||
               (planet.x == this.focusX && planet.y == this.focusY)
             ) {
               this.ctx.fillStyle = "#ff0000"; //red
@@ -211,39 +195,58 @@ export default {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     zoomIn() {
-      this.size = this.size - (this.galaxy / 14) * this.spacing;
-      if (this.size <= this.galaxy / 14) {
-        this.size = (this.galaxy / 14) * this.spacing;
+      if (this.zoomLevel == 10) {
+        this.zoomLevel = 11;
+        this.gameSize =
+          gameGalaxy * displaySpacing - (gameGalaxy - 22) * displaySpacing;
+      } else {
+        this.zoomLevel = Math.min(this.zoomLevel + 1, 10);
+        this.gameSize =
+          gameGalaxy * displaySpacing -
+          this.zoomLevel * zoomStep * displaySpacing;
       }
       this.draw();
     },
     zoomOut() {
-      this.size = this.size + (this.galaxy / 14) * this.spacing;
-      if (this.size > this.galaxy * this.spacing) {
-        this.size = this.galaxy * this.spacing;
-      }
+      this.zoomLevel = Math.max(this.zoomLevel - 1, 0);
+      this.gameSize =
+        gameGalaxy * displaySpacing -
+        this.zoomLevel * zoomStep * displaySpacing;
+      this.draw();
+    },
+    setZoom(zoomLevel) {
+      this.zoomLevel = zoomLevel;
+      this.gameSize =
+        gameGalaxy * displaySpacing - zoomLevel * zoomStep * displaySpacing;
       this.draw();
     },
     updateSearch(e) {
       this.search = e.target.value;
     },
     centerSearch(search) {
-      let split = search.replace(/\s+/g, "").split("/");
-      this.centerX = parseInt(split[0] * this.spacing);
-      this.centerY = parseInt(split[1] * this.spacing);
+      if (search == null) {
+        this.centerX = 0;
+        this.centerY = 0;
+      } else {
+        let split = search.replace(/\s+/g, "").split("/");
+        this.centerX = parseInt(split[0] * displaySpacing);
+        this.centerY = parseInt(split[1] * displaySpacing);
+      }
       this.draw();
     },
     focusCoordinate(event) {
       let rect = this.canvas.getBoundingClientRect();
       this.focusX = parseInt(
-        this.centerX / this.spacing +
-          ((event.clientX - rect.left - 800 / 2) * (this.size / 800)) /
-            this.spacing
+        this.centerX / displaySpacing +
+          ((event.clientX - rect.left - displaySize / 2) *
+            (this.gameSize / displaySize)) /
+            displaySpacing
       );
       this.focusY = parseInt(
-        this.centerY / this.spacing +
-          ((rect.top - event.clientY + 800 / 2) * (this.size / 800)) /
-            this.spacing
+        this.centerY / displaySpacing +
+          ((-event.clientY + rect.top + displaySize / 2) *
+            (this.gameSize / displaySize)) /
+            displaySpacing
       );
       this.search = this.focusX + "/" + this.focusY;
       this.draw();
@@ -256,10 +259,9 @@ export default {
       this.focusX = this.posX;
       this.focusY = this.posY;
       this.search = this.focusX + "/" + this.focusY;
-      this.centerX = this.focusX * this.spacing;
-      this.centerY = this.focusY * this.spacing;
-      this.size = (this.galaxy / 20) * this.spacing;
-      this.draw();
+      this.centerX = this.focusX * displaySpacing;
+      this.centerY = this.focusY * displaySpacing;
+      this.setZoom(10);
     },
     goFleet() {
       let newPath = this.$route.path.replace("maps", "fleet");
