@@ -14,21 +14,17 @@
         style="width: 800px; height: 800px;"
       ></canvas>
     </div>
-    <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">
-      -
-    </button>
-    <button @click="zoomIn()" v-tooltip="$t('Zoom In')">
-      +
-    </button>
-    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
+    <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">-</button>
+    <button @click="zoomIn()" v-tooltip="$t('Zoom In')">+</button>
+    <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
     <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
-      <target-variant-icon :title="$t('Focus')" />
+      <target-variant-icon :title="$t('Focus')"/>
     </button>
     <button @click="centerHome()" v-tooltip="$t('Center on Home')">
-      <earth-icon :title="$t('Home')" />
+      <earth-icon :title="$t('Home')"/>
     </button>
     <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
-      <ship-wheel-icon :title="$t('Fleet')" />
+      <ship-wheel-icon :title="$t('Fleet')"/>
     </button>
     {{ this.size / this.spacing }}
   </div>
@@ -60,14 +56,14 @@ export default {
       height: 0,
       canvas: null,
       ctx: null,
-      size: 9000,
+      size: 8000,
       focusX: 0,
       focusY: 0,
       centerX: 0,
       centerY: 0,
       search: null,
-      spacing: 7,
-      planetSize: 3.5,
+      spacing: 10,
+      planetSize: 8,
       galaxy: 1400,
       forceFullLoad: false
     };
@@ -179,7 +175,7 @@ export default {
           this.planets.forEach(planet => {
             let x = -this.centerX + this.size / 2 + planet.x * this.spacing;
             let y = this.centerY + this.size / 2 - planet.y * this.spacing;
-            let planetSize = this.planetSize;
+            let planetSize = this.planetSize / 2;
             if (planet.user == this.gameUser) {
               this.ctx.globalCompositeOperation = "destination-over";
               this.ctx.fillStyle = "#008000"; //yellow
@@ -215,14 +211,14 @@ export default {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     zoomIn() {
-      this.size = this.size - (this.galaxy / 10) * this.spacing;
-      if (this.size <= 0) {
-        this.size = (this.galaxy / 20) * this.spacing;
+      this.size = this.size - (this.galaxy / 14) * this.spacing;
+      if (this.size <= this.galaxy / 14) {
+        this.size = (this.galaxy / 14) * this.spacing;
       }
       this.draw();
     },
     zoomOut() {
-      this.size = this.size + (this.galaxy / 10) * this.spacing;
+      this.size = this.size + (this.galaxy / 14) * this.spacing;
       if (this.size > this.galaxy * this.spacing) {
         this.size = this.galaxy * this.spacing;
       }
