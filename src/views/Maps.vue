@@ -236,15 +236,16 @@ export default {
     },
     focusCoordinate(event) {
       let rect = this.canvas.getBoundingClientRect();
+      console.log(event.clientX, rect.left);
       this.focusX = parseInt(
         this.centerX / displaySpacing +
-          ((event.clientX - rect.left - displaySize / 2) *
+          ((event.clientX - rect.left - displaySize / 2 - displaySpacing) *
             (this.gameSize / displaySize)) /
             displaySpacing
       );
       this.focusY = parseInt(
         this.centerY / displaySpacing +
-          ((-event.clientY + rect.top + displaySize / 2) *
+          ((-event.clientY + rect.top + displaySize / 2 - displaySpacing) *
             (this.gameSize / displaySize)) /
             displaySpacing
       );
