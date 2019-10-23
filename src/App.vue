@@ -275,6 +275,11 @@ export default {
       this.$store.dispatch("maps/setLastUpdate", JSON.parse(lastUpdate));
     }
 
+    var fullUpdate = localStorage.getItem("fullUpdate");
+    if (fullUpdate !== "undefined") {
+      this.$store.dispatch("maps/setFullUpdate", JSON.parse(fullUpdate));
+    }
+
     this.$i18n.locale = this.language;
     moment.locale(this.locale);
   }
