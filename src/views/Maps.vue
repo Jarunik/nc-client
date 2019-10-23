@@ -257,15 +257,16 @@ export default {
         this.ctx.lineTo(this.gameSize, 0);
         this.ctx.stroke();
 
-        // Info Box
-        this.ctx.save();
+        // Blue Selector Rectangle
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = 1;
+        this.ctx.lineWidth = "2";
         this.ctx.strokeStyle = "blue";
-        let boxSize = this.gameSize / 5;
         this.ctx.rect(
-          this.gameSize - boxSize,
-          this.gameSize - boxSize,
-          boxSize,
-          boxSize
+          this.drawingX(this.focusX) - displaySpacing,
+          this.drawingY(this.focusY) - displaySpacing,
+          2 * displaySpacing,
+          2 * displaySpacing
         );
         this.ctx.stroke();
         this.ctx.restore();
