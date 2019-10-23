@@ -470,13 +470,17 @@ export default {
       if (mission.user !== this.loginUser) {
         return false;
       }
-      if (mission.result != null && mission.type != "support") {
+      if (
+        mission.result != null &&
+        mission.type != "support" &&
+        mission.type != "siege"
+      ) {
         return false;
       }
       if (
         !this.isOutgoing(mission.arrival) &&
         mission.type !== "support" &&
-        mission.type !== "seige" &&
+        mission.type !== "siege" &&
         mission.type !== "breaksiege"
       ) {
         return false;
