@@ -1227,7 +1227,10 @@ export default {
       let underSiege = false;
       if (this.activeMissions !== null) {
         this.activeMissions.forEach(mission => {
-          if (mission.type == "siege") {
+          if (
+            mission.type == "siege" &&
+            moment.unix(mission.arrival).isAfter(moment.utc())
+          ) {
             if (mission.to_planet != null) {
               if (mission.to_planet.id == this.planetId) {
                 underSiege = true;
