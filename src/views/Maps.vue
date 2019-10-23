@@ -2,7 +2,9 @@
   <div class="maps">
     <h1>{{ $t("Maps") }}</h1>
     <p>
-      <router-link to="/galaxy">{{ $t("Galaxy") }}</router-link>
+      <router-link
+        :to="`/galaxy?x=${focusX}&y=${focusY}`"
+      >{{ $t("Galaxy") }} {{focusX}} / {{focusY}}</router-link>
     </p>
     <div>
       <canvas
@@ -16,15 +18,15 @@
     </div>
     <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">-</button>
     <button @click="zoomIn()" v-tooltip="$t('Zoom In')">+</button>
-    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
+    <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
     <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
-      <target-variant-icon :title="$t('Focus')" />
+      <target-variant-icon :title="$t('Focus')"/>
     </button>
     <button @click="centerHome()" v-tooltip="$t('Center on Home')">
-      <earth-icon :title="$t('Home')" />
+      <earth-icon :title="$t('Home')"/>
     </button>
     <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
-      <ship-wheel-icon :title="$t('Fleet')" />
+      <ship-wheel-icon :title="$t('Fleet')"/>
     </button>
     {{ zoomLevel }}
   </div>
@@ -100,6 +102,17 @@ export default {
             this.prepareComponent();
         }
       });
+      if (
+        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+        (this.$route.query.y !== undefined && this.$route.query.y !== null)
+      ) {
+        this.focusX = this.$route.query.x;
+        this.focusY = this.$route.query.y;
+        this.search = this.focusX + "/" + this.focusY;
+        this.centerX = this.focusX * displaySpacing;
+        this.centerY = this.focusY * displaySpacing;
+      }
+      this.draw();
     },
     async getMap() {
       let now = this.moment.utc();
@@ -148,18 +161,22 @@ export default {
         this.$store.dispatch("maps/setPlanets", planets);
         this.planets = planets;
         this.gameSize = gameGalaxy * displaySpacing;
-        this.draw();
       }
+    },
+    drawingX(gameX) {
+      return -this.centerX + this.gameSize / 2 + gameX * displaySpacing;
+    },
+    drawingY(gameY) {
+      return this.centerY + this.gameSize / 2 - gameY * displaySpacing;
     },
     draw() {
       this.$nextTick(() => {
         this.clearCanvas();
         if (this.planets !== null) {
+          this.ctx.save();
           this.planets.forEach(planet => {
-            let x =
-              -this.centerX + this.gameSize / 2 + planet.x * displaySpacing;
-            let y =
-              this.centerY + this.gameSize / 2 - planet.y * displaySpacing;
+            let x = this.drawingX(planet.x);
+            let y = this.drawingY(planet.y);
             let planetSize = displayPlanetRadius;
             if (planet.user == this.gameUser) {
               this.ctx.globalCompositeOperation = "destination-over";
@@ -188,7 +205,36 @@ export default {
               this.ctx.fill();
             }
           });
+          this.ctx.restore();
         }
+        // Diagonal Crosshair
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = 0.2;
+        this.ctx.lineWidth = "2";
+        this.ctx.strokeStyle = "white";
+        this.ctx.moveTo(0, 0);
+        this.ctx.lineTo(this.gameSize, this.gameSize);
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = "white";
+        this.ctx.moveTo(0, this.gameSize);
+        this.ctx.lineTo(this.gameSize, 0);
+        this.ctx.stroke();
+
+        // Blue Selector Rectangle
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = 1;
+        this.ctx.lineWidth = "2";
+        this.ctx.strokeStyle = "blue";
+        this.ctx.rect(
+          this.drawingX(this.focusX) - displaySpacing,
+          this.drawingY(this.focusY) - displaySpacing,
+          2 * displaySpacing,
+          2 * displaySpacing
+        );
+        this.ctx.stroke();
+        this.ctx.restore();
       });
     },
     clearCanvas() {
@@ -239,13 +285,11 @@ export default {
       let scale = this.gameSize / displaySize / displaySpacing;
 
       let gameCenterX = this.centerX / displaySpacing;
-      let clickedCanvasX =
-        event.clientX - rect.left - displaySize / 2 - displaySpacing;
+      let clickedCanvasX = event.clientX - rect.left - displaySize / 2;
       this.focusX = parseInt(gameCenterX + clickedCanvasX * scale);
 
       let gameCenterY = this.centerY / displaySpacing;
-      let clickedCanvasY =
-        -event.clientY + rect.top + displaySize / 2 - displaySpacing;
+      let clickedCanvasY = -event.clientY + rect.top + displaySize / 2;
 
       this.focusY = parseInt(gameCenterY + clickedCanvasY * scale);
       this.search = this.focusX + "/" + this.focusY;
