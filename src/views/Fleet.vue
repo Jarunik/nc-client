@@ -1227,7 +1227,6 @@ export default {
       let underSiege = false;
       if (this.activeMissions !== null) {
         this.activeMissions.forEach(mission => {
-          console.log(moment.unix(mission.arrival).isBefore(moment.utc()));
           if (
             mission.type == "siege" &&
             moment.unix(mission.arrival).isBefore(moment.utc())
