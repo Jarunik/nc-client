@@ -29,6 +29,26 @@
       <ship-wheel-icon :title="$t('Fleet')"/>
     </button>
     {{ zoomLevel }}
+    <div>
+      <br>
+      <table v-if="planet !== null">
+        <tr>
+          <td>{{ planet.id }}</td>
+        </tr>
+        <tr>
+          <td>{{ $t("planet-bonus-"+planet.bonus) }}</td>
+        </tr>
+        <tr>
+          <td>{{ $t("planet-type-"+planet.type) }}</td>
+        </tr>
+        <tr>
+          <td>{{ planet.name }}</td>
+        </tr>
+        <tr>
+          <td>{{ planet.user }}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -91,7 +111,20 @@ export default {
       gameLocale: state => state.game.gameLocale,
       mapsPlanets: state => state.maps.planets,
       lastUpdate: state => state.maps.lastUpdate
-    })
+    }),
+    planet() {
+      let planet = null;
+      if (this.planets != null) {
+        planet = this.planets.find(obj => {
+          return obj.x == this.focusX && obj.y == this.focusY;
+        });
+      }
+      if (planet == undefined) {
+        return null;
+      } else {
+        return planet;
+      }
+    }
   },
   methods: {
     async prepareComponent() {
@@ -106,13 +139,15 @@ export default {
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
         (this.$route.query.y !== undefined && this.$route.query.y !== null)
       ) {
-        this.focusX = this.$route.query.x;
-        this.focusY = this.$route.query.y;
+        this.focusX = parseInt(this.$route.query.x);
+        this.focusY = parseInt(this.$route.query.y);
         this.search = this.focusX + "/" + this.focusY;
         this.centerX = this.focusX * displaySpacing;
         this.centerY = this.focusY * displaySpacing;
+        this.setZoom(10); // which does this.draw();
+      } else {
+        this.draw();
       }
-      this.draw();
     },
     async getMap() {
       let now = this.moment.utc();
@@ -222,16 +257,15 @@ export default {
         this.ctx.lineTo(this.gameSize, 0);
         this.ctx.stroke();
 
-        // Blue Selector Rectangle
-        this.ctx.beginPath();
-        this.ctx.globalAlpha = 1;
-        this.ctx.lineWidth = "2";
+        // Info Box
+        this.ctx.save();
         this.ctx.strokeStyle = "blue";
+        let boxSize = this.gameSize / 5;
         this.ctx.rect(
-          this.drawingX(this.focusX) - displaySpacing,
-          this.drawingY(this.focusY) - displaySpacing,
-          2 * displaySpacing,
-          2 * displaySpacing
+          this.gameSize - boxSize,
+          this.gameSize - boxSize,
+          boxSize,
+          boxSize
         );
         this.ctx.stroke();
         this.ctx.restore();
