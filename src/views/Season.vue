@@ -63,6 +63,10 @@
         </table>
       </template>
     </template>
+    <template v-else>
+      <p>Stay tuned for the very first Yamato season.</p>
+      <p>Try get a Yamato to be ready for the first season!</p>
+    </template>
   </div>
 </template>
 
