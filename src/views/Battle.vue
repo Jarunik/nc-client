@@ -41,8 +41,8 @@
               <td>
                 <div
                   :id="
-                    attacker.structure ==
-                    mission.initial_attacker_ships[a].structure
+                    attacker.structure.toFixed(0) ==
+                    mission.initial_attacker_ships[a].structure.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
