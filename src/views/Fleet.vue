@@ -639,10 +639,13 @@ export default {
               this.distance;
         }
       }
+      if (this.command != "deploy") {
+        this.fuelConsumption = 2 * this.fuelConsumption;
+      }
     },
     onCoordinateChange() {
       this.calculateConsumption();
-      this.search = this.xCoordinate + "/" + this.yCoordinate;
+      this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
     },
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
