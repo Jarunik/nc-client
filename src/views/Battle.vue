@@ -72,7 +72,8 @@
               <td>
                 <div
                   :id="
-                    attacker.armor == mission.initial_attacker_ships[a].armor
+                    attacker.armor.toFixed(0) ==
+                    mission.initial_attacker_ships[a].armor.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
@@ -102,7 +103,8 @@
               <td>
                 <div
                   :id="
-                    attacker.shield == mission.initial_attacker_ships[a].shield
+                    attacker.shield.toFixed(0) ==
+                    mission.initial_attacker_ships[a].shield.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
@@ -172,8 +174,8 @@
               <td>
                 <div
                   :id="
-                    defender.structure ==
-                    mission.initial_defender_ships[d].structure
+                    defender.structure.toFixed(0) ==
+                    mission.initial_defender_ships[d].structure.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
@@ -203,7 +205,8 @@
               <td>
                 <div
                   :id="
-                    defender.armor == mission.initial_defender_ships[d].armor
+                    defender.armor.toFixed(0) ==
+                    mission.initial_defender_ships[d].armor.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
@@ -233,7 +236,8 @@
               <td>
                 <div
                   :id="
-                    defender.shield == mission.initial_defender_ships[d].shield
+                    defender.shield.toFixed(0) ==
+                    mission.initial_defender_ships[d].shield.toFixed(0)
                       ? 'bag-health'
                       : 'bag-health-damaged'
                   "
