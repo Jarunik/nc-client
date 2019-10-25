@@ -3,8 +3,8 @@
     <h1>{{ $t("Fleet") }} - {{ planetName }}</h1>
     <template
       v-if="
-        gameUser !== 'null' &&
-          planetId != 'null' &&
+        gameUser !== null &&
+          planetId != null &&
           sortedFleet !== null &&
           sortedFleet.length > 0
       "
@@ -13,17 +13,35 @@
         {{ $t("Available Missions") }}: {{ availableMissions }} /
         {{ totalMissions }}
       </p>
+      <p v-if="isUnderSiege()" style="color:red">
+        {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
+      </p>
       <!-- Commands -->
       <p>
         {{ $t("Command") }}
         <select @change="onCommand()" v-model="command">
-          <option value="explorespace">{{ $t("Explore") }}</option>
-          <option value="transport">{{ $t("Transport") }}</option>
-          <option value="deploy">{{ $t("Deploy") }}</option>
-          <option value="support">{{ $t("Support") }}</option>
-          <option value="attack">{{ $t("Attack") }}</option>
-          <option value="siege">{{ $t("Siege") }}</option>
+          <option v-if="!isUnderSiege()" value="explorespace">{{
+            $t("Explore")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="transport">{{
+            $t("Transport")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="deploy">{{
+            $t("Deploy")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="support">{{
+            $t("Support")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="attack">{{
+            $t("Attack")
+          }}</option>
+          <option v-if="!isUnderSiege()" value="siege">{{
+            $t("Siege")
+          }}</option>
           <option value="breaksiege">{{ $t("Break Siege") }}</option>
+          <option v-if="!isUnderSiege()" value="upgradeyamato">{{
+            $t("Upgrade Yamato")
+          }}</option>
           <option value="sent">{{ $t("Sent") }}</option>
         </select>
       </p>
@@ -44,7 +62,13 @@
             <td>{{ $t(ship.longname) }}</td>
             <td>{{ ship.speed }}</td>
             <td>{{ ship.cons }}</td>
-            <td>{{ ship.capacity }}</td>
+            <td>
+              {{
+                Number(ship.capacity).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
               <input class="inputShort" type="number" v-model="ship.toSend" />
@@ -81,28 +105,30 @@
           <button @click="resetShipFormation">{{ $t("Clear") }}</button>
         </p>
         <!-- Destination -->
-        <p>
-          <input
-            class="inputMedium"
-            v-on:change="fillCoordinates(search)"
-            v-model="search"
-            placeholder="(x/y)"
-          />
-          {{ $t("X") }}:
-          <input
-            class="inputShort"
-            type="number"
-            v-model="xCoordinate"
-            v-on:change="onCoordinateChange"
-          />
-          {{ $t("Y") }}:
-          <input
-            class="inputShort"
-            type="number"
-            v-model="yCoordinate"
-            v-on:change="onCoordinateChange"
-          />
-        </p>
+        <template v-if="command !== 'upgradeyamato'">
+          <p>
+            <input
+              class="inputMedium"
+              v-on:change="fillCoordinates(search)"
+              v-model="search"
+              placeholder="x/y"
+            />
+            {{ $t("X") }}:
+            <input
+              class="inputShort"
+              type="number"
+              v-model="xCoordinate"
+              v-on:change="onCoordinateChange"
+            />
+            {{ $t("Y") }}:
+            <input
+              class="inputShort"
+              type="number"
+              v-model="yCoordinate"
+              v-on:change="onCoordinateChange"
+            />
+          </p>
+        </template>
         <!-- Travel Information -->
         <template v-if="command !== 'upgradeyamato'">
           <table>
@@ -116,8 +142,7 @@
                 <span
                   :style="{
                     color:
-                      parseFloat(this.uranium) -
-                        parseFloat(this.transportUranium) <
+                      parseFloat(this.uranium - this.transportUranium) <
                       parseFloat(this.fuelConsumption)
                         ? 'red'
                         : 'white'
@@ -172,9 +197,55 @@
           </p>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
+        <!-- Costs -->
+        <div v-if="command === 'upgradeyamato'">
+          <p>
+            {{ $t("Costs") }}:
+            <font v-if="yamatoCoal > coal" color="red">
+              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"/></font
+            ><font v-else>
+              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"
+            /></font>
+            <font v-if="yamatoOre > ore" color="red">
+              {{ yamatoOre }}
+              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+                :title="$t('Ore')"/></font
+            ><font v-else>
+              {{ yamatoOre }}
+              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+                :title="$t('Ore')"
+            /></font>
+            <font v-if="yamatoCopper > copper" color="red">
+              {{ yamatoCopper }}
+              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+                :title="$t('Copper')"/></font
+            ><font v-else>
+              {{ yamatoCopper }}
+              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+                :title="$t('Copper')"
+            /></font>
+            <font v-if="yamatoUranium > uranium" color="red">
+              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
+            /></font>
+            <font v-else>
+              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
+            /></font>
+            <font v-if="yamatoStardust > stardust" color="red">
+              {{ yamatoStardust / 100000000 }}
+              <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+                :title="$t('Stardust')"
+            /></font>
+            <font v-else>
+              <span :style="{ color: '#72bcd4' }">
+                {{ yamatoStardust / 100000000 }}
+                <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
+                  :title="$t('Stardust')"/></span
+            ></font>
+          </p>
+        </div>
         <!-- Send Transaction -->
         <div>
-          <div>
+          <div v-if="this.loginUser === this.gameUser">
             <div v-if="command === 'deploy'">
               <button
                 @click="deploy"
@@ -231,25 +302,33 @@
                 {{ $t("Send Transporter") }}
               </button>
             </div>
+            <div v-if="command === 'upgradeyamato'">
+              <button
+                @click="upgradeyamato"
+                :disabled="!commandEnabled('upgradeyamato') || clicked"
+              >
+                {{ $t("Upgrade Yamato") }}
+              </button>
+            </div>
           </div>
         </div>
       </template>
     </template>
     <!-- Not enough Context -->
     <template v-else>
-      <template v-if="gameUser === 'null'">
+      <template v-if="gameUser === null">
         <p>
           {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
+          {{ $t("user") }}
         </p>
       </template>
-      <template v-if="planetId === 'null'">
+      <template v-if="planetId === null">
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
         </p>
       </template>
-      <template v-if="gameUser !== 'null'">
+      <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no ships. Build some in the") }}
           <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link
@@ -270,17 +349,34 @@ import QuantityService from "@/services/quantity";
 import MissionsService from "@/services/missions";
 import SkillsService from "@/services/skills";
 import PlanetsService from "@/services/planets";
+import ShipyardService from "@/services/shipyard";
+import UserService from "@/services/user";
 import { mapState } from "vuex";
 import moment from "moment";
 import SteemConnectService from "@/services/steemconnect";
 import * as types from "@/store/mutation-types";
+import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
+import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
+import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
+import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
+import AlphaSBoxIcon from "vue-material-design-icons/AlphaSBox.vue";
+import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 
 export default {
   name: "fleet",
+  components: {
+    AlphaCBoxIcon,
+    AlphaFBoxIcon,
+    AlphaEBoxIcon,
+    AlphaUBoxIcon,
+    AlphaSBoxIcon,
+    AlphaDBoxIcon
+  },
   data: function() {
     return {
       fleet: null,
       activeUserMissions: null,
+      activeMissions: null,
       skills: null,
       quantity: null,
       interval: null,
@@ -288,6 +384,7 @@ export default {
       ore: null,
       copper: null,
       uranium: null,
+      stardust: null,
       clicked: false,
       chainResponse: [],
       currentSort: "name",
@@ -309,7 +406,14 @@ export default {
       capacity: 0,
       processing: false,
       lastX: null,
-      lastY: null
+      lastY: null,
+      yamatoCoal: 0,
+      yamatoOre: 0,
+      yamatoCopper: 0,
+      yamatoUranium: 0,
+      yamatoStardust: 0,
+      buildYamato: false,
+      activeYamatoMission: false
     };
   },
   async mounted() {
@@ -355,7 +459,8 @@ export default {
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
       planetPosX: state => state.planet.posX,
-      planetPosY: state => state.planet.posY
+      planetPosY: state => state.planet.posY,
+      gameLocale: state => state.game.gameLocale
     }),
     sortedFleet() {
       var sortedFleet = this.fleet;
@@ -389,12 +494,28 @@ export default {
       await this.getQuantity();
       await this.getMissions();
       await this.getSkills();
+      await this.getStardust();
+      await this.getShipyard();
       await this.calculateAvailableMissions();
+      await this.calculateYamatoMission();
       await this.fillForm();
     },
+    async getStardust() {
+      const response = await UserService.get(this.gameUser);
+      this.stardust = response.stardust;
+    },
+    async getShipyard() {
+      const response = await ShipyardService.all(this.planetId);
+      this.shipyard = response;
+    },
     async fillForm() {
-      if (this.$route.query.command === "explorespace") {
+      if (
+        this.$route.query.command !== undefined &&
+        this.$route.query.command === "explorespace"
+      ) {
         this.command = "explorespace";
+      } else {
+        return;
       }
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
@@ -402,8 +523,7 @@ export default {
       ) {
         this.xCoordinate = this.$route.query.x;
         this.yCoordinate = this.$route.query.y;
-        this.search =
-          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
+        this.search = this.$route.query.x + "/" + this.$route.query.y;
       }
       this.resetShipFormation();
       let addShip = null;
@@ -422,6 +542,8 @@ export default {
     async getMissions() {
       const response = await MissionsService.activeUser(this.gameUser);
       this.activeUserMissions = response;
+      const response2 = await MissionsService.active(this.gameUser);
+      this.activeMissions = response2;
     },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);
@@ -466,6 +588,10 @@ export default {
       }
     },
     onCommand() {
+      if (this.command == "upgradeyamato") {
+        this.xCoordinate = this.planetPosX;
+        this.yCoordinate = this.planetPosY;
+      }
       this.clicked = false;
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
@@ -473,8 +599,7 @@ export default {
       ) {
         this.xCoordinate = this.$route.query.x;
         this.yCoordinate = this.$route.query.y;
-        this.search =
-          "(" + this.$route.query.x + "/" + this.$route.query.y + ")";
+        this.search = this.$route.query.x + "/" + this.$route.query.y;
       }
       this.resetShipFormation();
     },
@@ -555,47 +680,94 @@ export default {
       });
       this.totalMissions = missionBudget;
     },
+    calculateYamatoMission() {
+      this.activeYamatoMission = false;
+      if (this.activeUserMissions !== null) {
+        this.activeUserMissions.forEach(mission => {
+          if (
+            (mission.user === this.gameUser) &
+            (mission.type === "upgradeyamato") &
+            (mission.from_planet.id === this.planetId)
+          ) {
+            this.activeYamatoMission = true;
+          }
+        });
+      }
+    },
     commandEnabled(command) {
       let enabled = false;
       if (
-        this.command !== null &&
-        this.command === command &&
-        this.xCoordinate !== null &&
-        this.xCoordinate !== "" &&
-        this.yCoordinate !== null &&
-        this.yCoordinate !== "" &&
-        this.shipFormation.count > 0 &&
-        parseFloat(this.uranium) > parseFloat(this.fuelConsumption) &&
-        this.availableMissions > 0
+        this.command === "transport" ||
+        this.command === "attack" ||
+        this.command === "deploy" ||
+        this.command === "support" ||
+        this.command === "explorespace" ||
+        this.command === "siege" ||
+        this.command === "breaksiege"
       ) {
-        if (command === "transport") {
-          if (
-            parseFloat(this.coal) > parseFloat(this.transportCoal) &&
-            parseFloat(this.ore) > parseFloat(this.transportOre) &&
-            parseFloat(this.copper) > parseFloat(this.transportCopper) &&
-            parseFloat(this.uranium) >
-              parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption)
-          ) {
-            enabled = true;
+        if (
+          this.command !== null &&
+          this.command === command &&
+          this.xCoordinate !== null &&
+          this.xCoordinate !== "" &&
+          this.yCoordinate !== null &&
+          this.yCoordinate !== "" &&
+          this.shipFormation.count > 0 &&
+          parseFloat(this.uranium - this.transportUranium) >
+            parseFloat(this.fuelConsumption) &&
+          this.availableMissions > 0 &&
+          this.loginUser === this.gameUser
+        ) {
+          if (command === "transport") {
+            if (
+              parseFloat(this.coal) > parseFloat(this.transportCoal) &&
+              parseFloat(this.ore) > parseFloat(this.transportOre) &&
+              parseFloat(this.copper) > parseFloat(this.transportCopper) &&
+              parseFloat(this.uranium) >
+                parseFloat(this.transportUranium) +
+                  parseFloat(this.fuelConsumption)
+            ) {
+              enabled = true;
+            } else {
+              enabled = false;
+            }
+          } else if (command === "explorespace") {
+            if (
+              parseFloat(this.uranium) >
+                parseFloat(this.transportUranium) +
+                  parseFloat(this.fuelConsumption) &&
+              this.shipFormation.count === 1 &&
+              this.shipFormation.ships[0].n === 1 &&
+              this.shipFormation.ships[0].type.includes("explore")
+            ) {
+              enabled = true;
+            } else {
+              enabled = false;
+            }
           } else {
-            enabled = false;
-          }
-        } else if (command === "explorespace") {
-          if (
-            parseFloat(this.uranium) >
-              parseFloat(this.transportUranium) +
-                parseFloat(this.fuelConsumption) &&
-            this.shipFormation.count === 1 &&
-            this.shipFormation.ships[0].n === 1 &&
-            this.shipFormation.ships[0].type.includes("explore")
-          ) {
             enabled = true;
-          } else {
-            enabled = false;
           }
-        } else {
+        }
+      }
+      if (this.command === "upgradeyamato") {
+        if (
+          this.shipFormation.count === 1 &&
+          this.shipFormation.ships[0].n === 1 &&
+          (typeof this.shipFormation.ships[0].type != "undefined" &&
+            this.shipFormation.ships[0].type.includes("yamato")) &&
+          this.shipFormation.ships[0].type != "yamato20" &&
+          this.coal >= this.yamatoCoal &&
+          this.ore >= this.yamatoOre &&
+          this.copper >= this.yamatoCopper &&
+          this.uranium >= this.yamatoUranium &&
+          this.stardust >= this.yamatoStardust &&
+          this.buildYamato &&
+          !this.activeYamatoMission &&
+          this.loginUser === this.gameUser
+        ) {
           enabled = true;
+        } else {
+          enabled = false;
         }
       }
       return enabled;
@@ -686,17 +858,43 @@ export default {
           this.capacity + this.shipFormation.ships[this.pos].n * ship.capacity;
         this.pos++;
       }
+      this.calculateYamatoCosts();
       this.calculateConsumption();
+    },
+    calculateYamatoCosts() {
+      this.yamatoCoal = 0;
+      this.yamatoOre = 0;
+      this.yamatoCopper = 0;
+      this.yamatoUranium = 0;
+      this.yamatoStardust = 0;
+      this.buildYamato = false;
+      this.shipFormation.ships.forEach(ship => {
+        if (
+          typeof ship.type !== "undefined" &&
+          ship.type !== null &&
+          ship.type.includes("yamato")
+        ) {
+          let upgradeTo =
+            "yamato" + (Number(ship.type.replace("yamato", "")) + 1);
+          let shipCost = this.shipyard.find(obj => {
+            return obj.type === upgradeTo;
+          });
+          if (typeof shipCost !== "undefined") {
+            this.yamatoCoal = shipCost.cost.coal;
+            this.yamatoOre = shipCost.cost.ore;
+            this.yamatoCopper = shipCost.cost.copper;
+            this.yamatoUranium = shipCost.cost.uranium;
+            this.yamatoStardust = shipCost.cost.stardust;
+            this.buildYamato = shipCost.cur_level >= shipCost.min_level;
+          }
+        }
+      });
     },
     openMap(x, y) {
       this.$router.push({ path: "galaxy", query: { x: x, y: y } });
     },
     fillCoordinates(search) {
-      let split = search
-        .replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "")
-        .split("/");
+      let split = search.replace(/\s+/g, "").split("/");
       this.xCoordinate = split[0];
       this.yCoordinate = split[1];
     },
@@ -780,6 +978,9 @@ export default {
     callbackHandling(self) {
       // Only do it once
       if (self.processing) {
+        if (self.command === "upgradeyamato") {
+          this.activeYamatoMission = true;
+        }
         self.command = "sent";
         self.lastX = self.xCoordinate;
         self.lastY = self.yCoordinate;
@@ -1005,6 +1206,43 @@ export default {
       setTimeout(function() {
         self.callbackHandling(self);
       }, 700);
+    },
+    upgradeyamato() {
+      let self = this;
+      self.processing = true;
+      this.clicked = true;
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.upgradeYamato(
+        this.loginUser,
+        this.planetId,
+        self.shipFormation.ships[0].type,
+        (error, result) => {
+          if (error === null && result.success) {
+            self.callbackHandling(self);
+          }
+        }
+      );
+      setTimeout(function() {
+        self.callbackHandling(self);
+      }, 700);
+    },
+    isUnderSiege() {
+      let underSiege = false;
+      if (this.activeMissions !== null) {
+        this.activeMissions.forEach(mission => {
+          if (
+            mission.type == "siege" &&
+            moment.unix(mission.arrival).isBefore(moment.utc())
+          ) {
+            if (mission.to_planet != null) {
+              if (mission.to_planet.id == this.planetId) {
+                underSiege = true;
+              }
+            }
+          }
+        });
+      }
+      return underSiege;
     }
   },
   beforeDestroy() {
@@ -1021,6 +1259,6 @@ export default {
   width: 6ch;
 }
 .fleet select {
-  width: 15ch;
+  width: 20ch;
 }
 </style>

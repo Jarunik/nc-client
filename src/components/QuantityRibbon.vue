@@ -1,14 +1,22 @@
 <template>
   <span>
-    <router-link :to="'/production'">
+    <router-link :to="'/production'" v-tooltip="$t('Production')">
       <span v-if="planetId !== null && quantity != null">
-        {{ coal }}
+        {{
+          Number(coal).toLocaleString(gameLocale, {
+            style: "decimal"
+          })
+        }}
         <font v-if="quantity.coaldepot <= coal" color="red"
-          ><alpha-c-box-icon :title="$t('Coal')"
+          ><alpha-c-box-icon :title="$t('Coal')" v-tooltip="$t('Coal')"
         /></font>
         <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
 
-        {{ ore }}
+        {{
+          Number(ore).toLocaleString(gameLocale, {
+            style: "decimal"
+          })
+        }}
         <font v-if="quantity.oredepot <= ore" color="red"
           ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
             :title="$t('Ore')"/></font
@@ -17,7 +25,11 @@
             :title="$t('Ore')"
         /></font>
 
-        {{ copper }}
+        {{
+          Number(copper).toLocaleString(gameLocale, {
+            style: "decimal"
+          })
+        }}
         <font v-if="quantity.copperdepot <= copper" color="red"
           ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
             :title="$t('Copper')"
@@ -27,7 +39,11 @@
             :title="$t('Copper')"
         /></font>
 
-        {{ uranium }}
+        {{
+          Number(uranium).toLocaleString(gameLocale, {
+            style: "decimal"
+          })
+        }}
         <font v-if="quantity.uraniumdepot <= uranium" color="red"
           ><alpha-u-box-icon :title="$t('Uranium')"
         /></font>
@@ -36,8 +52,15 @@
     </router-link>
     <span v-if="user !== null && stardust !== undefined && stardust !== null">
       |
-      <router-link :to="'/wallet'"
-        >{{ Number(stardust / 100000000).toFixed(0) }}
+      <router-link
+        :to="'/wallet'"
+        v-tooltip="$t('Wallet')"
+        :style="{ color: '#72bcd4' }"
+        >{{
+          Number(stardust / 100000000).toLocaleString(gameLocale, {
+            style: "decimal"
+          })
+        }}
         <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
           :title="$t('Stardust')"/></router-link
     ></span>
@@ -103,7 +126,8 @@ export default {
     ...mapState({
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
-      user: state => state.game.user
+      user: state => state.game.user,
+      gameLocale: state => state.game.gameLocale
     })
   },
   watch: {

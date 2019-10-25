@@ -327,6 +327,115 @@ class SteemConnectService extends Client {
 
     super.customJson([], [user], [appId], finalJson, cb);
   }
+
+  upgradeYamato(user, planetId, shipType, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "upgradeyamato";
+    scCommand["tr_var1"] = planetId;
+    scCommand["tr_var2"] = shipType;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  respawnPlanet(user, planetId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "respawn";
+    scCommand["tr_var1"] = planetId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  burnPlanet(user, planetId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    scJson["username"] = user;
+    scJson["type"] = "burn";
+    scCommand["tr_var1"] = planetId;
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  updateShop(user, itemId, shopParameter, amount, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "updateshop";
+    scCommand["tr_var1"] = itemId;
+    scCommand["tr_var2"] = shopParameter;
+    scCommand["tr_var3"] = amount;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  issue(user, itemId, amount, recipient, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "issue";
+    scCommand["tr_var1"] = itemId;
+    scCommand["tr_var2"] = amount;
+    scCommand["tr_var3"] = recipient;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  issueStardust(user, amount, recipient, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "issuestardust";
+    scCommand["tr_var1"] = amount;
+    scCommand["tr_var2"] = recipient;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  newSeason(user, name, duration, reward, killRate, deployRate, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "newseason";
+    scCommand["tr_var1"] = name;
+    scCommand["tr_var2"] = duration;
+    scCommand["tr_var3"] = reward;
+    scCommand["tr_var4"] = killRate;
+    scCommand["tr_var5"] = deployRate;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
 }
 
 export default new SteemConnectService();

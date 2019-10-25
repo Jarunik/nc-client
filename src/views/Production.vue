@@ -2,7 +2,7 @@
   <div class="production">
     <h1>{{ $t("Production") }} - {{ planetName }}</h1>
     <template
-      v-if="gameUser !== 'null' && planetId !== 'null' && production !== null"
+      v-if="gameUser !== null && planetId !== null && production !== null"
     >
       <table>
         <thead>
@@ -15,36 +15,111 @@
         <tbody>
           <tr>
             <td>{{ $t("Daily Production") }}</td>
-            <td>{{ production.coal.production }}</td>
-            <td>{{ production.ore.production }}</td>
-            <td>{{ production.copper.production }}</td>
-            <td>{{ production.uranium.production }}</td>
+            <td>
+              {{
+                Number(production.coal.production).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.ore.production).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.copper.production).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.uranium.production).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
           </tr>
           <tr>
             <td>{{ $t("Depot Size") }}</td>
-            <td>{{ production.coal.depot }}</td>
-            <td>{{ production.ore.depot }}</td>
-            <td>{{ production.copper.depot }}</td>
-            <td>{{ production.uranium.depot }}</td>
+            <td>
+              {{
+                Number(production.coal.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.ore.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.copper.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.uranium.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
           </tr>
           <tr>
             <td>{{ $t("Safe") }}</td>
-            <td>{{ production.coal.safe.toFixed(0) }}</td>
-            <td>{{ production.ore.safe.toFixed(0) }}</td>
-            <td>{{ production.copper.safe.toFixed(0) }}</td>
-            <td>{{ production.uranium.safe.toFixed(0) }}</td>
+            <td>
+              {{
+                Number(production.coal.safe).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.ore.safe).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.copper.safe).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.uranium.safe).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
           </tr>
         </tbody>
       </table>
     </template>
     <template v-else>
-      <template v-if="gameUser === 'null'">
-        <p>
-          {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
-        </p>
+      <template v-if="gameUser === null">
+        <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
       </template>
-      <template v-if="planetId == 'null'">
+      <template v-if="planetId == null">
         <p>
           {{ $t("Please set the") }}
           <router-link :to="'/planets'">{{ $t("planet") }}</router-link>
@@ -75,7 +150,8 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
-      planetName: state => state.planet.name
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
     })
   },
   methods: {

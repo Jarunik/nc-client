@@ -1,13 +1,15 @@
 <template>
   <div class="battle">
     <h1>{{ $t("Battle") }}</h1>
+    <i>{{ $t("Yamato only loses one tier on destruction.") }}</i>
     <div v-if="battle !== null">
       <div v-for="mission in battle" :key="mission.battle_number">
-        <p>
+        <h2>
           {{ $t("Mission") }} : {{ mission.mission_id }} {{ $t("Battle") }} :
           {{ mission.battle_number }}
-        </p>
-        <h2>
+        </h2>
+        <p>{{ moment.unix(mission.date, "seconds").format("lll") }},</p>
+        <h3>
           {{ $t("Attacker") }} {{ mission.attacker }}
           <font v-if="mission.result === 2" color="green">{{
             $t("Winner")
@@ -18,13 +20,13 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h2>
+        </h3>
         <table>
           <thead>
             <th>Slot</th>
             <th>Ship</th>
             <th>Survivor</th>
-            <th>Structure</th>
+            <th>Struct</th>
             <th>Armor</th>
             <th>Shield</th>
           </thead>
@@ -38,10 +40,19 @@
               <td>{{ attacker.survivor }} / {{ attacker.n }}</td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.structure ==
+                    mission.initial_attacker_ships[a].structure
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].structure != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_attacker_ships[a].structure != 0"
                     :style="{
                       width:
                         (attacker.structure /
@@ -50,14 +61,28 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.armor == mission.initial_attacker_ships[a].armor
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].armor != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_attacker_ships[a].armor != 0"
                     :style="{
                       width:
                         (attacker.armor /
@@ -66,14 +91,28 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_attacker_ships[a] !== undefined"
+                  :id="
+                    attacker.shield == mission.initial_attacker_ships[a].shield
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_attacker_ships[a] !== undefined &&
+                      mission.initial_attacker_ships[a].shield != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_attacker_ships[a].shield != 0"
                     :style="{
                       width:
                         (attacker.shield /
@@ -82,13 +121,18 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-
-        <h2>
+        <h3>
           {{ $t("Defender") }} {{ mission.defender }}
           <font v-if="mission.result === 2" color="red">{{
             $t("Looser")
@@ -99,13 +143,21 @@
           <font v-if="mission.result === 0" color="yellow">{{
             $t("Draw")
           }}</font>
-        </h2>
+        </h3>
+        <p>
+          {{ $t("Location") }}:
+          {{
+            mission.support_mission_id === null
+              ? $t("Planet")
+              : mission.support_mission_id
+          }}
+        </p>
         <table>
           <thead>
             <th>Slot</th>
             <th>Ship</th>
             <th>Survivor</th>
-            <th>Structure</th>
+            <th>Struct</th>
             <th>Armor</th>
             <th>Shield</th>
           </thead>
@@ -119,10 +171,19 @@
               <td>{{ defender.survivor }} / {{ defender.n }}</td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.structure ==
+                    mission.initial_defender_ships[d].structure
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].structure != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_defender_ships[d].structure != 0"
                     :style="{
                       width:
                         (defender.structure /
@@ -131,14 +192,28 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.armor == mission.initial_defender_ships[d].armor
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].armor != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_defender_ships[d].armor != 0"
                     :style="{
                       width:
                         (defender.armor /
@@ -147,14 +222,28 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
               <td>
                 <div
-                  id="bag-health"
-                  v-if="mission.initial_defender_ships[d] !== undefined"
+                  :id="
+                    defender.shield == mission.initial_defender_ships[d].shield
+                      ? 'bag-health'
+                      : 'bag-health-damaged'
+                  "
+                  v-if="
+                    mission.initial_defender_ships[d] !== undefined &&
+                      mission.initial_defender_ships[d].shield != 0
+                  "
                 >
                   <div
+                    v-if="mission.initial_defender_ships[d].shield != 0"
                     :style="{
                       width:
                         (defender.shield /
@@ -163,12 +252,18 @@
                         '%'
                     }"
                   ></div>
+                  <div
+                    v-else
+                    :style="{
+                      width: 0 + '%'
+                    }"
+                  ></div>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-        <h2>{{ $t("Loot") }}</h2>
+        <h3>{{ $t("Loot") }}</h3>
         <p>
           C:{{ Number(mission.coal).toFixed(0) }} Fe:{{
             Number(mission.ore).toFixed(0)
@@ -177,6 +272,7 @@
             Number(mission.uranium).toFixed(0)
           }}
         </p>
+        <hr v-if="battle.length != mission.battle_number" width="20%" />
       </div>
     </div>
   </div>
@@ -222,8 +318,16 @@ export default {
   width: 50px;
   border: 2px solid white;
 }
+#bag-health-damaged {
+  width: 50px;
+  border: 2px solid red;
+}
 #bag-health div {
   height: 10px;
   background: white;
+}
+#bag-health-damaged div {
+  height: 10px;
+  background: red;
 }
 </style>

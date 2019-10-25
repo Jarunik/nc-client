@@ -245,7 +245,7 @@ const ships = [
   },
   {
     id: "patrol2",
-    name: "Patrol Crucal",
+    name: "Patrol Cruqal",
     class: "Patrol",
     structure: 2,
     armor: 2,
@@ -267,7 +267,7 @@ const ships = [
   },
   {
     id: "corvette2",
-    name: "Corvette Pimpernel",
+    name: "Corvette Najtar",
     class: "Corvette",
     structure: 6,
     armor: 8,
@@ -278,7 +278,7 @@ const ships = [
   },
   {
     id: "frigate2",
-    name: "Frigate Lasalle",
+    name: "Frigate Droeel",
     class: "Frigate",
     structure: 12,
     armor: 16,
@@ -289,7 +289,7 @@ const ships = [
   },
   {
     id: "destroyer2",
-    name: "Destroyer Banshee",
+    name: "Destroyer Halgoin",
     class: "Destroyer",
     structure: 12,
     armor: 14,
@@ -300,7 +300,7 @@ const ships = [
   },
   {
     id: "cruiser2",
-    name: "Cruiser Hogue",
+    name: "Cruiser Eceza",
     class: "Cruiser",
     structure: 15,
     armor: 25,
@@ -311,7 +311,7 @@ const ships = [
   },
   {
     id: "battlecruiser2",
-    name: "Battlecruiser Leopard",
+    name: "Battlecruiser Dejah",
     class: "Battlecruiser",
     structure: 40,
     armor: 20,
@@ -322,7 +322,7 @@ const ships = [
   },
   {
     id: "carrier2",
-    name: "Carrier Centaur",
+    name: "Carrier Bhun'il",
     class: "Carrier",
     structure: 60,
     armor: 100,
@@ -333,7 +333,7 @@ const ships = [
   },
   {
     id: "dreadnought2",
-    name: "Dreadnought Galactic",
+    name: "Dreadnought Zaneel",
     class: "Dreadnought",
     structure: 200,
     armor: 240,
@@ -595,9 +595,9 @@ const ships = [
     structure: 36000,
     armor: 36000,
     shield: 36000,
-    rocket: 2600,
-    bullet: 2600,
-    laser: 2600
+    rocket: 3600,
+    bullet: 3600,
+    laser: 3600
   },
   {
     id: "yamato19",

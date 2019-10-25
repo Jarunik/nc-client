@@ -7,52 +7,118 @@
       }}</i></P
     >
     <p>
-      <span @click="setLoadSort('production')"
+      <span @click="setLoadSort('production')" class="pointer"
         ><font v-if="loadSort === 'production'" color="green">{{
           $t("Production")
         }}</font
         ><font v-else>{{ $t("Production") }}</font></span
       >
       |
-      <span @click="setLoadSort('battle')"
+      <span @click="setLoadSort('battle')" class="pointer"
         ><font v-if="loadSort === 'battle'" color="green">{{
           $t("Battle")
         }}</font
         ><font v-else>{{ $t("Battle") }}</font></span
       >
+      |
+      <span @click="setLoadSort('topwallets')" class="pointer"
+        ><font v-if="loadSort === 'topwallets'" color="green">{{
+          $t("Top Wallets")
+        }}</font
+        ><font v-else>{{ $t("Top Wallets") }}</font></span
+      >
     </p>
-    <table>
-      <thead>
-        <th><chevron-triple-up-icon :title="$t('Rank')" /></th>
-        <th @click="sort('user')"><account-icon :title="$t('User')" /></th>
-        <th @click="sort('meta_rate')">
-          <alpha-u-box-icon :title="$t('Production')" />
-        </th>
-        <th @click="sort('meta_skill')">
-          <school-icon :title="$t('Skill')" />
-        </th>
-        <th @click="sort('planets')"><earth-icon :title="$t('Planets')" /></th>
-        <th @click="sort('explorations')">
-          <magnify-icon :title="$t('Explorations')" />
-        </th>
-        <th @click="sort('ships')"><rocket-icon :title="$t('Ships')" /></th>
-        <th @click="sort('destroyed_ships_uranium')">
-          <nuke-icon :title="$t('Destroyed')" />
-        </th>
-      </thead>
-      <tbody>
-        <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
-          <td>{{ index + 1 }}</td>
-          <td @click="setUser(rank.user)">{{ rank.user }}</td>
-          <td>{{ rank.meta_rate.toFixed(0) }}</td>
-          <td>{{ rank.meta_skill.toFixed(0) }}</td>
-          <td>{{ rank.planets }}</td>
-          <td>{{ rank.explorations }}</td>
-          <td>{{ rank.ships }}</td>
-          <td>{{ rank.destroyed_ships_uranium.toFixed(0) }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <template v-if="loadSort === 'production' || loadSort === 'battle'">
+      <table>
+        <thead>
+          <th>
+            <chevron-triple-up-icon
+              :title="$t('Rank')"
+              v-tooltip="$t('Rank')"
+            />
+          </th>
+          <th @click="sort('user')">
+            <account-icon :title="$t('User')" v-tooltip="$t('User')" />
+          </th>
+          <th @click="sort('meta_rate')">
+            <alpha-u-box-icon
+              :title="$t('Production')"
+              v-tooltip="$t('Production')"
+            />
+          </th>
+          <th @click="sort('meta_skill')">
+            <school-icon :title="$t('Skill')" v-tooltip="$t('Skill')" />
+          </th>
+          <th @click="sort('planets')">
+            <earth-icon :title="$t('Planets')" v-tooltip="$t('Planets')" />
+          </th>
+          <th @click="sort('explorations')">
+            <magnify-icon
+              :title="$t('Explorations')"
+              v-tooltip="$t('Explorations')"
+            />
+          </th>
+          <th @click="sort('ships')">
+            <rocket-icon :title="$t('Ships')" v-tooltip="$t('Ships')" />
+          </th>
+          <th @click="sort('destroyed_ships_uranium')">
+            <nuke-icon :title="$t('Destroyed')" v-tooltip="$t('Destroyed')" />
+          </th>
+        </thead>
+        <tbody>
+          <tr v-for="(rank, index) in sortedRanking" :key="rank.user">
+            <td>{{ index + 1 }}</td>
+            <td @click="setUser(rank.user)">{{ rank.user }}</td>
+            <td>
+              {{
+                Number(rank.meta_rate).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.meta_skill).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.planets).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.explorations).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.ships).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(rank.destroyed_ships_uranium).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <TopWallets v-if="loadSort === 'topwallets'" />
   </div>
 </template>
 
@@ -68,6 +134,8 @@ import MagnifyIcon from "vue-material-design-icons/Magnify.vue";
 import RocketIcon from "vue-material-design-icons/Rocket.vue";
 import SchoolIcon from "vue-material-design-icons/School.vue";
 import NukeIcon from "vue-material-design-icons/Nuke.vue";
+import TopWallets from "@/components/TopWallets.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "ranking",
@@ -79,7 +147,8 @@ export default {
     MagnifyIcon,
     RocketIcon,
     SchoolIcon,
-    NukeIcon
+    NukeIcon,
+    TopWallets
   },
   data: function() {
     return {
@@ -93,6 +162,14 @@ export default {
     await this.prepareComponent();
   },
   computed: {
+    ...mapState({
+      loginUser: state => state.game.loginUser,
+      accessToken: state => state.game.accessToken,
+      gameUser: state => state.game.user,
+      planetId: state => state.planet.id,
+      planetName: state => state.planet.name,
+      gameLocale: state => state.game.gameLocale
+    }),
     sortedRanking() {
       var sortedRanking = this.ranking;
       if (sortedRanking !== null) {

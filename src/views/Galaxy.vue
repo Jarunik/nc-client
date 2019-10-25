@@ -2,10 +2,10 @@
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
     <p>
-      <i>{{ $t("Click to see details. Double click to move.") }}</i>
+      <router-link :to="`/maps?x=${focusX}&y=${focusY}`">{{ $t("Maps") }} {{focusX}} / {{focusY}}</router-link>
     </p>
     <template v-if="this.galaxy != null">
-      <table>
+      <table id="galaxy-map">
         <tbody>
           <tr v-for="y in areaHeight" :key="y">
             <td
@@ -14,65 +14,41 @@
               v-for="x in areaWidth"
               :key="x"
             >
-              <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
-                ><font color="green">
+              <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)">
+                <font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                  <magnify-icon
-                    v-if="lookupLocation(x, y) === 'explore'"
-                    :title="$t('Exploring')"
-                  />
-                  <texture-icon
-                    v-if="lookupLocation(x, y) === 'fog'"
-                    :title="$t('Fog')"
-                  />
-                  <earth-icon
-                    v-if="lookupLocation(x, y) === 'home'"
-                    :title="$t('Home')"
-                  />
-                  <circle-icon
-                    v-if="lookupLocation(x, y) === 'planet'"
-                    :title="$t('Planet')"
-                  /> </font
-              ></span>
+                  <magnify-icon v-if="lookupLocation(x, y) === 'explore'" :title="$t('Exploring')"/>
+                  <texture-icon v-if="lookupLocation(x, y) === 'fog'" :title="$t('Fog')"/>
+                  <earth-icon v-if="lookupLocation(x, y) === 'home'" :title="$t('Home')"/>
+                  <circle-icon v-if="lookupLocation(x, y) === 'planet'" :title="$t('Planet')"/>
+                  <skull-icon v-if="lookupLocation(x, y) === 'abandoned'" :title="$t('Abandoned')"/>
+                </font>
+              </span>
               <span v-else>
                 <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                <magnify-icon
-                  v-if="lookupLocation(x, y) === 'explore'"
-                  :title="$t('Exploring')"
-                />
-                <texture-icon
-                  v-if="lookupLocation(x, y) === 'fog'"
-                  :title="$t('Fog')"
-                />
-                <circle-icon
-                  v-if="lookupLocation(x, y) === 'planet'"
-                  :title="$t('Planet')"
-                />
-                <earth-icon
-                  v-if="lookupLocation(x, y) === 'home'"
-                  :title="$t('Home')"
-                />
+                <magnify-icon v-if="lookupLocation(x, y) === 'explore'" :title="$t('Exploring')"/>
+                <texture-icon v-if="lookupLocation(x, y) === 'fog'" :title="$t('Fog')"/>
+                <circle-icon v-if="lookupLocation(x, y) === 'planet'" :title="$t('Planet')"/>
+                <earth-icon v-if="lookupLocation(x, y) === 'home'" :title="$t('Home')"/>
+                <skull-icon v-if="lookupLocation(x, y) === 'abandoned'" :title="$t('Abandoned')"/>
               </span>
             </td>
           </tr>
         </tbody>
       </table>
-      <input :value="search" @blur="updateSearch($event)" placeholder="(x/y)" />
+      <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
       <button @click="goToSearch(search)" v-tooltip="$t('Center on Selection')">
-        <target-variant-icon :title="$t('Focus')" />
+        <target-variant-icon :title="$t('Focus')"/>
       </button>
       <button @click="goTo(posX, posY)" v-tooltip="$t('Center on Home')">
-        <earth-icon :title="$t('Home')" />
+        <earth-icon :title="$t('Home')"/>
       </button>
-      <button
-        @click="goFleet(focusX, focusY)"
-        v-tooltip="$t('Send Fleet to Selection')"
-      >
-        <ship-wheel-icon :title="$t('Fleet')" />
+      <button @click="goFleet(focusX, focusY)" v-tooltip="$t('Send Fleet to Selection')">
+        <ship-wheel-icon :title="$t('Fleet')"/>
       </button>
       {{ distance().toFixed(2) }}
       <div>
-        <br />
+        <br>
         <table v-if="planet !== null">
           <tr>
             <td>{{ planet.planet_id }}</td>
@@ -105,6 +81,7 @@ import TextureIcon from "vue-material-design-icons/Texture.vue";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import TargetVariantIcon from "vue-material-design-icons/TargetVariant.vue";
 import ShipWheelIcon from "vue-material-design-icons/ShipWheel.vue";
+import SkullIcon from "vue-material-design-icons/Skull.vue";
 import * as types from "@/store/mutation-types";
 
 export default {
@@ -115,7 +92,8 @@ export default {
     TextureIcon,
     EarthIcon,
     TargetVariantIcon,
-    ShipWheelIcon
+    ShipWheelIcon,
+    SkullIcon
   },
   data: function() {
     return {
@@ -138,7 +116,7 @@ export default {
     });
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
-        case "planet/" + types.SETPLANET_LIST:
+        case "planet/" + types.SET_PLANET_LIST:
           this.prepareComponent();
       }
     });
@@ -167,7 +145,7 @@ export default {
         yCoordinate = this.posY;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
-        this.search = "(" + this.focusX + "/" + this.focusY + ")";
+        this.search = this.focusX + "/" + this.focusY;
       }
       if (
         (this.$route.query.x !== undefined && this.$route.query.x !== null) &
@@ -177,7 +155,7 @@ export default {
         yCoordinate = this.$route.query.y;
         this.focusX = xCoordinate;
         this.focusY = yCoordinate;
-        this.search = "(" + this.focusX + "/" + this.focusY + ")";
+        this.search = this.focusX + "/" + this.focusY;
       }
       const response = await GalaxyService.area(
         xCoordinate,
@@ -204,7 +182,7 @@ export default {
     focus(tableX, tableY) {
       this.focusX = this.coordinateX(tableX);
       this.focusY = this.coordinateY(tableY);
-      this.search = "(" + this.focusX + "/" + this.focusY + ")";
+      this.search = this.focusX + "/" + this.focusY;
       this.locationDetail(tableX, tableY);
     },
     locationDetail(tableX, tableY) {
@@ -250,6 +228,13 @@ export default {
           ) {
             icon = "home";
           }
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.abandoned === 1
+          ) {
+            icon = "abandoned";
+          }
         });
       });
 
@@ -287,6 +272,13 @@ export default {
           ) {
             icon = "home";
           }
+          if (
+            planet.x === posX &&
+            planet.y === posY &&
+            planet.abandoned === 1
+          ) {
+            icon = "abandoned";
+          }
         });
       });
 
@@ -301,11 +293,7 @@ export default {
       this.getGalaxy();
     },
     goToSearch(search) {
-      let split = search
-        .replace("(", "")
-        .replace(")", "")
-        .replace(/\s+/g, "")
-        .split("/");
+      let split = search.replace(/\s+/g, "").split("/");
       this.goTo(split[0], split[1]);
     },
     goFleet(realX, realY) {
@@ -331,3 +319,10 @@ export default {
   }
 };
 </script>
+<style>
+#galaxy-map {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+</style>

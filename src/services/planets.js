@@ -22,6 +22,12 @@ class PlanetsService {
 
     return response;
   }
+
+  async burnRates() {
+    const response = await ApiService.get(`/burnrates`);
+
+    return response;
+  }
 }
 
 export default new PlanetsService();

@@ -1,16 +1,30 @@
 <template>
   <div class="wallet">
     <div v-if="wallet !== null">
-      <h1>{{ $t("Wallet") }}</h1>
-      <p>{{ $t("Total Supply") }}: {{ wallet.supply / 100000000 }}</p>
+      <h1>{{ $t("Wallet") }} - {{ gameUser }}</h1>
+      <p>
+        {{ $t("Total Supply") }}:
+        <span :style="{ color: '#72bcd4' }"
+          >{{
+            Number(wallet.supply / 100000000).toLocaleString(gameLocale, {
+              style: "decimal"
+            })
+          }}
+          {{ $t("Stardust") }}</span
+        >
+      </p>
       <p>
         {{ $t("Your Balance") }}:
         <b
-          ><font color="green">
-            {{ Number(wallet.stardust / 100000000).toFixed(8) }}</font
+          ><font color="#72bcd4">
+            {{
+              Number(wallet.stardust / 100000000).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}</font
           ></b
-        >
-        {{ $t("Stardust") }}
+        >&nbsp;
+        <span :style="{ color: '#72bcd4' }">{{ $t("Stardust") }}</span>
       </p>
       <h2>{{ $t("Transfer") }}</h2>
       <p>
@@ -40,6 +54,7 @@
           <th>{{ $t("Sender") }}</th>
           <th>{{ $t("Recipient") }}</th>
           <th>{{ $t("Amount") }}</th>
+          <th>{{ $t("Mission") }}</th>
           <th>{{ $t("Transaction") }}</th>
         </thead>
         <tbody>
@@ -51,13 +66,28 @@
               {{ $t(transaction.tr_type) }}
             </td>
             <td>
-              {{ transaction.from_user }}
+              {{ transaction.from_user || "-" }}
             </td>
             <td>
-              {{ transaction.to_user }}
+              {{ transaction.to_user || "-" }}
             </td>
             <td>
-              {{ transaction.amount / 100000000 }}
+              <span
+                :style="{
+                  color: transaction.from_user == gameUser ? 'red' : 'green'
+                }"
+                >{{
+                  Number(transaction.amount / 100000000).toLocaleString(
+                    gameLocale,
+                    {
+                      style: "decimal"
+                    }
+                  )
+                }}</span
+              >
+            </td>
+            <td>
+              {{ transaction.mission_id || "-" }}
             </td>
             <td>
               <a
@@ -77,6 +107,7 @@ import UserService from "@/services/user";
 import WalletService from "@/services/wallet";
 import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
+import * as types from "@/store/mutation-types";
 
 export default {
   name: "wallet",
@@ -91,13 +122,21 @@ export default {
   },
   async mounted() {
     await this.prepareComponent();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "game/" + types.SET_GAME_USER:
+          this.prepareComponent();
+          this.clicked = [];
+      }
+    });
   },
   computed: {
     ...mapState({
       loginUser: state => state.game.loginUser,
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
-      planetId: state => state.planet.id
+      planetId: state => state.planet.id,
+      gameLocale: state => state.game.gameLocale
     })
   },
   methods: {

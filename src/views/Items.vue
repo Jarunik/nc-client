@@ -61,16 +61,16 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="gameUser !== 'null'">
+      <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no items. Buy some in the") }}
           <router-link to="/shop">{{ $t("shop") }}</router-link> .
         </p>
       </template>
-      <template v-if="gameUser === 'null'">
+      <template v-if="gameUser === null">
         <p>
           {{ $t("Please set the") }}
-          <router-link to="/user">{{ $t("user") }}</router-link>
+          {{ $t("user") }}
         </p>
       </template>
     </template>

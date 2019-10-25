@@ -2,6 +2,10 @@
   <div id="app">
     <span id="navtop">
       <span>
+        <router-link to="/season" v-tooltip="$t('Season')"
+          ><timer-icon :title="$t('Season')"
+        /></router-link>
+        |
         <router-link to="/ranking" v-tooltip="$t('Ranking')"
           ><chevron-triple-up-icon :title="$t('Ranking')"
         /></router-link>
@@ -68,6 +72,18 @@
       <br />
 
       <QuantityRibbon />
+      <span
+        v-if="
+          loginUser == 'jarunik' ||
+            loginUser == 'oliverschmid' ||
+            loginUser == 'nextcolony' ||
+            loginUser == 'rondras'
+        "
+      >
+        |
+        <router-link to="/administration" v-tooltip="$t('Administration')">
+          <settings-icon :title="$t('Administration')"/></router-link
+      ></span>
     </span>
   </div>
 </template>
@@ -91,6 +107,8 @@ import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
+import TimerIcon from "vue-material-design-icons/Timer.vue";
+import SettingsIcon from "vue-material-design-icons/Settings.vue";
 
 export default {
   name: "App",
@@ -110,7 +128,9 @@ export default {
     AnimationPlayIcon,
     SwordCrossIcon,
     NewspaperIcon,
-    LoginIcon
+    LoginIcon,
+    TimerIcon,
+    SettingsIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -149,6 +169,11 @@ export default {
     planetPosY: {
       get() {
         return this.$store.state.planet.posY;
+      }
+    },
+    mapsPlanets: {
+      get() {
+        return this.$store.state.maps.planets;
       }
     }
   },
@@ -240,6 +265,21 @@ export default {
       );
     }
 
+    var mapsPlanets = localStorage.getItem("mapsPlanets");
+    if (mapsPlanets !== "undefined") {
+      this.$store.dispatch("maps/setPlanets", JSON.parse(mapsPlanets));
+    }
+
+    var lastUpdate = localStorage.getItem("lastUpdate");
+    if (lastUpdate !== "undefined") {
+      this.$store.dispatch("maps/setLastUpdate", JSON.parse(lastUpdate));
+    }
+
+    var fullUpdate = localStorage.getItem("fullUpdate");
+    if (fullUpdate !== "undefined") {
+      this.$store.dispatch("maps/setFullUpdate", JSON.parse(fullUpdate));
+    }
+
     this.$i18n.locale = this.language;
     moment.locale(this.locale);
   }
@@ -262,6 +302,7 @@ export default {
   width: 100%;
   background-color: #100f1c;
   font-size: x-large;
+  z-index: 100;
 }
 
 #middle {
@@ -277,6 +318,7 @@ export default {
   width: 100%;
   background-color: #100f1c;
   font-size: x-large;
+  z-index: 100;
 }
 #navbottom a {
   color: white;
@@ -308,6 +350,10 @@ td {
 }
 input {
   width: 15ch;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .router-link-exact-active {
