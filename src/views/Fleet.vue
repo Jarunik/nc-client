@@ -984,8 +984,6 @@ export default {
         self.command = "sent";
         self.lastX = self.xCoordinate;
         self.lastY = self.yCoordinate;
-        self.xCoordinate = null;
-        self.yCoordinate = null;
         self.processing = false;
         self.transportCoal = 0;
         self.transportOre = 0;
