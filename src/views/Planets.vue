@@ -622,10 +622,30 @@ export default {
       planetQuantities.uraniumdepot = 0;
       const response = await QuantityService.get(planet.id);
       quantityResponse = response;
-      planetQuantities.coal = quantityResponse.coal;
-      planetQuantities.ore = quantityResponse.ore;
-      planetQuantities.copper = quantityResponse.copper;
-      planetQuantities.uranium = quantityResponse.uranium;
+      planetQuantities.coal = this.calculateQuantity(
+        quantityResponse.coal,
+        quantityResponse.coaldepot,
+        quantityResponse.coalrate,
+        quantityResponse.lastUpdate
+      );
+      planetQuantities.ore = this.calculateQuantity(
+        quantityResponse.ore,
+        quantityResponse.oredepot,
+        quantityResponse.orerate,
+        quantityResponse.lastUpdate
+      );
+      planetQuantities.copper = this.calculateQuantity(
+        quantityResponse.copper,
+        quantityResponse.copperdepot,
+        quantityResponse.copperrate,
+        quantityResponse.lastUpdate
+      );
+      planetQuantities.uranium = this.calculateQuantity(
+        quantityResponse.uranium,
+        quantityResponse.uraniumdepot,
+        quantityResponse.uraniumrate,
+        quantityResponse.lastUpdate
+      );
       planetQuantities.coaldepot = quantityResponse.coaldepot;
       planetQuantities.oredepot = quantityResponse.oredepot;
       planetQuantities.copperdepot = quantityResponse.copperdepot;
@@ -641,6 +661,20 @@ export default {
       } else {
         return 0;
       }
+    },
+    calculateQuantity(quantity, depot, rate, lastUpdate) {
+      var startTime = this.moment.unix(parseInt(lastUpdate));
+      var endTime = this.moment.utc();
+      var duration = this.moment.duration(endTime.diff(startTime));
+      var diff = duration.asDays();
+
+      return Math.max(
+        Math.min(
+          parseFloat(quantity) + parseFloat(rate) * diff, // accumulation
+          parseFloat(depot) // below depot
+        ),
+        parseFloat(quantity) // or overflow above depot
+      ).toFixed(1);
     }
   }
 };
