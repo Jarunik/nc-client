@@ -645,7 +645,7 @@ export default {
     },
     onCoordinateChange() {
       this.calculateConsumption();
-      this.search = "(" + this.xCoordinate + "/" + this.yCoordinate + ")";
+      this.search = this.xCoordinate + "/" + this.yCoordinate;
     },
     async fetchStarterPlanet(user) {
       const response = await PlanetsService.starterPlanet(user);
