@@ -7,6 +7,7 @@
         <th>{{ $t("Category") }}</th>
         <th>{{ $t("Subcategory") }}</th>
         <th>{{ $t("Type") }}</th>
+        <th>{{ $t("Location") }}</th>
         <th>{{ $t("Seller") }}</th>
         <th>{{ $t("Price") }}</th>
         <th>{{ $t("Buy") }}</th>
@@ -32,10 +33,12 @@
                   : "planet-type-" + ask.type
               )
             }}
+          </td>
+          <td>
             {{
-              ask.category == "planet"
+              ask.category !== "item"
                 ? ask.cords_hor + "/" + ask.cords_ver
-                : ""
+                : "-"
             }}
           </td>
           <td>{{ ask.user }}</td>
