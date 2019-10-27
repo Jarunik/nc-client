@@ -28,7 +28,13 @@
         </thead>
         <tbody>
           <tr v-for="(planet, index) in sortedPlanets" :key="planet.id">
-            <td>{{ planet.id }}</td>
+            <td
+              :style="{
+                color: planet.for_sale == 1 ? 'red' : 'white'
+              }"
+            >
+              {{ planet.id }}
+            </td>
             <td>{{ planet.posx }}/{{ planet.posy }}</td>
             <td>{{ planet.name }}</td>
             <td>{{ $t("planet-bonus-" + planet.bonus) }}</td>
