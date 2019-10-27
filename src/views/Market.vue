@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
           <td>{{ $t(ask.type) }}</td>
-          <td>{{ $t(ask.user) }}</td>
+          <td>{{ ask.user }}</td>
           <td>
             {{ ask.price / 1e8 }}
           </td>
@@ -72,7 +72,7 @@ export default {
       await this.getAsks();
     },
     async getAsks() {
-      const response = await MarketService.asks();
+      const response = await MarketService.active();
       this.asks = response;
     },
     buy(ask) {

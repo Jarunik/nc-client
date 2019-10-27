@@ -544,5 +544,12 @@
   "blueprint_21": "Blueprint Cruiser Eceza",
   "blueprint_22": "Blueprint Battlecruiser Dejah",
   "blueprint_23": "Blueprint Carrier Bhun'il",
-  "blueprint_24": "Blueprint Dreadnought Zaneel"
+  "blueprint_24": "Blueprint Dreadnought Zaneel",
+  "chest_01": "Chest",
+  "chest_02": "Huge Chest",
+  "chest_03": "Imperaium Chest",
+  "trade": "Trade",
+  "Market": "Market",
+  "Buy": "Buy",
+  "Seller": "Seller"
 }
