@@ -10,6 +10,7 @@
           <th>{{ $t("Bonus") }}</th>
           <th>{{ $t("Type") }}</th>
           <th>{{ $t("Rename") }}</th>
+          <th>{{ $t("Sell") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift") }}</font>
           </th>
@@ -45,6 +46,21 @@
                     @click="renamePlanet(planet.id, newName, index)"
                   >
                     {{ $t("Send") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span v-if="gameUser === loginUser">
+                <button @click="toggleSell(planet.id)">...</button>
+                <template v-if="planet.id !== null && showSell === planet.id">
+                  <input v-model="price" :placeholder="$t(placeholderPrice)" />
+                  <button
+                    :disabled="clicked.includes(planet.id)"
+                    @click="sell(planet, price, index)"
+                  >
+                    {{ $t("Sell") }}
                   </button>
                 </template>
               </span>
@@ -376,7 +392,10 @@ export default {
       clicked: [],
       stardust: null,
       showBurn: null,
-      burnRates: null
+      burnRates: null,
+      showSell: null,
+      price: null,
+      placeholderPrice: "enter SD price"
     };
   },
   async mounted() {
@@ -675,6 +694,30 @@ export default {
         ),
         parseFloat(quantity) // or overflow above depot
       ).toFixed(1);
+    },
+    sell(planet, index) {
+      this.clicked.push(planet.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.ask(
+        this.loginUser,
+        "planet",
+        planet.id,
+        this.price,
+        "null",
+        (error, result) => {
+          if (error === null && result.success) {
+            this.price = null;
+            this.placeholderSell = "Success";
+          }
+        }
+      );
+    },
+    toggleSell(itemId) {
+      if (this.showSell !== itemId) {
+        this.showSell = itemId;
+      } else {
+        this.showSell = null;
+      }
     }
   }
 };

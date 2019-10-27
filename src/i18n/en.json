@@ -552,5 +552,12 @@
   "Market": "Market",
   "Buy": "Buy",
   "Seller": "Seller",
-  "market": "Market"
+  "market": "Market",
+  "Sell": "Sell",
+  "enter SD price": "enter SD price",
+  "item": "Item",
+  "planet": "Planet",
+  "ship": "Ship",
+  "blueprint": "Blueprint",
+  "chest": "Chest"
 }

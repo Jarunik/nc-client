@@ -170,7 +170,6 @@ export default {
         }
       );
     },
-    //  ask(user, category, uid, price, market, cb)
     sell(item, index) {
       this.clicked.push(item.id);
       SteemConnectService.setAccessToken(this.accessToken);

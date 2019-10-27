@@ -4,7 +4,9 @@
 
     <table>
       <thead>
-        <th>{{ $t("Name") }}</th>
+        <th>{{ $t("Category") }}</th>
+        <th>{{ $t("Subcategory") }}</th>
+        <th>{{ $t("Type") }}</th>
         <th>{{ $t("Seller") }}</th>
         <th>{{ $t("Price") }}</th>
         <th>{{ $t("Buy") }}</th>
@@ -12,7 +14,30 @@
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
-          <td>{{ $t(ask.type) }}</td>
+          <td>{{ $t(ask.category) }}</td>
+          <td>
+            {{
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.subcategory
+                  : "planet-bonus-" + ask.subcategory
+              )
+            }}
+          </td>
+          <td>
+            {{
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.type
+                  : "planet-type-" + ask.type
+              )
+            }}
+            {{
+              ask.category == "planet"
+                ? ask.cords_hor + "/" + ask.cords_ver
+                : ""
+            }}
+          </td>
           <td>{{ ask.user }}</td>
           <td>
             {{ ask.price / 1e8 }}
