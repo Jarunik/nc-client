@@ -179,7 +179,7 @@ export default {
         "item",
         item.uid,
         this.price,
-        "jarunik",
+        "null",
         (error, result) => {
           if (error === null && result.success) {
             this.price = null;
