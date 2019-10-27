@@ -135,8 +135,11 @@ export default {
     }),
     groupedItems() {
       let obj = {};
+      let filteredItems = this.items.filter(item => {
+        return item.for_sale == 0;
+      });
       return Object.keys(
-        this.items.reduce((prev, next) => {
+        filteredItems.reduce((prev, next) => {
           if (!obj[next["id"]]) obj[next["id"]] = next;
           return obj;
         }, obj)

@@ -4,22 +4,34 @@
 
     <table>
       <thead>
-        <th>{{ $t("Item") }}</th>
+        <th>{{ $t("Name") }}</th>
+        <th>{{ $t("Seller") }}</th>
         <th>{{ $t("Price") }}</th>
         <th>{{ $t("Buy") }}</th>
+        <th>{{ $t("Cancel") }}</th>
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
-          <td>
-            {{ ask.uid }}
-          </td>
+          <td>{{ $t(ask.type) }}</td>
+          <td>{{ $t(ask.user) }}</td>
           <td>
             {{ ask.price / 1e8 }}
           </td>
           <td>
-            <button @click="buy(ask, index)">
-              {{ $t("Buy") }}
-            </button>
+            <span v-if="loginUser != ask.user">
+              <button @click="buy(ask)">
+                {{ $t("Buy") }}
+              </button>
+            </span>
+            <span v-else>-</span>
+          </td>
+          <td>
+            <span v-if="loginUser == ask.user">
+              <button @click="cancel(ask)">
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </span>
+            <span v-else>-</span>
           </td>
         </tr>
       </tbody>
@@ -31,9 +43,13 @@
 import MarketService from "@/services/market";
 import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
+import CancelIcon from "vue-material-design-icons/Cancel.vue";
 
 export default {
   name: "market",
+  components: {
+    CancelIcon
+  },
   data: function() {
     return {
       asks: null
@@ -63,10 +79,21 @@ export default {
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.fill_ask(this.loginUser, ask.id, (error, result) => {
         if (error === null && result.success) {
-          this.price = null;
-          this.placeholderSell = "Success";
+          null;
         }
       });
+    },
+    cancel(ask) {
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.cancel_ask(
+        this.loginUser,
+        ask.id,
+        (error, result) => {
+          if (error === null && result.success) {
+            null;
+          }
+        }
+      );
     }
   }
 };
