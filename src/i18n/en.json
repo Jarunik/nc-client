@@ -551,5 +551,6 @@
   "trade": "Trade",
   "Market": "Market",
   "Buy": "Buy",
-  "Seller": "Seller"
+  "Seller": "Seller",
+  "market": "Market"
 }
