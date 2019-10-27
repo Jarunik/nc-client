@@ -436,6 +436,54 @@ class SteemConnectService extends Client {
 
     super.customJson([], [user], [appId], finalJson, cb);
   }
+
+  ask(user, category, uid, price, market, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "ask";
+    scCommand["tr_var1"] = category;
+    scCommand["tr_var2"] = uid;
+    scCommand["tr_var3"] = price;
+    scCommand["tr_var4"] = market;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  cancel_ask(user, askId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "cancel_ask";
+    scCommand["tr_var1"] = askId;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
+
+  fill_ask(user, askId, cb) {
+    var scJson = {};
+    var scCommand = {};
+    // Create Command
+    scJson["username"] = user;
+    scJson["type"] = "fill_ask";
+    scCommand["tr_var1"] = askId;
+
+    scJson["command"] = scCommand;
+    var finalJson = JSON.stringify(scJson);
+    var appId = this.appId();
+
+    super.customJson([], [user], [appId], finalJson, cb);
+  }
 }
 
 export default new SteemConnectService();

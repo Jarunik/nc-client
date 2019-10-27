@@ -7,7 +7,9 @@
           <th>{{ $t("Name") }}</th>
           <th>{{ $t("Quantity") }}</th>
           <th>{{ $t("Gift") }}</th>
+          <th>{{ $t("Sell") }}</th>
           <th>{{ $t("Activate") }}</th>
+
           <th></th>
         </thead>
         <tbody>
@@ -36,6 +38,21 @@
               <span v-else>
                 -
               </span>
+            </td>
+            <td>
+              <span v-if="gameUser === loginUser">
+                <button @click="toggleSell(item.id)">...</button>
+                <template v-if="item.id !== null && showSell === item.id">
+                  <input v-model="price" :placeholder="$t(placeholderPrice)" />
+                  <button
+                    :disabled="clicked.includes(item.id)"
+                    @click="sell(item, price, index)"
+                  >
+                    {{ $t("Sell") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
             </td>
             <td>
               <button
@@ -97,7 +114,10 @@ export default {
       showGift: null,
       clicked: [],
       chainResponse: [],
-      placeholderGift: "enter recipient"
+      placeholderGift: "enter recipient",
+      placeholderPrice: "enter SD price",
+      price: null,
+      showSell: null
     };
   },
   async mounted() {
@@ -147,11 +167,36 @@ export default {
         }
       );
     },
+    //  ask(user, category, uid, price, market, cb)
+    sell(item, index) {
+      this.clicked.push(item.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.ask(
+        this.loginUser,
+        "item",
+        item.uid,
+        this.price,
+        "jarunik",
+        (error, result) => {
+          if (error === null && result.success) {
+            this.price = null;
+            this.placeholderSell = "Success";
+          }
+        }
+      );
+    },
     toggleGift(itemId) {
       if (this.showGift !== itemId) {
         this.showGift = itemId;
       } else {
         this.showGift = null;
+      }
+    },
+    toggleSell(itemId) {
+      if (this.showSell !== itemId) {
+        this.showSell = itemId;
+      } else {
+        this.showSell = null;
       }
     },
     activateItem(item, planetId, index) {

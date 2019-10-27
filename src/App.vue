@@ -26,6 +26,10 @@
           ><cart-icon :title="$t('Shop')"
         /></router-link>
         |
+        <router-link :to="'/market'" v-tooltip="$t('Market')">
+          <store-icon :title="$t('Market')" />
+        </router-link>
+        |
         <router-link :to="'/items'" v-tooltip="$t('Items')">
           <package-variant-closed-icon :title="$t('Items')" />
         </router-link>
@@ -109,6 +113,7 @@ import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import TimerIcon from "vue-material-design-icons/Timer.vue";
 import SettingsIcon from "vue-material-design-icons/Settings.vue";
+import StoreIcon from "vue-material-design-icons/Store.vue";
 
 export default {
   name: "App",
@@ -130,7 +135,8 @@ export default {
     NewspaperIcon,
     LoginIcon,
     TimerIcon,
-    SettingsIcon
+    SettingsIcon,
+    StoreIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
