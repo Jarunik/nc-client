@@ -19,7 +19,7 @@
           </td>
           <td>
             <span v-if="loginUser != ask.user">
-              <button @click="buy(ask)">
+              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
                 {{ $t("Buy") }}
               </button>
             </span>
@@ -27,7 +27,7 @@
           </td>
           <td>
             <span v-if="loginUser == ask.user">
-              <button @click="cancel(ask)">
+              <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
                 <cancel-icon :title="$t('Cancel')" />
               </button>
             </span>
@@ -52,10 +52,12 @@ export default {
   },
   data: function() {
     return {
-      asks: null
+      asks: null,
+      clicked: []
     };
   },
   async mounted() {
+    this.clicked = [];
     await this.prepareComponent();
   },
   computed: {
@@ -76,6 +78,7 @@ export default {
       this.asks = response;
     },
     buy(ask) {
+      this.clicked.push(ask.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.fill_ask(this.loginUser, ask.id, (error, result) => {
         if (error === null && result.success) {
@@ -84,6 +87,7 @@ export default {
       });
     },
     cancel(ask) {
+      this.clicked.push(ask.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.cancel_ask(
         this.loginUser,
