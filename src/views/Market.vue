@@ -1,7 +1,28 @@
 <template>
   <div class="market">
     <h1>{{ $t("Market") }}</h1>
-
+    <p>
+      <input
+        v-model="userFilter"
+        @blur="setUserFilter(userFilter)"
+        @keyup.enter="setUserFilter(userFilter)"
+        :placeholder="$t('Filter User')"
+      />
+      &nbsp;
+      <select
+        @change="setCategoryFilter(categoryFilter)"
+        v-model="categoryFilter"
+      >
+        <option value="all">{{ $t("All") }}</option>
+        <option value="ship">{{ $t("Ship") }}</option>
+        <option value="item">{{ $t("Item") }}</option>
+        <option value="planet">{{ $t("planet") }}</option>
+      </select>
+      &nbsp;
+      <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
+      &nbsp;
+      <button @click="setUserFilter(null)">{{ $t("All") }}</button>
+    </p>
     <table>
       <thead>
         <th>{{ $t("Category") }}</th>
@@ -87,7 +108,9 @@ export default {
     return {
       asks: null,
       clicked: [],
-      stardust: null
+      stardust: null,
+      userFilter: null,
+      categoryFilter: "all"
     };
   },
   async mounted() {
@@ -108,6 +131,8 @@ export default {
     async prepareComponent() {
       await this.getAsks();
       await this.getStardust();
+      this.userFilter = null;
+      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
     },
     async getAsks() {
       const response = await MarketService.active();
@@ -145,6 +170,34 @@ export default {
       } else {
         return false;
       }
+    },
+    async getMarketByFilter(categoryFilter, userFilter) {
+      if (categoryFilter === "all") {
+        const response = await MarketService.byFilter(null, userFilter);
+        this.asks = response;
+      } else {
+        const response = await MarketService.byFilter(
+          categoryFilter,
+          userFilter
+        );
+        this.asks = response;
+      }
+    },
+    async setUserFilter(userFilter) {
+      if (userFilter !== "") {
+        this.userFilter = userFilter;
+      } else {
+        this.userFilter = null;
+      }
+      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+    },
+    async setCategoryFilter(categoryFilter) {
+      if (categoryFilter !== "") {
+        this.categoryFilter = categoryFilter;
+      } else {
+        this.categoryFilter = null;
+      }
+      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
     }
   }
 };
