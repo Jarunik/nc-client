@@ -704,7 +704,7 @@ export default {
         (error, result) => {
           if (error === null && result.success) {
             this.price = null;
-            this.placeholderSell = "Success";
+            this.placeholderPrice = "Success";
           }
         }
       );

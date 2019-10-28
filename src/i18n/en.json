@@ -548,6 +548,9 @@
   "chest_01": "Chest",
   "chest_02": "Huge Chest",
   "chest_03": "Imperaium Chest",
+  "booster_01": "Rune",
+  "booster_02": "Mighty Rune",
+  "booster_03": "Holy Rune",
   "trade": "Trade",
   "Market": "Market",
   "Buy": "Buy",
@@ -559,5 +562,10 @@
   "planet": "Planet",
   "ship": "Ship",
   "blueprint": "Blueprint",
-  "chest": "Chest"
+  "chest": "Chest",
+  "booster": "Rune",
+  "Category": "Category",
+  "Subcategory": "Subcategory",
+  "Items for Sale": "Items for Sale",
+  "Identifier": "Identifier"
 }

@@ -65,7 +65,7 @@
           </tbody>
         </table>
       </template>
-      <hr v-if="itemForSale !== null && itemsForSale.length > 0" width="20%">
+      <hr v-if="itemsForSale !== null && itemsForSale.length > 0" width="20%">
       <h2>
         <router-link :to="'/market'" v-tooltip="$t('Market')">
           <store-icon :title="$t('Market')"/>
@@ -76,13 +76,13 @@
         <table>
           <thead>
             <th>{{ $t("Name") }}</th>
-            <th>{{ $t("Id") }}</th>
+            <th>{{ $t("Identifier") }}</th>
             <th></th>
           </thead>
           <tbody>
             <tr v-for="item in itemsForSale" :key="item.uid">
               <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ $t(item.name) }}</td>
-              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ $t(item.uid) }}</td>
+              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ item.uid }}</td>
             </tr>
           </tbody>
         </table>
@@ -202,7 +202,7 @@ export default {
         (error, result) => {
           if (error === null && result.success) {
             this.price = null;
-            this.placeholderSell = "Success";
+            this.placeholderPrice = "Success";
           }
         }
       );
