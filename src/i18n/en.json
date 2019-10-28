@@ -563,5 +563,8 @@
   "Category": "Category",
   "Subcategory": "Subcategory",
   "Items for Sale": "Items for Sale",
-  "Identifier": "Identifier"
+  "Identifier": "Identifier",
+  "ask": "Ask",
+  "fill_ask": "Fill Ask",
+  "cancel_ask": "Cancel Ask"
 }

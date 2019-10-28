@@ -103,6 +103,9 @@
           </tbody>
         </table>
       </template>
+      <template v-else>
+        <p>{{ $t("Nothing listed on the market.") }}</p>
+      </template>
     </template>
     <template v-else>
       <template v-if="gameUser !== null">
