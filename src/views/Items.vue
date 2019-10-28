@@ -16,7 +16,7 @@
           <tbody>
             <tr v-for="(item, index) in groupedItems" :key="item.uid">
               <td>{{ $t(item.name) }}</td>
-              <td>{{ item.total }}</td>
+              <td>{{ item.total - itemsForSaleCount(item.id) }}</td>
               <td>
                 <span v-if="gameUser === loginUser">
                   <button @click="toggleGift(item.id)">...</button>
@@ -28,7 +28,7 @@
                     <button
                       :disabled="clicked.includes(item.id)"
                       @click="giftItem(item, index)"
-                      v-if="item.total > 0"
+                      v-if="item.total - itemsForSaleCount(item.id) > 0"
                     >
                       {{ $t("Send") }}
                     </button>
@@ -58,7 +58,7 @@
                 <button
                   v-if="
                     gameUser === loginUser &&
-                      item.total > 0 &&
+                      item.total - itemsForSaleCount(item.id) > 0 &&
                       planetId !== null
                   "
                   @click="activateItem(item, planetId, index)"
@@ -254,6 +254,16 @@ export default {
           }
         }
       );
+    },
+    itemsForSaleCount(itemId) {
+      let filteredItems = this.items.filter(item => {
+        return item.for_sale == 1 && item.id == itemId;
+      });
+      if (filteredItems != null) {
+        return filteredItems.length;
+      } else {
+        return 0;
+      }
     }
   }
 };
