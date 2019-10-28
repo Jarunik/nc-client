@@ -176,7 +176,6 @@ export default {
       ).map(i => obj[i]);
     },
     itemsForSale() {
-      let obj = {};
       let filteredItems = this.items.filter(item => {
         return item.for_sale == 1;
       });

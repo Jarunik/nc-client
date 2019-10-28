@@ -396,6 +396,8 @@ export default {
   data: function() {
     return {
       fleet: null,
+      filteredFleet: null,
+      groupedFleet: null,
       activeUserMissions: null,
       activeMissions: null,
       skills: null,
@@ -490,7 +492,7 @@ export default {
       gameLocale: state => state.game.gameLocale
     }),
     sortedFleet() {
-      var sortedFleet = this.fleet;
+      var sortedFleet = this.groupedFleet;
       if (sortedFleet !== null) {
         return sortedFleet.sort((a, b) => {
           let modifier = 1;
@@ -579,12 +581,15 @@ export default {
     async getFleet() {
       const response = await FleetService.all(this.gameUser, this.planetId);
       this.fleet = response;
-      if (this.fleet !== null) {
-        this.fleet.forEach(ship => {
+      this.filteredFleet = this.fleet.filter(ship => {
+        return ship.for_sale == 0;
+      });
+      if (this.filteredFleet !== null) {
+        this.filteredFleet.forEach(ship => {
           ship.quantity = 1;
           ship.toSend = 1;
         });
-        this.fleet = this.fleet.reduce((acc, current) => {
+        this.groupedFleet = this.filteredFleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
           if (!x) {
             // add first found by name
@@ -835,7 +840,7 @@ export default {
           { id: 8, type: null, n: "-", c: 0, pos: "-", name: "-" }
         ]
       };
-      this.fleet.forEach(ship => {
+      this.groupedFleet.forEach(ship => {
         ship.toSend = 1;
       });
     },
