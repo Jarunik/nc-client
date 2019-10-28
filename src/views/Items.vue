@@ -21,12 +21,17 @@
                 <span v-if="gameUser === loginUser">
                   <button @click="toggleGift(item.id)">...</button>
                   <template v-if="showGift === item.id">
-                    <input v-model="recipient" :placeholder="$t(placeholderGift)">
+                    <input
+                      v-model="recipient"
+                      :placeholder="$t(placeholderGift)"
+                    />
                     <button
                       :disabled="clicked.includes(item.id)"
                       @click="giftItem(item, index)"
                       v-if="item.total > 0"
-                    >{{ $t("Send") }}</button>
+                    >
+                      {{ $t("Send") }}
+                    </button>
                   </template>
                 </span>
                 <span v-else>-</span>
@@ -35,11 +40,16 @@
                 <span v-if="gameUser === loginUser">
                   <button @click="toggleSell(item.id)">...</button>
                   <template v-if="item.id !== null && showSell === item.id">
-                    <input v-model="price" :placeholder="$t(placeholderPrice)">
+                    <input
+                      v-model="price"
+                      :placeholder="$t(placeholderPrice)"
+                    />
                     <button
                       :disabled="clicked.includes(item.id)"
                       @click="sell(item, price, index)"
-                    >{{ $t("Sell") }}</button>
+                    >
+                      {{ $t("Sell") }}
+                    </button>
                   </template>
                 </span>
                 <span v-else>-</span>
@@ -47,28 +57,30 @@
               <td>
                 <button
                   v-if="
-                    gameUser === loginUser && item.total > 0 && planetId !== null
+                    gameUser === loginUser &&
+                      item.total > 0 &&
+                      planetId !== null
                   "
                   @click="activateItem(item, planetId, index)"
                   :disabled="clicked.includes(item.id)"
                 >
-                  <white-balance-sunny-icon :title="$t('Activate')"/>
+                  <white-balance-sunny-icon :title="$t('Activate')" />
                 </button>
                 <span v-else>-</span>
               </td>
               <td>
                 <span v-if="chainResponse.includes(item.id)">
-                  <timer-sand-icon :title="$t('Transaction sent')"/>
+                  <timer-sand-icon :title="$t('Transaction sent')" />
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
       </template>
-      <hr v-if="itemsForSale !== null && itemsForSale.length > 0" width="20%">
+      <hr v-if="itemsForSale !== null && itemsForSale.length > 0" width="20%" />
       <h2>
         <router-link :to="'/market'" v-tooltip="$t('Market')">
-          <store-icon :title="$t('Market')"/>
+          <store-icon :title="$t('Market')" />
         </router-link>
         {{ $t("Items for Sale") }}
       </h2>
@@ -81,8 +93,12 @@
           </thead>
           <tbody>
             <tr v-for="item in itemsForSale" :key="item.uid">
-              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ $t(item.name) }}</td>
-              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ item.uid }}</td>
+              <td :style="{ color: item.for_sale == 1 ? 'grey' : 'white' }">
+                {{ $t(item.name) }}
+              </td>
+              <td :style="{ color: item.for_sale == 1 ? 'grey' : 'white' }">
+                {{ item.uid }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -92,7 +108,8 @@
       <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no items. Buy some in the") }}
-          <router-link to="/shop">{{ $t("shop") }}</router-link>.
+          <router-link to="/shop">{{ $t("shop") }}</router-link
+          >.
         </p>
       </template>
       <template v-if="gameUser === null">

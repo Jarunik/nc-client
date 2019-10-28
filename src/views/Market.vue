@@ -18,45 +18,49 @@
           <td>{{ $t(ask.category) }}</td>
           <td>
             {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.subcategory
-            : "planet-bonus-" + ask.subcategory
-            )
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.subcategory
+                  : "planet-bonus-" + ask.subcategory
+              )
             }}
           </td>
           <td>
             {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.type
-            : "planet-type-" + ask.type
-            )
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.type
+                  : "planet-type-" + ask.type
+              )
             }}
           </td>
           <td>
             {{
-            ask.category !== "item"
-            ? ask.cords_hor + "/" + ask.cords_ver
-            : "-"
+              ask.category !== "item"
+                ? ask.cords_hor + "/" + ask.cords_ver
+                : "-"
             }}
           </td>
           <td>{{ ask.user }}</td>
           <td>
-            {{ Number(ask.price / 1e8).toLocaleString(gameLocale, {
-            style: "decimal"
-            }) }}
+            {{
+              Number(ask.price / 1e8).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}
           </td>
           <td>
             <span v-if="loginUser != ask.user">
-              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">{{ $t("Buy") }}</button>
+              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
+                {{ $t("Buy") }}
+              </button>
             </span>
             <span v-else>-</span>
           </td>
           <td>
             <span v-if="loginUser == ask.user">
               <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
-                <cancel-icon :title="$t('Cancel')"/>
+                <cancel-icon :title="$t('Cancel')" />
               </button>
             </span>
             <span v-else>-</span>
