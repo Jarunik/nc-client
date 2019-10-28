@@ -46,7 +46,7 @@
                     />
                     <button
                       :disabled="clicked.includes(item.id)"
-                      @click="sell(item, price, index)"
+                      @click="sell(item, price)"
                     >
                       {{ $t("Sell") }}
                     </button>
@@ -209,7 +209,7 @@ export default {
         }
       );
     },
-    sell(item, index) {
+    sell(item) {
       this.clicked.push(item.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.ask(
