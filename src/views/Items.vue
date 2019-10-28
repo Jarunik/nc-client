@@ -2,86 +2,97 @@
   <div class="items">
     <h1>{{ $t("Items") }} - {{ planetName }}</h1>
     <template v-if="items !== null && items.length > 0">
-      <table>
-        <thead>
-          <th>{{ $t("Name") }}</th>
-          <th>{{ $t("Quantity") }}</th>
-          <th>{{ $t("Gift") }}</th>
-          <th>{{ $t("Sell") }}</th>
-          <th>{{ $t("Activate") }}</th>
+      <template v-if="groupedItems !== null && groupedItems.length > 0">
+        <table>
+          <thead>
+            <th>{{ $t("Name") }}</th>
+            <th>{{ $t("Quantity") }}</th>
+            <th>{{ $t("Gift") }}</th>
+            <th>{{ $t("Sell") }}</th>
+            <th>{{ $t("Activate") }}</th>
 
-          <th></th>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in groupedItems" :key="item.uid">
-            <td>{{ $t(item.name) }}</td>
-            <td>{{ item.total }}</td>
-            <td>
-              <span v-if="gameUser === loginUser">
-                <button @click="toggleGift(item.id)">
-                  ...
+            <th></th>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in groupedItems" :key="item.uid">
+              <td>{{ $t(item.name) }}</td>
+              <td>{{ item.total }}</td>
+              <td>
+                <span v-if="gameUser === loginUser">
+                  <button @click="toggleGift(item.id)">...</button>
+                  <template v-if="showGift === item.id">
+                    <input v-model="recipient" :placeholder="$t(placeholderGift)">
+                    <button
+                      :disabled="clicked.includes(item.id)"
+                      @click="giftItem(item, index)"
+                      v-if="item.total > 0"
+                    >{{ $t("Send") }}</button>
+                  </template>
+                </span>
+                <span v-else>-</span>
+              </td>
+              <td>
+                <span v-if="gameUser === loginUser">
+                  <button @click="toggleSell(item.id)">...</button>
+                  <template v-if="item.id !== null && showSell === item.id">
+                    <input v-model="price" :placeholder="$t(placeholderPrice)">
+                    <button
+                      :disabled="clicked.includes(item.id)"
+                      @click="sell(item, price, index)"
+                    >{{ $t("Sell") }}</button>
+                  </template>
+                </span>
+                <span v-else>-</span>
+              </td>
+              <td>
+                <button
+                  v-if="
+                    gameUser === loginUser && item.total > 0 && planetId !== null
+                  "
+                  @click="activateItem(item, planetId, index)"
+                  :disabled="clicked.includes(item.id)"
+                >
+                  <white-balance-sunny-icon :title="$t('Activate')"/>
                 </button>
-                <template v-if="showGift === item.id">
-                  <input
-                    v-model="recipient"
-                    :placeholder="$t(placeholderGift)"
-                  />
-                  <button
-                    :disabled="clicked.includes(item.id)"
-                    @click="giftItem(item, index)"
-                    v-if="item.total > 0"
-                  >
-                    {{ $t("Send") }}
-                  </button>
-                </template>
-              </span>
-              <span v-else>
-                -
-              </span>
-            </td>
-            <td>
-              <span v-if="gameUser === loginUser">
-                <button @click="toggleSell(item.id)">...</button>
-                <template v-if="item.id !== null && showSell === item.id">
-                  <input v-model="price" :placeholder="$t(placeholderPrice)" />
-                  <button
-                    :disabled="clicked.includes(item.id)"
-                    @click="sell(item, price, index)"
-                  >
-                    {{ $t("Sell") }}
-                  </button>
-                </template>
-              </span>
-              <span v-else>-</span>
-            </td>
-            <td>
-              <button
-                v-if="
-                  gameUser === loginUser && item.total > 0 && planetId !== null
-                "
-                @click="activateItem(item, planetId, index)"
-                :disabled="clicked.includes(item.id)"
-              >
-                <white-balance-sunny-icon :title="$t('Activate')" />
-              </button>
-              <span v-else>
-                -
-              </span>
-            </td>
-            <td>
-              <span v-if="chainResponse.includes(item.id)"
-                ><timer-sand-icon :title="$t('Transaction sent')"
-              /></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <span v-else>-</span>
+              </td>
+              <td>
+                <span v-if="chainResponse.includes(item.id)">
+                  <timer-sand-icon :title="$t('Transaction sent')"/>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
+      <hr v-if="itemForSale !== null && itemsForSale.length > 0" width="20%">
+      <h2>
+        <router-link :to="'/market'" v-tooltip="$t('Market')">
+          <store-icon :title="$t('Market')"/>
+        </router-link>
+        {{ $t("Items for Sale") }}
+      </h2>
+      <template v-if="itemsForSale !== null && itemsForSale.length > 0">
+        <table>
+          <thead>
+            <th>{{ $t("Name") }}</th>
+            <th>{{ $t("Id") }}</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr v-for="item in itemsForSale" :key="item.uid">
+              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ $t(item.name) }}</td>
+              <td :style="{color: item.for_sale == 1 ? 'grey' : 'white'}">{{ $t(item.uid) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
     </template>
     <template v-else>
       <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no items. Buy some in the") }}
-          <router-link to="/shop">{{ $t("shop") }}</router-link> .
+          <router-link to="/shop">{{ $t("shop") }}</router-link>.
         </p>
       </template>
       <template v-if="gameUser === null">
@@ -100,12 +111,14 @@ import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
 import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
+import StoreIcon from "vue-material-design-icons/Store.vue";
 
 export default {
   name: "items",
   components: {
     TimerSandIcon,
-    WhiteBalanceSunnyIcon
+    WhiteBalanceSunnyIcon,
+    StoreIcon
   },
   data: function() {
     return {
@@ -144,6 +157,13 @@ export default {
           return obj;
         }, obj)
       ).map(i => obj[i]);
+    },
+    itemsForSale() {
+      let obj = {};
+      let filteredItems = this.items.filter(item => {
+        return item.for_sale == 1;
+      });
+      return filteredItems;
     }
   },
   methods: {
