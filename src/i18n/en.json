@@ -566,5 +566,6 @@
   "Identifier": "Identifier",
   "ask": "Ask",
   "fill_ask": "Fill Ask",
-  "cancel_ask": "Cancel Ask"
+  "cancel_ask": "Cancel Ask",
+  "Patrol": "Patrol"
 }

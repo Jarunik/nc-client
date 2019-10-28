@@ -50,7 +50,7 @@
             }}
           </td>
           <td>
-            <span v-if="loginUser != ask.user">
+            <span v-if="loginUser != ask.user && showBuyButton(ask)">
               <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
                 {{ $t("Buy") }}
               </button>
@@ -73,6 +73,7 @@
 
 <script>
 import MarketService from "@/services/market";
+import UserService from "@/services/user";
 import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
@@ -85,7 +86,8 @@ export default {
   data: function() {
     return {
       asks: null,
-      clicked: []
+      clicked: [],
+      stardust: null
     };
   },
   async mounted() {
@@ -105,10 +107,15 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getAsks();
+      await this.getStardust();
     },
     async getAsks() {
       const response = await MarketService.active();
       this.asks = response;
+    },
+    async getStardust() {
+      const response = await UserService.get(this.gameUser);
+      this.stardust = response.stardust;
     },
     buy(ask) {
       this.clicked.push(ask.id);
@@ -131,6 +138,13 @@ export default {
           }
         }
       );
+    },
+    showBuyButton(ask) {
+      if (ask.price <= this.stardust) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };

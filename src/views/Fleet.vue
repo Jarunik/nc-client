@@ -16,35 +16,40 @@
       <p v-if="isUnderSiege()" style="color:red">
         {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
       </p>
-      <!-- Commands -->
-      <p>
-        {{ $t("Command") }}
-        <select @change="onCommand()" v-model="command">
-          <option v-if="!isUnderSiege()" value="explorespace">
-            {{ $t("Explore") }}
-          </option>
-          <option v-if="!isUnderSiege()" value="transport">
-            {{ $t("Transport") }}
-          </option>
-          <option v-if="!isUnderSiege()" value="deploy">
-            {{ $t("Deploy") }}
-          </option>
-          <option v-if="!isUnderSiege()" value="support">
-            {{ $t("Support") }}
-          </option>
-          <option v-if="!isUnderSiege()" value="attack">
-            {{ $t("Attack") }}
-          </option>
-          <option v-if="!isUnderSiege()" value="siege">
-            {{ $t("Siege") }}
-          </option>
-          <option value="breaksiege">{{ $t("Break Siege") }}</option>
-          <option v-if="!isUnderSiege()" value="upgradeyamato">
-            {{ $t("Upgrade Yamato") }}
-          </option>
-          <option value="sent">{{ $t("Sent") }}</option>
-        </select>
+      <p v-if="planetForSale()" style="color:red">
+        {{ $t("Planet is listed for sale. No mission is possible!") }}
       </p>
+      <!-- Commands -->
+      <span v-if="!planetForSale()">
+        <p>
+          {{ $t("Command") }}
+          <select @change="onCommand()" v-model="command">
+            <option v-if="!isUnderSiege()" value="explorespace">
+              {{ $t("Explore") }}
+            </option>
+            <option v-if="!isUnderSiege()" value="transport">
+              {{ $t("Transport") }}
+            </option>
+            <option v-if="!isUnderSiege()" value="deploy">
+              {{ $t("Deploy") }}
+            </option>
+            <option v-if="!isUnderSiege()" value="support">
+              {{ $t("Support") }}
+            </option>
+            <option v-if="!isUnderSiege()" value="attack">
+              {{ $t("Attack") }}
+            </option>
+            <option v-if="!isUnderSiege()" value="siege">
+              {{ $t("Siege") }}
+            </option>
+            <option value="breaksiege">{{ $t("Break Siege") }}</option>
+            <option v-if="!isUnderSiege()" value="upgradeyamato">
+              {{ $t("Upgrade Yamato") }}
+            </option>
+            <option value="sent">{{ $t("Sent") }}</option>
+          </select>
+        </p>
+      </span>
       <!-- Ship List -->
       <table>
         <thead>
@@ -489,7 +494,8 @@ export default {
       planetName: state => state.planet.name,
       planetPosX: state => state.planet.posX,
       planetPosY: state => state.planet.posY,
-      gameLocale: state => state.game.gameLocale
+      gameLocale: state => state.game.gameLocale,
+      planetList: state => state.planet.list
     }),
     sortedFleet() {
       var sortedFleet = this.groupedFleet;
@@ -1297,6 +1303,18 @@ export default {
       } else {
         this.showSell = null;
       }
+    },
+    planetForSale() {
+      console.log(this.planetList);
+      let forSale = false;
+      if (this.planetList != null) {
+        this.planetList.forEach(planet => {
+          if (planet.id == this.planetId && planet.for_sale == 1) {
+            forSale = true;
+          }
+        });
+      }
+      return forSale;
     }
   },
   beforeDestroy() {
