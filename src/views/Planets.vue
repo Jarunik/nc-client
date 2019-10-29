@@ -10,7 +10,8 @@
           <th>{{ $t("Bonus") }}</th>
           <th>{{ $t("Type") }}</th>
           <th>{{ $t("Rename") }}</th>
-          <th>{{ $t("For Sale") }}</th>
+          <th>{{ $t("Sale") }}</th>
+          <th>{{ $t("Ship") }}</th>
           <th>{{ $t("Sell") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift") }}</font>
@@ -71,7 +72,22 @@
               <span v-else>-</span>
             </td>
             <td>
-              <span v-if="gameUser === loginUser && planet.for_sale != 1">
+              <span v-if="shipForSale(planet)">
+                <router-link :to="'/market'" v-tooltip="$t('Market')">
+                  <store-icon :title="$t('Market')" />
+                </router-link>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    planet.for_sale != 1 &&
+                    planet.starter == 0 &&
+                    !shipForSale(planet)
+                "
+              >
                 <button @click="toggleSell(planet)">...</button>
                 <template v-if="planet.id !== null && showSell === planet.id">
                   <input v-model="price" :placeholder="$t(placeholderPrice)" />
@@ -637,7 +653,8 @@ export default {
         battlecruiser: 0,
         carrier: 0,
         dreadnought: 0,
-        yamato: 0
+        yamato: 0,
+        forSale: 0
       };
       const response = await FleetService.all(this.gameUser, planetFleet.id);
       fleetResponse = response;
@@ -671,6 +688,9 @@ export default {
         }
         if (ship.type.startsWith("yamato")) {
           planetFleet.fleet.yamato++;
+        }
+        if (ship.for_sale == 1) {
+          planetFleet.fleet.forSale++;
         }
       });
       return planetFleet;
@@ -769,6 +789,17 @@ export default {
       } else {
         this.showSell = null;
       }
+    },
+    shipForSale(planet) {
+      let forSale = false;
+      this.planetFleet.forEach(planetFleet => {
+        if (planetFleet.id == planet.id) {
+          if (planetFleet.fleet.forSale > 0) {
+            forSale = true;
+          }
+        }
+      });
+      return forSale;
     }
   }
 };

@@ -57,6 +57,7 @@
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
+          <th @click="sort('forSale')">{{ $t("Sale") }}</th>
           <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
           <th v-if="command !== null" @click="sort('toSend')">
             {{ $t("Send") }}
@@ -75,14 +76,28 @@
                 })
               }}
             </td>
+            <td>
+              <span v-if="ship.forSale > 0">{{ ship.forSale }}</span
+              ><span v-else>-</span>
+            </td>
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
-              <input class="inputShort" type="number" v-model="ship.toSend" />
-              <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
+              <span v-if="ship.quantity > 0">
+                <input class="inputShort" type="number" v-model="ship.toSend" />
+                <button @click="add(ship, ship.toSend)">
+                  {{ $t("+") }}
+                </button> </span
+              ><span v-else>-</span>
             </td>
             <td v-if="command == null">
-              <span v-if="gameUser === loginUser">
-                <button @click="toggleSell(ship.id)">...</button>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    ship.quantity > 0 &&
+                    !planetForSale()
+                "
+              >
+                <button @click="toggleSell(ship)">...</button>
                 <template v-if="ship.id !== null && showSell === ship.id">
                   <input v-model="price" :placeholder="$t(placeholderPrice)" />
                   <button
@@ -401,7 +416,6 @@ export default {
   data: function() {
     return {
       fleet: null,
-      filteredFleet: null,
       groupedFleet: null,
       activeUserMissions: null,
       activeMissions: null,
@@ -587,15 +601,19 @@ export default {
     async getFleet() {
       const response = await FleetService.all(this.gameUser, this.planetId);
       this.fleet = response;
-      this.filteredFleet = this.fleet.filter(ship => {
-        return ship.for_sale == 0;
-      });
-      if (this.filteredFleet !== null) {
-        this.filteredFleet.forEach(ship => {
-          ship.quantity = 1;
-          ship.toSend = 1;
+      if (this.fleet !== null) {
+        this.fleet.forEach(ship => {
+          if (ship.for_sale == 0) {
+            ship.quantity = 1;
+            ship.toSend = 1;
+            ship.forSale = 0;
+          } else {
+            ship.quantity = 0;
+            ship.toSend = 0;
+            ship.forSale = 1;
+          }
         });
-        this.groupedFleet = this.filteredFleet.reduce((acc, current) => {
+        this.groupedFleet = this.fleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
           if (!x) {
             // add first found by name
@@ -604,7 +622,11 @@ export default {
             acc.forEach(ship => {
               // count up the duplicates
               if (ship.longname === current.longname) {
-                ship.quantity++;
+                if (current.for_sale == 0) {
+                  ship.quantity++;
+                } else {
+                  ship.forSale++;
+                }
               }
             });
             return acc;
@@ -884,9 +906,9 @@ export default {
       // Add a new one
       if (!existingGroup) {
         this.shipFormation.count = this.shipFormation.count + 1;
-        this.shipFormation.ships[this.pos].n = Math.max(
-          Math.min(quantity, ship.quantity),
-          1
+        this.shipFormation.ships[this.pos].n = Math.min(
+          quantity,
+          ship.quantity
         );
         this.shipFormation.ships[this.pos].c = ship.cons;
         this.shipFormation.ships[this.pos].pos = this.pos + 1;
@@ -1297,15 +1319,14 @@ export default {
         }
       );
     },
-    toggleSell(shipId) {
-      if (this.showSell !== shipId) {
-        this.showSell = shipId;
+    toggleSell(ship) {
+      if (this.showSell !== ship.id) {
+        this.showSell = ship.id;
       } else {
         this.showSell = null;
       }
     },
     planetForSale() {
-      console.log(this.planetList);
       let forSale = false;
       if (this.planetList != null) {
         this.planetList.forEach(planet => {
