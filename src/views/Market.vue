@@ -6,17 +6,17 @@
         @change="setCategoryFilter(categoryFilter)"
         v-model="categoryFilter"
       >
-        <option value="all">{{ $t("Category") }}</option>
-        <option value="ship">{{ $t("Ship") }}</option>
-        <option value="item">{{ $t("Item") }}</option>
-        <option value="planet">{{ $t("planet") }}</option>
+        <option value="all">{{ $t("Category: All") }}</option>
+        <option value="ship">{{ $t("Ships") }}</option>
+        <option value="item">{{ $t("Items") }}</option>
+        <option value="planet">{{ $t("Planets") }}</option>
       </select>
       &nbsp;
       <select
         @change="setSubcategoryFilter(subcategoryFilter)"
         v-model="subcategoryFilter"
       >
-        <option value="all">{{ $t("Subcategory") }}</option>
+        <option value="all">{{ $t("Subcategory: All") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="blueprint"
