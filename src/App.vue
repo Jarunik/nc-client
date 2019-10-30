@@ -360,6 +360,7 @@ input {
 
 .pointer {
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .router-link-exact-active {

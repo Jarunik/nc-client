@@ -162,11 +162,12 @@
             }}
           </td>
           <td>
-            {{
-              ask.category !== "item"
-                ? ask.cords_hor + "/" + ask.cords_ver
-                : "-"
-            }}
+            <span v-if="ask.category !== 'item'"
+              ><router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
+                >{{ ask.cords_hor }} / {{ ask.cords_ver }}</router-link
+              ></span
+            >
+            <span v-else>-</span>
           </td>
           <td>{{ ask.user }}</td>
           <td>
