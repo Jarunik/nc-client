@@ -2,13 +2,6 @@
   <div class="market">
     <h1>{{ $t("Market") }}</h1>
     <p>
-      <input
-        v-model="userFilter"
-        @blur="setUserFilter(userFilter)"
-        @keyup.enter="setUserFilter(userFilter)"
-        :placeholder="$t('Filter User')"
-      />
-      &nbsp;
       <select
         @change="setCategoryFilter(categoryFilter)"
         v-model="categoryFilter"
@@ -18,6 +11,119 @@
         <option value="item">{{ $t("Item") }}</option>
         <option value="planet">{{ $t("planet") }}</option>
       </select>
+      <select
+        @change="setSubcategoryFilter(subcategoryFilter)"
+        v-model="subcategoryFilter"
+      >
+        <option value="all">{{ $t("All") }}</option>
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'item'"
+          value="blueprint"
+          >{{ $t("Blueprint") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'item'"
+          value="rune"
+          >{{ $t("Rune") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'item'"
+          value="chest"
+          >{{ $t("Chest") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
+          value="common"
+          >{{ $t("Common") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
+          value="uncommon"
+          >{{ $t("Uncommon") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
+          value="rare"
+          >{{ $t("Rare") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
+          value="legendary"
+          >{{ $t("Legendary") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="scout"
+          >{{ $t("Scout") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="patrol"
+          >{{ $t("Patrol") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="cutter"
+          >{{ $t("Cutter") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="corvette"
+          >{{ $t("Corvette") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="frigate"
+          >{{ $t("Frigate") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="destroyer"
+          >{{ $t("Destroyer") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="cruiser"
+          >{{ $t("Cruiser") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="battlercruiser"
+          >{{ $t("Battlecruiser") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="carrier"
+          >{{ $t("Carrier") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="dreadnought"
+          >{{ $t("Dreadnought") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="yamato"
+          >{{ $t("Yamato") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="trasnporter"
+          >{{ $t("Transporter") }}</option
+        >
+        <option
+          v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
+          value="explorer"
+          >{{ $t("Explorer") }}</option
+        >
+      </select>
+      &nbsp;
+      <input
+        v-model="userFilter"
+        @blur="setUserFilter(userFilter)"
+        @keyup.enter="setUserFilter(userFilter)"
+        :placeholder="$t('Filter User')"
+      />
       &nbsp;
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
       &nbsp;
@@ -109,8 +215,9 @@ export default {
       asks: null,
       clicked: [],
       stardust: null,
-      userFilter: null,
-      categoryFilter: "all"
+      userFilter: "",
+      categoryFilter: "all",
+      subcategoryFilter: "all"
     };
   },
   async mounted() {
@@ -171,17 +278,26 @@ export default {
         return false;
       }
     },
-    async getMarketByFilter(categoryFilter, userFilter) {
-      if (categoryFilter === "all") {
-        const response = await MarketService.byFilter(null, userFilter);
-        this.asks = response;
-      } else {
-        const response = await MarketService.byFilter(
-          categoryFilter,
-          userFilter
-        );
-        this.asks = response;
+    async getMarketByFilter(
+      categoryFilter = null,
+      subcategoryFilter = null,
+      userFilter = null
+    ) {
+      let category = null;
+      let subcategory = null;
+      if (categoryFilter != "all") {
+        category = categoryFilter;
       }
+      if (subcategoryFilter != "all") {
+        subcategory = subcategoryFilter;
+      }
+
+      let response = await MarketService.byFilter(
+        category,
+        subcategory,
+        userFilter
+      );
+      this.asks = response;
     },
     async setUserFilter(userFilter) {
       if (userFilter !== "") {
@@ -189,15 +305,28 @@ export default {
       } else {
         this.userFilter = null;
       }
-      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      await this.getMarketByFilter(
+        this.categoryFilter,
+        this.subcategoryFilter,
+        this.userFilter
+      );
     },
     async setCategoryFilter(categoryFilter) {
-      if (categoryFilter !== "") {
-        this.categoryFilter = categoryFilter;
-      } else {
-        this.categoryFilter = null;
-      }
-      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      this.categoryFilter = categoryFilter;
+      this.subcategoryFilter = "all";
+      await this.getMarketByFilter(
+        this.categoryFilter,
+        this.subcategoryFilter,
+        this.userFilter
+      );
+    },
+    async setSubcategoryFilter(subcategoryFilter) {
+      this.subcategoryFilter = subcategoryFilter;
+      await this.getMarketByFilter(
+        this.categoryFilter,
+        this.subcategoryFilter,
+        this.userFilter
+      );
     }
   }
 };

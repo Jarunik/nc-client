@@ -11,10 +11,17 @@ class MarketService {
 
     return response;
   }
-  async byFilter(categoryFilter = null, userFilter = null) {
+  async byFilter(
+    categoryFilter = null,
+    subcategoryFilter = null,
+    userFilter = null
+  ) {
     let query = "";
     if (categoryFilter !== null) {
       query = query + "category=" + categoryFilter + "&";
+    }
+    if (subcategoryFilter !== null) {
+      query = query + "subcategory=" + subcategoryFilter + "&";
     }
     if (userFilter !== null) {
       query = query + "user=" + userFilter + "&";

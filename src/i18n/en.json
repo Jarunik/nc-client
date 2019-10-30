@@ -570,5 +570,9 @@
   "Patrol": "Patrol",
   "For Sale": "For Sale",
   "Filter User": "Filter User",
-  "Sale": "Sale"
+  "Sale": "Sale",
+  "Common": "Common",
+  "Uncommon": "Uncommon",
+  "Rare": "Rare",
+  "Legendary": "Legendary"
 }
