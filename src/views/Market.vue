@@ -136,7 +136,7 @@
         <th>{{ $t("Type") }}</th>
         <th>{{ $t("Location") }}</th>
         <th>{{ $t("Seller") }}</th>
-        <th>{{ $t("Price") }}</th>
+        <th>{{ $t("Stardust") }}</th>
         <th>{{ $t("Buy") }}</th>
         <th>{{ $t("Cancel") }}</th>
       </thead>
@@ -170,7 +170,7 @@
             <span v-else>-</span>
           </td>
           <td>{{ ask.user }}</td>
-          <td>
+          <td :style="{ color: '#72bcd4' }">
             {{
               Number(ask.price / 1e8).toLocaleString(gameLocale, {
                 style: "decimal"
