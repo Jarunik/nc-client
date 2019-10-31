@@ -92,6 +92,7 @@
                 <template v-if="planet.id !== null && showSell === planet.id">
                   <input
                     v-model.number="price"
+                    @blur="validatePrice()"
                     :placeholder="$t(placeholderPrice)"
                   />
                   <button
@@ -808,6 +809,14 @@ export default {
         }
       });
       return forSale;
+    },
+    validatePrice() {
+      if (this.price < 0) {
+        this.price = 0.000001;
+      }
+      if (this.price > 90000000000) {
+        this.price = 90000000000;
+      }
     }
   }
 };

@@ -42,6 +42,7 @@
                   <template v-if="item.id !== null && showSell === item.id">
                     <input
                       v-model.number="price"
+                      @blur="validatePrice()"
                       :placeholder="$t(placeholderPrice)"
                     />
                     <button
@@ -263,6 +264,14 @@ export default {
         return filteredItems.length;
       } else {
         return 0;
+      }
+    },
+    validatePrice() {
+      if (this.price < 0) {
+        this.price = 0.000001;
+      }
+      if (this.price > 90000000000) {
+        this.price = 90000000000;
       }
     }
   }
