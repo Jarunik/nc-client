@@ -8,7 +8,7 @@
         @blur="setUserFilter(userFilter)"
         @keyup.enter="setUserFilter(userFilter)"
         :placeholder="placeholder"
-      />
+      >
       &nbsp;
       <select @change="setActivityType(activityType)" v-model="activityType">
         <option value="all">{{ $t("All Commands") }}</option>
@@ -33,6 +33,7 @@
         <option value="newuser">{{ $t("newuser") }}</option>
         <option value="transferstardust">{{ $t("transferstardust") }}</option>
         <option value="issue">{{ $t("issue") }}</option>
+        <option value="issuestardust">{{ $t("Issue Stardust") }}</option>
         <option value="newseason">{{ $t("newseason") }}</option>
         <option value="upgradeyamato">{{ $t("upgradeyamato") }}</option>
         <option value="ask">{{ $t("ask") }}</option>
@@ -55,25 +56,18 @@
       </thead>
       <tbody>
         <tr v-for="transaction in activity" :key="transaction.trx">
-          <td>
-            {{ moment.unix(transaction.date, "seconds").format("MMM D HH:mm") }}
-          </td>
-          <td @click="setUserFilter(transaction.user)">
-            {{ transaction.user }}
-          </td>
-          <td @click="setActivityType(transaction.tr_type)">
-            {{ $t(transaction.tr_type) }}
-          </td>
+          <td>{{ moment.unix(transaction.date, "seconds").format("MMM D HH:mm") }}</td>
+          <td @click="setUserFilter(transaction.user)">{{ transaction.user }}</td>
+          <td @click="setActivityType(transaction.tr_type)">{{ $t(transaction.tr_type) }}</td>
           <td>
             <span
               :style="{ color: transaction.tr_status == 2 ? 'red' : 'white' }"
-              >{{ prettyStatus(transaction.tr_status) }}</span
-            >
+            >{{ prettyStatus(transaction.tr_status) }}</span>
           </td>
           <td>
-            <a :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
-              >{{ transaction.trx.substring(0, 8) }}...</a
-            >
+            <a
+              :href="baseUrl() + '/loadtransaction?trx_id=' + transaction.trx"
+            >{{ transaction.trx.substring(0, 8) }}...</a>
           </td>
         </tr>
       </tbody>
