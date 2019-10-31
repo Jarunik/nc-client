@@ -1,41 +1,32 @@
 <template>
   <span class="planetnav">
-    <span
-      v-if="!searchUser && (loginUser !== null || gameUser !== null)"
-      v-tooltip="$t('User')"
-    >
-      <span @click="activateSearch()">{{ gameUser }} | </span>
+    <span v-if="!searchUser && (loginUser !== null || gameUser !== null)" v-tooltip="$t('User')">
+      <span @click="activateSearch()">{{ gameUser }} |</span>
     </span>
-    <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')"
-      ><input
+    <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
+      <input
         ref="search"
         v-model="displayUser"
         @keyup.enter="setUser(displayUser)"
         :placeholder="placeholder"
-      />
+      >
       |
     </span>
 
     <router-link :to="'/planets'" v-tooltip="$t('Planets')">
-      <earth-icon :title="$t('Planets')" />
-    </router-link>
-    |
-    <span @click="lastPlanet()" class="pointer"
-      ><arrow-left-circle-icon :title="$t('Last')"
-    /></span>
+      <earth-icon :title="$t('Planets')"/>
+    </router-link>|
+    <span @click="lastPlanet()" class="pointer">
+      <arrow-left-circle-icon :title="$t('Last')"/>
+    </span>
     |
     <select @change="setPlanet(planet)" v-model="planet">
-      <option
-        v-for="planet in sortedPlanets"
-        :value="planet"
-        :key="planet.id"
-        >{{ planet.name }}</option
-      >
+      <option v-for="planet in sortedPlanets" :value="planet" :key="planet.id">{{ planet.name }}</option>
     </select>
     |
-    <span @click="nextPlanet()" class="pointer"
-      ><arrow-right-circle-icon :title="$t('Next')"
-    /></span>
+    <span @click="nextPlanet()" class="pointer">
+      <arrow-right-circle-icon :title="$t('Next')"/>
+    </span>
   </span>
 </template>
 
@@ -92,37 +83,47 @@ export default {
       planetId: state => state.planet.id
     }),
     sortedPlanets() {
-      var sortedPlanets = this.planets;
-      var currentSortDir = "asc";
-      var currentSort = "name";
-      if (sortedPlanets !== null) {
-        return sortedPlanets.sort((a, b) => {
-          let modifier = 1;
-          if (currentSortDir === "desc") modifier = -1;
-          if (a[currentSort] === null) return -1 * modifier;
-          if (b[currentSort] === null) return 1 * modifier;
-          if (a[currentSort] < b[currentSort]) return -1 * modifier;
-          if (a[currentSort] > b[currentSort]) return 1 * modifier;
-          return 0;
-        });
+      if (this.planets != null) {
+        var sortedPlanets = this.planets;
+        var currentSortDir = "asc";
+        var currentSort = "name";
+        if (sortedPlanets !== null) {
+          return sortedPlanets.sort((a, b) => {
+            let modifier = 1;
+            if (currentSortDir === "desc") modifier = -1;
+            if (a[currentSort] === null) return -1 * modifier;
+            if (b[currentSort] === null) return 1 * modifier;
+            if (a[currentSort] < b[currentSort]) return -1 * modifier;
+            if (a[currentSort] > b[currentSort]) return 1 * modifier;
+            return 0;
+          });
+        } else {
+          return sortedPlanets;
+        }
       } else {
-        return sortedPlanets;
+        return null;
       }
     }
   },
   methods: {
     async prepareComponent() {
       await this.getPlanets();
-      this.$store.dispatch("planet/setList", this.planets);
+      if (this.planets != null) {
+        this.$store.dispatch("planet/setList", this.planets);
+      }
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.gameUser);
-      this.planets = response.planets;
-      this.planets.forEach(planet => {
-        if (planet.id === this.planetId) {
-          this.planet = planet;
-        }
-      });
+      if (this.gameUser != null) {
+        const response = await PlanetsService.byUser(this.gameUser);
+        this.planets = response.planets;
+      }
+      if (this.planets != null) {
+        this.planets.forEach(planet => {
+          if (planet.id === this.planetId) {
+            this.planet = planet;
+          }
+        });
+      }
     },
     setPlanet(planet) {
       if (planet.id !== this.planetId) {
@@ -141,27 +142,31 @@ export default {
     },
     nextPlanet() {
       let newPlanet = null;
-      for (let i = 0; i < this.planets.length; i++) {
-        if (i !== 0 && this.planets[i - 1].id === this.planetId) {
-          newPlanet = this.planets[i];
+      if (this.planets != null) {
+        for (let i = 0; i < this.planets.length; i++) {
+          if (i !== 0 && this.planets[i - 1].id === this.planetId) {
+            newPlanet = this.planets[i];
+          }
         }
-      }
-      if (newPlanet !== null) {
-        this.setPlanet(newPlanet);
+        if (newPlanet !== null) {
+          this.setPlanet(newPlanet);
+        }
       }
     },
     lastPlanet() {
       let newPlanet = null;
-      for (let i = 0; i < this.planets.length; i++) {
-        if (
-          i < this.planets.length - 1 &&
-          this.planets[i + 1].id === this.planetId
-        ) {
-          newPlanet = this.planets[i];
+      if (this.planets != null) {
+        for (let i = 0; i < this.planets.length; i++) {
+          if (
+            i < this.planets.length - 1 &&
+            this.planets[i + 1].id === this.planetId
+          ) {
+            newPlanet = this.planets[i];
+          }
         }
-      }
-      if (newPlanet !== null) {
-        this.setPlanet(newPlanet);
+        if (newPlanet !== null) {
+          this.setPlanet(newPlanet);
+        }
       }
     },
     setUser(newUser) {

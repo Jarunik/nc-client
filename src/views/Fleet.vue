@@ -24,28 +24,28 @@
         <p>
           {{ $t("Command") }}
           <select @change="onCommand()" v-model="command">
-            <option v-if="!isUnderSiege()" value="explorespace">
-              {{ $t("Explore") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="transport">
-              {{ $t("Transport") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="deploy">
-              {{ $t("Deploy") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="support">
-              {{ $t("Support") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="attack">
-              {{ $t("Attack") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="siege">
-              {{ $t("Siege") }}
-            </option>
+            <option v-if="!isUnderSiege()" value="explorespace">{{
+              $t("Explore")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="transport">{{
+              $t("Transport")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="deploy">{{
+              $t("Deploy")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="support">{{
+              $t("Support")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="attack">{{
+              $t("Attack")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="siege">{{
+              $t("Siege")
+            }}</option>
             <option value="breaksiege">{{ $t("Break Siege") }}</option>
-            <option v-if="!isUnderSiege()" value="upgradeyamato">
-              {{ $t("Upgrade Yamato") }}
-            </option>
+            <option v-if="!isUnderSiege()" value="upgradeyamato">{{
+              $t("Upgrade Yamato")
+            }}</option>
             <option value="sent">{{ $t("Sent") }}</option>
           </select>
         </p>
@@ -77,17 +77,16 @@
               }}
             </td>
             <td>
-              <span v-if="ship.forSale > 0">{{ ship.forSale }}</span
-              ><span v-else>-</span>
+              <span v-if="ship.forSale > 0">{{ ship.forSale }}</span>
+              <span v-else>-</span>
             </td>
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
               <span v-if="ship.quantity > 0">
                 <input class="inputShort" type="number" v-model="ship.toSend" />
-                <button @click="add(ship, ship.toSend)">
-                  {{ $t("+") }}
-                </button> </span
-              ><span v-else>-</span>
+                <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
+              </span>
+              <span v-else>-</span>
             </td>
             <td v-if="command == null">
               <span
@@ -118,9 +117,11 @@
       </table>
       <!-- Last Destination -->
       <p v-if="command === 'sent'">
-        <span @click="openMap(lastX, lastY)">
-          {{ $t("Last Destination") }}:{{ "(" + lastX + "/" + lastY + ")" }}
-        </span>
+        <span @click="openMap(lastX, lastY)"
+          >{{ $t("Last Destination") }}:{{
+            "(" + lastX + "/" + lastY + ")"
+          }}</span
+        >
       </p>
       <template v-if="command !== null && command !== 'sent'">
         <!-- Formation -->
@@ -733,12 +734,14 @@ export default {
         });
       }
       this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (this.planetId === planet.id) {
-          missionBudget = missionBudget + 1;
-          this.totalMissions = missionBudget;
-          this.availableMissions = missionBudget - runningMissions;
-        } else {
-          this.availableMissions = missionBudget - runningMissions;
+        if (planet !== null) {
+          if (this.planetId === planet.id) {
+            missionBudget = missionBudget + 1;
+            this.totalMissions = missionBudget;
+            this.availableMissions = missionBudget - runningMissions;
+          } else {
+            this.availableMissions = missionBudget - runningMissions;
+          }
         }
       });
       this.totalMissions = missionBudget;

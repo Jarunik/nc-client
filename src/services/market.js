@@ -14,6 +14,7 @@ class MarketService {
   async byFilter(
     categoryFilter = null,
     subcategoryFilter = null,
+    typeFilter = null,
     userFilter = null
   ) {
     let query = "";
@@ -22,6 +23,9 @@ class MarketService {
     }
     if (subcategoryFilter !== null) {
       query = query + "subcategory=" + subcategoryFilter + "&";
+    }
+    if (typeFilter !== null) {
+      query = query + "type=" + typeFilter + "&";
     }
     if (userFilter !== null) {
       query = query + "user=" + userFilter + "&";

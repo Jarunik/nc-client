@@ -2,60 +2,73 @@
   <div class="buildings">
     <h1>{{ $t("Buildings") }} - {{ planetName }}</h1>
     <p>
-      {{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}<br />
+      {{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}
+      <br>
       {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
     </p>
     <div v-if="planetId !== null && quantity != null">
       {{
-        Number(coal).toLocaleString(gameLocale, {
-          style: "decimal"
-        })
+      Number(coal).toLocaleString(gameLocale, {
+      style: "decimal"
+      })
       }}
-      <font v-if="quantity.coaldepot <= coal" color="red">
-        <alpha-c-box-icon :title="$t('Coal')" />
+      <font
+        v-if="quantity.coaldepot <= coal"
+        color="red"
+      >
+        <alpha-c-box-icon :title="$t('Coal')"/>
       </font>
       <font v-else>
-        <alpha-c-box-icon :title="$t('Coal')" />
+        <alpha-c-box-icon :title="$t('Coal')"/>
       </font>
       {{
-        Number(ore).toLocaleString(gameLocale, {
-          style: "decimal"
-        })
+      Number(ore).toLocaleString(gameLocale, {
+      style: "decimal"
+      })
       }}
-      <font v-if="quantity.oredepot <= ore" color="red">
-        <alpha-f-box-icon :title="$t('Ore')" />
-        <alpha-e-box-icon :title="$t('Ore')" />
+      <font
+        v-if="quantity.oredepot <= ore"
+        color="red"
+      >
+        <alpha-f-box-icon :title="$t('Ore')"/>
+        <alpha-e-box-icon :title="$t('Ore')"/>
       </font>
       <font v-else>
-        <alpha-f-box-icon :title="$t('Ore')" />
-        <alpha-e-box-icon :title="$t('Ore')" />
+        <alpha-f-box-icon :title="$t('Ore')"/>
+        <alpha-e-box-icon :title="$t('Ore')"/>
       </font>
       {{
-        Number(copper).toLocaleString(gameLocale, {
-          style: "decimal"
-        })
+      Number(copper).toLocaleString(gameLocale, {
+      style: "decimal"
+      })
       }}
-      <font v-if="quantity.copperdepot <= copper" color="red">
-        <alpha-c-box-icon :title="$t('Copper')" />
-        <alpha-u-box-icon :title="$t('Copper')" />
+      <font
+        v-if="quantity.copperdepot <= copper"
+        color="red"
+      >
+        <alpha-c-box-icon :title="$t('Copper')"/>
+        <alpha-u-box-icon :title="$t('Copper')"/>
       </font>
       <font v-else>
-        <alpha-c-box-icon :title="$t('Copper')" />
-        <alpha-u-box-icon :title="$t('Copper')" />
+        <alpha-c-box-icon :title="$t('Copper')"/>
+        <alpha-u-box-icon :title="$t('Copper')"/>
       </font>
       {{
-        Number(uranium).toLocaleString(gameLocale, {
-          style: "decimal"
-        })
+      Number(uranium).toLocaleString(gameLocale, {
+      style: "decimal"
+      })
       }}
-      <font v-if="quantity.uraniumdepot <= uranium" color="red">
-        <alpha-u-box-icon :title="$t('Uranium')" />
+      <font
+        v-if="quantity.uraniumdepot <= uranium"
+        color="red"
+      >
+        <alpha-u-box-icon :title="$t('Uranium')"/>
       </font>
       <font v-else>
-        <alpha-u-box-icon :title="$t('Uranium')" />
+        <alpha-u-box-icon :title="$t('Uranium')"/>
       </font>
-      <br />
-      <br />
+      <br>
+      <br>
     </div>
     <template v-if="gameUser !== null && planetId != null">
       <table>
@@ -71,15 +84,9 @@
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Busy") }}</th>
-          <th v-if="loginUser !== null && loginUser === gameUser">
-            {{ $t("Upgrade") }}
-          </th>
-          <th v-if="loginUser !== null && loginUser === gameUser">
-            {{ $t("Charge") }}
-          </th>
-          <th v-if="loginUser !== null && loginUser === gameUser">
-            {{ $t("Activate") }}
-          </th>
+          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Upgrade") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Charge") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Activate") }}</th>
           <th></th>
         </thead>
         <tbody>
@@ -87,105 +94,120 @@
             <td>{{ $t(building.name) }}</td>
             <td>
               {{
-                building.cur_rate === null
-                  ? "-"
-                  : Number(building.cur_rate).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
+              building.cur_rate === null
+              ? "-"
+              : Number(building.cur_rate).toLocaleString(gameLocale, {
+              style: "decimal"
+              })
               }}
             </td>
             <td>
               {{
-                building.next_rate === null
-                  ? "-"
-                  : Number(building.next_rate).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
+              building.next_rate === null
+              ? "-"
+              : Number(building.next_rate).toLocaleString(gameLocale, {
+              style: "decimal"
+              })
               }}
             </td>
             <td>
               {{
-                Number(building.current).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
+              Number(building.current).toLocaleString(gameLocale, {
+              style: "decimal"
+              })
               }}
             </td>
             <td>
-              <font v-if="building.current === building.skill" color="red">
-                {{ building.skill }}
-              </font>
+              <font v-if="building.current === building.skill" color="red">{{ building.skill }}</font>
               <font v-else>{{ building.skill }}</font>
             </td>
             <td>
-              <font v-if="building.coal > coal" color="red">{{
+              <font v-if="building.coal > coal" color="red">
+                {{
                 building.coal === 0
-                  ? "-"
-                  : Number(building.coal).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
-              <font v-else>{{
+                ? "-"
+                : Number(building.coal).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
+              <font v-else>
+                {{
                 building.coal === 0
-                  ? "-"
-                  : Number(building.coal).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
+                ? "-"
+                : Number(building.coal).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
             </td>
             <td>
-              <font v-if="building.ore > ore" color="red">{{
+              <font v-if="building.ore > ore" color="red">
+                {{
                 building.ore === 0
-                  ? "-"
-                  : Number(building.ore).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
-              <font v-else>{{
+                ? "-"
+                : Number(building.ore).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
+              <font v-else>
+                {{
                 building.ore === 0
-                  ? "-"
-                  : Number(building.ore).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
+                ? "-"
+                : Number(building.ore).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
             </td>
             <td>
-              <font v-if="building.copper > copper" color="red">{{
+              <font v-if="building.copper > copper" color="red">
+                {{
                 building.copper === 0
-                  ? "-"
-                  : Number(building.copper).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
-              <font v-else>{{
+                ? "-"
+                : Number(building.copper).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
+              <font v-else>
+                {{
                 building.copper === 0
-                  ? "-"
-                  : Number(building.copper).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
+                ? "-"
+                : Number(building.copper).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
             </td>
             <td>
-              <font v-if="building.uranium > uranium" color="red">{{
+              <font v-if="building.uranium > uranium" color="red">
+                {{
                 building.uranium === 0
-                  ? "-"
-                  : Number(building.uranium).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
-              <font v-else>{{
+                ? "-"
+                : Number(building.uranium).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
+              <font v-else>
+                {{
                 building.uranium === 0
-                  ? "-"
-                  : Number(building.uranium).toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
-              }}</font>
+                ? "-"
+                : Number(building.uranium).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
+                }}
+              </font>
             </td>
             <td>{{ building.time | timePretty }}</td>
             <td>
               <span v-if="chainResponse.includes(building.name)">
-                <timer-sand-icon :title="$t('Transaction sent')" />
-                {{ nextRefreshFormatted() }} </span
-              ><span v-else>{{ building.busy | busyPretty(now) }}</span>
+                <timer-sand-icon :title="$t('Transaction sent')"/>
+                {{ nextRefreshFormatted() }}
+              </span>
+              <span v-else>{{ building.busy | busyPretty(now) }}</span>
             </td>
             <td>
               <span
@@ -200,11 +222,11 @@
                   v-if="buildingPossible(building)"
                   @click="upgradeBuilding(building, index)"
                 >
-                  <arrow-up-bold-icon :title="$t('Upgrade')" />
+                  <arrow-up-bold-icon :title="$t('Upgrade')"/>
                 </button>
               </span>
               <span v-else>
-                <check-outline-icon :title="$t('Maxed')" />
+                <check-outline-icon :title="$t('Maxed')"/>
               </span>
             </td>
             <td>
@@ -218,7 +240,7 @@
                 "
                 @click="charge(building, index)"
               >
-                <refresh-icon :title="$t('Charge')" />
+                <refresh-icon :title="$t('Charge')"/>
               </button>
             </td>
             <td>
@@ -235,10 +257,10 @@
                   v-if="enablePossible(building, index)"
                   @click="enable(building, index)"
                 >
-                  <white-balance-sunny-icon :title="$t('Enable')" />
+                  <white-balance-sunny-icon :title="$t('Enable')"/>
                 </button>
                 <span v-if="isBusy(building.misc.shieldprotection_busy)">
-                  <shield-icon :title="$t('Protected')" />
+                  <shield-icon :title="$t('Protected')"/>
                 </span>
               </span>
             </td>
@@ -248,7 +270,7 @@
     </template>
     <template v-else>
       <template v-if="gameUser === null">
-        <p>{{ $t("Please set the") }}{{ $t("user") }}</p>
+        <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
       </template>
       <template v-if="planetId === null">
         <p>

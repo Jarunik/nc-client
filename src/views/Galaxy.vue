@@ -2,7 +2,7 @@
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
     <p>
-      <router-link :to="`/maps?x=${focusX}&y=${focusY}`">{{ $t("Maps") }} {{focusX}} / {{focusY}}</router-link>
+      <router-link :to="`/maps?x=${focusX}&y=${focusY}`">{{ $t("Maps") }} {{focusX}}/{{focusY}}</router-link>
     </p>
     <template v-if="this.galaxy != null">
       <table id="galaxy-map">

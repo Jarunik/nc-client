@@ -422,10 +422,7 @@
       </table>
     </template>
     <template v-else>
-      <p>
-        {{ $t("Please set a") }}
-        <router-link to="/">{{ $t("user") }}</router-link>
-      </p>
+      <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
     </template>
   </div>
 </template>
@@ -506,13 +503,17 @@ export default {
       await this.getStardust();
     },
     async getStardust() {
-      const response = await UserService.get(this.gameUser);
-      this.stardust = response.stardust;
+      if (this.gameUser !== null) {
+        const response = await UserService.get(this.gameUser);
+        this.stardust = response.stardust;
+      }
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.gameUser);
-      this.planets = response.planets;
-      this.$store.dispatch("planet/setList", response.planets);
+      if (this.gameUser !== null) {
+        const response = await PlanetsService.byUser(this.gameUser);
+        this.planets = response.planets;
+        this.$store.dispatch("planet/setList", response.planets);
+      }
     },
     async getBurnRates() {
       const response = await PlanetsService.burnRates();
@@ -520,16 +521,20 @@ export default {
     },
     async getPlanetFleet() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let fleet = await this.getFleet(planets[i]);
-        this.planetFleet.push(fleet);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let fleet = await this.getFleet(planets[i]);
+          this.planetFleet.push(fleet);
+        }
       }
     },
     async getPlanetQuantities() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let qty = await this.getQuantities(planets[i]);
-        this.planetQuantities.push(qty);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let qty = await this.getQuantities(planets[i]);
+          this.planetQuantities.push(qty);
+        }
       }
     },
     setPlanet(planet) {
