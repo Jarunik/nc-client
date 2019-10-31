@@ -30,35 +30,26 @@
         </thead>
         <tbody>
           <tr v-for="(planet, index) in sortedPlanets" :key="planet.id">
-            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
-              {{ planet.id }}
-            </td>
-            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
-              {{ planet.posx }}/{{ planet.posy }}
-            </td>
-            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
-              {{ planet.name }}
-            </td>
-            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
-              {{ $t("planet-bonus-" + planet.bonus) }}
-            </td>
-            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
-              {{ $t("planet-type-" + planet.planet_type) }}
-            </td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">{{ planet.id }}</td>
+            <td
+              :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }"
+            >{{ planet.posx }}/{{ planet.posy }}</td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">{{ planet.name }}</td>
+            <td
+              :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }"
+            >{{ $t("planet-bonus-" + planet.bonus) }}</td>
+            <td
+              :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }"
+            >{{ $t("planet-type-" + planet.planet_type) }}</td>
             <td>
               <span v-if="gameUser === loginUser">
                 <button @click="toggleRename(planet.id)">...</button>
                 <template v-if="planet.id !== null && showRename === planet.id">
-                  <input
-                    v-model="newName"
-                    :placeholder="$t(placeholderRename)"
-                  />
+                  <input v-model="newName" :placeholder="$t(placeholderRename)">
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="renamePlanet(planet.id, newName, index)"
-                  >
-                    {{ $t("Send") }}
-                  </button>
+                  >{{ $t("Send") }}</button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -66,7 +57,7 @@
             <td>
               <span v-if="planet.for_sale == 1">
                 <router-link :to="'/market'" v-tooltip="$t('Market')">
-                  <store-icon :title="$t('Market')" />
+                  <store-icon :title="$t('Market')"/>
                 </router-link>
               </span>
               <span v-else>-</span>
@@ -74,7 +65,7 @@
             <td>
               <span v-if="shipForSale(planet)">
                 <router-link :to="'/market'" v-tooltip="$t('Market')">
-                  <store-icon :title="$t('Market')" />
+                  <store-icon :title="$t('Market')"/>
                 </router-link>
               </span>
               <span v-else>-</span>
@@ -90,13 +81,11 @@
               >
                 <button @click="toggleSell(planet)">...</button>
                 <template v-if="planet.id !== null && showSell === planet.id">
-                  <input v-model="price" :placeholder="$t(placeholderPrice)" />
+                  <input v-model="price" :placeholder="$t(placeholderPrice)">
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="sell(planet, price, index)"
-                  >
-                    {{ $t("Sell") }}
-                  </button>
+                  >{{ $t("Sell") }}</button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -110,19 +99,12 @@
                 "
               >
                 <button @click="toggleGifting(planet)">...</button>
-                <template
-                  v-if="planet.id !== null && showGifting === planet.id"
-                >
-                  <input
-                    v-model="giftRecipient"
-                    :placeholder="$t(placeholderGifting)"
-                  />
+                <template v-if="planet.id !== null && showGifting === planet.id">
+                  <input v-model="giftRecipient" :placeholder="$t(placeholderGifting)">
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="giftPlanet(planet, giftRecipient, index)"
-                  >
-                    {{ $t("Send") }}
-                  </button>
+                  >{{ $t("Send") }}</button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -136,16 +118,12 @@
                 "
               >
                 <button @click="toggleGifting(planet)">...</button>
-                <template
-                  v-if="planet.id !== null && showGifting === planet.id"
-                >
+                <template v-if="planet.id !== null && showGifting === planet.id">
                   {{ $t("Really?") }}
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="respawnPlanet(planet, index)"
-                  >
-                    {{ $t("Respawn") }}
-                  </button>
+                  >{{ $t("Respawn") }}</button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -164,9 +142,7 @@
                   <button
                     :disabled="clicked.includes(planet.id)"
                     @click="burnPlanet(planet, index)"
-                  >
-                    {{ $t("Burn") }}
-                  </button>
+                  >{{ $t("Burn") }}</button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -174,9 +150,9 @@
             <td>
               <font color="#72bcd4">
                 {{
-                  Number(
-                    burnRate(planet.bonus, planet.planet_type) / 100000000
-                  ).toLocaleString(gameLocale, { style: "decimal" })
+                Number(
+                burnRate(planet.bonus, planet.planet_type) / 100000000
+                ).toLocaleString(gameLocale, { style: "decimal" })
                 }}
               </font>
             </td>
@@ -185,7 +161,7 @@
             </td>
             <td>
               <span v-if="planet.id === planetId">
-                <earth-icon :title="$t('Home')" />
+                <earth-icon :title="$t('Home')"/>
               </span>
             </td>
           </tr>
@@ -197,51 +173,49 @@
         </h2>
         <p>
           {{
-            $t(
-              "Warning: You activated actions with potentially severe consequences."
-            )
+          $t(
+          "Warning: You activated actions with potentially severe consequences."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location."
-            )
+          $t(
+          "On respawn you will lose the starter planet with all ships on it. You will get a new empty starter planet in a new location."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "Respawn costs 1000 Stardust in fees and it is only possible without active outgoing missions."
-            )
+          $t(
+          "Respawn costs 1000 Stardust in fees and it is only possible without active outgoing missions."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "If you burn a (non-starter) planet with all ships on it then you will receive stardust for it."
-            )
+          $t(
+          "If you burn a (non-starter) planet with all ships on it then you will receive stardust for it."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
-            )
+          $t(
+          "Gifting will hand over ownership of your planet to someone else and you can't claim it back."
+          )
           }}
         </p>
         <p>
           {{
-            $t(
-              "A planet transfer costs 1000 Stardust in fees and it is only possible without active outgoing missions."
-            )
+          $t(
+          "A planet transfer costs 1000 Stardust in fees and it is only possible without active outgoing missions."
+          )
           }}
         </p>
       </font>
       <p>
-        <button @click="toggleGiftingLock">
-          {{ $t("Gifting") }}/{{ $t("Respawn") }}/{{ $t("Burn") }}
-        </button>
+        <button @click="toggleGiftingLock">{{ $t("Gifting") }}/{{ $t("Respawn") }}/{{ $t("Burn") }}</button>
       </p>
       <h2>{{ $t("Fleet") }}</h2>
       <table>
@@ -263,43 +237,33 @@
             <td>{{ pFleet.name }}</td>
             <td>
               {{
-                pFleet.fleet.explorership === 0
-                  ? "-"
-                  : pFleet.fleet.explorership
+              pFleet.fleet.explorership === 0
+              ? "-"
+              : pFleet.fleet.explorership
               }}
             </td>
             <td>
               {{
-                pFleet.fleet.transportship === 0
-                  ? "-"
-                  : pFleet.fleet.transportship
+              pFleet.fleet.transportship === 0
+              ? "-"
+              : pFleet.fleet.transportship
               }}
             </td>
-            <td>
-              {{ pFleet.fleet.corvette === 0 ? "-" : pFleet.fleet.corvette }}
-            </td>
-            <td>
-              {{ pFleet.fleet.frigate === 0 ? "-" : pFleet.fleet.frigate }}
-            </td>
-            <td>
-              {{ pFleet.fleet.destroyer === 0 ? "-" : pFleet.fleet.destroyer }}
-            </td>
-            <td>
-              {{ pFleet.fleet.cruiser === 0 ? "-" : pFleet.fleet.cruiser }}
-            </td>
+            <td>{{ pFleet.fleet.corvette === 0 ? "-" : pFleet.fleet.corvette }}</td>
+            <td>{{ pFleet.fleet.frigate === 0 ? "-" : pFleet.fleet.frigate }}</td>
+            <td>{{ pFleet.fleet.destroyer === 0 ? "-" : pFleet.fleet.destroyer }}</td>
+            <td>{{ pFleet.fleet.cruiser === 0 ? "-" : pFleet.fleet.cruiser }}</td>
             <td>
               {{
-                pFleet.fleet.battlecruiser === 0
-                  ? "-"
-                  : pFleet.fleet.battlecruiser
+              pFleet.fleet.battlecruiser === 0
+              ? "-"
+              : pFleet.fleet.battlecruiser
               }}
             </td>
-            <td>
-              {{ pFleet.fleet.carrier === 0 ? "-" : pFleet.fleet.carrier }}
-            </td>
+            <td>{{ pFleet.fleet.carrier === 0 ? "-" : pFleet.fleet.carrier }}</td>
             <td>
               {{
-                pFleet.fleet.dreadnought === 0 ? "-" : pFleet.fleet.dreadnought
+              pFleet.fleet.dreadnought === 0 ? "-" : pFleet.fleet.dreadnought
               }}
             </td>
             <td>{{ pFleet.fleet.yamato === 0 ? "-" : pFleet.fleet.yamato }}</td>
@@ -325,9 +289,9 @@
             <td>
               <span>
                 {{
-                  Number(pQuantity.coal).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.coal).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
@@ -338,18 +302,18 @@
                 }"
               >
                 {{
-                  Number(pQuantity.coaldepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.coaldepot).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.ore).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.ore).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
@@ -360,18 +324,18 @@
                 }"
               >
                 {{
-                  Number(pQuantity.oredepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.oredepot).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.copper).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.copper).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
@@ -383,18 +347,18 @@
                 }"
               >
                 {{
-                  Number(pQuantity.copperdepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.copperdepot).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.uranium).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.uranium).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
@@ -408,9 +372,9 @@
                 }"
               >
                 {{
-                  Number(pQuantity.uraniumdepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                Number(pQuantity.uraniumdepot).toLocaleString(gameLocale, {
+                style: "decimal"
+                })
                 }}
               </span>
             </td>
@@ -419,10 +383,7 @@
       </table>
     </template>
     <template v-else>
-      <p>
-        {{ $t("Please set a") }}
-        <router-link to="/">{{ $t("user") }}</router-link>
-      </p>
+      <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
     </template>
   </div>
 </template>
@@ -503,13 +464,17 @@ export default {
       await this.getStardust();
     },
     async getStardust() {
-      const response = await UserService.get(this.gameUser);
-      this.stardust = response.stardust;
+      if (this.gameUser !== null) {
+        const response = await UserService.get(this.gameUser);
+        this.stardust = response.stardust;
+      }
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.gameUser);
-      this.planets = response.planets;
-      this.$store.dispatch("planet/setList", response.planets);
+      if (this.gameUser !== null) {
+        const response = await PlanetsService.byUser(this.gameUser);
+        this.planets = response.planets;
+        this.$store.dispatch("planet/setList", response.planets);
+      }
     },
     async getBurnRates() {
       const response = await PlanetsService.burnRates();
@@ -517,16 +482,20 @@ export default {
     },
     async getPlanetFleet() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let fleet = await this.getFleet(planets[i]);
-        this.planetFleet.push(fleet);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let fleet = await this.getFleet(planets[i]);
+          this.planetFleet.push(fleet);
+        }
       }
     },
     async getPlanetQuantities() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let qty = await this.getQuantities(planets[i]);
-        this.planetQuantities.push(qty);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let qty = await this.getQuantities(planets[i]);
+          this.planetQuantities.push(qty);
+        }
       }
     },
     setPlanet(planet) {

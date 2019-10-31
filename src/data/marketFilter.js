@@ -2,145 +2,145 @@ const filter = [
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Corvette Petunia",
+    name: "Corvette Petunia BP",
     type: "blueprint_01"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Frigate Redmill",
+    name: "Frigate Redmill BP",
     type: "blueprint_02"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Destroyer Janus",
+    name: "Destroyer Janus BP",
     type: "blueprint_03"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Cruiser Drake",
+    name: "Cruiser Drake BP",
     type: "blueprint_04"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Battlecruiser Lion",
+    name: "Battlecruiser Lion BP",
     type: "blueprint_05"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Carrier Unicorn",
+    name: "Carrier Unicorn BP",
     type: "blueprint_06"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Dreadnought Imperial",
+    name: "Dreadnought Imperial BP",
     type: "blueprint_07"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Explorer II",
+    name: "Explorer II BP",
     type: "blueprint_08"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Transporter II",
+    name: "Transporter II BP",
     type: "blueprint_09"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Transporter III",
+    name: "Transporter III BP",
     type: "blueprint_10"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Scout Athene",
+    name: "Scout Athene BP",
     type: "blueprint_11"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Patrol Hermes",
+    name: "Patrol Hermes BP",
     type: "blueprint_12"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Cutter Canard",
+    name: "Cutter Canard BP",
     type: "blueprint_13"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Yamato",
+    name: "Yamato BP",
     type: "blueprint_14"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Scout Minerva",
+    name: "Scout Minerva BP",
     type: "blueprint_15"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Patrol Cruqal",
+    name: "Patrol Cruqal BP",
     type: "blueprint_16"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Cutter Orchis",
+    name: "Cutter Orchis BP",
     type: "blueprint_17"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Corvette Najtar",
+    name: "Corvette Najtar BP",
     type: "blueprint_18"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Frigate Droeel",
+    name: "Frigate Droeel BP",
     type: "blueprint_19"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Destroyer Halgoin",
+    name: "Destroyer Halgoin BP",
     type: "blueprint_20"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Cruiser Eceza",
+    name: "Cruiser Eceza BP",
     type: "blueprint_21"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Battlecruiser Dejah",
+    name: "Battlecruiser Dejah BP",
     type: "blueprint_22"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Carrier Bhun'il",
+    name: "Carrier Bhun'il BP",
     type: "blueprint_23"
   },
   {
     category: "item",
     subcategory: "blueprint",
-    name: "Blueprint Dreadnought Zaneel",
+    name: "Dreadnought Zaneel BP",
     type: "blueprint_24"
   },
   {

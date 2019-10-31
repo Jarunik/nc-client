@@ -4,9 +4,9 @@
     <p>
       <select @change="setCategoryFilter(categoryFilter)" v-model="categoryFilter">
         <option value="all">{{ $t("Category: All") }}</option>
-        <option value="ship">{{ $t("Ships") }}</option>
         <option value="item">{{ $t("Items") }}</option>
         <option value="planet">{{ $t("Planets") }}</option>
+        <option value="ship">{{ $t("Ships") }}</option>
       </select>
       &nbsp;
       <select
@@ -152,7 +152,7 @@
             <span v-if="ask.category !== 'item'">
               <router-link
                 :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
-              >{{ ask.cords_hor }} / {{ ask.cords_ver }}</router-link>
+              >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link>
             </span>
             <span v-else>-</span>
           </td>
