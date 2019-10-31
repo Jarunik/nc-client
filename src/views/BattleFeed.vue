@@ -13,62 +13,61 @@
         <th>{{ $t("Result") }}</th>
       </thead>
       <tbody>
-        <tr v-for="battle in battles" :key="battle.mission_id + battle.trx_id">
+        <tr
+          v-for="battle in battles"
+          :key="battle.mission_id + battle.trx_id + battle.battle_number"
+        >
           <td>{{ moment.unix(battle.date, "seconds").format("lll") }}</td>
           <td @click="setUser(battle.attacker)">{{ battle.attacker }}</td>
           <td @click="setUser(battle.defender)">{{ battle.defender }}</td>
           <td>
             {{
-              Number(battle.coal).toLocaleString(gameLocale, {
-                style: "decimal"
-              })
+            Number(battle.coal).toLocaleString(gameLocale, {
+            style: "decimal"
+            })
             }}
           </td>
           <td>
             {{
-              Number(battle.ore).toLocaleString(gameLocale, {
-                style: "decimal"
-              })
+            Number(battle.ore).toLocaleString(gameLocale, {
+            style: "decimal"
+            })
             }}
           </td>
           <td>
             {{
-              Number(battle.copper).toLocaleString(gameLocale, {
-                style: "decimal"
-              })
+            Number(battle.copper).toLocaleString(gameLocale, {
+            style: "decimal"
+            })
             }}
           </td>
           <td>
             {{
-              Number(battle.uranium).toLocaleString(gameLocale, {
-                style: "decimal"
-              })
+            Number(battle.uranium).toLocaleString(gameLocale, {
+            style: "decimal"
+            })
             }}
           </td>
           <td>
             <router-link
               v-if="battle.initial_defender_ships.length == 0"
               :to="{ path: '/battle/' + battle.mission_id }"
-              >{{ $t("Loot") }}
-            </router-link>
+            >{{ $t("Loot") }}</router-link>
             <router-link
               v-if="
                 battle.result === 2 &&
                   !battle.initial_defender_ships.length == 0
               "
               :to="{ path: '/battle/' + battle.mission_id }"
-              >{{ $t("Victory") }}
-            </router-link>
+            >{{ $t("Victory") }}</router-link>
             <router-link
               v-if="battle.result === 1"
               :to="{ path: '/battle/' + battle.mission_id }"
-              >{{ $t("Defeat") }}</router-link
-            >
+            >{{ $t("Defeat") }}</router-link>
             <router-link
               v-if="battle.result === 0"
               :to="{ path: '/battle/' + battle.mission_id }"
-              >{{ $t("Standoff") }}</router-link
-            >
+            >{{ $t("Standoff") }}</router-link>
           </td>
         </tr>
       </tbody>
