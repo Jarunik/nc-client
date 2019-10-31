@@ -41,7 +41,7 @@
                   <button @click="toggleSell(item.id)">...</button>
                   <template v-if="item.id !== null && showSell === item.id">
                     <input
-                      v-model="price"
+                      v-model.number="price"
                       :placeholder="$t(placeholderPrice)"
                     />
                     <button

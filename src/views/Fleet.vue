@@ -99,7 +99,10 @@
               >
                 <button @click="toggleSell(ship)">...</button>
                 <template v-if="ship.id !== null && showSell === ship.id">
-                  <input v-model="price" :placeholder="$t(placeholderPrice)" />
+                  <input
+                    v-model.number="price"
+                    :placeholder="$t(placeholderPrice)"
+                  />
                   <button
                     :disabled="clickedSell.includes(ship.id)"
                     @click="sell(ship, price)"
