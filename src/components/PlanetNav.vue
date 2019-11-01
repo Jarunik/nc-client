@@ -1,7 +1,10 @@
 <template>
   <span class="planetnav">
-    <span v-if="!searchUser && (loginUser !== null || gameUser !== null)" v-tooltip="$t('User')">
-      <span @click="activateSearch()">{{ gameUser }} |</span>
+    <span
+      v-if="!searchUser && (loginUser !== null || gameUser !== null)"
+      v-tooltip="$t('User')"
+    >
+      <span @click="activateSearch()">{{ gameUser }}</span>
     </span>
     <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
       <input
@@ -9,23 +12,28 @@
         v-model="displayUser"
         @keyup.enter="setUser(displayUser)"
         :placeholder="placeholder"
-      >
-      |
+      />
     </span>
-
+    |
     <router-link :to="'/planets'" v-tooltip="$t('Planets')">
-      <earth-icon :title="$t('Planets')"/>
-    </router-link>|
+      <earth-icon :title="$t('Planets')" />
+    </router-link>
+    |
     <span @click="lastPlanet()" class="pointer">
-      <arrow-left-circle-icon :title="$t('Last')"/>
+      <arrow-left-circle-icon :title="$t('Last')" />
     </span>
     |
     <select @change="setPlanet(planet)" v-model="planet">
-      <option v-for="planet in sortedPlanets" :value="planet" :key="planet.id">{{ planet.name }}</option>
+      <option
+        v-for="planet in sortedPlanets"
+        :value="planet"
+        :key="planet.id"
+        >{{ planet.name }}</option
+      >
     </select>
     |
     <span @click="nextPlanet()" class="pointer">
-      <arrow-right-circle-icon :title="$t('Next')"/>
+      <arrow-right-circle-icon :title="$t('Next')" />
     </span>
   </span>
 </template>
