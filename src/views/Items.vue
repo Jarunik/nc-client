@@ -15,7 +15,7 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in groupedItems" :key="item.uid">
-              <td>{{ $t(item.name) }}</td>
+              <td>{{ $t(item.id) }}</td>
               <td>{{ item.total - itemsForSaleCount(item.id) }}</td>
               <td>
                 <span v-if="gameUser === loginUser">
