@@ -57,15 +57,6 @@
         <router-link :to="'/missions'" v-tooltip="$t('Missions')">
           <calendar-icon :title="$t('Mission')" />
         </router-link>
-        |
-        <router-link to="/" v-tooltip="$t('Login')">
-          <font v-if="loginUser == null" color="red"
-            ><login-icon :title="$t('Login')"
-          /></font>
-          <font v-else
-            ><router-link to="/"
-              ><account-icon :title="$t('Login')"/></router-link></font
-        ></router-link>
       </span>
     </span>
     <div id="middle">
@@ -88,6 +79,15 @@
         <router-link to="/administration" v-tooltip="$t('Administration')">
           <settings-icon :title="$t('Administration')"/></router-link
       ></span>
+      |
+      <router-link to="/" v-tooltip="$t('Login')">
+        <font v-if="loginUser == null" color="red"
+          ><login-icon :title="$t('Login')"
+        /></font>
+        <font v-else
+          ><router-link to="/"
+            ><account-icon :title="$t('Login')"/></router-link></font
+      ></router-link>
     </span>
   </div>
 </template>
