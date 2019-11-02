@@ -201,6 +201,7 @@ export default {
         this.areaWidth
       );
       this.galaxy = response;
+      this.focus(this.areaHeight / 2, this.areaWidth / 2);
     },
     async getPlanet(planetId) {
       const response = await PlanetsService.byId(planetId);
@@ -322,12 +323,14 @@ export default {
       return icon;
     },
     goTo(realX, realY) {
-      let newPath = this.$route.path;
-      this.$router.push({
-        path: newPath,
-        query: { x: realX, y: realY }
-      });
-      this.getGalaxy();
+      if (realX != this.$route.query.x && realY != this.$route.query.y) {
+        let newPath = this.$route.path;
+        this.$router.push({
+          path: newPath,
+          query: { x: realX, y: realY }
+        });
+        this.getGalaxy();
+      }
     },
     goToSearch(search) {
       let split = search.replace(/\s+/g, "").split("/");
