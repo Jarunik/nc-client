@@ -5,7 +5,7 @@
     <template v-if="gameUser !== null">
       <h2>
         {{ $t("Active") }} ({{
-        activeMissions !== null ? activeMissions.length : 0
+          activeMissions !== null ? activeMissions.length : 0
         }}
         / {{ totalMissions }})
       </h2>
@@ -28,21 +28,30 @@
         </thead>
         <tbody>
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
-            <td>
+            <td
+              :style="{
+                color: missionTypeColor(gameUser, mission.user, mission.type)
+              }"
+            >
               <span v-tooltip="mission.id">{{ $t(mission.type) }}</span>
             </td>
-            <td>{{ mission.user }}</td>
+            <td>
+              {{ mission.user }}
+            </td>
             <td>
               <span v-if="mission.from_planet !== null">
                 <span
                   class="pointer"
                   v-tooltip="mission.from_planet.name"
                   @click="openMap(mission.start_x, mission.start_y)"
-                >{{ mission.start_x + "/" + mission.start_y }}</span>
+                  >{{ mission.start_x + "/" + mission.start_y }}</span
+                >
               </span>
             </td>
             <td>
-              <span v-if="mission.to_planet !== null">{{ mission.to_planet.user }}</span>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
               <span v-else>-</span>
             </td>
             <td>
@@ -51,64 +60,68 @@
                   class="pointer"
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
-                >{{ mission.end_x + "/" + mission.end_y }}</span>
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
+                >
               </span>
               <span v-else>
                 <span
                   class="pointer"
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
-                >{{ mission.end_x + "/" + mission.end_y }}</span>
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
+                >
               </span>
             </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
-                <font v-if="selectedShips === mission.id" color="green">{{ mission.ships.total }}</font>
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
                 <span v-else>{{ mission.ships.total }}</span>
               </span>
             </td>
             <td>
               <span v-tooltip="resourceList(mission)">
                 {{
-                Number(
-                mission.resources.coal +
-                mission.resources.ore +
-                mission.resources.copper +
-                mission.resources.uranium
-                ).toFixed(0)
+                  Number(
+                    mission.resources.coal +
+                      mission.resources.ore +
+                      mission.resources.copper +
+                      mission.resources.uranium
+                  ).toFixed(0)
                 }}
               </span>
             </td>
             <td>
               {{
-              moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
+                moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
               }}
             </td>
             <td>
               <span v-if="moment.unix(mission.arrival, 'seconds').isAfter(now)">
                 <span v-if="mission.return !== mission.arrival">
                   {{
-                  moment
-                  .duration(
-                  now.diff(moment.unix(mission.arrival, "seconds"))
-                  )
-                  .humanize()
+                    moment
+                      .duration(
+                        now.diff(moment.unix(mission.arrival, "seconds"))
+                      )
+                      .humanize()
                   }}
                 </span>
                 <span v-else>-</span>
               </span>
               <span v-else>
                 {{
-                moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
+                  moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
                 }}
               </span>
             </td>
             <td>
               <span v-if="mission.return !== null">
                 {{
-                moment
-                .duration(now.diff(moment.unix(mission.return, "seconds")))
-                .humanize()
+                  moment
+                    .duration(now.diff(moment.unix(mission.return, "seconds")))
+                    .humanize()
                 }}
               </span>
               <span v-else>-</span>
@@ -128,19 +141,24 @@
                       mission.result === '2')
                 "
                 :to="{ path: '/battle/' + mission.id }"
-              >{{ $t("Log") }}</router-link>
+                >{{ $t("Log") }}</router-link
+              >
               <span v-if="mission.type === 'explorespace'">
-                <span v-if="mission.new_planet_id !== null">{{ mission.new_planet_id }}</span>
+                <span v-if="mission.new_planet_id !== null">{{
+                  mission.new_planet_id
+                }}</span>
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
-                  <span
-                    :style="{ color: '#72bcd4' }"
-                  >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span>
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  >
                 </span>
-                <span v-if="mission.new_stardust > 0 && mission.new_item_id == null">
-                  <span
-                    :style="{ color: '#72bcd4' }"
-                  >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span>
+                <span
+                  v-if="mission.new_stardust > 0 && mission.new_item_id == null"
+                >
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  >
                 </span>
               </span>
             </td>
@@ -150,11 +168,11 @@
                 v-if="cancelPossible(mission)"
                 @click="cancel(mission)"
               >
-                <cancel-icon :title="$t('Cancel')"/>
+                <cancel-icon :title="$t('Cancel')" />
               </button>
             </td>
             <td v-if="chainResponse.includes(mission.id)">
-              <timer-sand-icon :title="$t('Transaction sent')"/>
+              <timer-sand-icon :title="$t('Transaction sent')" />
             </td>
           </tr>
         </tbody>
@@ -184,10 +202,13 @@
                 class="pointer"
                 v-tooltip="mission.from_planet.name"
                 @click="openMap(mission.start_x, mission.start_y)"
-              >{{ mission.start_x + "/" + mission.start_y }}</span>
+                >{{ mission.start_x + "/" + mission.start_y }}</span
+              >
             </td>
             <td>
-              <span v-if="mission.to_planet !== null">{{ mission.to_planet.user }}</span>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
               <span v-else>-</span>
             </td>
             <td>
@@ -196,43 +217,47 @@
                   class="pointer"
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
-                >{{ mission.end_x + "/" + mission.end_y }}</span>
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
+                >
               </span>
               <span v-else>
                 <span
                   class="pointer"
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
-                >{{ mission.end_x + "/" + mission.end_y }}</span>
+                  >{{ mission.end_x + "/" + mission.end_y }}</span
+                >
               </span>
             </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
-                <font v-if="selectedShips === mission.id" color="green">{{ mission.ships.total }}</font>
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
                 <span v-else>{{ mission.ships.total }}</span>
               </span>
             </td>
             <td>
               <span v-tooltip="resourceList(mission)">
                 {{
-                Number(
-                mission.resources.coal +
-                mission.resources.ore +
-                mission.resources.copper +
-                mission.resources.uranium
-                ).toFixed(0)
+                  Number(
+                    mission.resources.coal +
+                      mission.resources.ore +
+                      mission.resources.copper +
+                      mission.resources.uranium
+                  ).toFixed(0)
                 }}
               </span>
             </td>
             <td>
               {{
-              moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
+                moment.unix(mission.start_date, "seconds").format("MMM D HH:mm")
               }}
             </td>
             <td>
               <span v-if="mission.return !== null">
                 {{
-                moment.unix(mission.return, "seconds").format("MMM D HH:mm")
+                  moment.unix(mission.return, "seconds").format("MMM D HH:mm")
                 }}
               </span>
               <span v-else>-</span>
@@ -252,19 +277,24 @@
                       mission.result === '2')
                 "
                 :to="{ path: '/battle/' + mission.id }"
-              >{{ $t("Log") }}</router-link>
+                >{{ $t("Log") }}</router-link
+              >
               <span v-if="mission.type === 'explorespace'">
-                <span v-if="mission.new_planet_id !== null">{{ mission.new_planet_id }}</span>
+                <span v-if="mission.new_planet_id !== null">{{
+                  mission.new_planet_id
+                }}</span>
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
-                  <span
-                    :style="{ color: '#72bcd4' }"
-                  >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span>
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  >
                 </span>
-                <span v-if="mission.new_stardust > 0 && mission.new_item_id == null">
-                  <span
-                    :style="{ color: '#72bcd4' }"
-                  >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span>
+                <span
+                  v-if="mission.new_stardust > 0 && mission.new_item_id == null"
+                >
+                  <span :style="{ color: '#72bcd4' }"
+                    >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
+                  >
                 </span>
               </span>
             </td>
@@ -636,6 +666,24 @@ export default {
       } else {
         return null;
       }
+    },
+    missionTypeColor(gameUser, missionUser, missionType) {
+      if (
+        (missionType == "attack" || missionType == "siege") &&
+        gameUser != missionUser
+      ) {
+        return "red";
+      }
+      if (
+        (missionType == "support" ||
+          missionType == "break_siege" ||
+          missionType == "deploy" ||
+          missionType == "transport") &&
+        gameUser != missionUser
+      ) {
+        return "green";
+      }
+      return "white";
     }
   },
   beforeDestroy() {
