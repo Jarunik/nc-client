@@ -2,7 +2,9 @@
   <div class="galaxy">
     <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
     <p>
-      <router-link :to="`/maps?x=${focusX}&y=${focusY}`">{{ $t("Maps") }} {{focusX}}/{{focusY}}</router-link>
+      <router-link :to="`/maps?x=${focusX}&y=${focusY}`"
+        >{{ $t("Maps") }} {{ focusX }}/{{ focusY }}</router-link
+      >
     </p>
     <template v-if="this.galaxy != null">
       <table id="galaxy-map">
@@ -14,41 +16,76 @@
               v-for="x in areaWidth"
               :key="x"
             >
-              <span v-if="focusX === coordinateX(x) && focusY == coordinateY(y)">
+              <span
+                v-if="focusX === coordinateX(x) && focusY == coordinateY(y)"
+              >
                 <font color="green">
                   <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                  <magnify-icon v-if="lookupLocation(x, y) === 'explore'" :title="$t('Exploring')"/>
-                  <texture-icon v-if="lookupLocation(x, y) === 'fog'" :title="$t('Fog')"/>
-                  <earth-icon v-if="lookupLocation(x, y) === 'home'" :title="$t('Home')"/>
-                  <circle-icon v-if="lookupLocation(x, y) === 'planet'" :title="$t('Planet')"/>
-                  <skull-icon v-if="lookupLocation(x, y) === 'abandoned'" :title="$t('Abandoned')"/>
+                  <magnify-icon
+                    v-if="lookupLocation(x, y) === 'explore'"
+                    :title="$t('Exploring')"
+                  />
+                  <texture-icon
+                    v-if="lookupLocation(x, y) === 'fog'"
+                    :title="$t('Fog')"
+                  />
+                  <earth-icon
+                    v-if="lookupLocation(x, y) === 'home'"
+                    :title="$t('Home')"
+                  />
+                  <circle-icon
+                    v-if="lookupLocation(x, y) === 'planet'"
+                    :title="$t('Planet')"
+                  />
+                  <skull-icon
+                    v-if="lookupLocation(x, y) === 'abandoned'"
+                    :title="$t('Abandoned')"
+                  />
                 </font>
               </span>
               <span v-else>
                 <span v-if="lookupLocation(x, y) === 'space'">&nbsp;</span>
-                <magnify-icon v-if="lookupLocation(x, y) === 'explore'" :title="$t('Exploring')"/>
-                <texture-icon v-if="lookupLocation(x, y) === 'fog'" :title="$t('Fog')"/>
-                <circle-icon v-if="lookupLocation(x, y) === 'planet'" :title="$t('Planet')"/>
-                <earth-icon v-if="lookupLocation(x, y) === 'home'" :title="$t('Home')"/>
-                <skull-icon v-if="lookupLocation(x, y) === 'abandoned'" :title="$t('Abandoned')"/>
+                <magnify-icon
+                  v-if="lookupLocation(x, y) === 'explore'"
+                  :title="$t('Exploring')"
+                />
+                <texture-icon
+                  v-if="lookupLocation(x, y) === 'fog'"
+                  :title="$t('Fog')"
+                />
+                <circle-icon
+                  v-if="lookupLocation(x, y) === 'planet'"
+                  :title="$t('Planet')"
+                />
+                <earth-icon
+                  v-if="lookupLocation(x, y) === 'home'"
+                  :title="$t('Home')"
+                />
+                <skull-icon
+                  v-if="lookupLocation(x, y) === 'abandoned'"
+                  :title="$t('Abandoned')"
+                />
               </span>
             </td>
           </tr>
         </tbody>
       </table>
-      <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
+      <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
       <button @click="goToSearch(search)" v-tooltip="$t('Center on Selection')">
-        <target-variant-icon :title="$t('Focus')"/>
+        <target-variant-icon :title="$t('Focus')" />
       </button>
       <button @click="goTo(posX, posY)" v-tooltip="$t('Center on Home')">
-        <earth-icon :title="$t('Home')"/>
+        <earth-icon :title="$t('Home')" />
       </button>
-      <button @click="goFleet(focusX, focusY)" v-tooltip="$t('Send Fleet to Selection')">
-        <ship-wheel-icon :title="$t('Fleet')"/>
+      <button
+        @click="goFleet(focusX, focusY)"
+        v-tooltip="$t('Send Fleet to Selection')"
+      >
+        <ship-wheel-icon :title="$t('Fleet')" />
       </button>
       {{ distance().toFixed(2) }}
       <div>
-        <br>
+        <br />
         <table v-if="planet !== null">
           <tr>
             <td>{{ planet.planet_id }}</td>
