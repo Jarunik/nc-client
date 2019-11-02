@@ -1298,7 +1298,7 @@ export default {
           if (mission.type == "siege") {
             if (
               moment.unix(mission.return).isAfter(moment.utc()) &&
-              moment.unix(mission.arrival).isBefore(moment.utc()) &&
+              mission.arrival == mission.return && //as mission arrival will be set to return on arrival
               mission.cancel_trx == null
             ) {
               if (mission.to_planet != null) {
