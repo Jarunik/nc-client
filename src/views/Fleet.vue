@@ -618,6 +618,8 @@ export default {
             ship.forSale = 1;
           }
         });
+        // Sort to bring the for sales once to the end
+        this.fleet.sort((a, b) => (a.forSale > b.forSale ? 1 : -1));
         this.groupedFleet = this.fleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
           if (!x) {
