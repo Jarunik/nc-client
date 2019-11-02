@@ -10,6 +10,9 @@
           <th>{{ $t("Bonus") }}</th>
           <th>{{ $t("Type") }}</th>
           <th>{{ $t("Rename") }}</th>
+          <th>{{ $t("Sale") }}</th>
+          <th>{{ $t("Ship") }}</th>
+          <th>{{ $t("Sell") }}</th>
           <th v-if="!giftingLock">
             <font color="red">{{ $t("Gift") }}</font>
           </th>
@@ -27,11 +30,21 @@
         </thead>
         <tbody>
           <tr v-for="(planet, index) in sortedPlanets" :key="planet.id">
-            <td>{{ planet.id }}</td>
-            <td>{{ planet.posx }}/{{ planet.posy }}</td>
-            <td>{{ planet.name }}</td>
-            <td>{{ $t("planet-bonus-" + planet.bonus) }}</td>
-            <td>{{ $t("planet-type-" + planet.planet_type) }}</td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
+              {{ planet.id }}
+            </td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
+              {{ planet.posx }}/{{ planet.posy }}
+            </td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
+              {{ planet.name }}
+            </td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
+              {{ $t("planet-bonus-" + planet.bonus) }}
+            </td>
+            <td :style="{ color: planet.for_sale == 1 ? 'grey' : 'white' }">
+              {{ $t("planet-type-" + planet.planet_type) }}
+            </td>
             <td>
               <span v-if="gameUser === loginUser">
                 <button @click="toggleRename(planet.id)">...</button>
@@ -50,9 +63,57 @@
               </span>
               <span v-else>-</span>
             </td>
+            <td>
+              <span v-if="planet.for_sale == 1">
+                <router-link :to="'/market'" v-tooltip="$t('Market')">
+                  <store-icon :title="$t('Market')" />
+                </router-link>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span v-if="shipForSale(planet)">
+                <router-link :to="'/market'" v-tooltip="$t('Market')">
+                  <store-icon :title="$t('Market')" />
+                </router-link>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    planet.for_sale != 1 &&
+                    planet.starter == 0 &&
+                    !shipForSale(planet)
+                "
+              >
+                <button @click="toggleSell(planet)">...</button>
+                <template v-if="planet.id !== null && showSell === planet.id">
+                  <input
+                    v-model.number="price"
+                    @blur="validatePrice()"
+                    :placeholder="$t(placeholderPrice)"
+                  />
+                  <button
+                    :disabled="clicked.includes(planet.id)"
+                    @click="sell(planet, price, index)"
+                  >
+                    {{ $t("Sell") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
+            </td>
             <td v-if="!giftingLock">
-              <span v-if="gameUser === loginUser && planet.starter !== 1">
-                <button @click="toggleGifting(planet.id)">...</button>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    planet.starter !== 1 &&
+                    planet.for_sale != 1
+                "
+              >
+                <button @click="toggleGifting(planet)">...</button>
                 <template
                   v-if="planet.id !== null && showGifting === planet.id"
                 >
@@ -71,8 +132,14 @@
               <span v-else>-</span>
             </td>
             <td v-if="!giftingLock">
-              <span v-if="gameUser === loginUser && planet.starter == 1">
-                <button @click="toggleGifting(planet.id)">...</button>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    planet.starter == 1 &&
+                    planet.for_sale != 1
+                "
+              >
+                <button @click="toggleGifting(planet)">...</button>
                 <template
                   v-if="planet.id !== null && showGifting === planet.id"
                 >
@@ -88,8 +155,14 @@
               <span v-else>-</span>
             </td>
             <td v-if="!giftingLock">
-              <span v-if="gameUser === loginUser && planet.starter != 1">
-                <button @click="toggleBurn(planet.id)">...</button>
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    planet.starter != 1 &&
+                    planet.for_sale != 1
+                "
+              >
+                <button @click="toggleBurn(planet)">...</button>
                 <template v-if="planet.id !== null && showBurn === planet.id">
                   {{ $t("Really?") }}
                   <button
@@ -103,19 +176,21 @@
               <span v-else>-</span>
             </td>
             <td>
-              <font color="#72bcd4">{{
-                Number(
-                  burnRate(planet.bonus, planet.planet_type) / 100000000
-                ).toLocaleString(gameLocale, { style: "decimal" })
-              }}</font>
+              <font color="#72bcd4">
+                {{
+                  Number(
+                    burnRate(planet.bonus, planet.planet_type) / 100000000
+                  ).toLocaleString(gameLocale, { style: "decimal" })
+                }}
+              </font>
             </td>
             <td>
               <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td>
-              <span v-if="planet.id === planetId"
-                ><earth-icon :title="$t('Home')"
-              /></span>
+              <span v-if="planet.id === planetId">
+                <earth-icon :title="$t('Home')" />
+              </span>
             </td>
           </tr>
         </tbody>
@@ -231,9 +306,7 @@
                 pFleet.fleet.dreadnought === 0 ? "-" : pFleet.fleet.dreadnought
               }}
             </td>
-            <td>
-              {{ pFleet.fleet.yamato === 0 ? "-" : pFleet.fleet.yamato }}
-            </td>
+            <td>{{ pFleet.fleet.yamato === 0 ? "-" : pFleet.fleet.yamato }}</td>
           </tr>
         </tbody>
       </table>
@@ -254,49 +327,57 @@
           <tr v-for="pQuantity in sortedPlanetQuantities" :key="pQuantity.id">
             <td>{{ pQuantity.name }}</td>
             <td>
-              <span>{{
-                Number(pQuantity.coal).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}</span>
+              <span>
+                {{
+                  Number(pQuantity.coal).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}
+              </span>
             </td>
             <td>
               <span
                 :style="{
                   color: pQuantity.coal >= pQuantity.coaldepot ? 'red' : 'white'
                 }"
-                >{{
+              >
+                {{
                   Number(pQuantity.coaldepot).toLocaleString(gameLocale, {
                     style: "decimal"
                   })
-                }}</span
-              >
+                }}
+              </span>
             </td>
             <td>
-              <span>{{
-                Number(pQuantity.ore).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}</span>
+              <span>
+                {{
+                  Number(pQuantity.ore).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}
+              </span>
             </td>
             <td>
               <span
                 :style="{
                   color: pQuantity.ore >= pQuantity.oredepot ? 'red' : 'white'
                 }"
-                >{{
+              >
+                {{
                   Number(pQuantity.oredepot).toLocaleString(gameLocale, {
                     style: "decimal"
                   })
-                }}</span
-              >
+                }}
+              </span>
             </td>
             <td>
-              <span>{{
-                Number(pQuantity.copper).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}</span>
+              <span>
+                {{
+                  Number(pQuantity.copper).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}
+              </span>
             </td>
             <td>
               <span
@@ -304,19 +385,22 @@
                   color:
                     pQuantity.copper >= pQuantity.copperdepot ? 'red' : 'white'
                 }"
-                >{{
+              >
+                {{
                   Number(pQuantity.copperdepot).toLocaleString(gameLocale, {
                     style: "decimal"
                   })
-                }}</span
-              >
+                }}
+              </span>
             </td>
             <td>
-              <span>{{
-                Number(pQuantity.uranium).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}</span>
+              <span>
+                {{
+                  Number(pQuantity.uranium).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
+                }}
+              </span>
             </td>
             <td>
               <span
@@ -326,22 +410,20 @@
                       ? 'red'
                       : 'white'
                 }"
-                >{{
+              >
+                {{
                   Number(pQuantity.uraniumdepot).toLocaleString(gameLocale, {
                     style: "decimal"
                   })
-                }}</span
-              >
+                }}
+              </span>
             </td>
           </tr>
         </tbody>
       </table>
     </template>
     <template v-else>
-      <p>
-        {{ $t("Please set a") }}
-        <router-link to="/">{{ $t("user") }}</router-link>
-      </p>
+      <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
     </template>
   </div>
 </template>
@@ -355,11 +437,13 @@ import { mapState } from "vuex";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import QuantityService from "@/services/quantity";
 import * as types from "@/store/mutation-types";
+import StoreIcon from "vue-material-design-icons/Store.vue";
 
 export default {
   name: "planets",
   components: {
-    EarthIcon
+    EarthIcon,
+    StoreIcon
   },
   data: function() {
     return {
@@ -376,7 +460,10 @@ export default {
       clicked: [],
       stardust: null,
       showBurn: null,
-      burnRates: null
+      burnRates: null,
+      showSell: null,
+      price: null,
+      placeholderPrice: "enter SD price"
     };
   },
   async mounted() {
@@ -417,13 +504,17 @@ export default {
       await this.getStardust();
     },
     async getStardust() {
-      const response = await UserService.get(this.gameUser);
-      this.stardust = response.stardust;
+      if (this.gameUser !== null) {
+        const response = await UserService.get(this.gameUser);
+        this.stardust = response.stardust;
+      }
     },
     async getPlanets() {
-      const response = await PlanetsService.byUser(this.gameUser);
-      this.planets = response.planets;
-      this.$store.dispatch("planet/setList", response.planets);
+      if (this.gameUser !== null) {
+        const response = await PlanetsService.byUser(this.gameUser);
+        this.planets = response.planets;
+        this.$store.dispatch("planet/setList", response.planets);
+      }
     },
     async getBurnRates() {
       const response = await PlanetsService.burnRates();
@@ -431,16 +522,20 @@ export default {
     },
     async getPlanetFleet() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let fleet = await this.getFleet(planets[i]);
-        this.planetFleet.push(fleet);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let fleet = await this.getFleet(planets[i]);
+          this.planetFleet.push(fleet);
+        }
       }
     },
     async getPlanetQuantities() {
       let planets = this.planets;
-      for (let i = 0; i < planets.length; i++) {
-        let qty = await this.getQuantities(planets[i]);
-        this.planetQuantities.push(qty);
+      if (planets !== null) {
+        for (let i = 0; i < planets.length; i++) {
+          let qty = await this.getQuantities(planets[i]);
+          this.planetQuantities.push(qty);
+        }
       }
     },
     setPlanet(planet) {
@@ -488,16 +583,16 @@ export default {
         this.giftingLock = true;
       }
     },
-    toggleGifting(planetId) {
-      if (this.showGifting !== planetId && this.stardust >= 100000000000) {
-        this.showGifting = planetId;
+    toggleGifting(planet) {
+      if (this.showGifting !== planet.id && this.stardust >= 100000000000) {
+        this.showGifting = planet.id;
       } else {
         this.showGifting = null;
       }
     },
-    toggleBurn(planetId) {
-      if (this.showBurn !== planetId) {
-        this.showBurn = planetId;
+    toggleBurn(planet) {
+      if (this.showBurn !== planet.id) {
+        this.showBurn = planet.id;
       } else {
         this.showBurn = null;
       }
@@ -567,7 +662,8 @@ export default {
         battlecruiser: 0,
         carrier: 0,
         dreadnought: 0,
-        yamato: 0
+        yamato: 0,
+        forSale: 0
       };
       const response = await FleetService.all(this.gameUser, planetFleet.id);
       fleetResponse = response;
@@ -601,6 +697,9 @@ export default {
         }
         if (ship.type.startsWith("yamato")) {
           planetFleet.fleet.yamato++;
+        }
+        if (ship.for_sale == 1) {
+          planetFleet.fleet.forSale++;
         }
       });
       return planetFleet;
@@ -675,6 +774,49 @@ export default {
         ),
         parseFloat(quantity) // or overflow above depot
       ).toFixed(1);
+    },
+    sell(planet, index) {
+      this.clicked.push(planet.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.ask(
+        this.loginUser,
+        "planet",
+        planet.id,
+        this.price,
+        "null",
+        (error, result) => {
+          if (error === null && result.success) {
+            this.price = null;
+            this.placeholderPrice = "Success";
+          }
+        }
+      );
+    },
+    toggleSell(planet) {
+      if (this.showSell !== planet.id) {
+        this.showSell = planet.id;
+      } else {
+        this.showSell = null;
+      }
+    },
+    shipForSale(planet) {
+      let forSale = false;
+      this.planetFleet.forEach(planetFleet => {
+        if (planetFleet.id == planet.id) {
+          if (planetFleet.fleet.forSale > 0) {
+            forSale = true;
+          }
+        }
+      });
+      return forSale;
+    },
+    validatePrice() {
+      if (this.price < 0) {
+        this.price = 0.000001;
+      }
+      if (this.price > 90000000000) {
+        this.price = 90000000000;
+      }
     }
   }
 };

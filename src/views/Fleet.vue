@@ -16,35 +16,40 @@
       <p v-if="isUnderSiege()" style="color:red">
         {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
       </p>
-      <!-- Commands -->
-      <p>
-        {{ $t("Command") }}
-        <select @change="onCommand()" v-model="command">
-          <option v-if="!isUnderSiege()" value="explorespace">{{
-            $t("Explore")
-          }}</option>
-          <option v-if="!isUnderSiege()" value="transport">{{
-            $t("Transport")
-          }}</option>
-          <option v-if="!isUnderSiege()" value="deploy">{{
-            $t("Deploy")
-          }}</option>
-          <option v-if="!isUnderSiege()" value="support">{{
-            $t("Support")
-          }}</option>
-          <option v-if="!isUnderSiege()" value="attack">{{
-            $t("Attack")
-          }}</option>
-          <option v-if="!isUnderSiege()" value="siege">{{
-            $t("Siege")
-          }}</option>
-          <option value="breaksiege">{{ $t("Break Siege") }}</option>
-          <option v-if="!isUnderSiege()" value="upgradeyamato">{{
-            $t("Upgrade Yamato")
-          }}</option>
-          <option value="sent">{{ $t("Sent") }}</option>
-        </select>
+      <p v-if="planetForSale()" style="color:red">
+        {{ $t("Planet is listed for sale. No mission is possible!") }}
       </p>
+      <!-- Commands -->
+      <span v-if="!planetForSale()">
+        <p>
+          {{ $t("Command") }}
+          <select @change="onCommand()" v-model="command">
+            <option v-if="!isUnderSiege()" value="explorespace">{{
+              $t("Explore")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="transport">{{
+              $t("Transport")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="deploy">{{
+              $t("Deploy")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="support">{{
+              $t("Support")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="attack">{{
+              $t("Attack")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="siege">{{
+              $t("Siege")
+            }}</option>
+            <option value="breaksiege">{{ $t("Break Siege") }}</option>
+            <option v-if="!isUnderSiege()" value="upgradeyamato">{{
+              $t("Upgrade Yamato")
+            }}</option>
+            <option value="sent">{{ $t("Sent") }}</option>
+          </select>
+        </p>
+      </span>
       <!-- Ship List -->
       <table>
         <thead>
@@ -52,10 +57,12 @@
           <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('cons')">{{ $t("Use") }}</th>
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
+          <th @click="sort('forSale')">{{ $t("Sale") }}</th>
           <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
           <th v-if="command !== null" @click="sort('toSend')">
             {{ $t("Send") }}
           </th>
+          <th v-if="command == null">{{ $t("Sell") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -69,10 +76,42 @@
                 })
               }}
             </td>
+            <td>
+              <span v-if="ship.forSale > 0">{{ ship.forSale }}</span>
+              <span v-else>-</span>
+            </td>
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
-              <input class="inputShort" type="number" v-model="ship.toSend" />
-              <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
+              <span v-if="ship.quantity > 0">
+                <input class="inputShort" type="number" v-model="ship.toSend" />
+                <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td v-if="command == null">
+              <span
+                v-if="
+                  gameUser === loginUser &&
+                    ship.quantity > 0 &&
+                    !planetForSale()
+                "
+              >
+                <button @click="toggleSell(ship)">...</button>
+                <template v-if="ship.id !== null && showSell === ship.id">
+                  <input
+                    v-model.number="price"
+                    @blur="validatePrice()"
+                    :placeholder="$t(placeholderPrice)"
+                  />
+                  <button
+                    :disabled="clickedSell.includes(ship.id)"
+                    @click="sell(ship, price)"
+                  >
+                    {{ $t("Sell") }}
+                  </button>
+                </template>
+              </span>
+              <span v-else>-</span>
             </td>
           </tr>
         </tbody>
@@ -147,8 +186,7 @@
                         ? 'red'
                         : 'white'
                   }"
-                >
-                  {{ Number(this.fuelConsumption).toFixed(4) }}</span
+                  >{{ Number(this.fuelConsumption).toFixed(4) }}</span
                 >
               </td>
             </tr>
@@ -202,45 +240,53 @@
           <p>
             {{ $t("Costs") }}:
             <font v-if="yamatoCoal > coal" color="red">
-              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"/></font
-            ><font v-else>
-              {{ yamatoCoal }} <alpha-c-box-icon :title="$t('Coal')"
-            /></font>
+              {{ yamatoCoal }}
+              <alpha-c-box-icon :title="$t('Coal')" />
+            </font>
+            <font v-else>
+              {{ yamatoCoal }}
+              <alpha-c-box-icon :title="$t('Coal')" />
+            </font>
             <font v-if="yamatoOre > ore" color="red">
               {{ yamatoOre }}
-              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-                :title="$t('Ore')"/></font
-            ><font v-else>
+              <alpha-f-box-icon :title="$t('Ore')" />
+              <alpha-e-box-icon :title="$t('Ore')" />
+            </font>
+            <font v-else>
               {{ yamatoOre }}
-              <alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-                :title="$t('Ore')"
-            /></font>
+              <alpha-f-box-icon :title="$t('Ore')" />
+              <alpha-e-box-icon :title="$t('Ore')" />
+            </font>
             <font v-if="yamatoCopper > copper" color="red">
               {{ yamatoCopper }}
-              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-                :title="$t('Copper')"/></font
-            ><font v-else>
-              {{ yamatoCopper }}
-              <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-                :title="$t('Copper')"
-            /></font>
-            <font v-if="yamatoUranium > uranium" color="red">
-              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
-            /></font>
+              <alpha-c-box-icon :title="$t('Copper')" />
+              <alpha-u-box-icon :title="$t('Copper')" />
+            </font>
             <font v-else>
-              {{ yamatoUranium }} <alpha-u-box-icon :title="$t('Uranium')"
-            /></font>
+              {{ yamatoCopper }}
+              <alpha-c-box-icon :title="$t('Copper')" />
+              <alpha-u-box-icon :title="$t('Copper')" />
+            </font>
+            <font v-if="yamatoUranium > uranium" color="red">
+              {{ yamatoUranium }}
+              <alpha-u-box-icon :title="$t('Uranium')" />
+            </font>
+            <font v-else>
+              {{ yamatoUranium }}
+              <alpha-u-box-icon :title="$t('Uranium')" />
+            </font>
             <font v-if="yamatoStardust > stardust" color="red">
               {{ yamatoStardust / 100000000 }}
-              <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
-                :title="$t('Stardust')"
-            /></font>
+              <alpha-s-box-icon :title="$t('Stardust')" />
+              <alpha-d-box-icon :title="$t('Stardust')" />
+            </font>
             <font v-else>
               <span :style="{ color: '#72bcd4' }">
                 {{ yamatoStardust / 100000000 }}
-                <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
-                  :title="$t('Stardust')"/></span
-            ></font>
+                <alpha-s-box-icon :title="$t('Stardust')" />
+                <alpha-d-box-icon :title="$t('Stardust')" />
+              </span>
+            </font>
           </p>
         </div>
         <!-- Send Transaction -->
@@ -375,6 +421,7 @@ export default {
   data: function() {
     return {
       fleet: null,
+      groupedFleet: null,
       activeUserMissions: null,
       activeMissions: null,
       skills: null,
@@ -413,11 +460,16 @@ export default {
       yamatoUranium: 0,
       yamatoStardust: 0,
       buildYamato: false,
-      activeYamatoMission: false
+      activeYamatoMission: false,
+      showSell: null,
+      price: null,
+      placeholderPrice: "enter SD price",
+      clickedSell: []
     };
   },
   async mounted() {
     this.clicked = false;
+    this.clickedSell = [];
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();
@@ -430,6 +482,7 @@ export default {
         case "planet/" + types.SET_PLANET_ID:
           this.prepareComponent();
           this.clicked = false;
+          this.clickedSell = [];
       }
     });
   },
@@ -460,10 +513,11 @@ export default {
       planetName: state => state.planet.name,
       planetPosX: state => state.planet.posX,
       planetPosY: state => state.planet.posY,
-      gameLocale: state => state.game.gameLocale
+      gameLocale: state => state.game.gameLocale,
+      planetList: state => state.planet.list
     }),
     sortedFleet() {
-      var sortedFleet = this.fleet;
+      var sortedFleet = this.groupedFleet;
       if (sortedFleet !== null) {
         return sortedFleet.sort((a, b) => {
           let modifier = 1;
@@ -554,10 +608,19 @@ export default {
       this.fleet = response;
       if (this.fleet !== null) {
         this.fleet.forEach(ship => {
-          ship.quantity = 1;
-          ship.toSend = 1;
+          if (ship.for_sale == 0) {
+            ship.quantity = 1;
+            ship.toSend = 1;
+            ship.forSale = 0;
+          } else {
+            ship.quantity = 0;
+            ship.toSend = 0;
+            ship.forSale = 1;
+          }
         });
-        this.fleet = this.fleet.reduce((acc, current) => {
+        // Sort to bring the for sales once to the end
+        this.fleet.sort((a, b) => (a.forSale > b.forSale ? 1 : -1));
+        this.groupedFleet = this.fleet.reduce((acc, current) => {
           const x = acc.find(item => item.longname === current.longname);
           if (!x) {
             // add first found by name
@@ -566,7 +629,11 @@ export default {
             acc.forEach(ship => {
               // count up the duplicates
               if (ship.longname === current.longname) {
-                ship.quantity++;
+                if (current.for_sale == 0) {
+                  ship.quantity++;
+                } else {
+                  ship.forSale++;
+                }
               }
             });
             return acc;
@@ -670,12 +737,14 @@ export default {
         });
       }
       this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (this.planetId === planet.id) {
-          missionBudget = missionBudget + 1;
-          this.totalMissions = missionBudget;
-          this.availableMissions = missionBudget - runningMissions;
-        } else {
-          this.availableMissions = missionBudget - runningMissions;
+        if (planet !== null) {
+          if (this.planetId === planet.id) {
+            missionBudget = missionBudget + 1;
+            this.totalMissions = missionBudget;
+            this.availableMissions = missionBudget - runningMissions;
+          } else {
+            this.availableMissions = missionBudget - runningMissions;
+          }
         }
       });
       this.totalMissions = missionBudget;
@@ -808,7 +877,7 @@ export default {
           { id: 8, type: null, n: "-", c: 0, pos: "-", name: "-" }
         ]
       };
-      this.fleet.forEach(ship => {
+      this.groupedFleet.forEach(ship => {
         ship.toSend = 1;
       });
     },
@@ -846,9 +915,9 @@ export default {
       // Add a new one
       if (!existingGroup) {
         this.shipFormation.count = this.shipFormation.count + 1;
-        this.shipFormation.ships[this.pos].n = Math.max(
-          Math.min(quantity, ship.quantity),
-          1
+        this.shipFormation.ships[this.pos].n = Math.min(
+          quantity,
+          ship.quantity
         );
         this.shipFormation.ships[this.pos].c = ship.cons;
         this.shipFormation.ships[this.pos].pos = this.pos + 1;
@@ -1228,19 +1297,65 @@ export default {
       let underSiege = false;
       if (this.activeMissions !== null) {
         this.activeMissions.forEach(mission => {
-          if (
-            mission.type == "siege" &&
-            moment.unix(mission.arrival).isBefore(moment.utc())
-          ) {
-            if (mission.to_planet != null) {
-              if (mission.to_planet.id == this.planetId) {
-                underSiege = true;
+          if (mission.type == "siege") {
+            if (
+              moment.unix(mission.return).isAfter(moment.utc()) &&
+              mission.arrival == mission.return && //as mission arrival will be set to return on arrival
+              mission.cancel_trx == null
+            ) {
+              if (mission.to_planet != null) {
+                if (mission.to_planet.id == this.planetId) {
+                  underSiege = true;
+                }
               }
             }
           }
         });
       }
       return underSiege;
+    },
+    sell(ship) {
+      this.clickedSell.push(ship.id);
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.ask(
+        this.loginUser,
+        "ship",
+        ship.id,
+        this.price,
+        "null",
+        (error, result) => {
+          if (error === null && result.success) {
+            this.price = null;
+            this.placeholderPrice = "Success";
+          }
+        }
+      );
+    },
+    toggleSell(ship) {
+      if (this.showSell !== ship.id) {
+        this.showSell = ship.id;
+      } else {
+        this.showSell = null;
+      }
+    },
+    planetForSale() {
+      let forSale = false;
+      if (this.planetList != null) {
+        this.planetList.forEach(planet => {
+          if (planet.id == this.planetId && planet.for_sale == 1) {
+            forSale = true;
+          }
+        });
+      }
+      return forSale;
+    },
+    validatePrice() {
+      if (this.price < 0) {
+        this.price = 0.000001;
+      }
+      if (this.price > 90000000000) {
+        this.price = 90000000000;
+      }
     }
   },
   beforeDestroy() {

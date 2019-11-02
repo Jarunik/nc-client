@@ -28,13 +28,20 @@
         </thead>
         <tbody>
           <tr v-for="mission in sortedActiveMissions" :key="mission.id">
-            <td>
+            <td
+              :style="{
+                color: missionTypeColor(gameUser, mission.user, mission.type)
+              }"
+            >
               <span v-tooltip="mission.id">{{ $t(mission.type) }}</span>
             </td>
-            <td>{{ mission.user }}</td>
+            <td>
+              {{ mission.user }}
+            </td>
             <td>
               <span v-if="mission.from_planet !== null">
                 <span
+                  class="pointer"
                   v-tooltip="mission.from_planet.name"
                   @click="openMap(mission.start_x, mission.start_y)"
                   >{{ mission.start_x + "/" + mission.start_y }}</span
@@ -42,14 +49,15 @@
               </span>
             </td>
             <td>
-              <span v-if="mission.to_planet !== null">
-                {{ mission.to_planet.user }}
-              </span>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
               <span v-else>-</span>
             </td>
             <td>
               <span v-if="mission.to_planet !== null">
                 <span
+                  class="pointer"
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
                   >{{ mission.end_x + "/" + mission.end_y }}</span
@@ -57,6 +65,7 @@
               </span>
               <span v-else>
                 <span
+                  class="pointer"
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
                   >{{ mission.end_x + "/" + mission.end_y }}</span
@@ -65,9 +74,9 @@
             </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
-                <font v-if="selectedShips === mission.id" color="green">
-                  {{ mission.ships.total }}
-                </font>
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
                 <span v-else>{{ mission.ships.total }}</span>
               </span>
             </td>
@@ -80,8 +89,8 @@
                       mission.resources.copper +
                       mission.resources.uranium
                   ).toFixed(0)
-                }}</span
-              >
+                }}
+              </span>
             </td>
             <td>
               {{
@@ -101,9 +110,11 @@
                 </span>
                 <span v-else>-</span>
               </span>
-              <span v-else>{{
-                moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
-              }}</span>
+              <span v-else>
+                {{
+                  moment.unix(mission.arrival, "seconds").format("MMM D HH:mm")
+                }}
+              </span>
             </td>
             <td>
               <span v-if="mission.return !== null">
@@ -115,9 +126,7 @@
               </span>
               <span v-else>-</span>
             </td>
-            <td>
-              {{ $t(parseResult(mission.result)) || "-" }}
-            </td>
+            <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
             <td>
               <router-link
                 v-if="
@@ -135,22 +144,22 @@
                 >{{ $t("Log") }}</router-link
               >
               <span v-if="mission.type === 'explorespace'">
-                <span v-if="mission.new_planet_id !== null">
-                  {{ mission.new_planet_id }}</span
-                >
+                <span v-if="mission.new_planet_id !== null">{{
+                  mission.new_planet_id
+                }}</span>
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
                   <span :style="{ color: '#72bcd4' }"
                     >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
-                  ></span
-                >
+                  >
+                </span>
                 <span
                   v-if="mission.new_stardust > 0 && mission.new_item_id == null"
                 >
                   <span :style="{ color: '#72bcd4' }"
                     >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
-                  ></span
-                >
+                  >
+                </span>
               </span>
             </td>
             <td>
@@ -190,20 +199,22 @@
             <td>{{ mission.user }}</td>
             <td>
               <span
+                class="pointer"
                 v-tooltip="mission.from_planet.name"
                 @click="openMap(mission.start_x, mission.start_y)"
                 >{{ mission.start_x + "/" + mission.start_y }}</span
               >
             </td>
             <td>
-              <span v-if="mission.to_planet !== null">
-                {{ mission.to_planet.user }}
-              </span>
+              <span v-if="mission.to_planet !== null">{{
+                mission.to_planet.user
+              }}</span>
               <span v-else>-</span>
             </td>
             <td>
               <span v-if="mission.to_planet !== null">
                 <span
+                  class="pointer"
                   v-tooltip="mission.to_planet.name"
                   @click="openMap(mission.end_x, mission.end_y)"
                   >{{ mission.end_x + "/" + mission.end_y }}</span
@@ -211,6 +222,7 @@
               </span>
               <span v-else>
                 <span
+                  class="pointer"
                   v-tooltip="'Space'"
                   @click="openMap(mission.end_x, mission.end_y)"
                   >{{ mission.end_x + "/" + mission.end_y }}</span
@@ -219,9 +231,9 @@
             </td>
             <td>
               <span v-if="mission.ships !== null" v-tooltip="shipList(mission)">
-                <font v-if="selectedShips === mission.id" color="green">
-                  {{ mission.ships.total }}
-                </font>
+                <font v-if="selectedShips === mission.id" color="green">{{
+                  mission.ships.total
+                }}</font>
                 <span v-else>{{ mission.ships.total }}</span>
               </span>
             </td>
@@ -243,9 +255,11 @@
               }}
             </td>
             <td>
-              <span v-if="mission.return !== null">{{
-                moment.unix(mission.return, "seconds").format("MMM D HH:mm")
-              }}</span>
+              <span v-if="mission.return !== null">
+                {{
+                  moment.unix(mission.return, "seconds").format("MMM D HH:mm")
+                }}
+              </span>
               <span v-else>-</span>
             </td>
             <td>{{ $t(parseResult(mission.result)) || "-" }}</td>
@@ -266,22 +280,22 @@
                 >{{ $t("Log") }}</router-link
               >
               <span v-if="mission.type === 'explorespace'">
-                <span v-if="mission.new_planet_id !== null">
-                  {{ mission.new_planet_id }}</span
-                >
+                <span v-if="mission.new_planet_id !== null">{{
+                  mission.new_planet_id
+                }}</span>
                 <span v-if="mission.new_item_id !== null">
                   {{ $t(mission.new_item_id) }}
                   <span :style="{ color: '#72bcd4' }"
                     >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
-                  ></span
-                >
+                  >
+                </span>
                 <span
                   v-if="mission.new_stardust > 0 && mission.new_item_id == null"
                 >
                   <span :style="{ color: '#72bcd4' }"
                     >{{ mission.new_stardust / 100000000 }} {{ $t("SD") }}</span
-                  ></span
-                >
+                  >
+                </span>
               </span>
             </td>
           </tr>
@@ -290,7 +304,7 @@
       <p v-if="JSON.stringify(missions) === '[]'">{{ $t("No Result") }}</p>
     </template>
     <template v-else>
-      <p>{{ $t("Please set the") }} {{ $t("set a user") }}</p>
+      <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
     </template>
   </div>
 </template>
@@ -440,11 +454,13 @@ export default {
       }
       this.totalMissions = missionBudget;
       this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (this.planetId === planet.id) {
-          missionBudget = missionBudget + 1;
-          this.totalMissions = missionBudget;
-        } else {
-          this.totalMissions = missionBudget;
+        if (planet !== null) {
+          if (this.planetId === planet.id) {
+            missionBudget = missionBudget + 1;
+            this.totalMissions = missionBudget;
+          } else {
+            this.totalMissions = missionBudget;
+          }
         }
       });
     },
@@ -650,6 +666,24 @@ export default {
       } else {
         return null;
       }
+    },
+    missionTypeColor(gameUser, missionUser, missionType) {
+      if (
+        (missionType == "attack" || missionType == "siege") &&
+        gameUser != missionUser
+      ) {
+        return "red";
+      }
+      if (
+        (missionType == "support" ||
+          missionType == "break_siege" ||
+          missionType == "deploy" ||
+          missionType == "transport") &&
+        gameUser != missionUser
+      ) {
+        return "green";
+      }
+      return "white";
     }
   },
   beforeDestroy() {

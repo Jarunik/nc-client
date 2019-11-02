@@ -26,6 +26,10 @@
           ><cart-icon :title="$t('Shop')"
         /></router-link>
         |
+        <router-link :to="'/market'" v-tooltip="$t('Market')">
+          <store-icon :title="$t('Market')" />
+        </router-link>
+        |
         <router-link :to="'/items'" v-tooltip="$t('Items')">
           <package-variant-closed-icon :title="$t('Items')" />
         </router-link>
@@ -53,15 +57,6 @@
         <router-link :to="'/missions'" v-tooltip="$t('Missions')">
           <calendar-icon :title="$t('Mission')" />
         </router-link>
-        |
-        <router-link to="/" v-tooltip="$t('Login')">
-          <font v-if="loginUser == null" color="red"
-            ><login-icon :title="$t('Login')"
-          /></font>
-          <font v-else
-            ><router-link to="/"
-              ><account-icon :title="$t('Login')"/></router-link></font
-        ></router-link>
       </span>
     </span>
     <div id="middle">
@@ -84,6 +79,15 @@
         <router-link to="/administration" v-tooltip="$t('Administration')">
           <settings-icon :title="$t('Administration')"/></router-link
       ></span>
+      |
+      <router-link to="/" v-tooltip="$t('Login')">
+        <font v-if="loginUser == null" color="red"
+          ><login-icon :title="$t('Login')"
+        /></font>
+        <font v-else
+          ><router-link to="/"
+            ><account-icon :title="$t('Login')"/></router-link></font
+      ></router-link>
     </span>
   </div>
 </template>
@@ -109,6 +113,7 @@ import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import TimerIcon from "vue-material-design-icons/Timer.vue";
 import SettingsIcon from "vue-material-design-icons/Settings.vue";
+import StoreIcon from "vue-material-design-icons/Store.vue";
 
 export default {
   name: "App",
@@ -130,7 +135,8 @@ export default {
     NewspaperIcon,
     LoginIcon,
     TimerIcon,
-    SettingsIcon
+    SettingsIcon,
+    StoreIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -354,6 +360,7 @@ input {
 
 .pointer {
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .router-link-exact-active {

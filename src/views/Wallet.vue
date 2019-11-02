@@ -58,7 +58,7 @@
           <th>{{ $t("Transaction") }}</th>
         </thead>
         <tbody>
-          <tr v-for="transaction in wallet.transactions" :key="transaction.trx">
+          <tr v-for="transaction in wallet.transactions" :key="transaction.id">
             <td>
               {{ moment.unix(transaction.date, "seconds").format("lll") }}
             </td>

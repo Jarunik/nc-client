@@ -1,37 +1,41 @@
 <template>
   <div>
     <div>
-      <h1><b>Next</b>Colony</h1>
+      <h1>
+        <b>Next</b>Colony
+      </h1>
     </div>
     <p>{{ $t("Explore. Colonize. Battle. Collect.") }}</p>
     <p>
       {{ $t("Explore undiscovered space") }}
-      <br />
+      <br>
       {{ $t("Find and colonize new planets") }}
-      <br />
+      <br>
       {{ $t("Battle for honor and resources") }}
-      <br />
+      <br>
       {{ $t("Trade digital collectibles") }}
     </p>
     <p>
       <i>
         {{
-          $t(
-            "Warning: This is alternative, experimental client which is in development."
-          )
+        $t(
+        "Warning: This is alternative, experimental client which is in development."
+        )
         }}
       </i>
     </p>
     <p>
-      <a href="https://github.com/Jarunik/nc-client">{{
+      <a href="https://github.com/Jarunik/nc-client">
+        {{
         $t("Source Code on Github")
-      }}</a>
+        }}
+      </a>
     </p>
     <p>
       {{
-        $t(
-          "Please use the official client if you don't want to play with the open source version."
-        )
+      $t(
+      "Please use the official client if you don't want to play with the open source version."
+      )
       }}
     </p>
     <p>
@@ -45,14 +49,14 @@
           <td>
             <span v-if="apiState.tracker_delay_seconds > 3">
               {{
-                moment
-                  .duration(apiState.tracker_delay_seconds, "seconds")
-                  .humanize()
+              moment
+              .duration(apiState.tracker_delay_seconds, "seconds")
+              .humanize()
               }}
             </span>
-            <span v-else
-              ><font color="green">{{ $t("live") }}</font></span
-            >
+            <span v-else>
+              <font color="green">{{ $t("live") }}</font>
+            </span>
           </td>
         </tr>
         <tr>
@@ -60,20 +64,19 @@
           <td>
             <span v-if="apiState.processing_delay_seconds > 3">
               {{
-                moment
-                  .duration(apiState.processing_delay_seconds, "seconds")
-                  .humanize()
-              }}</span
-            >
-            <span v-else
-              ><font color="green">{{ $t("live") }}</font></span
-            >
+              moment
+              .duration(apiState.processing_delay_seconds, "seconds")
+              .humanize()
+              }}
+            </span>
+            <span v-else>
+              <font color="green">{{ $t("live") }}</font>
+            </span>
           </td>
         </tr>
       </table>
     </span>
     <template v-if="!loginUser">
-      <img src="@/assets/nextcolony-icon.png" width="90px" height="90px" />
       <p>
         <i>{{ $t("Web signing with SteemConnect") }}:</i>
       </p>
@@ -84,15 +87,8 @@
         <i>{{ $t("Local signing with Steem Keychain") }}:</i>
       </p>
       <p>
-        <input
-          v-model="userName"
-          :placeholder="placeholder"
-          type="text"
-          autocomplete="on"
-        />
-        <button v-on:click="loginKeychain(userName)">
-          {{ $t("Login with Keychain") }}
-        </button>
+        <input v-model="userName" :placeholder="placeholder" type="text" autocomplete="on">
+        <button v-on:click="loginKeychain(userName)">{{ $t("Login with Keychain") }}</button>
       </p>
     </template>
     <template v-else>
