@@ -1297,9 +1297,9 @@ export default {
         this.activeMissions.forEach(mission => {
           if (mission.type == "siege") {
             if (
-              (mission.return !== null &&
-                moment.unix(mission.return).isAfter(moment.utc())) ||
-              moment.unix(mission.arrival).isBefore(moment.utc())
+              moment.unix(mission.return).isAfter(moment.utc()) &&
+              moment.unix(mission.arrival).isBefore(moment.utc()) &&
+              mission.cancel_trx == null
             ) {
               if (mission.to_planet != null) {
                 if (mission.to_planet.id == this.planetId) {
