@@ -78,6 +78,7 @@
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('stardust')">{{ $t("SD") }}</th>
+          <th @click="sort('speed')">{{ $t("Speed") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('attack')">{{ $t("A/D") }}</th>
           <th @click="sort('busy_until')">{{ $t("Busy") }}</th>
@@ -200,6 +201,7 @@
                     )
               }}</font>
             </td>
+            <td>{{ ship.speed }}</td>
             <td>
               {{ ship.cost.time | timePretty }}
             </td>
