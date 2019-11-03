@@ -33,6 +33,10 @@ class MarketService {
     const response = await ApiService.get(`/asks?${query}&active=1`);
     return response;
   }
+  async lowest() {
+    const response = await ApiService.get(`/lowestasks`);
+    return response;
+  }
 }
 
 export default new MarketService();

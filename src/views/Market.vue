@@ -287,7 +287,7 @@ export default {
       await this.getMarketByFilter(this.categoryFilter, this.userFilter);
     },
     async getAsks() {
-      const response = await MarketService.active();
+      const response = await MarketService.lowest();
       this.asks = response;
     },
     async getStardust() {
@@ -329,26 +329,36 @@ export default {
       typeFilter = null,
       userFilter = null
     ) {
-      let category = null;
-      let subcategory = null;
-      let type = null;
-      if (categoryFilter != "all") {
-        category = categoryFilter;
-      }
-      if (subcategoryFilter != "all") {
-        subcategory = subcategoryFilter;
-      }
-      if (typeFilter != "all") {
-        type = typeFilter;
-      }
+      if (
+        (categoryFilter == null || categoryFilter == "all") &&
+        (subcategoryFilter == null || subcategoryFilter == "all") &&
+        (typeFilter == null || typeFilter == "all") &&
+        (userFilter == null || userFilter == "")
+      ) {
+        let response = await MarketService.lowest();
+        this.asks = response;
+      } else {
+        let category = null;
+        let subcategory = null;
+        let type = null;
+        if (categoryFilter != "all") {
+          category = categoryFilter;
+        }
+        if (subcategoryFilter != "all") {
+          subcategory = subcategoryFilter;
+        }
+        if (typeFilter != "all") {
+          type = typeFilter;
+        }
 
-      let response = await MarketService.byFilter(
-        category,
-        subcategory,
-        type,
-        userFilter
-      );
-      this.asks = response;
+        let response = await MarketService.byFilter(
+          category,
+          subcategory,
+          type,
+          userFilter
+        );
+        this.asks = response;
+      }
     },
     async setUserFilter(userFilter) {
       if (userFilter !== "") {
