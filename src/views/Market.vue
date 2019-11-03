@@ -89,7 +89,7 @@
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="battlercruiser"
+          value="battlecruiser"
           >{{ $t("Battlecruiser") }}</option
         >
         <option
