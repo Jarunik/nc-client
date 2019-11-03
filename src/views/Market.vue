@@ -2,7 +2,10 @@
   <div class="market">
     <h1>{{ $t("Market") }}</h1>
     <p>
-      <select @change="setCategoryFilter(categoryFilter)" v-model="categoryFilter">
+      <select
+        @change="setCategoryFilter(categoryFilter)"
+        v-model="categoryFilter"
+      >
         <option value="all">{{ $t("Category: All") }}</option>
         <option value="item">{{ $t("Items") }}</option>
         <option value="planet">{{ $t("Planets") }}</option>
@@ -17,83 +20,103 @@
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="blueprint"
-        >{{ $t("Blueprint") }}</option>
+          >{{ $t("Blueprint") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="booster"
-        >{{ $t("Rune") }}</option>
+          >{{ $t("Rune") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="chest"
-        >{{ $t("Chest") }}</option>
+          >{{ $t("Chest") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="1"
-        >{{ $t("Common") }}</option>
+          >{{ $t("Common") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="2"
-        >{{ $t("Uncommon") }}</option>
+          >{{ $t("Uncommon") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="3"
-        >{{ $t("Rare") }}</option>
+          >{{ $t("Rare") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="4"
-        >{{ $t("Legendary") }}</option>
+          >{{ $t("Legendary") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="scout"
-        >{{ $t("Scout") }}</option>
+          >{{ $t("Scout") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="patrol"
-        >{{ $t("Patrol") }}</option>
+          >{{ $t("Patrol") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="cutter"
-        >{{ $t("Cutter") }}</option>
+          >{{ $t("Cutter") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="corvette"
-        >{{ $t("Corvette") }}</option>
+          >{{ $t("Corvette") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="frigate"
-        >{{ $t("Frigate") }}</option>
+          >{{ $t("Frigate") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="destroyer"
-        >{{ $t("Destroyer") }}</option>
+          >{{ $t("Destroyer") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="cruiser"
-        >{{ $t("Cruiser") }}</option>
+          >{{ $t("Cruiser") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="battlercruiser"
-        >{{ $t("Battlecruiser") }}</option>
+          >{{ $t("Battlecruiser") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="carrier"
-        >{{ $t("Carrier") }}</option>
+          >{{ $t("Carrier") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="dreadnought"
-        >{{ $t("Dreadnought") }}</option>
+          >{{ $t("Dreadnought") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="yamato"
-        >{{ $t("Yamato") }}</option>
+          >{{ $t("Yamato") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="trasnporter"
-        >{{ $t("Transporter") }}</option>
+          value="transporter"
+          >{{ $t("Transporter") }}</option
+        >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="explorer"
-        >{{ $t("Explorer") }}</option>
+          >{{ $t("Explorer") }}</option
+        >
       </select>
       &nbsp;
       <select @change="setTypeFilter(typeFilter)" v-model="typeFilter">
@@ -102,7 +125,8 @@
           v-for="filter in contextMarketFilter"
           :key="filter.name"
           :value="filter.type"
-        >{{ $t(filter.name) }}</option>
+          >{{ $t(filter.name) }}</option
+        >
       </select>
       &nbsp;
       <input
@@ -110,7 +134,7 @@
         @blur="setUserFilter(userFilter)"
         @keyup.enter="setUserFilter(userFilter)"
         :placeholder="$t('Filter User')"
-      >
+      />
       &nbsp;
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
       &nbsp;
@@ -132,48 +156,50 @@
           <td>{{ $t(ask.category) }}</td>
           <td>
             {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.subcategory
-            : "planet-bonus-" + ask.subcategory
-            )
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.subcategory
+                  : "planet-bonus-" + ask.subcategory
+              )
             }}
           </td>
           <td>
             {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.type
-            : "planet-type-" + ask.type
-            )
+              $t(
+                ask.category == "item" || ask.category == "ship"
+                  ? ask.type
+                  : "planet-type-" + ask.type
+              )
             }}
           </td>
           <td>
             <span v-if="ask.category !== 'item'">
-              <router-link
-                :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
-              >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link>
+              <router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
+                >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link
+              >
             </span>
             <span v-else>-</span>
           </td>
           <td>{{ ask.user }}</td>
           <td :style="{ color: '#72bcd4' }">
             {{
-            Number(ask.price / 1e8).toLocaleString(gameLocale, {
-            style: "decimal"
-            })
+              Number(ask.price / 1e8).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
             }}
           </td>
           <td>
             <span v-if="loginUser != ask.user && showBuyButton(ask)">
-              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">{{ $t("Buy") }}</button>
+              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
+                {{ $t("Buy") }}
+              </button>
             </span>
             <span v-else>-</span>
           </td>
           <td>
             <span v-if="loginUser == ask.user">
               <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
-                <cancel-icon :title="$t('Cancel')"/>
+                <cancel-icon :title="$t('Cancel')" />
               </button>
             </span>
             <span v-else>-</span>
