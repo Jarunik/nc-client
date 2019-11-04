@@ -2,11 +2,66 @@
   <div class="market">
     <h1>{{ $t("Market") }}</h1>
     <p>
+      <span @click="setFilterDisplay('stacked')" class="pointer">
+        <font v-if="filterDisplay === 'stacked'" color="green">
+          {{
+          $t("Stacked")
+          }}
+        </font>
+        <font v-else>{{ $t("Stacked") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('all')" class="pointer">
+        <font v-if="filterDisplay === 'all'" color="green">
+          {{
+          $t("All")
+          }}
+        </font>
+        <font v-else>{{ $t("All") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('ship')" class="pointer">
+        <font v-if="filterDisplay === 'ship'" color="green">
+          {{
+          $t("Ship")
+          }}
+        </font>
+        <font v-else>{{ $t("Ship") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('item')" class="pointer">
+        <font v-if="filterDisplay === 'item'" color="green">
+          {{
+          $t("Item")
+          }}
+        </font>
+        <font v-else>{{ $t("Item") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('planet')" class="pointer">
+        <font v-if="filterDisplay === 'planet'" color="green">
+          {{
+          $t("Planet")
+          }}
+        </font>
+        <font v-else>{{ $t("Planet") }}</font>
+      </span>
+      |
+      <span>
+        <font v-if="filterDisplay === 'filtered'" color="green">
+          {{
+          $t("Filtered")
+          }}
+        </font>
+        <font v-else style="color: grey">{{ $t("Filtered") }}</font>
+      </span>
+    </p>
+    <p>
       <select @change="setCategoryFilter(categoryFilter)" v-model="categoryFilter">
         <option value="all">{{ $t("Category: All") }}</option>
+        <option value="ship">{{ $t("Ships") }}</option>
         <option value="item">{{ $t("Items") }}</option>
         <option value="planet">{{ $t("Planets") }}</option>
-        <option value="ship">{{ $t("Ships") }}</option>
       </select>
       &nbsp;
       <select
@@ -114,7 +169,7 @@
       &nbsp;
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
       &nbsp;
-      <button @click="setUserFilter(null)">{{ $t("All") }}</button>
+      <button @click="setUserFilter('all')">{{ $t("All") }}</button>
     </p>
     <table>
       <thead>
@@ -129,24 +184,33 @@
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
-          <td>{{ $t(ask.category) }}</td>
           <td>
-            {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.subcategory
-            : "planet-bonus-" + ask.subcategory
-            )
-            }}
+            <span
+              class="pointer-only"
+              @click="setCategoryFilter(ask.category)"
+            >{{ $t(ask.category) }}</span>
           </td>
           <td>
-            {{
-            $t(
-            ask.category == "item" || ask.category == "ship"
-            ? ask.type
-            : "planet-type-" + ask.type
-            )
-            }}
+            <span class="pointer-only" @click="setSubcategoryFilter(ask.subcategory)">
+              {{
+              $t(
+              ask.category == "item" || ask.category == "ship"
+              ? ask.subcategory
+              : "planet-bonus-" + ask.subcategory
+              )
+              }}
+            </span>
+          </td>
+          <td>
+            <span class="pointer-only" @click="setTypeFilter(ask.type)">
+              {{
+              $t(
+              ask.category == "item" || ask.category == "ship"
+              ? ask.type
+              : "planet-type-" + ask.type
+              )
+              }}
+            </span>
           </td>
           <td>
             <span v-if="ask.category == 'planet'">
@@ -156,7 +220,9 @@
             </span>
             <span v-else>-</span>
           </td>
-          <td>{{ ask.user }}</td>
+          <td>
+            <span class="pointer-only" @click="setUserFilter(ask.user)">{{ ask.user }}</span>
+          </td>
           <td :style="{ color: '#72bcd4' }">
             {{
             Number(ask.price / 1e8).toLocaleString(gameLocale, {
@@ -203,10 +269,11 @@ export default {
       asks: null,
       clicked: [],
       stardust: null,
-      userFilter: "",
+      userFilter: "all",
       categoryFilter: "all",
       subcategoryFilter: "all",
-      typeFilter: "all"
+      typeFilter: "all",
+      filterDisplay: "all"
     };
   },
   async mounted() {
@@ -257,11 +324,11 @@ export default {
     async prepareComponent() {
       await this.getAsks();
       await this.getStardust();
-      this.userFilter = null;
+      this.userFilter = "all";
       await this.getMarketByFilter(this.categoryFilter, this.userFilter);
     },
     async getAsks() {
-      const response = await MarketService.active();
+      const response = await MarketService.lowest();
       this.asks = response;
     },
     async getStardust() {
@@ -306,6 +373,7 @@ export default {
       let category = null;
       let subcategory = null;
       let type = null;
+      let user = null;
       if (categoryFilter != "all") {
         category = categoryFilter;
       }
@@ -315,21 +383,21 @@ export default {
       if (typeFilter != "all") {
         type = typeFilter;
       }
+      if (userFilter != "all") {
+        user = userFilter;
+      }
 
       let response = await MarketService.byFilter(
         category,
         subcategory,
         type,
-        userFilter
+        user
       );
       this.asks = response;
     },
     async setUserFilter(userFilter) {
-      if (userFilter !== "") {
-        this.userFilter = userFilter;
-      } else {
-        this.userFilter = null;
-      }
+      this.filterDisplay = "filtered";
+      this.userFilter = userFilter;
       await this.getMarketByFilter(
         this.categoryFilter,
         this.subcategoryFilter,
@@ -338,6 +406,7 @@ export default {
       );
     },
     async setCategoryFilter(categoryFilter) {
+      this.filterDisplay = categoryFilter;
       this.categoryFilter = categoryFilter;
       this.subcategoryFilter = "all";
       this.typeFilter = "all";
@@ -349,7 +418,9 @@ export default {
       );
     },
     async setSubcategoryFilter(subcategoryFilter) {
+      this.filterDisplay = "filtered";
       this.subcategoryFilter = subcategoryFilter;
+      this.typeFilter = "all";
       // Reset type filter only for non planet bonus values
       if (
         subcategoryFilter != "1" &&
@@ -367,6 +438,7 @@ export default {
       );
     },
     async setTypeFilter(typeFilter) {
+      this.filterDisplay = "filtered";
       this.typeFilter = typeFilter;
       await this.getMarketByFilter(
         this.categoryFilter,
@@ -374,6 +446,64 @@ export default {
         this.typeFilter,
         this.userFilter
       );
+    },
+    async getLowest() {
+      let response = await MarketService.lowest();
+      this.asks = response;
+    },
+    async setFilterDisplay(filterDisplay) {
+      this.filterDisplay = filterDisplay;
+      if (filterDisplay == "stacked") {
+        this.getLowest();
+      }
+      if (filterDisplay == "all") {
+        this.categoryFilter = "all";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "ship") {
+        this.categoryFilter = "ship";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "item") {
+        this.categoryFilter = "item";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "planet") {
+        this.categoryFilter = "planet";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
     }
   }
 };

@@ -30,7 +30,11 @@ class MarketService {
     if (userFilter !== null) {
       query = query + "user=" + userFilter + "&";
     }
-    const response = await ApiService.get(`/asks?${query}&active=1`);
+    const response = await ApiService.get(`/asks?${query}active=1`);
+    return response;
+  }
+  async lowest() {
+    const response = await ApiService.get(`/lowestasks`);
     return response;
   }
 }
