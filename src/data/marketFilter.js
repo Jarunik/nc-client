@@ -176,290 +176,290 @@ const filter = [
   },
   {
     category: "ship",
-    subcategory: "battlecruiser",
+    subcategory: "Battlecruiser",
     type: "battlecruiser",
     name: "Battlecruiser Tiger"
   },
   {
     category: "ship",
-    subcategory: "battlecruiser",
+    subcategory: "Battlecruiser",
     type: "battlecruiser1",
     name: "Battlecruiser Lion"
   },
   {
     category: "ship",
-    subcategory: "battlecruiser",
+    subcategory: "Battlecruiser",
     type: "battlecruiser2",
     name: "Battlecruiser Dejah"
   },
   {
     category: "ship",
-    subcategory: "carrier",
+    subcategory: "Carrier",
     type: "carrier",
     name: "Carrier Argus"
   },
   {
     category: "ship",
-    subcategory: "carrier",
+    subcategory: "Carrier",
     type: "carrier1",
     name: "Carrier Unicorn"
   },
   {
     category: "ship",
-    subcategory: "carrier",
+    subcategory: "Carrier",
     type: "carrier2",
     name: "Carrier Bhun'il"
   },
   {
     category: "ship",
-    subcategory: "corvette",
+    subcategory: "Corvette",
     type: "corvette",
     name: "Corvette Crocus"
   },
   {
     category: "ship",
-    subcategory: "corvette",
+    subcategory: "Corvette",
     type: "corvette1",
     name: "Corvette Petunia"
   },
   {
     category: "ship",
-    subcategory: "corvette",
+    subcategory: "Corvette",
     type: "corvette2",
     name: "Corvette Najtar"
   },
   {
     category: "ship",
-    subcategory: "cruiser",
+    subcategory: "Cruiser",
     type: "cruiser",
     name: "Cruiser Kent"
   },
   {
     category: "ship",
-    subcategory: "cruiser",
+    subcategory: "Cruiser",
     type: "cruiser1",
     name: "Cruiser Drake"
   },
   {
     category: "ship",
-    subcategory: "cruiser",
+    subcategory: "Cruiser",
     type: "cruiser2",
     name: "Cruiser Eceza"
   },
   {
     category: "ship",
-    subcategory: "cutter",
+    subcategory: "Cutter",
     type: "cutter",
     name: "Cutter Arrow"
   },
   {
     category: "ship",
-    subcategory: "cutter",
+    subcategory: "Cutter",
     type: "cutter1",
     name: "Cutter Canard"
   },
   {
     category: "ship",
-    subcategory: "cutter",
+    subcategory: "Cutter",
     type: "cutter2",
     name: "Cutter Orchis"
   },
   {
     category: "ship",
-    subcategory: "destroyer",
+    subcategory: "Destroyer",
     type: "destroyer",
     name: "Destroyer Rocket"
   },
   {
     category: "ship",
-    subcategory: "destroyer",
+    subcategory: "Destroyer",
     type: "destroyer1",
     name: "Destroyer Janus"
   },
   {
     category: "ship",
-    subcategory: "destroyer",
+    subcategory: "Destroyer",
     type: "destroyer2",
     name: "Destroyer Halgoin"
   },
   {
     category: "ship",
-    subcategory: "dreadnought",
+    subcategory: "Dreadnought",
     type: "dreadnought",
     name: "Dreadnought Royal"
   },
   {
     category: "ship",
-    subcategory: "dreadnought",
+    subcategory: "Dreadnought",
     type: "dreadnought1",
     name: "Dreadnought Imperial"
   },
   {
     category: "ship",
-    subcategory: "dreadnought",
+    subcategory: "Dreadnought",
     type: "dreadnought2",
     name: "Dreadnought Zaneel"
   },
   {
     category: "ship",
-    subcategory: "explorer",
+    subcategory: "Explorer",
     type: "explorership",
     name: "Explorer"
   },
   {
     category: "ship",
-    subcategory: "explorer",
+    subcategory: "Explorer",
     type: "explorership1",
     name: "Explorer II"
   },
   {
     category: "ship",
-    subcategory: "frigate",
+    subcategory: "Frigate",
     type: "frigate",
     name: "Frigate Quorn"
   },
   {
     category: "ship",
-    subcategory: "frigate",
+    subcategory: "Frigate",
     type: "frigate1",
     name: "Frigate Redmill"
   },
   {
     category: "ship",
-    subcategory: "frigate",
+    subcategory: "Frigate",
     type: "frigate2",
     name: "Frigate Droeel"
   },
   {
     category: "ship",
-    subcategory: "patrol",
+    subcategory: "Patrol",
     type: "patrol",
     name: "Patrol Amaterasu"
   },
   {
     category: "ship",
-    subcategory: "patrol",
+    subcategory: "Patrol",
     type: "patrol1",
     name: "Patrol Hermes"
   },
   {
     category: "ship",
-    subcategory: "patrol",
+    subcategory: "Patrol",
     type: "patrol2",
     name: "Patrol Cruqal"
   },
   {
     category: "ship",
-    subcategory: "scout",
+    subcategory: "Scout",
     type: "scout",
     name: "Scout Sentry"
   },
   {
     category: "ship",
-    subcategory: "scout",
+    subcategory: "Scout",
     type: "scout1",
     name: "Scout Athene"
   },
   {
     category: "ship",
-    subcategory: "scout",
+    subcategory: "Scout",
     type: "scout2",
     name: "Scout Minerva"
   },
   {
     category: "ship",
-    subcategory: "transporter",
+    subcategory: "Transporter",
     type: "transportship",
     name: "Transporter"
   },
   {
     category: "ship",
-    subcategory: "transporter",
+    subcategory: "Transporter",
     type: "transportship1",
     name: "Transporter II"
   },
   {
     category: "ship",
-    subcategory: "transporter",
+    subcategory: "Transporter",
     type: "transportship2",
     name: "Transporter III"
   },
-  { category: "ship", subcategory: "yamato", type: "yamato", name: "Yamato" },
-  { category: "ship", subcategory: "yamato", type: "yamato1", name: "Yamato1" },
+  { category: "ship", subcategory: "Yamato", type: "yamato", name: "Yamato" },
+  { category: "ship", subcategory: "Yamato", type: "yamato1", name: "Yamato1" },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato10",
     name: "Yamato10"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato11",
     name: "Yamato11"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato12",
     name: "Yamato12"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato13",
     name: "Yamato13"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato14",
     name: "Yamato14"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato15",
     name: "Yamato15"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato16",
     name: "Yamato16"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato17",
     name: "Yamato17"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato18",
     name: "Yamato18"
   },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato19",
     name: "Yamato19"
   },
-  { category: "ship", subcategory: "yamato", type: "yamato2", name: "Yamato2" },
+  { category: "ship", subcategory: "Yamato", type: "yamato2", name: "Yamato2" },
   {
     category: "ship",
-    subcategory: "yamato",
+    subcategory: "Yamato",
     type: "yamato20",
     name: "Yamato20"
   },
-  { category: "ship", subcategory: "yamato", type: "yamato3", name: "Yamato3" },
-  { category: "ship", subcategory: "yamato", type: "yamato4", name: "Yamato4" },
-  { category: "ship", subcategory: "yamato", type: "yamato5", name: "Yamato5" },
-  { category: "ship", subcategory: "yamato", type: "yamato6", name: "Yamato6" },
-  { category: "ship", subcategory: "yamato", type: "yamato7", name: "Yamato7" },
-  { category: "ship", subcategory: "yamato", type: "yamato8", name: "Yamato8" },
-  { category: "ship", subcategory: "yamato", type: "yamato9", name: "Yamato9" },
+  { category: "ship", subcategory: "Yamato", type: "yamato3", name: "Yamato3" },
+  { category: "ship", subcategory: "Yamato", type: "yamato4", name: "Yamato4" },
+  { category: "ship", subcategory: "Yamato", type: "yamato5", name: "Yamato5" },
+  { category: "ship", subcategory: "Yamato", type: "yamato6", name: "Yamato6" },
+  { category: "ship", subcategory: "Yamato", type: "yamato7", name: "Yamato7" },
+  { category: "ship", subcategory: "Yamato", type: "yamato8", name: "Yamato8" },
+  { category: "ship", subcategory: "Yamato", type: "yamato9", name: "Yamato9" },
   {
     category: "planet",
     subcategory: "all",

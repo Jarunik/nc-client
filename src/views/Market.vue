@@ -97,67 +97,67 @@
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="scout"
+          value="Scout"
           >{{ $t("Scout") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="patrol"
+          value="Patrol"
           >{{ $t("Patrol") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="cutter"
+          value="Cutter"
           >{{ $t("Cutter") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="corvette"
+          value="Corvette"
           >{{ $t("Corvette") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="frigate"
+          value="Frigate"
           >{{ $t("Frigate") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="destroyer"
+          value="Destroyer"
           >{{ $t("Destroyer") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="cruiser"
+          value="Cruiser"
           >{{ $t("Cruiser") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="battlecruiser"
+          value="Battlecruiser"
           >{{ $t("Battlecruiser") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="carrier"
+          value="Carrier"
           >{{ $t("Carrier") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="dreadnought"
+          value="Dreadnought"
           >{{ $t("Dreadnought") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="yamato"
+          value="Yamato"
           >{{ $t("Yamato") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="transporter"
+          value="Transporter"
           >{{ $t("Transporter") }}</option
         >
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
-          value="explorer"
+          value="Explorer"
           >{{ $t("Explorer") }}</option
         >
       </select>
@@ -440,6 +440,7 @@ export default {
     async setSubcategoryFilter(subcategoryFilter) {
       this.filterDisplay = "filtered";
       this.subcategoryFilter = subcategoryFilter;
+      console.log(subcategoryFilter);
       this.typeFilter = "all";
       // Reset type filter only for non planet bonus values
       if (
@@ -474,6 +475,10 @@ export default {
     async setFilterDisplay(filterDisplay) {
       this.filterDisplay = filterDisplay;
       if (filterDisplay == "stacked") {
+        this.categoryFilter = "all";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
         this.getLowest();
       }
       if (filterDisplay == "all") {
