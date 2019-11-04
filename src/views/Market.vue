@@ -185,10 +185,13 @@
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
           <td>
-            <span @click="setCategoryFilter(ask.category)">{{ $t(ask.category) }}</span>
+            <span
+              class="pointer-only"
+              @click="setCategoryFilter(ask.category)"
+            >{{ $t(ask.category) }}</span>
           </td>
           <td>
-            <span @click="setSubcategoryFilter(ask.subcategory)">
+            <span class="pointer-only" @click="setSubcategoryFilter(ask.subcategory)">
               {{
               $t(
               ask.category == "item" || ask.category == "ship"
@@ -199,7 +202,7 @@
             </span>
           </td>
           <td>
-            <span @click="setTypeFilter(ask.type)">
+            <span class="pointer-only" @click="setTypeFilter(ask.type)">
               {{
               $t(
               ask.category == "item" || ask.category == "ship"
@@ -218,7 +221,7 @@
             <span v-else>-</span>
           </td>
           <td>
-            <span @click="setUserFilter(ask.user)">{{ ask.user }}</span>
+            <span class="pointer-only" @click="setUserFilter(ask.user)">{{ ask.user }}</span>
           </td>
           <td :style="{ color: '#72bcd4' }">
             {{
@@ -270,7 +273,7 @@ export default {
       categoryFilter: "all",
       subcategoryFilter: "all",
       typeFilter: "all",
-      filterDisplay: "stacked"
+      filterDisplay: "all"
     };
   },
   async mounted() {
@@ -417,6 +420,7 @@ export default {
     async setSubcategoryFilter(subcategoryFilter) {
       this.filterDisplay = "filtered";
       this.subcategoryFilter = subcategoryFilter;
+      this.typeFilter = "all";
       // Reset type filter only for non planet bonus values
       if (
         subcategoryFilter != "1" &&
