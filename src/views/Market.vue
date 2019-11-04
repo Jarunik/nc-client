@@ -2,14 +2,66 @@
   <div class="market">
     <h1>{{ $t("Market") }}</h1>
     <p>
-      <select
-        @change="setCategoryFilter(categoryFilter)"
-        v-model="categoryFilter"
-      >
+      <span @click="setFilterDisplay('stacked')" class="pointer">
+        <font v-if="filterDisplay === 'stacked'" color="green">
+          {{
+          $t("Stacked")
+          }}
+        </font>
+        <font v-else>{{ $t("Stacked") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('all')" class="pointer">
+        <font v-if="filterDisplay === 'all'" color="green">
+          {{
+          $t("All")
+          }}
+        </font>
+        <font v-else>{{ $t("All") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('ship')" class="pointer">
+        <font v-if="filterDisplay === 'ship'" color="green">
+          {{
+          $t("Ship")
+          }}
+        </font>
+        <font v-else>{{ $t("Ship") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('item')" class="pointer">
+        <font v-if="filterDisplay === 'item'" color="green">
+          {{
+          $t("Item")
+          }}
+        </font>
+        <font v-else>{{ $t("Item") }}</font>
+      </span>
+      |
+      <span @click="setFilterDisplay('planet')" class="pointer">
+        <font v-if="filterDisplay === 'planet'" color="green">
+          {{
+          $t("Planet")
+          }}
+        </font>
+        <font v-else>{{ $t("Planet") }}</font>
+      </span>
+      |
+      <span>
+        <font v-if="filterDisplay === 'filtered'" color="green">
+          {{
+          $t("Filtered")
+          }}
+        </font>
+        <font v-else style="color: grey">{{ $t("Filtered") }}</font>
+      </span>
+    </p>
+    <p>
+      <select @change="setCategoryFilter(categoryFilter)" v-model="categoryFilter">
         <option value="all">{{ $t("Category: All") }}</option>
+        <option value="ship">{{ $t("Ships") }}</option>
         <option value="item">{{ $t("Items") }}</option>
         <option value="planet">{{ $t("Planets") }}</option>
-        <option value="ship">{{ $t("Ships") }}</option>
       </select>
       &nbsp;
       <select
@@ -20,103 +72,83 @@
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="blueprint"
-          >{{ $t("Blueprint") }}</option
-        >
+        >{{ $t("Blueprint") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="booster"
-          >{{ $t("Rune") }}</option
-        >
+        >{{ $t("Rune") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'item'"
           value="chest"
-          >{{ $t("Chest") }}</option
-        >
+        >{{ $t("Chest") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="1"
-          >{{ $t("Common") }}</option
-        >
+        >{{ $t("Common") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="2"
-          >{{ $t("Uncommon") }}</option
-        >
+        >{{ $t("Uncommon") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="3"
-          >{{ $t("Rare") }}</option
-        >
+        >{{ $t("Rare") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'planet'"
           value="4"
-          >{{ $t("Legendary") }}</option
-        >
+        >{{ $t("Legendary") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="scout"
-          >{{ $t("Scout") }}</option
-        >
+        >{{ $t("Scout") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="patrol"
-          >{{ $t("Patrol") }}</option
-        >
+        >{{ $t("Patrol") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="cutter"
-          >{{ $t("Cutter") }}</option
-        >
+        >{{ $t("Cutter") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="corvette"
-          >{{ $t("Corvette") }}</option
-        >
+        >{{ $t("Corvette") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="frigate"
-          >{{ $t("Frigate") }}</option
-        >
+        >{{ $t("Frigate") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="destroyer"
-          >{{ $t("Destroyer") }}</option
-        >
+        >{{ $t("Destroyer") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="cruiser"
-          >{{ $t("Cruiser") }}</option
-        >
+        >{{ $t("Cruiser") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="battlecruiser"
-          >{{ $t("Battlecruiser") }}</option
-        >
+        >{{ $t("Battlecruiser") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="carrier"
-          >{{ $t("Carrier") }}</option
-        >
+        >{{ $t("Carrier") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="dreadnought"
-          >{{ $t("Dreadnought") }}</option
-        >
+        >{{ $t("Dreadnought") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="yamato"
-          >{{ $t("Yamato") }}</option
-        >
+        >{{ $t("Yamato") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="transporter"
-          >{{ $t("Transporter") }}</option
-        >
+        >{{ $t("Transporter") }}</option>
         <option
           v-if="categoryFilter == 'all' || categoryFilter == 'ship'"
           value="explorer"
-          >{{ $t("Explorer") }}</option
-        >
+        >{{ $t("Explorer") }}</option>
       </select>
       &nbsp;
       <select @change="setTypeFilter(typeFilter)" v-model="typeFilter">
@@ -125,8 +157,7 @@
           v-for="filter in contextMarketFilter"
           :key="filter.name"
           :value="filter.type"
-          >{{ $t(filter.name) }}</option
-        >
+        >{{ $t(filter.name) }}</option>
       </select>
       &nbsp;
       <input
@@ -134,11 +165,11 @@
         @blur="setUserFilter(userFilter)"
         @keyup.enter="setUserFilter(userFilter)"
         :placeholder="$t('Filter User')"
-      />
+      >
       &nbsp;
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
       &nbsp;
-      <button @click="setUserFilter(null)">{{ $t("All") }}</button>
+      <button @click="setUserFilter('all')">{{ $t("All") }}</button>
     </p>
     <table>
       <thead>
@@ -153,53 +184,59 @@
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
-          <td>{{ $t(ask.category) }}</td>
           <td>
-            {{
-              $t(
-                ask.category == "item" || ask.category == "ship"
-                  ? ask.subcategory
-                  : "planet-bonus-" + ask.subcategory
-              )
-            }}
+            <span @click="setCategoryFilter(ask.category)">{{ $t(ask.category) }}</span>
           </td>
           <td>
-            {{
+            <span @click="setSubcategoryFilter(ask.subcategory)">
+              {{
               $t(
-                ask.category == "item" || ask.category == "ship"
-                  ? ask.type
-                  : "planet-type-" + ask.type
+              ask.category == "item" || ask.category == "ship"
+              ? ask.subcategory
+              : "planet-bonus-" + ask.subcategory
               )
-            }}
+              }}
+            </span>
+          </td>
+          <td>
+            <span @click="setTypeFilter(ask.type)">
+              {{
+              $t(
+              ask.category == "item" || ask.category == "ship"
+              ? ask.type
+              : "planet-type-" + ask.type
+              )
+              }}
+            </span>
           </td>
           <td>
             <span v-if="ask.category == 'planet'">
-              <router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
-                >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link
-              >
+              <router-link
+                :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
+              >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link>
             </span>
             <span v-else>-</span>
           </td>
-          <td>{{ ask.user }}</td>
+          <td>
+            <span @click="setUserFilter(ask.user)">{{ ask.user }}</span>
+          </td>
           <td :style="{ color: '#72bcd4' }">
             {{
-              Number(ask.price / 1e8).toLocaleString(gameLocale, {
-                style: "decimal"
-              })
+            Number(ask.price / 1e8).toLocaleString(gameLocale, {
+            style: "decimal"
+            })
             }}
           </td>
           <td>
             <span v-if="loginUser != ask.user && showBuyButton(ask)">
-              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
-                {{ $t("Buy") }}
-              </button>
+              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">{{ $t("Buy") }}</button>
             </span>
             <span v-else>-</span>
           </td>
           <td>
             <span v-if="loginUser == ask.user">
               <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
-                <cancel-icon :title="$t('Cancel')" />
+                <cancel-icon :title="$t('Cancel')"/>
               </button>
             </span>
             <span v-else>-</span>
@@ -229,10 +266,11 @@ export default {
       asks: null,
       clicked: [],
       stardust: null,
-      userFilter: "",
+      userFilter: "all",
       categoryFilter: "all",
       subcategoryFilter: "all",
-      typeFilter: "all"
+      typeFilter: "all",
+      filterDisplay: "stacked"
     };
   },
   async mounted() {
@@ -283,7 +321,7 @@ export default {
     async prepareComponent() {
       await this.getAsks();
       await this.getStardust();
-      this.userFilter = null;
+      this.userFilter = "all";
       await this.getMarketByFilter(this.categoryFilter, this.userFilter);
     },
     async getAsks() {
@@ -329,43 +367,34 @@ export default {
       typeFilter = null,
       userFilter = null
     ) {
-      if (
-        (categoryFilter == null || categoryFilter == "all") &&
-        (subcategoryFilter == null || subcategoryFilter == "all") &&
-        (typeFilter == null || typeFilter == "all") &&
-        (userFilter == null || userFilter == "")
-      ) {
-        let response = await MarketService.lowest();
-        this.asks = response;
-      } else {
-        let category = null;
-        let subcategory = null;
-        let type = null;
-        if (categoryFilter != "all") {
-          category = categoryFilter;
-        }
-        if (subcategoryFilter != "all") {
-          subcategory = subcategoryFilter;
-        }
-        if (typeFilter != "all") {
-          type = typeFilter;
-        }
-
-        let response = await MarketService.byFilter(
-          category,
-          subcategory,
-          type,
-          userFilter
-        );
-        this.asks = response;
+      let category = null;
+      let subcategory = null;
+      let type = null;
+      let user = null;
+      if (categoryFilter != "all") {
+        category = categoryFilter;
       }
+      if (subcategoryFilter != "all") {
+        subcategory = subcategoryFilter;
+      }
+      if (typeFilter != "all") {
+        type = typeFilter;
+      }
+      if (userFilter != "all") {
+        user = userFilter;
+      }
+
+      let response = await MarketService.byFilter(
+        category,
+        subcategory,
+        type,
+        user
+      );
+      this.asks = response;
     },
     async setUserFilter(userFilter) {
-      if (userFilter !== "") {
-        this.userFilter = userFilter;
-      } else {
-        this.userFilter = null;
-      }
+      this.filterDisplay = "filtered";
+      this.userFilter = userFilter;
       await this.getMarketByFilter(
         this.categoryFilter,
         this.subcategoryFilter,
@@ -374,6 +403,7 @@ export default {
       );
     },
     async setCategoryFilter(categoryFilter) {
+      this.filterDisplay = categoryFilter;
       this.categoryFilter = categoryFilter;
       this.subcategoryFilter = "all";
       this.typeFilter = "all";
@@ -385,6 +415,7 @@ export default {
       );
     },
     async setSubcategoryFilter(subcategoryFilter) {
+      this.filterDisplay = "filtered";
       this.subcategoryFilter = subcategoryFilter;
       // Reset type filter only for non planet bonus values
       if (
@@ -403,6 +434,7 @@ export default {
       );
     },
     async setTypeFilter(typeFilter) {
+      this.filterDisplay = "filtered";
       this.typeFilter = typeFilter;
       await this.getMarketByFilter(
         this.categoryFilter,
@@ -410,6 +442,64 @@ export default {
         this.typeFilter,
         this.userFilter
       );
+    },
+    async getLowest() {
+      let response = await MarketService.lowest();
+      this.asks = response;
+    },
+    async setFilterDisplay(filterDisplay) {
+      this.filterDisplay = filterDisplay;
+      if (filterDisplay == "stacked") {
+        this.getLowest();
+      }
+      if (filterDisplay == "all") {
+        this.categoryFilter = "all";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "ship") {
+        this.categoryFilter = "ship";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "item") {
+        this.categoryFilter = "item";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (filterDisplay == "planet") {
+        this.categoryFilter = "planet";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = "all";
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
     }
   }
 };
