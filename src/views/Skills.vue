@@ -3,72 +3,60 @@
     <h1>{{ $t("Skills") }} - {{ planetName }}</h1>
     <p>
       {{ $t("Next Enhancement") }}: {{ nextEventDuration() || "-" }}
-      <br>
+      <br />
       {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
     </p>
     <div v-if="planetId !== null && quantity != null">
       {{
-      Number(coal).toLocaleString(gameLocale, {
-      style: "decimal"
-      })
+        Number(coal).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
       }}
-      <font
-        v-if="quantity.coaldepot <= coal"
-        color="red"
-      >
-        <alpha-c-box-icon :title="$t('Coal')"/>
+      <font v-if="quantity.coaldepot <= coal" color="red">
+        <alpha-c-box-icon :title="$t('Coal')" />
       </font>
       <font v-else>
-        <alpha-c-box-icon :title="$t('Coal')"/>
+        <alpha-c-box-icon :title="$t('Coal')" />
       </font>
       {{
-      Number(ore).toLocaleString(gameLocale, {
-      style: "decimal"
-      })
+        Number(ore).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
       }}
-      <font
-        v-if="quantity.oredepot <= ore"
-        color="red"
-      >
-        <alpha-f-box-icon :title="$t('Ore')"/>
-        <alpha-e-box-icon :title="$t('Ore')"/>
+      <font v-if="quantity.oredepot <= ore" color="red">
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
       </font>
       <font v-else>
-        <alpha-f-box-icon :title="$t('Ore')"/>
-        <alpha-e-box-icon :title="$t('Ore')"/>
+        <alpha-f-box-icon :title="$t('Ore')" />
+        <alpha-e-box-icon :title="$t('Ore')" />
       </font>
       {{
-      Number(copper).toLocaleString(gameLocale, {
-      style: "decimal"
-      })
+        Number(copper).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
       }}
-      <font
-        v-if="quantity.copperdepot <= copper"
-        color="red"
-      >
-        <alpha-c-box-icon :title="$t('Copper')"/>
-        <alpha-u-box-icon :title="$t('Copper')"/>
+      <font v-if="quantity.copperdepot <= copper" color="red">
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
       </font>
       <font v-else>
-        <alpha-c-box-icon :title="$t('Copper')"/>
-        <alpha-u-box-icon :title="$t('Copper')"/>
+        <alpha-c-box-icon :title="$t('Copper')" />
+        <alpha-u-box-icon :title="$t('Copper')" />
       </font>
       {{
-      Number(uranium).toLocaleString(gameLocale, {
-      style: "decimal"
-      })
+        Number(uranium).toLocaleString(gameLocale, {
+          style: "decimal"
+        })
       }}
-      <font
-        v-if="quantity.uraniumdepot <= uranium"
-        color="red"
-      >
-        <alpha-u-box-icon :title="$t('Uranium')"/>
+      <font v-if="quantity.uraniumdepot <= uranium" color="red">
+        <alpha-u-box-icon :title="$t('Uranium')" />
       </font>
       <font v-else>
-        <alpha-u-box-icon :title="$t('Uranium')"/>
+        <alpha-u-box-icon :title="$t('Uranium')" />
       </font>
-      <br>
-      <br>
+      <br />
+      <br />
     </div>
     <template v-if="gameUser !== null">
       <table>
@@ -81,7 +69,9 @@
           <th @click="sort('uranium')">{{ $t("U") }}</th>
           <th @click="sort('time')">{{ $t("Needs") }}</th>
           <th @click="sort('busy')">{{ $t("Enhancing") }}</th>
-          <th v-if="loginUser !== null && loginUser === gameUser">{{ $t("Enhance") }}</th>
+          <th v-if="loginUser !== null && loginUser === gameUser">
+            {{ $t("Enhance") }}
+          </th>
           <th></th>
         </thead>
         <tbody>
@@ -89,68 +79,71 @@
             <td>{{ $t(skill.name) }}</td>
             <td>{{ skill.current }}</td>
             <td>
-              <font v-if="skill.coal > coal" color="red">{{ skill.coal === 0 ? "-" : skill.coal }}</font>
+              <font v-if="skill.coal > coal" color="red">{{
+                skill.coal === 0 ? "-" : skill.coal
+              }}</font>
               <font v-else>
                 {{
-                skill.coal === 0
-                ? "-"
-                : Number(skill.coal).toLocaleString(gameLocale, {
-                style: "decimal"
-                })
+                  skill.coal === 0
+                    ? "-"
+                    : Number(skill.coal).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
                 }}
               </font>
             </td>
             <td>
-              <font v-if="skill.ore > ore" color="red">{{ skill.ore === 0 ? "-" : skill.ore }}</font>
+              <font v-if="skill.ore > ore" color="red">{{
+                skill.ore === 0 ? "-" : skill.ore
+              }}</font>
               <font v-else>
                 {{
-                skill.ore === 0
-                ? "-"
-                : Number(skill.ore).toLocaleString(gameLocale, {
-                style: "decimal"
-                })
+                  skill.ore === 0
+                    ? "-"
+                    : Number(skill.ore).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
                 }}
               </font>
             </td>
             <td>
-              <font
-                v-if="skill.copper > copper"
-                color="red"
-              >{{ skill.copper === 0 ? "-" : skill.copper }}</font>
+              <font v-if="skill.copper > copper" color="red">{{
+                skill.copper === 0 ? "-" : skill.copper
+              }}</font>
               <font v-else>
                 {{
-                skill.copper === 0
-                ? "-"
-                : Number(skill.copper).toLocaleString(gameLocale, {
-                style: "decimal"
-                })
+                  skill.copper === 0
+                    ? "-"
+                    : Number(skill.copper).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
                 }}
               </font>
             </td>
             <td>
               <font v-if="skill.uranium > uranium" color="red">
                 {{
-                skill.uranium === 0
-                ? "-"
-                : Number(skill.uranium).toLocaleString(gameLocale, {
-                style: "decimal"
-                })
+                  skill.uranium === 0
+                    ? "-"
+                    : Number(skill.uranium).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
                 }}
               </font>
               <font v-else>
                 {{
-                skill.uranium === 0
-                ? "-"
-                : Number(skill.uranium).toLocaleString(gameLocale, {
-                style: "decimal"
-                })
+                  skill.uranium === 0
+                    ? "-"
+                    : Number(skill.uranium).toLocaleString(gameLocale, {
+                        style: "decimal"
+                      })
                 }}
               </font>
             </td>
             <td>{{ skill.time | timePretty }}</td>
             <td>
               <span v-if="chainResponse.includes(skill.name)">
-                <timer-sand-icon :title="$t('Transaction sent')"/>
+                <timer-sand-icon :title="$t('Transaction sent')" />
                 {{ nextRefreshFormatted() }}
               </span>
               <span v-else>{{ skill.busy | busyPretty(now) }}</span>
@@ -168,12 +161,12 @@
                   v-if="skillPossible(skill)"
                   @click="enhanceSkill(skill)"
                 >
-                  <arrow-up-bold-icon :title="$t('Enhance')"/>
+                  <arrow-up-bold-icon :title="$t('Enhance')" />
                 </button>
               </span>
               <span v-else>
                 <span v-if="skill.current > 19">
-                  <check-outline-icon :title="$t('Maxed')"/>
+                  <check-outline-icon :title="$t('Maxed')" />
                 </span>
               </span>
             </td>

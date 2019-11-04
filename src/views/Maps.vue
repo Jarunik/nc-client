@@ -2,9 +2,9 @@
   <div class="maps">
     <h1>{{ $t("Maps") }}</h1>
     <p>
-      <router-link
-        :to="`/galaxy?x=${focusX}&y=${focusY}`"
-      >{{ $t("Galaxy") }} {{ focusX }}/{{ focusY }}</router-link>
+      <router-link :to="`/galaxy?x=${focusX}&y=${focusY}`"
+        >{{ $t("Galaxy") }} {{ focusX }}/{{ focusY }}</router-link
+      >
     </p>
     <div>
       <canvas
@@ -18,19 +18,19 @@
     </div>
     <button @click="zoomOut()" v-tooltip="$t('Zoom Out')">-</button>
     <button @click="zoomIn()" v-tooltip="$t('Zoom In')">+</button>
-    <input :value="search" @blur="updateSearch($event)" placeholder="x/y">
+    <input :value="search" @blur="updateSearch($event)" placeholder="x/y" />
     <button @click="centerSearch(search)" v-tooltip="$t('Center on Selection')">
-      <target-variant-icon :title="$t('Focus')"/>
+      <target-variant-icon :title="$t('Focus')" />
     </button>
     <button @click="centerHome()" v-tooltip="$t('Center on Home')">
-      <earth-icon :title="$t('Home')"/>
+      <earth-icon :title="$t('Home')" />
     </button>
     <button @click="goFleet()" v-tooltip="$t('Send Fleet to Selection')">
-      <ship-wheel-icon :title="$t('Fleet')"/>
+      <ship-wheel-icon :title="$t('Fleet')" />
     </button>
     {{ zoomLevel }}
     <div>
-      <br>
+      <br />
       <table v-if="planet !== null">
         <tr>
           <td>{{ planet.id }}</td>

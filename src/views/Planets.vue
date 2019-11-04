@@ -554,7 +554,7 @@ export default {
       this.$store.dispatch("planet/setPosX", null);
       this.$store.dispatch("planet/setPosY", null);
     },
-    renamePlanet(planetId, newName, index) {
+    renamePlanet(planetId, newName) {
       this.clicked.push(planetId);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.renamePlanet(
@@ -597,7 +597,7 @@ export default {
         this.showBurn = null;
       }
     },
-    giftPlanet(planet, recipient, index) {
+    giftPlanet(planet, recipient) {
       this.fetchhUser(recipient).then(searchedUser => {
         if (searchedUser !== null && searchedUser === recipient) {
           this.clicked.push(planet.id);
@@ -623,7 +623,7 @@ export default {
         }
       });
     },
-    respawnPlanet(planet, index) {
+    respawnPlanet(planet) {
       this.clicked.push(planet.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.respawnPlanet(
@@ -636,7 +636,7 @@ export default {
         }
       );
     },
-    burnPlanet(planet, index) {
+    burnPlanet(planet) {
       this.clicked.push(planet.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.burnPlanet(
@@ -775,7 +775,7 @@ export default {
         parseFloat(quantity) // or overflow above depot
       ).toFixed(1);
     },
-    sell(planet, index) {
+    sell(planet) {
       this.clicked.push(planet.id);
       SteemConnectService.setAccessToken(this.accessToken);
       SteemConnectService.ask(
