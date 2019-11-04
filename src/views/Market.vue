@@ -173,7 +173,7 @@
             }}
           </td>
           <td>
-            <span v-if="ask.category !== 'item'">
+            <span v-if="ask.category == 'planet'">
               <router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
                 >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link
               >
