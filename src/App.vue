@@ -3,57 +3,70 @@
     <span id="navtop">
       <span>
         <router-link to="/season" v-tooltip="$t('Season')">
-          <timer-icon :title="$t('Season')"/>
-        </router-link>|
+          <timer-icon :title="$t('Season')" />
+        </router-link>
+        |
         <router-link to="/ranking" v-tooltip="$t('Ranking')">
-          <chevron-triple-up-icon :title="$t('Ranking')"/>
-        </router-link>|
+          <chevron-triple-up-icon :title="$t('Ranking')" />
+        </router-link>
+        |
         <router-link to="/activity" v-tooltip="$t('Activity')">
-          <newspaper-icon :title="$t('Activity')"/>
-        </router-link>|
+          <newspaper-icon :title="$t('Activity')" />
+        </router-link>
+        |
         <router-link to="/battlefeed" v-tooltip="$t('Recent Battles')">
-          <sword-cross-icon :title="$t('Recent Battles')"/>
-        </router-link>|
+          <sword-cross-icon :title="$t('Recent Battles')" />
+        </router-link>
+        |
         <router-link :to="'/simulator'" v-tooltip="$t('Simulator')">
-          <animation-play-icon :title="$t('Simulator')"/>
-        </router-link>|
+          <animation-play-icon :title="$t('Simulator')" />
+        </router-link>
+        |
         <router-link to="/shop" v-tooltip="$t('Shop')">
-          <cart-icon :title="$t('Shop')"/>
-        </router-link>|
+          <cart-icon :title="$t('Shop')" />
+        </router-link>
+        |
         <router-link :to="'/market'" v-tooltip="$t('Market')">
-          <store-icon :title="$t('Market')"/>
-        </router-link>|
+          <store-icon :title="$t('Market')" />
+        </router-link>
+        |
         <router-link :to="'/items'" v-tooltip="$t('Items')">
-          <package-variant-closed-icon :title="$t('Items')"/>
-        </router-link>|
+          <package-variant-closed-icon :title="$t('Items')" />
+        </router-link>
+        |
         <router-link :to="'/skills'" v-tooltip="$t('Skills')">
-          <school-icon :title="$t('Skills')"/>
-        </router-link>|
+          <school-icon :title="$t('Skills')" />
+        </router-link>
+        |
         <router-link :to="'/buildings'" v-tooltip="$t('Buildings')">
-          <home-city-icon :title="$t('Buildings')"/>
-        </router-link>|
+          <home-city-icon :title="$t('Buildings')" />
+        </router-link>
+        |
         <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
-          <factory-icon :title="$t('Shipyard')"/>
-        </router-link>|
+          <factory-icon :title="$t('Shipyard')" />
+        </router-link>
+        |
         <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
-          <map-icon :title="$t('Galaxy')"/>
-        </router-link>|
+          <map-icon :title="$t('Galaxy')" />
+        </router-link>
+        |
         <router-link :to="'/fleet'" v-tooltip="$t('Fleet')">
-          <ship-wheel-icon :title="$t('Fleet')"/>
-        </router-link>|
+          <ship-wheel-icon :title="$t('Fleet')" />
+        </router-link>
+        |
         <router-link :to="'/missions'" v-tooltip="$t('Missions')">
-          <calendar-icon :title="$t('Mission')"/>
+          <calendar-icon :title="$t('Mission')" />
         </router-link>
       </span>
     </span>
     <div id="middle">
-      <router-view/>
+      <router-view />
     </div>
     <span id="navbottom">
-      <PlanetNav :routeUser="gameUser"/>
-      <br>
+      <PlanetNav :routeUser="gameUser" />
+      <br />
 
-      <QuantityRibbon/>
+      <QuantityRibbon />
       <span
         v-if="
           loginUser == 'jarunik' ||
@@ -64,17 +77,17 @@
       >
         |
         <router-link to="/administration" v-tooltip="$t('Administration')">
-          <settings-icon :title="$t('Administration')"/>
+          <settings-icon :title="$t('Administration')" />
         </router-link>
       </span>
       |
       <router-link to="/" v-tooltip="$t('Login')">
         <font v-if="loginUser == null" color="red">
-          <login-icon :title="$t('Login')"/>
+          <login-icon :title="$t('Login')" />
         </font>
         <font v-else>
           <router-link to="/">
-            <account-icon :title="$t('Login')"/>
+            <account-icon :title="$t('Login')" />
           </router-link>
         </font>
       </router-link>
