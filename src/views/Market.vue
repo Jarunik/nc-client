@@ -182,6 +182,10 @@
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
       &nbsp;
       <button @click="setUserFilter('all')">{{ $t("All") }}</button>
+      &nbsp;
+      <button @click="reloadMarket()" :disabled="clickedReload">
+        <reload-icon :title="$t('Reload')" />
+      </button>
     </p>
     <table>
       <thead>
@@ -277,11 +281,14 @@ import { mapState } from "vuex";
 import SteemConnectService from "@/services/steemconnect";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import marketFilter from "@/data/marketFilter.js";
+import ReloadIcon from "vue-material-design-icons/Reload.vue";
+import moment from "moment";
 
 export default {
   name: "market",
   components: {
-    CancelIcon
+    CancelIcon,
+    ReloadIcon
   },
   data: function() {
     return {
@@ -293,12 +300,21 @@ export default {
       categoryFilter: "all",
       subcategoryFilter: "all",
       typeFilter: "all",
-      filterDisplay: "all"
+      filterDisplay: "all",
+      clickedReload: false,
+      nextReload: null,
+      internval: null
     };
   },
   async mounted() {
     this.clicked = [];
     await this.prepareComponent();
+    this.interval = setInterval(() => {
+      this.now = moment.utc();
+      if (this.nextReload != null && this.now.isAfter(this.nextReload)) {
+        this.clickedReload = false;
+      }
+    }, 1000);
   },
   computed: {
     ...mapState({
@@ -377,6 +393,20 @@ export default {
         }
       );
     },
+    async reloadMarket() {
+      this.clickedReload = true;
+      this.nextReload = this.now.add(3, "seconds");
+      if (this.filterDisplay != "stacked") {
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      } else {
+        await this.getLowest();
+      }
+    },
     showBuyButton(ask) {
       if (ask.price <= this.stardust) {
         return true;
@@ -440,7 +470,6 @@ export default {
     async setSubcategoryFilter(subcategoryFilter) {
       this.filterDisplay = "filtered";
       this.subcategoryFilter = subcategoryFilter;
-      console.log(subcategoryFilter);
       this.typeFilter = "all";
       // Reset type filter only for non planet bonus values
       if (
@@ -530,6 +559,9 @@ export default {
         );
       }
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 };
 </script>
