@@ -282,7 +282,7 @@ export default {
       stardust: null,
       clicked: [],
       chainResponse: [],
-      currentSort: "longname",
+      currentSort: "min_level",
       currentSortDir: "asc",
       processing: false,
       filter: "active",
