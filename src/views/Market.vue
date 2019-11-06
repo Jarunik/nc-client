@@ -189,19 +189,15 @@
     </p>
     <table>
       <thead>
-        <span v-if="filterDisplay == 'history'">
-          <th>{{ $t("Sold") }}</th>
-        </span>
+        <th v-if="filterDisplay == 'history'">{{ $t("Sold") }}</th>
         <th>{{ $t("Category") }}</th>
         <th>{{ $t("Subcategory") }}</th>
         <th>{{ $t("Type") }}</th>
         <th>{{ $t("Location") }}</th>
         <th>{{ $t("Seller") }}</th>
         <th>{{ $t("Stardust") }}</th>
-        <span v-if="filterDisplay != 'history'">
-          <th>{{ $t("Buy") }}</th>
-          <th>{{ $t("Cancel") }}</th>
-        </span>
+        <th v-if="filterDisplay != 'history'">{{ $t("Buy") }}</th>
+        <th v-if="filterDisplay != 'history'">{{ $t("Cancel") }}</th>
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
@@ -260,27 +256,22 @@
               })
             }}
           </td>
-          <span v-if="filterDisplay != 'history'">
-            <td>
-              <span v-if="loginUser != ask.user && showBuyButton(ask)">
-                <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
-                  {{ $t("Buy") }}
-                </button>
-              </span>
-              <span v-else>-</span>
-            </td>
-            <td>
-              <span v-if="loginUser == ask.user">
-                <button
-                  :disabled="clicked.includes(ask.id)"
-                  @click="cancel(ask)"
-                >
-                  <cancel-icon :title="$t('Cancel')" />
-                </button>
-              </span>
-              <span v-else>-</span>
-            </td>
-          </span>
+          <td v-if="filterDisplay != 'history'">
+            <span v-if="loginUser != ask.user && showBuyButton(ask)">
+              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
+                {{ $t("Buy") }}
+              </button>
+            </span>
+            <span v-else>-</span>
+          </td>
+          <td v-if="filterDisplay != 'history'">
+            <span v-if="loginUser == ask.user">
+              <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
+                <cancel-icon :title="$t('Cancel')" />
+              </button>
+            </span>
+            <span v-else>-</span>
+          </td>
         </tr>
       </tbody>
     </table>
