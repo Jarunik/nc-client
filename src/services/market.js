@@ -37,6 +37,30 @@ class MarketService {
     const response = await ApiService.get(`/lowestasks`);
     return response;
   }
+  async sold(
+    categoryFilter = null,
+    subcategoryFilter = null,
+    typeFilter = null,
+    userFilter = null
+  ) {
+    let query = "";
+    if (categoryFilter !== null) {
+      query = query + "category=" + categoryFilter + "&";
+    }
+    if (subcategoryFilter !== null) {
+      query = query + "subcategory=" + subcategoryFilter + "&";
+    }
+    if (typeFilter !== null) {
+      query = query + "type=" + typeFilter + "&";
+    }
+    if (userFilter !== null) {
+      query = query + "user=" + userFilter + "&";
+    }
+    const response = await ApiService.get(
+      `/asks?${query}sold=1&orderby=sold&order=desc`
+    );
+    return response;
+  }
 }
 
 export default new MarketService();
