@@ -37,11 +37,11 @@
         <font v-else>{{ $t("Planet") }}</font>
       </span>
       |
-      <span>
-        <font v-if="filterDisplay === 'filtered'" color="green">
-          {{ $t("Filtered") }}
+      <span @click="setFilterDisplay('history')" class="pointer">
+        <font v-if="filterDisplay === 'history'" color="green">
+          {{ $t("History") }}
         </font>
-        <font v-else style="color: grey">{{ $t("Filtered") }}</font>
+        <font v-else>{{ $t("History") }}</font>
       </span>
     </p>
     <p>
@@ -189,17 +189,25 @@
     </p>
     <table>
       <thead>
+        <span v-if="filterDisplay == 'history'">
+          <th>{{ $t("Sold") }}</th>
+        </span>
         <th>{{ $t("Category") }}</th>
         <th>{{ $t("Subcategory") }}</th>
         <th>{{ $t("Type") }}</th>
         <th>{{ $t("Location") }}</th>
         <th>{{ $t("Seller") }}</th>
         <th>{{ $t("Stardust") }}</th>
-        <th>{{ $t("Buy") }}</th>
-        <th>{{ $t("Cancel") }}</th>
+        <span v-if="filterDisplay != 'history'">
+          <th>{{ $t("Buy") }}</th>
+          <th>{{ $t("Cancel") }}</th>
+        </span>
       </thead>
       <tbody>
         <tr v-for="ask in asks" :key="ask.id">
+          <td v-if="filterDisplay == 'history'">
+            {{ moment.unix(ask.sold, "seconds").format("MMM D HH:mm") }}
+          </td>
           <td>
             <span
               class="pointer-only"
@@ -252,22 +260,27 @@
               })
             }}
           </td>
-          <td>
-            <span v-if="loginUser != ask.user && showBuyButton(ask)">
-              <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
-                {{ $t("Buy") }}
-              </button>
-            </span>
-            <span v-else>-</span>
-          </td>
-          <td>
-            <span v-if="loginUser == ask.user">
-              <button :disabled="clicked.includes(ask.id)" @click="cancel(ask)">
-                <cancel-icon :title="$t('Cancel')" />
-              </button>
-            </span>
-            <span v-else>-</span>
-          </td>
+          <span v-if="filterDisplay != 'history'">
+            <td>
+              <span v-if="loginUser != ask.user && showBuyButton(ask)">
+                <button :disabled="clicked.includes(ask.id)" @click="buy(ask)">
+                  {{ $t("Buy") }}
+                </button>
+              </span>
+              <span v-else>-</span>
+            </td>
+            <td>
+              <span v-if="loginUser == ask.user">
+                <button
+                  :disabled="clicked.includes(ask.id)"
+                  @click="cancel(ask)"
+                >
+                  <cancel-icon :title="$t('Cancel')" />
+                </button>
+              </span>
+              <span v-else>-</span>
+            </td>
+          </span>
         </tr>
       </tbody>
     </table>
@@ -396,15 +409,22 @@ export default {
     async reloadMarket() {
       this.clickedReload = true;
       this.nextReload = this.now.add(3, "seconds");
-      if (this.filterDisplay != "stacked") {
-        await this.getMarketByFilter(
+      if (this.filterDisplay == "stacked") {
+        await this.getLowest();
+      } else if (this.filterDisplay == "history") {
+        await this.getHistory(
           this.categoryFilter,
           this.subcategoryFilter,
           this.typeFilter,
           this.userFilter
         );
       } else {
-        await this.getLowest();
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
       }
     },
     showBuyButton(ask) {
@@ -413,6 +433,66 @@ export default {
       } else {
         return false;
       }
+    },
+    async fetchFromApi() {
+      if (this.filterDisplay == "stacked") {
+        await this.getLowest();
+      }
+      if (
+        this.filterDisplay == "all" ||
+        this.filterDisplay == "ship" ||
+        this.filterDisplay == "item" ||
+        this.filterDisplay == "planet"
+      ) {
+        await this.getMarketByFilter(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+      if (this.filterDisplay == "history") {
+        await this.getHistory(
+          this.categoryFilter,
+          this.subcategoryFilter,
+          this.typeFilter,
+          this.userFilter
+        );
+      }
+    },
+    async getLowest() {
+      let response = await MarketService.lowest();
+      this.asks = response;
+    },
+    async getHistory(
+      categoryFilter = null,
+      subcategoryFilter = null,
+      typeFilter = null,
+      userFilter = null
+    ) {
+      let category = null;
+      let subcategory = null;
+      let type = null;
+      let user = null;
+      if (categoryFilter != "all") {
+        category = categoryFilter;
+      }
+      if (subcategoryFilter != "all") {
+        subcategory = subcategoryFilter;
+      }
+      if (typeFilter != "all") {
+        type = typeFilter;
+      }
+      if (userFilter != "all") {
+        user = userFilter;
+      }
+      let response = await MarketService.sold(
+        category,
+        subcategory,
+        type,
+        user
+      );
+      this.asks = response;
     },
     async getMarketByFilter(
       categoryFilter = null,
@@ -446,29 +526,25 @@ export default {
       this.asks = response;
     },
     async setUserFilter(userFilter) {
-      this.filterDisplay = "filtered";
+      if (this.filterDisplay == "stacked") {
+        this.filterDisplay = "all";
+      }
       this.userFilter = userFilter;
-      await this.getMarketByFilter(
-        this.categoryFilter,
-        this.subcategoryFilter,
-        this.typeFilter,
-        this.userFilter
-      );
+      await this.fetchFromApi();
     },
     async setCategoryFilter(categoryFilter) {
-      this.filterDisplay = categoryFilter;
+      if (this.filterDisplay == "stacked") {
+        this.filterDisplay = "all";
+      }
       this.categoryFilter = categoryFilter;
       this.subcategoryFilter = "all";
       this.typeFilter = "all";
-      await this.getMarketByFilter(
-        this.categoryFilter,
-        this.subcategoryFilter,
-        this.typeFilter,
-        this.userFilter
-      );
+      await this.fetchFromApi();
     },
     async setSubcategoryFilter(subcategoryFilter) {
-      this.filterDisplay = "filtered";
+      if (this.filterDisplay == "stacked") {
+        this.filterDisplay = "all";
+      }
       this.subcategoryFilter = subcategoryFilter;
       this.typeFilter = "all";
       // Reset type filter only for non planet bonus values
@@ -480,84 +556,55 @@ export default {
       ) {
         this.typeFilter = "all";
       }
-      await this.getMarketByFilter(
-        this.categoryFilter,
-        this.subcategoryFilter,
-        this.typeFilter,
-        this.userFilter
-      );
+      await this.fetchFromApi();
     },
     async setTypeFilter(typeFilter) {
-      this.filterDisplay = "filtered";
+      if (this.filterDisplay == "stacked") {
+        this.filterDisplay = "all";
+      }
       this.typeFilter = typeFilter;
-      await this.getMarketByFilter(
-        this.categoryFilter,
-        this.subcategoryFilter,
-        this.typeFilter,
-        this.userFilter
-      );
-    },
-    async getLowest() {
-      let response = await MarketService.lowest();
-      this.asks = response;
+      await this.fetchFromApi();
     },
     async setFilterDisplay(filterDisplay) {
       this.filterDisplay = filterDisplay;
+      // Defaults
       if (filterDisplay == "stacked") {
         this.categoryFilter = "all";
         this.subcategoryFilter = "all";
         this.typeFilter = "all";
         this.userFilter = "all";
-        this.getLowest();
+      }
+      if (filterDisplay == "history") {
+        this.categoryFilter = "all";
+        this.subcategoryFilter = "all";
+        this.typeFilter = "all";
+        this.userFilter = this.gameUser;
       }
       if (filterDisplay == "all") {
         this.categoryFilter = "all";
         this.subcategoryFilter = "all";
         this.typeFilter = "all";
         this.userFilter = "all";
-        await this.getMarketByFilter(
-          this.categoryFilter,
-          this.subcategoryFilter,
-          this.typeFilter,
-          this.userFilter
-        );
       }
       if (filterDisplay == "ship") {
         this.categoryFilter = "ship";
         this.subcategoryFilter = "all";
         this.typeFilter = "all";
         this.userFilter = "all";
-        await this.getMarketByFilter(
-          this.categoryFilter,
-          this.subcategoryFilter,
-          this.typeFilter,
-          this.userFilter
-        );
       }
       if (filterDisplay == "item") {
         this.categoryFilter = "item";
         this.subcategoryFilter = "all";
         this.typeFilter = "all";
         this.userFilter = "all";
-        await this.getMarketByFilter(
-          this.categoryFilter,
-          this.subcategoryFilter,
-          this.typeFilter,
-          this.userFilter
-        );
       }
       if (filterDisplay == "planet") {
         this.categoryFilter = "planet";
         this.subcategoryFilter = "all";
         this.typeFilter = "all";
         this.userFilter = "all";
-        await this.getMarketByFilter(
-          this.categoryFilter,
-          this.subcategoryFilter,
-          this.typeFilter,
-          this.userFilter
-        );
       }
+      this.fetchFromApi();
     }
   },
   beforeDestroy() {
