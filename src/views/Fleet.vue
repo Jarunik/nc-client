@@ -13,54 +13,38 @@
         {{ $t("Available Missions") }}: {{ availableMissions }} /
         {{ totalMissions }}
       </p>
-      <p
-        v-if="isUnderSiege()"
-        style="color:red"
-      >{{ $t("Planet under siege. Only 'Break Siege' is possible!") }}</p>
-      <p
-        v-if="planetForSale()"
-        style="color:red"
-      >{{ $t("Planet is listed for sale. No mission is possible!") }}</p>
+      <p v-if="isUnderSiege()" style="color:red">
+        {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
+      </p>
+      <p v-if="planetForSale()" style="color:red">
+        {{ $t("Planet is listed for sale. No mission is possible!") }}
+      </p>
       <!-- Commands -->
       <span v-if="!planetForSale()">
         <p>
           {{ $t("Command") }}
           <select @change="onCommand()" v-model="command">
             <option v-if="!isUnderSiege()" value="explorespace">
-              {{
-              $t("Explore")
-              }}
+              {{ $t("Explore") }}
             </option>
             <option v-if="!isUnderSiege()" value="transport">
-              {{
-              $t("Transport")
-              }}
+              {{ $t("Transport") }}
             </option>
             <option v-if="!isUnderSiege()" value="deploy">
-              {{
-              $t("Deploy")
-              }}
+              {{ $t("Deploy") }}
             </option>
             <option v-if="!isUnderSiege()" value="support">
-              {{
-              $t("Support")
-              }}
+              {{ $t("Support") }}
             </option>
             <option v-if="!isUnderSiege()" value="attack">
-              {{
-              $t("Attack")
-              }}
+              {{ $t("Attack") }}
             </option>
             <option v-if="!isUnderSiege()" value="siege">
-              {{
-              $t("Siege")
-              }}
+              {{ $t("Siege") }}
             </option>
             <option value="breaksiege">{{ $t("Break Siege") }}</option>
             <option v-if="!isUnderSiege()" value="upgradeyamato">
-              {{
-              $t("Upgrade Yamato")
-              }}
+              {{ $t("Upgrade Yamato") }}
             </option>
             <option value="sent">{{ $t("Sent") }}</option>
           </select>
@@ -75,7 +59,9 @@
           <th @click="sort('capacity')">{{ $t("Load") }}</th>
           <th @click="sort('forSale')">{{ $t("Sale") }}</th>
           <th @click="sort('quantity')">{{ $t("Quantity") }}</th>
-          <th v-if="command !== null" @click="sort('toSend')">{{ $t("Send") }}</th>
+          <th v-if="command !== null" @click="sort('toSend')">
+            {{ $t("Send") }}
+          </th>
           <th v-if="command == null">{{ $t("Sell") }}</th>
         </thead>
         <tbody>
@@ -85,9 +71,9 @@
             <td>{{ ship.cons }}</td>
             <td>
               {{
-              Number(ship.capacity).toLocaleString(gameLocale, {
-              style: "decimal"
-              })
+                Number(ship.capacity).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
               }}
             </td>
             <td>
@@ -97,7 +83,7 @@
             <td>{{ ship.quantity }}</td>
             <td v-if="command !== null">
               <span v-if="ship.quantity > 0">
-                <input class="inputShort" type="number" v-model="ship.toSend">
+                <input class="inputShort" type="number" v-model="ship.toSend" />
                 <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
               </span>
               <span v-else>-</span>
@@ -116,11 +102,13 @@
                     v-model.number="price"
                     @blur="validatePrice()"
                     :placeholder="$t(placeholderPrice)"
-                  >
+                  />
                   <button
                     :disabled="clickedSell.includes(ship.id)"
                     @click="sell(ship, price)"
-                  >{{ $t("Sell") }}</button>
+                  >
+                    {{ $t("Sell") }}
+                  </button>
                 </template>
               </span>
               <span v-else>-</span>
@@ -131,9 +119,7 @@
       <!-- Last Destination -->
       <p v-if="command === 'sent'">
         <span @click="openMap(lastX, lastY)">
-          {{ $t("Last Destination") }}:{{
-          "(" + lastX + "/" + lastY + ")"
-          }}
+          {{ $t("Last Destination") }}:{{ "(" + lastX + "/" + lastY + ")" }}
         </span>
       </p>
       <template v-if="command !== null && command !== 'sent'">
@@ -163,21 +149,21 @@
               v-on:change="fillCoordinates(search)"
               v-model="search"
               placeholder="x/y"
-            >
+            />
             {{ $t("X") }}:
             <input
               class="inputShort"
               type="number"
               v-model="xCoordinate"
               v-on:change="onCoordinateChange"
-            >
+            />
             {{ $t("Y") }}:
             <input
               class="inputShort"
               type="number"
               v-model="yCoordinate"
               v-on:change="onCoordinateChange"
-            >
+            />
           </p>
         </template>
         <!-- Travel Information -->
@@ -198,14 +184,15 @@
                         ? 'red'
                         : 'white'
                   }"
-                >{{ Number(this.fuelConsumption).toFixed(4) }}</span>
+                  >{{ Number(this.fuelConsumption).toFixed(4) }}</span
+                >
               </td>
             </tr>
             <tr>
               <td>{{ $t("Outbound Travel") }}</td>
               <td>
                 {{
-                moment.duration(parseFloat(travelTime), "hours").humanize()
+                  moment.duration(parseFloat(travelTime), "hours").humanize()
                 }}
               </td>
             </tr>
@@ -221,28 +208,28 @@
               type="number"
               v-model="transportCoal"
               v-on:change="onDeployResource('coal')"
-            >
+            />
             {{ $t("Fe") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportOre"
               v-on:change="onDeployResource('ore')"
-            >
+            />
             {{ $t("Cu") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportCopper"
               v-on:change="onDeployResource('copper')"
-            >
+            />
             {{ $t("U") }}:
             <input
               class="inputMedium"
               type="number"
               v-model="transportUranium"
               v-on:change="onDeployResource('uranium')"
-            >
+            />
           </p>
           <p>{{ $t("Capacity") }}: {{ capacity }}</p>
         </div>
@@ -252,50 +239,50 @@
             {{ $t("Costs") }}:
             <font v-if="yamatoCoal > coal" color="red">
               {{ yamatoCoal }}
-              <alpha-c-box-icon :title="$t('Coal')"/>
+              <alpha-c-box-icon :title="$t('Coal')" />
             </font>
             <font v-else>
               {{ yamatoCoal }}
-              <alpha-c-box-icon :title="$t('Coal')"/>
+              <alpha-c-box-icon :title="$t('Coal')" />
             </font>
             <font v-if="yamatoOre > ore" color="red">
               {{ yamatoOre }}
-              <alpha-f-box-icon :title="$t('Ore')"/>
-              <alpha-e-box-icon :title="$t('Ore')"/>
+              <alpha-f-box-icon :title="$t('Ore')" />
+              <alpha-e-box-icon :title="$t('Ore')" />
             </font>
             <font v-else>
               {{ yamatoOre }}
-              <alpha-f-box-icon :title="$t('Ore')"/>
-              <alpha-e-box-icon :title="$t('Ore')"/>
+              <alpha-f-box-icon :title="$t('Ore')" />
+              <alpha-e-box-icon :title="$t('Ore')" />
             </font>
             <font v-if="yamatoCopper > copper" color="red">
               {{ yamatoCopper }}
-              <alpha-c-box-icon :title="$t('Copper')"/>
-              <alpha-u-box-icon :title="$t('Copper')"/>
+              <alpha-c-box-icon :title="$t('Copper')" />
+              <alpha-u-box-icon :title="$t('Copper')" />
             </font>
             <font v-else>
               {{ yamatoCopper }}
-              <alpha-c-box-icon :title="$t('Copper')"/>
-              <alpha-u-box-icon :title="$t('Copper')"/>
+              <alpha-c-box-icon :title="$t('Copper')" />
+              <alpha-u-box-icon :title="$t('Copper')" />
             </font>
             <font v-if="yamatoUranium > uranium" color="red">
               {{ yamatoUranium }}
-              <alpha-u-box-icon :title="$t('Uranium')"/>
+              <alpha-u-box-icon :title="$t('Uranium')" />
             </font>
             <font v-else>
               {{ yamatoUranium }}
-              <alpha-u-box-icon :title="$t('Uranium')"/>
+              <alpha-u-box-icon :title="$t('Uranium')" />
             </font>
             <font v-if="yamatoStardust > stardust" color="red">
               {{ yamatoStardust / 100000000 }}
-              <alpha-s-box-icon :title="$t('Stardust')"/>
-              <alpha-d-box-icon :title="$t('Stardust')"/>
+              <alpha-s-box-icon :title="$t('Stardust')" />
+              <alpha-d-box-icon :title="$t('Stardust')" />
             </font>
             <font v-else>
               <span :style="{ color: '#72bcd4' }">
                 {{ yamatoStardust / 100000000 }}
-                <alpha-s-box-icon :title="$t('Stardust')"/>
-                <alpha-d-box-icon :title="$t('Stardust')"/>
+                <alpha-s-box-icon :title="$t('Stardust')" />
+                <alpha-d-box-icon :title="$t('Stardust')" />
               </span>
             </font>
           </p>
@@ -307,49 +294,65 @@
               <button
                 @click="deploy"
                 :disabled="!commandEnabled('deploy') || clicked"
-              >{{ $t("Deploy Ships") }}</button>
+              >
+                {{ $t("Deploy Ships") }}
+              </button>
             </div>
             <div v-if="command === 'support'">
               <button
                 @click="support"
                 :disabled="!commandEnabled('support') || clicked"
-              >{{ $t("Support Planet") }}</button>
+              >
+                {{ $t("Support Planet") }}
+              </button>
             </div>
             <div v-if="command === 'attack'">
               <button
                 @click="attack"
                 :disabled="!commandEnabled('attack') || clicked"
-              >{{ $t("Attack Planet") }}</button>
+              >
+                {{ $t("Attack Planet") }}
+              </button>
             </div>
             <div v-if="command === 'siege'">
               <button
                 @click="siege"
                 :disabled="!commandEnabled('siege') || clicked"
-              >{{ $t("Siege Planet") }}</button>
+              >
+                {{ $t("Siege Planet") }}
+              </button>
             </div>
             <div v-if="command === 'breaksiege'">
               <button
                 @click="breaksiege"
                 :disabled="!commandEnabled('breaksiege') || clicked"
-              >{{ $t("Break Siege") }}</button>
+              >
+                {{ $t("Break Siege") }}
+              </button>
             </div>
             <div v-if="command === 'explorespace'">
               <button
                 @click="explore"
                 :disabled="!commandEnabled('explorespace') || clicked"
-              >{{ $t("Send Explorer") }}</button>
+              >
+                {{ $t("Send Explorer") }}
+              </button>
             </div>
             <div v-if="command === 'transport'">
               <button
                 @click="transport"
                 :disabled="!commandEnabled('transport') || clicked"
-              >{{ $t("Send Transporter") }}</button>
+              >
+                {{ $t("Send Transporter") }}
+              </button>
             </div>
             <div v-if="command === 'upgradeyamato'">
               <button
                 @click="upgradeyamato"
                 :disabled="!commandEnabled('upgradeyamato') || clicked"
-              >{{ $t("Upgrade Yamato") }}</button>
+              >
+                {{ $t("Upgrade Yamato") }}
+              </button>
             </div>
           </div>
         </div>
@@ -372,7 +375,8 @@
       <template v-if="gameUser !== null">
         <p>
           {{ $t("You have no ships. Build some in the") }}
-          <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link>.
+          <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link
+          >.
         </p>
         <p>
           {{ $t("Available Missions") }}: {{ availableMissions }} /
