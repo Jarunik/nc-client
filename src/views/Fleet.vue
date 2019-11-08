@@ -62,7 +62,6 @@
           <th v-if="command !== null" @click="sort('toSend')">
             {{ $t("Send") }}
           </th>
-          <th v-if="command == null">{{ $t("Sell") }}</th>
         </thead>
         <tbody>
           <tr v-for="ship in sortedFleet" :key="ship.longname">
@@ -85,31 +84,6 @@
               <span v-if="ship.quantity > 0">
                 <input class="inputShort" type="number" v-model="ship.toSend" />
                 <button @click="add(ship, ship.toSend)">{{ $t("+") }}</button>
-              </span>
-              <span v-else>-</span>
-            </td>
-            <td v-if="command == null">
-              <span
-                v-if="
-                  gameUser === loginUser &&
-                    ship.quantity > 0 &&
-                    !planetForSale()
-                "
-              >
-                <button @click="toggleSell(ship)">...</button>
-                <template v-if="ship.id !== null && showSell === ship.id">
-                  <input
-                    v-model.number="price"
-                    @blur="validatePrice()"
-                    :placeholder="$t(placeholderPrice)"
-                  />
-                  <button
-                    :disabled="clickedSell.includes(ship.id)"
-                    @click="sell(ship, price)"
-                  >
-                    {{ $t("Sell") }}
-                  </button>
-                </template>
               </span>
               <span v-else>-</span>
             </td>
@@ -458,15 +432,10 @@ export default {
       yamatoStardust: 0,
       buildYamato: false,
       activeYamatoMission: false,
-      showSell: null,
-      price: null,
-      placeholderPrice: "enter SD price",
-      clickedSell: []
     };
   },
   async mounted() {
     this.clicked = false;
-    this.clickedSell = [];
     await this.prepareComponent();
     this.interval = setInterval(() => {
       this.calculateCoal();
@@ -479,7 +448,6 @@ export default {
         case "planet/" + types.SET_PLANET_ID:
           this.prepareComponent();
           this.clicked = false;
-          this.clickedSell = [];
       }
     });
   },
@@ -607,7 +575,9 @@ export default {
         let quantity = ship.quantity
         let for_sale = ship.for_sale
         ship.quantity = quantity - for_sale;
+        ship.toSend = 1;
       })
+
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
@@ -1278,30 +1248,6 @@ export default {
         });
       }
       return underSiege;
-    },
-    sell(ship) {
-      this.clickedSell.push(ship.id);
-      SteemConnectService.setAccessToken(this.accessToken);
-      SteemConnectService.ask(
-        this.loginUser,
-        "ship",
-        ship.id,
-        this.price,
-        "null",
-        (error, result) => {
-          if (error === null && result.success) {
-            this.price = null;
-            this.placeholderPrice = "Success";
-          }
-        }
-      );
-    },
-    toggleSell(ship) {
-      if (this.showSell !== ship.id) {
-        this.showSell = ship.id;
-      } else {
-        this.showSell = null;
-      }
     },
     planetForSale() {
       let forSale = false;
