@@ -8,6 +8,20 @@ class FleetService {
 
     return response;
   }
+  async grouped(userId, planetId) {
+    const response = await ApiService.get(
+      `/planetfleet?user=${userId}&planet=${planetId}`
+    );
+
+    return response;
+  }
+  async ships(userId, planetId) {
+    const response = await ApiService.get(
+      `/planetships?user=${userId}&planet=${planetId}`
+    );
+
+    return response;
+  }
 }
 
 export default new FleetService();
