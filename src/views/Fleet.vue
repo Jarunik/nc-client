@@ -419,7 +419,6 @@ export default {
   data: function() {
     return {
       fleet: null,
-      groupedFleet: null,
       activeUserMissions: null,
       activeMissions: null,
       skills: null,
@@ -515,7 +514,7 @@ export default {
       planetList: state => state.planet.list
     }),
     sortedFleet() {
-      var sortedFleet = this.groupedFleet;
+      var sortedFleet = this.fleet;
       if (sortedFleet !== null) {
         return sortedFleet.sort((a, b) => {
           let modifier = 1;
@@ -602,50 +601,18 @@ export default {
       this.skills = response;
     },
     async getFleet() {
-      const response = await FleetService.all(this.gameUser, this.planetId);
+      const response = await FleetService.grouped(this.gameUser, this.planetId);
       this.fleet = response;
       if (this.fleet !== null) {
         this.fleet.forEach(ship => {
           if (ship.for_sale == 0) {
-            ship.quantity = 1;
             ship.toSend = 1;
-            ship.forSale = 0;
           } else {
-            ship.quantity = 0;
             ship.toSend = 0;
-            ship.forSale = 1;
           }
         });
         // Sort to bring the for sales once to the end
         this.fleet.sort((a, b) => (a.forSale > b.forSale ? 1 : -1));
-        this.groupedFleet = this.fleet.reduce((acc, current) => {
-          const x = acc.find(item => item.longname === current.longname);
-          if (!x) {
-            // add first found by name
-            return acc.concat([current]);
-          } else {
-            acc.forEach(ship => {
-              // count up the duplicates
-              if (ship.longname === current.longname) {
-                if (current.for_sale == 0) {
-                  ship.quantity++;
-                } else {
-                  ship.forSale++;
-                }
-              }
-            });
-            return acc;
-          }
-        }, []);
-        if (this.groupedFleet != null && this.shipyard != null) {
-          this.groupedFleet.forEach(group => {
-            let shipyard = this.shipyard.find(obj => {
-              return obj.type === group.type;
-            });
-            console.log(shipyard);
-            group.shipyardMinLevel = shipyard.min_level;
-          });
-        }
       }
     },
     isBusy(busy) {
@@ -884,7 +851,7 @@ export default {
           { id: 8, type: null, n: "-", c: 0, pos: "-", name: "-" }
         ]
       };
-      this.groupedFleet.forEach(ship => {
+      this.fleet.forEach(ship => {
         ship.toSend = 1;
       });
     },
