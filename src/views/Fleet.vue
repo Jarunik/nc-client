@@ -431,7 +431,7 @@ export default {
       stardust: null,
       clicked: false,
       chainResponse: [],
-      currentSort: "shipyardMinLevel",
+      currentSort: "shipyard_level",
       currentSortDir: "asc",
       command: null,
       xCoordinate: null,
