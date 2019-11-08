@@ -100,9 +100,11 @@ export default {
     }),
     sortedShips() {
       let sortedShips = this.ships;
-      sortedShips.sort((a, b) => {
-        return a.for_sale - b.for_sale || a.shipyard_level - b.shipyard_level;
-      });
+      sortedShips = this._.sortBy(sortedShips, [
+        "for_sale",
+        "shipyard_level",
+        "type"
+      ]);
       return sortedShips;
     }
   },
