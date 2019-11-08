@@ -141,6 +141,11 @@ export default {
       if (ship.price > 90000000000) {
         ship.price = 90000000000;
       }
+      this.ships.forEach(s => {
+        if (s.type == ship.type && !this.chainResponse.includes(s.id)) {
+          s.price = ship.price;
+        }
+      });
     }
   }
 };
