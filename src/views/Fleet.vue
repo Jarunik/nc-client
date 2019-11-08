@@ -77,7 +77,7 @@
               }}
             </td>
             <td>
-              <span v-if="ship.forSale > 0">{{ ship.forSale }}</span>
+              <span v-if="ship.for_sale > 0">{{ ship.for_sale }}</span>
               <span v-else>-</span>
             </td>
             <td>{{ ship.quantity }}</td>
@@ -603,17 +603,11 @@ export default {
     async getFleet() {
       const response = await FleetService.grouped(this.gameUser, this.planetId);
       this.fleet = response;
-      if (this.fleet !== null) {
-        this.fleet.forEach(ship => {
-          if (ship.for_sale == 0) {
-            ship.toSend = 1;
-          } else {
-            ship.toSend = 0;
-          }
-        });
-        // Sort to bring the for sales once to the end
-        this.fleet.sort((a, b) => (a.forSale > b.forSale ? 1 : -1));
-      }
+      this.fleet.forEach(ship => {
+        let quantity = ship.quantity
+        let for_sale = ship.for_sale
+        ship.quantity = quantity - for_sale;
+      })
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
@@ -851,9 +845,6 @@ export default {
           { id: 8, type: null, n: "-", c: 0, pos: "-", name: "-" }
         ]
       };
-      this.fleet.forEach(ship => {
-        ship.toSend = 1;
-      });
     },
     add(ship, quantity) {
       let existingGroup = false;
