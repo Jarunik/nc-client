@@ -1,6 +1,9 @@
 <template>
   <div class="fleet">
     <h1>{{ $t("Fleet") }} - {{ planetName }}</h1>
+    <p>
+      <router-link :to="'/ships'">{{ $t("Sell Ships") }}</router-link>
+    </p>
     <template
       v-if="
         gameUser !== null &&
@@ -431,7 +434,7 @@ export default {
       yamatoUranium: 0,
       yamatoStardust: 0,
       buildYamato: false,
-      activeYamatoMission: false,
+      activeYamatoMission: false
     };
   },
   async mounted() {
@@ -572,12 +575,11 @@ export default {
       const response = await FleetService.grouped(this.gameUser, this.planetId);
       this.fleet = response;
       this.fleet.forEach(ship => {
-        let quantity = ship.quantity
-        let for_sale = ship.for_sale
+        let quantity = ship.quantity;
+        let for_sale = ship.for_sale;
         ship.quantity = quantity - for_sale;
         ship.toSend = 1;
-      })
-
+      });
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
