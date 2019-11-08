@@ -877,7 +877,7 @@ export default {
           // Remove old Capacity
           this.capacity = this.capacity - s.n * ship.capacity;
           s.n = Math.min(quantity, ship.quantity);
-          s.c = ship.cons;
+          s.c = ship.consumption;
           s.pos = this.pos;
           s.type = ship.type;
           s.name = ship.longname;
@@ -893,7 +893,7 @@ export default {
           quantity,
           ship.quantity
         );
-        this.shipFormation.ships[this.pos].c = ship.cons;
+        this.shipFormation.ships[this.pos].c = ship.consumption;
         this.shipFormation.ships[this.pos].pos = this.pos + 1;
         this.shipFormation.ships[this.pos].type = ship.type;
         this.shipFormation.ships[this.pos].name = ship.longname;
