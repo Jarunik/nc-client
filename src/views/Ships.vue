@@ -86,7 +86,7 @@ export default {
       switch (mutation.type) {
         case "planet/" + types.SET_PLANET_ID:
           this.prepareComponent();
-          this.clicked = false;
+          this.clicked = [];
       }
     });
   },
