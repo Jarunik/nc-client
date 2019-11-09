@@ -512,7 +512,7 @@ export default {
       ) {
         return false;
       }
-      if (ship.skill < 20) {
+      if (ship.ship_skill < 20) {
         return false;
       }
       return true;
