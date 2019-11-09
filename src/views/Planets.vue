@@ -340,7 +340,7 @@
             <td>
               <span
                 :style="{
-                  color: pQuantity.coal >= pQuantity.coaldepot ? 'red' : 'white'
+                  color: pQuantity.coal >= pQuantity.coaldepot ? 'red' : 'green'
                 }"
               >
                 {{
@@ -366,7 +366,7 @@
             <td>
               <span
                 :style="{
-                  color: pQuantity.ore >= pQuantity.oredepot ? 'red' : 'white'
+                  color: pQuantity.ore >= pQuantity.oredepot ? 'red' : 'green'
                 }"
               >
                 {{
@@ -393,7 +393,7 @@
               <span
                 :style="{
                   color:
-                    pQuantity.copper >= pQuantity.copperdepot ? 'red' : 'white'
+                    pQuantity.copper >= pQuantity.copperdepot ? 'red' : 'green'
                 }"
               >
                 {{
@@ -422,7 +422,7 @@
                   color:
                     pQuantity.uranium >= pQuantity.uraniumdepot
                       ? 'red'
-                      : 'white'
+                      : 'green'
                 }"
               >
                 {{
