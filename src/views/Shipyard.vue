@@ -92,7 +92,7 @@
             <td>
               <font
                 v-if="
-                  ship.activated === true ||
+                  ship.activated === 'true' ||
                     ship.variant === 0 ||
                     ship.type === 'explorership' ||
                     ship.type === 'transportship'
@@ -104,16 +104,19 @@
               {{ ship.shipyard_min_level }}
             </td>
             <td>
-              <font v-if="ship.shipyard_level < ship.shipyard_min_level" color="red">{{
-                ship.shipyard_level
-              }}</font
+              <font
+                v-if="ship.shipyard_level < ship.shipyard_min_level"
+                color="red"
+                >{{ ship.shipyard_level }}</font
               ><font v-else>{{ ship.shipyard_level }}</font>
             </td>
             <td>
               <font v-if="ship.shipyard_skill < 20" color="red">{{
                 ship.shipyard_skill === null ? 0 : ship.shipyard_skill
               }}</font
-              ><font v-else>{{ ship.shipyard_skill === null ? 0 : ship.shipyard_skill }}</font>
+              ><font v-else>{{
+                ship.shipyard_skill === null ? 0 : ship.shipyard_skill
+              }}</font>
             </td>
             <td>
               <font v-if="ship.costs.coal > coal" color="red">{{
@@ -413,7 +416,7 @@ export default {
         return this._.filter(
           sortedShipyard,
           ship =>
-            ship.activated == true ||
+            ship.activated == "true" ||
             ship.variant === 0 ||
             ship.type === "explorership" ||
             ship.type === "transportship"
@@ -502,7 +505,7 @@ export default {
         return false;
       }
       if (
-        ship.activated === false &&
+        ship.activated === "false" &&
         ship.variant !== 0 &&
         ship.type !== "explorership" &&
         ship.type !== "transportship"
