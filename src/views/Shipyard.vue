@@ -111,11 +111,11 @@
               ><font v-else>{{ ship.shipyard_level }}</font>
             </td>
             <td>
-              <font v-if="ship.shipyard_skill < 20" color="red">{{
-                ship.shipyard_skill === null ? 0 : ship.shipyard_skill
+              <font v-if="ship.ship_skill < 20" color="red">{{
+                ship.ship_skill === null ? 0 : ship.ship_skill
               }}</font
               ><font v-else>{{
-                ship.shipyard_skill === null ? 0 : ship.shipyard_skill
+                ship.ship_skill === null ? 0 : ship.ship_skill
               }}</font>
             </td>
             <td>
