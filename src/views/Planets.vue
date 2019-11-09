@@ -329,9 +329,11 @@
             <td>
               <span>
                 {{
-                  Number(pQuantity.coal).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.coal)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
@@ -342,18 +344,22 @@
                 }"
               >
                 {{
-                  Number(pQuantity.coaldepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.coaldepot)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.ore).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.ore)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
@@ -364,18 +370,22 @@
                 }"
               >
                 {{
-                  Number(pQuantity.oredepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.oredepot)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.copper).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.copper)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
@@ -387,18 +397,22 @@
                 }"
               >
                 {{
-                  Number(pQuantity.copperdepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.copperdepot)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(pQuantity.uranium).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.uranium)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
@@ -412,9 +426,11 @@
                 }"
               >
                 {{
-                  Number(pQuantity.uraniumdepot).toLocaleString(gameLocale, {
-                    style: "decimal"
-                  })
+                  Number(Number(pQuantity.uraniumdepot)
+                    .toFixed(0))
+                    .toLocaleString(gameLocale, {
+                      style: "decimal"
+                    })
                 }}
               </span>
             </td>
