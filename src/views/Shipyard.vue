@@ -70,8 +70,8 @@
       <table>
         <thead>
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
-          <th @click="sort('min_level')">{{ $t("Need") }}</th>
-          <th @click="sort('cur_level')">{{ $t("Yard") }}</th>
+          <th @click="sort('shipyard_min_level')">{{ $t("Need") }}</th>
+          <th @click="sort('shipyard_level')">{{ $t("Yard") }}</th>
           <th @click="sort('skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
@@ -101,89 +101,89 @@
               ><font v-else color="grey">{{ $t(ship.longname) }}</font>
             </td>
             <td>
-              {{ ship.min_level }}
+              {{ ship.shipyard_min_level }}
             </td>
             <td>
-              <font v-if="ship.cur_level < ship.min_level" color="red">{{
-                ship.cur_level
+              <font v-if="ship.shipyard_level < ship.shipyard_min_level" color="red">{{
+                ship.shipyard_level
               }}</font
-              ><font v-else>{{ ship.cur_level }}</font>
+              ><font v-else>{{ ship.shipyard_level }}</font>
             </td>
             <td>
-              <font v-if="ship.skill < 20" color="red">{{
-                ship.skill === null ? 0 : ship.skill
+              <font v-if="ship.shipyard_skill < 20" color="red">{{
+                ship.shipyard_skill === null ? 0 : ship.shipyard_skill
               }}</font
-              ><font v-else>{{ ship.skill === null ? 0 : ship.skill }}</font>
+              ><font v-else>{{ ship.shipyard_skill === null ? 0 : ship.shipyard_skill }}</font>
             </td>
             <td>
-              <font v-if="ship.cost.coal > coal" color="red">{{
-                ship.cost.coal === 0
+              <font v-if="ship.costs.coal > coal" color="red">{{
+                ship.costs.coal === 0
                   ? "-"
-                  : Number(ship.cost.coal).toLocaleString(gameLocale, {
+                  : Number(ship.costs.coal).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font>
               <font v-else>{{
-                ship.cost.coal === 0
+                ship.costs.coal === 0
                   ? "-"
-                  : Number(ship.cost.coal).toLocaleString(gameLocale, {
+                  : Number(ship.costs.coal).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font>
             </td>
             <td>
-              <font v-if="ship.cost.ore > ore" color="red">{{
-                ship.cost.ore === 0
+              <font v-if="ship.costs.ore > ore" color="red">{{
+                ship.costs.ore === 0
                   ? "-"
-                  : Number(ship.cost.ore).toLocaleString(gameLocale, {
+                  : Number(ship.costs.ore).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font
               ><font v-else>{{
-                ship.cost.ore === 0
+                ship.costs.ore === 0
                   ? "-"
-                  : Number(ship.cost.ore).toLocaleString(gameLocale, {
+                  : Number(ship.costs.ore).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font>
             </td>
             <td>
-              <font v-if="ship.cost.copper > copper" color="red">{{
-                ship.cost.copper === 0
+              <font v-if="ship.costs.copper > copper" color="red">{{
+                ship.costs.copper === 0
                   ? "-"
-                  : Number(ship.cost.copper).toLocaleString(gameLocale, {
+                  : Number(ship.costs.copper).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font
               ><font v-else>{{
-                ship.cost.copper === 0
+                ship.costs.copper === 0
                   ? "-"
-                  : Number(ship.cost.copper).toLocaleString(gameLocale, {
+                  : Number(ship.costs.copper).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font>
             </td>
             <td>
-              <font v-if="ship.cost.uranium > uranium" color="red">{{
-                ship.cost.uranium === 0
+              <font v-if="ship.costs.uranium > uranium" color="red">{{
+                ship.costs.uranium === 0
                   ? "-"
-                  : Number(ship.cost.uranium).toLocaleString(gameLocale, {
+                  : Number(ship.costs.uranium).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font
               ><font v-else>{{
-                ship.cost.uranium === 0
+                ship.costs.uranium === 0
                   ? "-"
-                  : Number(ship.cost.uranium).toLocaleString(gameLocale, {
+                  : Number(ship.costs.uranium).toLocaleString(gameLocale, {
                       style: "decimal"
                     })
               }}</font>
             </td>
             <td>
-              <font v-if="ship.cost.stardust > stardust" color="red">{{
-                ship.cost.stardust === 0
+              <font v-if="ship.costs.stardust > stardust" color="red">{{
+                ship.costs.stardust === 0
                   ? "-"
-                  : Number(ship.cost.stardust / 100000000).toLocaleString(
+                  : Number(ship.costs.stardust / 100000000).toLocaleString(
                       gameLocale,
                       {
                         style: "decimal"
@@ -191,9 +191,9 @@
                     )
               }}</font
               ><font v-else>{{
-                ship.cost.stardust === 0
+                ship.costs.stardust === 0
                   ? "-"
-                  : Number(ship.cost.stardust / 100000000).toLocaleString(
+                  : Number(ship.costs.stardust / 100000000).toLocaleString(
                       gameLocale,
                       {
                         style: "decimal"
@@ -203,7 +203,7 @@
             </td>
             <td>{{ ship.speed }}</td>
             <td>
-              {{ ship.cost.time | timePretty }}
+              {{ ship.costs.time | timePretty }}
             </td>
             <td>
               {{ (ship.rocket + ship.bullet + ship.laser) | omitZero }} /
@@ -282,7 +282,7 @@ export default {
       stardust: null,
       clicked: [],
       chainResponse: [],
-      currentSort: "min_level",
+      currentSort: "shipyard_min_level",
       currentSortDir: "asc",
       processing: false,
       filter: "active",
@@ -428,7 +428,10 @@ export default {
       await this.getStardust();
     },
     async getShipyard() {
-      const response = await ShipyardService.all(this.planetId);
+      const response = await ShipyardService.planetShipyard(
+        this.gameUser,
+        this.planetId
+      );
       this.shipyard = response;
     },
     async getStardust() {
@@ -471,10 +474,10 @@ export default {
     handleCallback(self, ship) {
       if (self.processing) {
         self.chainResponse.push(ship.longname);
-        self.quantity.coal = self.quantity.coal - ship.cost.coal;
-        self.quantity.ore = self.quantity.ore - ship.cost.ore;
-        self.quantity.copper = self.quantity.copper - ship.cost.copper;
-        self.quantity.uranium = self.quantity.uranium - ship.cost.uranium;
+        self.quantity.coal = self.quantity.coal - ship.costs.coal;
+        self.quantity.ore = self.quantity.ore - ship.costs.ore;
+        self.quantity.copper = self.quantity.copper - ship.costs.copper;
+        self.quantity.uranium = self.quantity.uranium - ship.costs.uranium;
         self.processing = false;
         this.nextRefresh = moment.utc().add(6, "seconds");
       }
@@ -483,16 +486,16 @@ export default {
       if (this.isBusy(ship.busy_until)) {
         return false;
       }
-      if (this.coal < ship.cost.coal) {
+      if (this.coal < ship.costs.coal) {
         return false;
       }
-      if (this.ore < ship.cost.ore) {
+      if (this.ore < ship.costs.ore) {
         return false;
       }
-      if (this.copper < ship.cost.copper) {
+      if (this.copper < ship.costs.copper) {
         return false;
       }
-      if (this.uranium < ship.cost.uranium) {
+      if (this.uranium < ship.costs.uranium) {
         return false;
       }
       if (ship.cur_level < ship.min_level) {
