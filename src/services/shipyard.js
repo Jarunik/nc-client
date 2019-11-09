@@ -6,6 +6,13 @@ class ShipyardService {
 
     return response;
   }
+  async planetShipyard(userId, planetId) {
+    const response = await ApiService.get(
+      `/planetshipyard?user=${userId}&planet=${planetId}`
+    );
+
+    return response;
+  }
 }
 
 export default new ShipyardService();

@@ -527,7 +527,10 @@ export default {
       this.stardust = response.stardust;
     },
     async getShipyard() {
-      const response = await ShipyardService.all(this.planetId);
+      const response = await ShipyardService.planetShipyard(
+        this.gameUser,
+        this.planetId
+      );
       this.shipyard = response;
     },
     async fillForm() {
