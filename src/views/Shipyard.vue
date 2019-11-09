@@ -92,7 +92,7 @@
             <td>
               <font
                 v-if="
-                  ship.activated === 'true' ||
+                  ship.activated === true ||
                     ship.variant === 0 ||
                     ship.type === 'explorership' ||
                     ship.type === 'transportship'
@@ -416,7 +416,7 @@ export default {
         return this._.filter(
           sortedShipyard,
           ship =>
-            ship.activated == "true" ||
+            ship.activated == true ||
             ship.variant === 0 ||
             ship.type === "explorership" ||
             ship.type === "transportship"
@@ -505,7 +505,7 @@ export default {
         return false;
       }
       if (
-        ship.activated === "false" &&
+        ship.activated === false &&
         ship.variant !== 0 &&
         ship.type !== "explorership" &&
         ship.type !== "transportship"
