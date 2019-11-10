@@ -253,6 +253,9 @@
           <th>{{ $t("Planet") }}</th>
           <th>{{ $t("Explorer") }}</th>
           <th>{{ $t("Transporter") }}</th>
+          <th>{{ $t("Scout") }}</th>
+          <th>{{ $t("Patrol") }}</th>
+          <th>{{ $t("Cutter") }}</th>
           <th>{{ $t("Corvette") }}</th>
           <th>{{ $t("Frigate") }}</th>
           <th>{{ $t("Destroyer") }}</th>
@@ -278,6 +281,15 @@
                   ? "-"
                   : pFleet.fleet.transportship
               }}
+            </td>
+            <td>
+              {{ pFleet.fleet.scout === 0 ? "-" : pFleet.fleet.scout }}
+            </td>
+            <td>
+              {{ pFleet.fleet.patrol === 0 ? "-" : pFleet.fleet.patrol }}
+            </td>
+            <td>
+              {{ pFleet.fleet.cutter === 0 ? "-" : pFleet.fleet.cutter }}
             </td>
             <td>
               {{ pFleet.fleet.corvette === 0 ? "-" : pFleet.fleet.corvette }}
@@ -329,11 +341,12 @@
             <td>
               <span>
                 {{
-                  Number(Number(pQuantity.coal)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.coal).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
@@ -344,22 +357,24 @@
                 }"
               >
                 {{
-                  Number(Number(pQuantity.coaldepot)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.coaldepot).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(Number(pQuantity.ore)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.ore).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
@@ -370,22 +385,24 @@
                 }"
               >
                 {{
-                  Number(Number(pQuantity.oredepot)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.oredepot).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(Number(pQuantity.copper)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.copper).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
@@ -397,22 +414,23 @@
                 }"
               >
                 {{
-                  Number(Number(pQuantity.copperdepot)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
+                  Number(
+                    Number(pQuantity.copperdepot).toFixed(0)
+                  ).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
                 }}
               </span>
             </td>
             <td>
               <span>
                 {{
-                  Number(Number(pQuantity.uranium)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
+                  Number(Number(pQuantity.uranium).toFixed(0)).toLocaleString(
+                    gameLocale,
+                    {
                       style: "decimal"
-                    })
+                    }
+                  )
                 }}
               </span>
             </td>
@@ -426,11 +444,11 @@
                 }"
               >
                 {{
-                  Number(Number(pQuantity.uraniumdepot)
-                    .toFixed(0))
-                    .toLocaleString(gameLocale, {
-                      style: "decimal"
-                    })
+                  Number(
+                    Number(pQuantity.uraniumdepot).toFixed(0)
+                  ).toLocaleString(gameLocale, {
+                    style: "decimal"
+                  })
                 }}
               </span>
             </td>
@@ -671,6 +689,9 @@ export default {
       planetFleet.fleet = {
         explorership: 0,
         transportship: 0,
+        scout: 0,
+        patrol: 0,
+        cutter: 0,
         corvette: 0,
         frigate: 0,
         destroyer: 0,
@@ -689,6 +710,15 @@ export default {
         }
         if (ship.type.startsWith("transportship")) {
           planetFleet.fleet.transportship++;
+        }
+        if (ship.type.startsWith("scout")) {
+          planetFleet.fleet.scout++;
+        }
+        if (ship.type.startsWith("patrol")) {
+          planetFleet.fleet.patrol++;
+        }
+        if (ship.type.startsWith("cutter")) {
+          planetFleet.fleet.cutter++;
         }
         if (ship.type.startsWith("corvette")) {
           planetFleet.fleet.corvette++;
