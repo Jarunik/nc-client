@@ -72,7 +72,7 @@
           <th @click="sort('longname')">{{ $t("Ship") }}</th>
           <th @click="sort('shipyard_min_level')">{{ $t("Need") }}</th>
           <th @click="sort('shipyard_level')">{{ $t("Yard") }}</th>
-          <th @click="sort('skill')">{{ $t("Skill") }}</th>
+          <th @click="sort('ship_skill')">{{ $t("Skill") }}</th>
           <th @click="sort('coal')">{{ $t("C") }}</th>
           <th @click="sort('ore')">{{ $t("Fe") }}</th>
           <th @click="sort('copper')">{{ $t("Cu") }}</th>
@@ -501,7 +501,7 @@ export default {
       if (this.uranium < ship.costs.uranium) {
         return false;
       }
-      if (ship.cur_level < ship.min_level) {
+      if (ship.shipyard_level < ship.shipyard_min_level) {
         return false;
       }
       if (
