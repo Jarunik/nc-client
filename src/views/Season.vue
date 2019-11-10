@@ -3,7 +3,7 @@
     <h1>
       {{ $t("Season") }}
     </h1>
-    <template v-if="seasonRanking !== null">
+    <template v-if="!_.isEmpty(seasonRanking)">
       <p>
         {{ moment(new Date(seasonRanking.start_date * 1000)).format("LLL") }} -
         {{ moment(new Date(seasonRanking.end_date * 1000)).format("LLL") }}
@@ -113,7 +113,7 @@ export default {
       } else {
         sortedRanking = [];
       }
-      if (sortedRanking !== null) {
+      if (sortedRanking != null && sortedRanking != undefined) {
         return sortedRanking.sort((a, b) => {
           let modifier = 1;
           if (this.currentSortDir === "desc") modifier = -1;
