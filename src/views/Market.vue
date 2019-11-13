@@ -237,7 +237,7 @@
             </span>
           </td>
           <td>
-            <span v-if="ask.category == 'planet'">
+            <span v-if="ask.category == 'planet' || (ask.user == gameUser && ask.category == 'ship')">
               <router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
                 >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link
               >
