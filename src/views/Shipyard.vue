@@ -375,9 +375,9 @@ export default {
               this.currentSort === "stardust" ||
               this.currentSort === "time"
             ) {
-              if (a.cost[this.currentSort] < b.cost[this.currentSort])
+              if (a.costs[this.currentSort] < b.costs[this.currentSort])
                 return -1 * modifier;
-              if (a.cost[this.currentSort] > b.cost[this.currentSort])
+              if (a.costs[this.currentSort] > b.costs[this.currentSort])
                 return 1 * modifier;
               // attack
             } else if (this.currentSort === "attack") {
