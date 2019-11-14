@@ -22,20 +22,22 @@
           <cart-icon :title="$t('Shop')" />
         </router-link>
         |
+        <router-link :to="'/market'" v-tooltip="$t('Market')">
+          <store-icon :title="$t('Market')" />
+        </router-link>
+
+        &nbsp; &nbsp; &nbsp;
+
         <router-link :to="'/items'" v-tooltip="$t('Items')">
           <package-variant-closed-icon :title="$t('Items')" />
         </router-link>
         |
-        <router-link :to="'/market'" v-tooltip="$t('Market')">
-          <store-icon :title="$t('Market')" />
+        <router-link :to="'/wallet'" v-tooltip="$t('Wallet')">
+          <wallet-icon :title="$t('Wallet')" />
         </router-link>
         |
         <router-link to="/activity" v-tooltip="$t('Activity')">
           <newspaper-icon :title="$t('Activity')" />
-        </router-link>
-        |
-        <router-link :to="'/wallet'" v-tooltip="$t('Wallet')">
-          <wallet-icon :title="$t('Wallet')" />
         </router-link>
         |
         <router-link :to="'/skills'" v-tooltip="$t('Skills')">
@@ -56,19 +58,6 @@
             </router-link>
           </font>
         </router-link>
-        <span
-          v-if="
-            loginUser == 'jarunik' ||
-              loginUser == 'oliverschmid' ||
-              loginUser == 'nextcolony' ||
-              loginUser == 'rondras'
-          "
-        >
-          |
-          <router-link to="/administration" v-tooltip="$t('Administration')">
-            <apple-keyboard-command-icon :title="$t('Administration')" />
-          </router-link>
-        </span>
       </span>
       <br />
       <span
@@ -103,7 +92,7 @@
       <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
         <factory-icon :title="$t('Shipyard')" />
       </router-link>
-      |
+      &nbsp; &nbsp; &nbsp;
       <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
         <map-icon :title="$t('Galaxy')" />
       </router-link>
@@ -139,7 +128,6 @@ import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import TimerIcon from "vue-material-design-icons/Timer.vue";
-import AppleKeyboardCommandIcon from "vue-material-design-icons/AppleKeyboardCommand.vue";
 import StoreIcon from "vue-material-design-icons/Store.vue";
 import CogsIcon from "vue-material-design-icons/Cogs.vue";
 import WalletIcon from "vue-material-design-icons/Wallet.vue";
@@ -172,7 +160,6 @@ export default {
     NewspaperIcon,
     LoginIcon,
     TimerIcon,
-    AppleKeyboardCommandIcon,
     StoreIcon,
     CogsIcon,
     WalletIcon,
