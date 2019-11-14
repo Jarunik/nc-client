@@ -4,7 +4,11 @@
       <arrow-left-circle-icon :title="$t('Last')" />
     </span>
     &nbsp;
-    <select @change="setPlanet(planet)" v-model="planet">
+    <select
+      @change="setPlanet(planet)"
+      v-model="planet"
+      v-tooltip="$t('Planet')"
+    >
       <option
         v-for="planet in sortedPlanets"
         :value="planet"
