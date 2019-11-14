@@ -1,6 +1,22 @@
 <template>
   <div id="app">
     <span id="navtop">
+           
+      <span
+        v-if="!searchUser && (loginUser !== null || gameUser !== null)"
+        v-tooltip="$t('User')"
+      >
+        <span @click="activateSearch()">{{ gameUser }}</span>
+      </span>
+      <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
+        <input
+          ref="search"
+          v-model="displayUser"
+          @keyup.enter="setUser(displayUser)"
+          :placeholder="placeholder"
+        />
+      </span>
+      <br />
       <span>
         <router-link to="/season" v-tooltip="$t('Season')">
           <timer-icon :title="$t('Season')" />
@@ -59,28 +75,11 @@
           </font>
         </router-link>
       </span>
-      <br />
-      <span
-        v-if="!searchUser && (loginUser !== null || gameUser !== null)"
-        v-tooltip="$t('User')"
-      >
-        <span @click="activateSearch()">{{ gameUser }}</span>
-      </span>
-      <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
-        <input
-          ref="search"
-          v-model="displayUser"
-          @keyup.enter="setUser(displayUser)"
-          :placeholder="placeholder"
-        />
-      </span>
     </span>
     <div id="middle">
       <router-view />
     </div>
     <span id="navbottom">
-      <PlanetNav :routeUser="gameUser" />
-      <br />
       <router-link :to="'/production'" v-tooltip="$t('Production')">
         <cogs-icon :title="$t('Production')" />
       </router-link>
@@ -92,7 +91,7 @@
       <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
         <factory-icon :title="$t('Shipyard')" />
       </router-link>
-      &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
       <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
         <map-icon :title="$t('Galaxy')" />
       </router-link>
@@ -104,6 +103,8 @@
       <router-link :to="'/missions'" v-tooltip="$t('Missions')">
         <calendar-icon :title="$t('Mission')" />
       </router-link>
+      <br />
+      <PlanetNav :routeUser="gameUser" />
     </span>
   </div>
 </template>
@@ -369,7 +370,7 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: x-large;
+  font-size: xx-large;
   z-index: 100;
 }
 
@@ -385,15 +386,15 @@ export default {
   left: 0;
   width: 100%;
   background-color: #100f1c;
-  font-size: x-large;
+  font-size: xx-large;
   z-index: 100;
 }
 
 #navbottom select {
-  font-size: large;
+  font-size: x-large;
 }
-#navbottom input {
-  font-size: large;
+#navtop input {
+  font-size: x-large;
 }
 body {
   background-image: url("./assets/background.jpg");
