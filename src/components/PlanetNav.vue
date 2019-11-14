@@ -3,7 +3,7 @@
     <span @click="lastPlanet()" class="pointer">
       <arrow-left-circle-icon :title="$t('Last')" />
     </span>
-    |
+    &nbsp;
     <select @change="setPlanet(planet)" v-model="planet">
       <option
         v-for="planet in sortedPlanets"
@@ -12,7 +12,7 @@
         >{{ planet.name }}</option
       >
     </select>
-    |
+    &nbsp;
     <span @click="nextPlanet()" class="pointer">
       <arrow-right-circle-icon :title="$t('Next')" />
     </span>
