@@ -1,24 +1,5 @@
 <template>
   <span class="planetnav">
-    <span
-      v-if="!searchUser && (loginUser !== null || gameUser !== null)"
-      v-tooltip="$t('User')"
-    >
-      <span @click="activateSearch()">{{ gameUser }}</span>
-    </span>
-    <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
-      <input
-        ref="search"
-        v-model="displayUser"
-        @keyup.enter="setUser(displayUser)"
-        :placeholder="placeholder"
-      />
-    </span>
-    |
-    <router-link :to="'/planets'" v-tooltip="$t('Planets')">
-      <earth-icon :title="$t('Planets')" />
-    </router-link>
-    |
     <span @click="lastPlanet()" class="pointer">
       <arrow-left-circle-icon :title="$t('Last')" />
     </span>
@@ -40,9 +21,7 @@
 
 <script>
 import PlanetsService from "@/services/planets";
-import UserService from "@/services/user";
 import { mapState } from "vuex";
-import EarthIcon from "vue-material-design-icons/Earth.vue";
 import * as types from "@/store/mutation-types";
 import ArrowLeftCircleIcon from "vue-material-design-icons/ArrowLeftCircle.vue";
 import ArrowRightCircleIcon from "vue-material-design-icons/ArrowRightCircle.vue";
@@ -50,7 +29,6 @@ import ArrowRightCircleIcon from "vue-material-design-icons/ArrowRightCircle.vue
 export default {
   name: "planetnav",
   components: {
-    EarthIcon,
     ArrowLeftCircleIcon,
     ArrowRightCircleIcon
   },
@@ -176,39 +154,6 @@ export default {
           this.setPlanet(newPlanet);
         }
       }
-    },
-    setUser(newUser) {
-      this.fetchUser(newUser).then(searchedUser => {
-        if (searchedUser !== null && searchedUser === newUser) {
-          this.$store.dispatch("game/setUser", newUser);
-          this.searchUser = false;
-          this.fetchStarterPlanet(newUser).then(planet => {
-            if (planet !== undefined && planet !== null) {
-              this.$store.dispatch("planet/setId", planet.id);
-              this.$store.dispatch("planet/setName", planet.name);
-              this.$store.dispatch("planet/setPosX", planet.posx);
-              this.$store.dispatch("planet/setPosY", planet.posy);
-            }
-          });
-        } else {
-          this.displayUser = this.loginUser;
-        }
-      });
-    },
-    activateSearch() {
-      this.displayUser = null;
-      this.searchUser = true;
-      this.$nextTick(() => {
-        this.$refs.search.focus();
-      });
-    },
-    async fetchUser(user) {
-      const response = await UserService.get(user);
-      return response.username;
-    },
-    async fetchStarterPlanet(user) {
-      const response = await PlanetsService.starterPlanet(user);
-      return response;
     }
   }
 };
