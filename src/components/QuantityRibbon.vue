@@ -130,13 +130,6 @@ export default {
       gameLocale: state => state.game.gameLocale
     })
   },
-  watch: {
-    async planetId(newValue, oldValue) {
-      if (newValue != oldValue) {
-        await this.getQuantity();
-      }
-    }
-  },
   methods: {
     async prepareComponent() {
       await this.getQuantity();
