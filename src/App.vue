@@ -37,6 +37,7 @@
             ref="search"
             v-model="displayUser"
             @keyup.enter="setUser(displayUser)"
+            @blur="searchUser = false"
             :placeholder="placeholder"
           />
         </span>
