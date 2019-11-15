@@ -231,22 +231,22 @@ export default {
   },
   methods: {
     setUser(newUser) {
-      this.fetchUser(newUser).then(searchedUser => {
-        if (searchedUser !== null && searchedUser === newUser) {
-          this.$store.dispatch("game/setUser", newUser);
-          this.searchUser = false;
-          this.fetchStarterPlanet(newUser).then(planet => {
-            if (planet !== undefined && planet !== null) {
-              this.$store.dispatch("planet/setId", planet.id);
-              this.$store.dispatch("planet/setName", planet.name);
-              this.$store.dispatch("planet/setPosX", planet.posx);
-              this.$store.dispatch("planet/setPosY", planet.posy);
-            }
-          });
-        } else {
-          this.displayUser = this.loginUser;
-        }
-      });
+      if (newUser != null && newUser != this.gameUser) {
+        this.fetchUser(newUser).then(searchedUser => {
+          if (searchedUser !== null && searchedUser === newUser) {
+            this.$store.dispatch("game/setUser", newUser);
+            this.searchUser = false;
+            this.fetchStarterPlanet(newUser).then(planet => {
+              if (planet !== undefined && planet !== null) {
+                this.$store.dispatch("planet/setId", planet.id);
+                this.$store.dispatch("planet/setName", planet.name);
+                this.$store.dispatch("planet/setPosX", planet.posx);
+                this.$store.dispatch("planet/setPosY", planet.posy);
+              }
+            });
+          }
+        });
+      }
     },
     activateSearch() {
       this.displayUser = null;

@@ -204,8 +204,10 @@ export default {
       this.focus(this.areaHeight / 2, this.areaWidth / 2);
     },
     async getPlanet(planetId) {
-      const response = await PlanetsService.byId(planetId);
-      this.planet = response;
+      if (this.planet.id != planetId) {
+        const response = await PlanetsService.byId(planetId);
+        this.planet = response;
+      }
     },
     // Debounce to speed up editing of the search field (v-model was slow here)
     updateSearch(e) {

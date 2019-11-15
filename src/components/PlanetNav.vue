@@ -46,13 +46,13 @@ export default {
   async mounted() {
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
-        case "game/" + types.SET_GAME_USER:
+        case "planet/" + types.SET_PLANET_ID:
           this.prepareComponent();
       }
     });
     this.$store.subscribe(mutation => {
       switch (mutation.type) {
-        case "planet/" + types.SET_PLANET_ID:
+        case "game/" + types.SET_GAME_USER:
           this.prepareComponent();
       }
     });
@@ -115,11 +115,11 @@ export default {
     },
     setPlanet(planet) {
       if (planet.id !== this.planetId) {
+        this.planet = planet;
         this.$store.dispatch("planet/setId", planet.id);
         this.$store.dispatch("planet/setName", planet.name);
         this.$store.dispatch("planet/setPosX", planet.posx);
         this.$store.dispatch("planet/setPosY", planet.posy);
-        this.planet = planet;
       }
     },
     resetPlanet() {
@@ -130,26 +130,28 @@ export default {
     },
     nextPlanet() {
       let newPlanet = null;
-      if (this.planets != null) {
-        for (let i = 0; i < this.planets.length; i++) {
-          if (i !== 0 && this.planets[i - 1].id === this.planetId) {
-            newPlanet = this.planets[i];
+      let planets = this.planets;
+      if (planets != null) {
+        for (let i = 0; i < planets.length; i++) {
+          if (i !== 0 && planets[i - 1].id === this.planetId) {
+            newPlanet = planets[i];
           }
         }
-        if (newPlanet !== null) {
+        if (newPlanet !== null && newPlanet.id != this.planetId) {
           this.setPlanet(newPlanet);
         }
       }
     },
     lastPlanet() {
       let newPlanet = null;
-      if (this.planets != null) {
-        for (let i = 0; i < this.planets.length; i++) {
+      let planets = this.planets;
+      if (planets != null) {
+        for (let i = 0; i < planets.length; i++) {
           if (
             i < this.planets.length - 1 &&
-            this.planets[i + 1].id === this.planetId
+            planets[i + 1].id === this.planetId
           ) {
-            newPlanet = this.planets[i];
+            newPlanet = planets[i];
           }
         }
         if (newPlanet !== null) {
