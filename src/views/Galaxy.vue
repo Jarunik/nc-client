@@ -206,9 +206,11 @@ export default {
       }
     },
     async getPlanet(planetId) {
-      if (this.planet.id != planetId) {
-        const response = await PlanetsService.byId(planetId);
-        this.planet = response;
+      if (this.$route.name == "galaxy") {
+        if (this.planet == null || this.planet.id != this.planetId) {
+          const response = await PlanetsService.byId(planetId);
+          this.planet = response;
+        }
       }
     },
     // Debounce to speed up editing of the search field (v-model was slow here)
