@@ -426,9 +426,11 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getShipyard();
-      await this.getQuantity();
-      await this.getStardust();
+      if (this.$route.name == "shipyard") {
+        await this.getShipyard();
+        await this.getQuantity();
+        await this.getStardust();
+      }
     },
     async getShipyard() {
       const response = await ShipyardService.planetShipyard(

@@ -129,25 +129,27 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getMap();
-      this.$store.subscribe(mutation => {
-        switch (mutation.type) {
-          case "planet/" + types.SET_PLANET_ID:
-            this.prepareComponent();
+      if (this.$route.name == "maps") {
+        await this.getMap();
+        this.$store.subscribe(mutation => {
+          switch (mutation.type) {
+            case "planet/" + types.SET_PLANET_ID:
+              this.prepareComponent();
+          }
+        });
+        if (
+          (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+          (this.$route.query.y !== undefined && this.$route.query.y !== null)
+        ) {
+          this.focusX = parseInt(this.$route.query.x);
+          this.focusY = parseInt(this.$route.query.y);
+          this.search = this.focusX + "/" + this.focusY;
+          this.centerX = this.focusX * displaySpacing;
+          this.centerY = this.focusY * displaySpacing;
+          this.setZoom(10); // which does this.draw();
+        } else {
+          this.draw();
         }
-      });
-      if (
-        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
-        (this.$route.query.y !== undefined && this.$route.query.y !== null)
-      ) {
-        this.focusX = parseInt(this.$route.query.x);
-        this.focusY = parseInt(this.$route.query.y);
-        this.search = this.focusX + "/" + this.focusY;
-        this.centerX = this.focusX * displaySpacing;
-        this.centerY = this.focusY * displaySpacing;
-        this.setZoom(10); // which does this.draw();
-      } else {
-        this.draw();
       }
     },
     async getMap() {

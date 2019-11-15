@@ -367,10 +367,12 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getAsks();
-      await this.getStardust();
-      this.userFilter = "all";
-      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      if (this.$route.name == "market") {
+        await this.getAsks();
+        await this.getStardust();
+        this.userFilter = "all";
+        await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      }
     },
     async getAsks() {
       const response = await MarketService.lowest();

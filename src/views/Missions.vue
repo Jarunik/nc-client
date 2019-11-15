@@ -414,9 +414,11 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getMissions();
-      await this.getSkills();
-      await this.calculatMissionTotal();
+      if (this.$route.name == "missions") {
+        await this.getMissions();
+        await this.getSkills();
+        await this.calculatMissionTotal();
+      }
     },
     async getMissions() {
       const active = await MissionsService.active(this.gameUser);

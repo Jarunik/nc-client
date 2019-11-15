@@ -307,7 +307,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getBattle();
+      if (this.$route.name == "battle") {
+        await this.getBattle();
+      }
     },
     async getBattle() {
       const response = await BattleService.all(this.missionId);

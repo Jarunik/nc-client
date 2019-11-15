@@ -163,13 +163,15 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getProduction();
-      this.$store.subscribe(mutation => {
-        switch (mutation.type) {
-          case "planet/" + types.SET_PLANET_ID:
-            this.prepareComponent();
-        }
-      });
+      if (this.$route.name == "production") {
+        await this.getProduction();
+        this.$store.subscribe(mutation => {
+          switch (mutation.type) {
+            case "planet/" + types.SET_PLANET_ID:
+              this.prepareComponent();
+          }
+        });
+      }
     },
     async getProduction() {
       const response = await ProductionService.all(

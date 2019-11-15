@@ -130,7 +130,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getSeason();
+      if (this.$route.name == "season") {
+        await this.getSeason();
+      }
     },
     async getSeason() {
       const response = await SeasonService.seasonRanking();

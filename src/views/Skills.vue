@@ -296,8 +296,10 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getSkills();
-      await this.getQuantity();
+      if (this.$route.name == "skills") {
+        await this.getSkills();
+        await this.getQuantity();
+      }
     },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);

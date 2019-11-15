@@ -531,11 +531,13 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getPlanets();
-      await this.getBurnRates();
-      await this.getPlanetFleet();
-      await this.getPlanetQuantities();
-      await this.getStardust();
+      if (this.$route.name == "planets") {
+        await this.getPlanets();
+        await this.getBurnRates();
+        await this.getPlanetFleet();
+        await this.getPlanetQuantities();
+        await this.getStardust();
+      }
     },
     async getStardust() {
       if (this.gameUser !== null) {

@@ -175,33 +175,35 @@ export default {
       await this.getGalaxy();
     },
     async getGalaxy() {
-      var xCoordinate = 0;
-      var yCoordinate = 0;
-      if (this.planetId !== null) {
-        xCoordinate = this.posX;
-        yCoordinate = this.posY;
-        this.focusX = xCoordinate;
-        this.focusY = yCoordinate;
-        this.search = this.focusX + "/" + this.focusY;
+      if (this.$route.name == "galaxy") {
+        var xCoordinate = 0;
+        var yCoordinate = 0;
+        if (this.planetId !== null) {
+          xCoordinate = this.posX;
+          yCoordinate = this.posY;
+          this.focusX = xCoordinate;
+          this.focusY = yCoordinate;
+          this.search = this.focusX + "/" + this.focusY;
+        }
+        if (
+          (this.$route.query.x !== undefined && this.$route.query.x !== null) &
+          (this.$route.query.y !== undefined && this.$route.query.y !== null)
+        ) {
+          xCoordinate = this.$route.query.x;
+          yCoordinate = this.$route.query.y;
+          this.focusX = xCoordinate;
+          this.focusY = yCoordinate;
+          this.search = this.focusX + "/" + this.focusY;
+        }
+        const response = await GalaxyService.area(
+          xCoordinate,
+          yCoordinate,
+          this.areaHeight,
+          this.areaWidth
+        );
+        this.galaxy = response;
+        this.focus(this.areaHeight / 2, this.areaWidth / 2);
       }
-      if (
-        (this.$route.query.x !== undefined && this.$route.query.x !== null) &
-        (this.$route.query.y !== undefined && this.$route.query.y !== null)
-      ) {
-        xCoordinate = this.$route.query.x;
-        yCoordinate = this.$route.query.y;
-        this.focusX = xCoordinate;
-        this.focusY = yCoordinate;
-        this.search = this.focusX + "/" + this.focusY;
-      }
-      const response = await GalaxyService.area(
-        xCoordinate,
-        yCoordinate,
-        this.areaHeight,
-        this.areaWidth
-      );
-      this.galaxy = response;
-      this.focus(this.areaHeight / 2, this.areaWidth / 2);
     },
     async getPlanet(planetId) {
       if (this.planet.id != planetId) {

@@ -400,8 +400,10 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getBuildings();
-      await this.getQuantity();
+      if (this.$route.name == "buildings") {
+        await this.getBuildings();
+        await this.getQuantity();
+      }
     },
     async getBuildings() {
       const response = await BuildingService.all(this.planetId);
