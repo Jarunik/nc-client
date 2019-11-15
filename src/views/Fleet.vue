@@ -891,12 +891,12 @@ export default {
             return obj.type === upgradeTo;
           });
           if (typeof shipCost !== "undefined") {
-            this.yamatoCoal = shipCost.cost.coal;
-            this.yamatoOre = shipCost.cost.ore;
-            this.yamatoCopper = shipCost.cost.copper;
-            this.yamatoUranium = shipCost.cost.uranium;
-            this.yamatoStardust = shipCost.cost.stardust;
-            this.buildYamato = shipCost.cur_level >= shipCost.min_level;
+            this.yamatoCoal = shipCost.costs.coal;
+            this.yamatoOre = shipCost.costs.ore;
+            this.yamatoCopper = shipCost.costs.copper;
+            this.yamatoUranium = shipCost.costs.uranium;
+            this.yamatoStardust = shipCost.costs.stardust;
+            this.buildYamato = shipCost.shipyard_level >= shipCost.shipyard_min_level;
           }
         }
       });
