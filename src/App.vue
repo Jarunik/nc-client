@@ -28,11 +28,11 @@
         |
         <span
           v-if="!searchUser && (loginUser !== null || gameUser !== null)"
-          v-tooltip="$t('User')"
+          v-tooltip="gameUser"
         >
           <span @click="activateSearch()">{{ gameUser.substring(0, 7) }}</span>
         </span>
-        <span v-show="searchUser || gameUser === null" v-tooltip="$t('User')">
+        <span v-show="searchUser || gameUser === null" v-tooltip="gameUser">
           <input
             ref="search"
             v-model="displayUser"
@@ -372,7 +372,7 @@ export default {
 }
 
 #middle {
-  padding-top: 80px;
+  padding-top: 40px;
   padding-bottom: 200px;
 }
 
