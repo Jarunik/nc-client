@@ -188,7 +188,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getShop();
+      if (this.$route.name == "items") {
+        await this.getShop();
+      }
     },
     async getShop() {
       const response = await ItemsService.byUser(this.gameUser);

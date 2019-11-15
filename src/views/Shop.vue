@@ -72,7 +72,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getShop();
+      if (this.$route.name == "shop") {
+        await this.getShop();
+      }
     },
     async getShop() {
       const response = await ShopService.all();

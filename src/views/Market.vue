@@ -237,7 +237,12 @@
             </span>
           </td>
           <td>
-            <span v-if="ask.category == 'planet' || (ask.user == gameUser && ask.category == 'ship')">
+            <span
+              v-if="
+                ask.category == 'planet' ||
+                  (ask.user == gameUser && ask.category == 'ship')
+              "
+            >
               <router-link :to="`/maps?x=${ask.cords_hor}&y=${ask.cords_ver}`"
                 >{{ ask.cords_hor }}/{{ ask.cords_ver }}</router-link
               >
@@ -362,10 +367,12 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getAsks();
-      await this.getStardust();
-      this.userFilter = "all";
-      await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      if (this.$route.name == "market") {
+        await this.getAsks();
+        await this.getStardust();
+        this.userFilter = "all";
+        await this.getMarketByFilter(this.categoryFilter, this.userFilter);
+      }
     },
     async getAsks() {
       const response = await MarketService.lowest();

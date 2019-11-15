@@ -110,7 +110,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getShips();
+      if (this.$route.name == "ships") {
+        await this.getShips();
+      }
     },
     async getShips() {
       const response = await FleetService.ships(this.gameUser, this.planetId);

@@ -34,63 +34,75 @@
           <package-variant-closed-icon :title="$t('Items')" />
         </router-link>
         |
-        <router-link :to="'/skills'" v-tooltip="$t('Skills')">
-          <school-icon :title="$t('Skills')" />
+        <router-link :to="'/wallet'" v-tooltip="$t('Wallet')">
+          <wallet-icon :title="$t('Wallet')" />
         </router-link>
         |
-        <router-link :to="'/buildings'" v-tooltip="$t('Buildings')">
-          <home-city-icon :title="$t('Buildings')" />
+        <router-link :to="'/planets'" v-tooltip="$t('Planets')">
+          <earth-icon :title="$t('Planets')" />
         </router-link>
         |
-        <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
-          <factory-icon :title="$t('Shipyard')" />
+        <router-link to="/" v-tooltip="$t('Login')">
+          <font v-if="loginUser == null" color="red">
+            <login-icon :title="$t('Login')" />
+          </font>
+          <font v-else>
+            <router-link to="/">
+              <account-icon :title="$t('Login')" />
+            </router-link>
+          </font>
         </router-link>
         |
-        <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
-          <map-icon :title="$t('Galaxy')" />
-        </router-link>
-        |
-        <router-link :to="'/fleet'" v-tooltip="$t('Fleet')">
-          <ship-wheel-icon :title="$t('Fleet')" />
-        </router-link>
-        |
-        <router-link :to="'/missions'" v-tooltip="$t('Missions')">
-          <calendar-icon :title="$t('Mission')" />
-        </router-link>
+        <span
+          v-if="!searchUser && (loginUser !== null || gameUser !== null)"
+          v-tooltip="gameUser"
+        >
+          <span @click="activateSearch()">{{ gameUser.substring(0, 7) }}</span>
+        </span>
+        <span v-show="searchUser || gameUser === null" v-tooltip="gameUser">
+          <input
+            ref="search"
+            v-model="displayUser"
+            @keyup.enter="setUser(displayUser)"
+            @blur="searchUser = false"
+            :placeholder="placeholder"
+          />
+        </span>
       </span>
     </span>
     <div id="middle">
       <router-view />
     </div>
     <span id="navbottom">
-      <PlanetNav :routeUser="gameUser" />
-      <br />
-
-      <QuantityRibbon />
-      <span
-        v-if="
-          loginUser == 'jarunik' ||
-            loginUser == 'oliverschmid' ||
-            loginUser == 'nextcolony' ||
-            loginUser == 'rondras'
-        "
-      >
-        |
-        <router-link to="/administration" v-tooltip="$t('Administration')">
-          <settings-icon :title="$t('Administration')" />
-        </router-link>
-      </span>
-      |
-      <router-link to="/" v-tooltip="$t('Login')">
-        <font v-if="loginUser == null" color="red">
-          <login-icon :title="$t('Login')" />
-        </font>
-        <font v-else>
-          <router-link to="/">
-            <account-icon :title="$t('Login')" />
-          </router-link>
-        </font>
+      <router-link :to="'/production'" v-tooltip="$t('Production')">
+        <cogs-icon :title="$t('Production')" />
       </router-link>
+      |
+      <router-link :to="'/skills'" v-tooltip="$t('Skills')">
+        <school-icon :title="$t('Skills')" />
+      </router-link>
+      |
+      <router-link :to="'/buildings'" v-tooltip="$t('Buildings')">
+        <home-city-icon :title="$t('Buildings')" />
+      </router-link>
+      |
+      <router-link :to="'/shipyard'" v-tooltip="$t('Shipyard')">
+        <factory-icon :title="$t('Shipyard')" />
+      </router-link>
+      |
+      <router-link :to="'/galaxy'" v-tooltip="$t('Galaxy')">
+        <map-icon :title="$t('Galaxy')" />
+      </router-link>
+      |
+      <router-link :to="'/fleet'" v-tooltip="$t('Fleet')">
+        <ship-wheel-icon :title="$t('Fleet')" />
+      </router-link>
+      |
+      <router-link :to="'/missions'" v-tooltip="$t('Missions')">
+        <calendar-icon :title="$t('Mission')" />
+      </router-link>
+      |
+      <PlanetNav :routeUser="gameUser" />
     </span>
   </div>
 </template>
@@ -98,8 +110,8 @@
 <script>
 import { mapGetters } from "vuex";
 import moment from "moment";
-import QuantityRibbon from "@/components/QuantityRibbon.vue";
 import PlanetNav from "@/components/PlanetNav.vue";
+import PlanetsService from "@/services/planets";
 import HomeCityIcon from "vue-material-design-icons/HomeCity.vue";
 import SchoolIcon from "vue-material-design-icons/School.vue";
 import CartIcon from "vue-material-design-icons/Cart.vue";
@@ -115,13 +127,22 @@ import SwordCrossIcon from "vue-material-design-icons/SwordCross.vue";
 import NewspaperIcon from "vue-material-design-icons/Newspaper.vue";
 import LoginIcon from "vue-material-design-icons/Login.vue";
 import TimerIcon from "vue-material-design-icons/Timer.vue";
-import SettingsIcon from "vue-material-design-icons/Settings.vue";
 import StoreIcon from "vue-material-design-icons/Store.vue";
+import CogsIcon from "vue-material-design-icons/Cogs.vue";
+import WalletIcon from "vue-material-design-icons/Wallet.vue";
+import UserService from "@/services/user";
+import EarthIcon from "vue-material-design-icons/Earth.vue";
 
 export default {
   name: "App",
+  data: function() {
+    return {
+      displayUser: null,
+      searchUser: false,
+      placeholder: "Enter User"
+    };
+  },
   components: {
-    QuantityRibbon,
     PlanetNav,
     HomeCityIcon,
     SchoolIcon,
@@ -138,8 +159,10 @@ export default {
     NewspaperIcon,
     LoginIcon,
     TimerIcon,
-    SettingsIcon,
-    StoreIcon
+    StoreIcon,
+    CogsIcon,
+    WalletIcon,
+    EarthIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -204,6 +227,41 @@ export default {
       this.$store.dispatch("planet/setPosX", null);
       this.$store.dispatch("planet/setPosY", null);
       window.location.href = "/";
+    }
+  },
+  methods: {
+    setUser(newUser) {
+      if (newUser != null && newUser != this.gameUser) {
+        this.fetchUser(newUser).then(searchedUser => {
+          if (searchedUser !== null && searchedUser === newUser) {
+            this.$store.dispatch("game/setUser", newUser);
+            this.searchUser = false;
+            this.fetchStarterPlanet(newUser).then(planet => {
+              if (planet !== undefined && planet !== null) {
+                this.$store.dispatch("planet/setId", planet.id);
+                this.$store.dispatch("planet/setName", planet.name);
+                this.$store.dispatch("planet/setPosX", planet.posx);
+                this.$store.dispatch("planet/setPosY", planet.posy);
+              }
+            });
+          }
+        });
+      }
+    },
+    activateSearch() {
+      this.displayUser = null;
+      this.searchUser = true;
+      this.$nextTick(() => {
+        this.$refs.search.focus();
+      });
+    },
+    async fetchUser(user) {
+      const response = await UserService.get(user);
+      return response.username;
+    },
+    async fetchStarterPlanet(user) {
+      const response = await PlanetsService.starterPlanet(user);
+      return response;
     }
   },
   created() {
@@ -329,14 +387,11 @@ export default {
   font-size: x-large;
   z-index: 100;
 }
-#navbottom a {
-  color: white;
-  text-decoration: none;
-}
+
 #navbottom select {
   font-size: large;
 }
-#navbottom input {
+#navtop input {
   font-size: large;
 }
 body {
@@ -373,6 +428,7 @@ input {
 .router-link-exact-active {
   color: green;
 }
+
 .tooltip {
   display: block !important;
   z-index: 10000;

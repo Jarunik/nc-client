@@ -1,83 +1,62 @@
 <template>
-  <span>
-    <router-link :to="'/production'" v-tooltip="$t('Production')">
-      <span v-if="planetId !== null && quantity != null">
-        {{
-          Number(coal).toLocaleString(gameLocale, {
-            style: "decimal"
-          })
-        }}
-        <font v-if="quantity.coaldepot <= coal" color="red"
-          ><alpha-c-box-icon :title="$t('Coal')" v-tooltip="$t('Coal')"
-        /></font>
-        <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
+  <span v-if="planetId !== null && quantity != null">
+    {{
+      Number(coal).toLocaleString(gameLocale, {
+        style: "decimal"
+      })
+    }}
+    <font v-if="quantity.coaldepot <= coal" color="red"
+      ><alpha-c-box-icon :title="$t('Coal')" v-tooltip="$t('Coal')"
+    /></font>
+    <font v-else><alpha-c-box-icon :title="$t('Coal')"/></font>
 
-        {{
-          Number(ore).toLocaleString(gameLocale, {
-            style: "decimal"
-          })
-        }}
-        <font v-if="quantity.oredepot <= ore" color="red"
-          ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-            :title="$t('Ore')"/></font
-        ><font v-else
-          ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
-            :title="$t('Ore')"
-        /></font>
+    {{
+      Number(ore).toLocaleString(gameLocale, {
+        style: "decimal"
+      })
+    }}
+    <font v-if="quantity.oredepot <= ore" color="red"
+      ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+        :title="$t('Ore')"/></font
+    ><font v-else
+      ><alpha-f-box-icon :title="$t('Ore')"/><alpha-e-box-icon
+        :title="$t('Ore')"
+    /></font>
 
-        {{
-          Number(copper).toLocaleString(gameLocale, {
-            style: "decimal"
-          })
-        }}
-        <font v-if="quantity.copperdepot <= copper" color="red"
-          ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-            :title="$t('Copper')"
-        /></font>
-        <font v-else>
-          <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
-            :title="$t('Copper')"
-        /></font>
+    {{
+      Number(copper).toLocaleString(gameLocale, {
+        style: "decimal"
+      })
+    }}
+    <font v-if="quantity.copperdepot <= copper" color="red"
+      ><alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+        :title="$t('Copper')"
+    /></font>
+    <font v-else>
+      <alpha-c-box-icon :title="$t('Copper')"/><alpha-u-box-icon
+        :title="$t('Copper')"
+    /></font>
 
-        {{
-          Number(uranium).toLocaleString(gameLocale, {
-            style: "decimal"
-          })
-        }}
-        <font v-if="quantity.uraniumdepot <= uranium" color="red"
-          ><alpha-u-box-icon :title="$t('Uranium')"
-        /></font>
-        <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
-      </span>
-    </router-link>
-    <span v-if="user !== null && stardust !== undefined && stardust !== null">
-      |
-      <router-link
-        :to="'/wallet'"
-        v-tooltip="$t('Wallet')"
-        :style="{ color: '#72bcd4' }"
-        >{{
-          Number(stardust / 100000000).toLocaleString(gameLocale, {
-            style: "decimal"
-          })
-        }}
-        <alpha-s-box-icon :title="$t('Stardust')"/><alpha-d-box-icon
-          :title="$t('Stardust')"/></router-link
-    ></span>
+    {{
+      Number(uranium).toLocaleString(gameLocale, {
+        style: "decimal"
+      })
+    }}
+    <font v-if="quantity.uraniumdepot <= uranium" color="red"
+      ><alpha-u-box-icon :title="$t('Uranium')"
+    /></font>
+    <font v-else><alpha-u-box-icon :title="$t('Uranium')"/></font>
   </span>
 </template>
 
 <script>
 import QuantityService from "@/services/quantity";
-import UserService from "@/services/user";
 import moment from "moment";
 import { mapState } from "vuex";
 import AlphaCBoxIcon from "vue-material-design-icons/AlphaCBox.vue";
 import AlphaFBoxIcon from "vue-material-design-icons/AlphaFBox.vue";
 import AlphaEBoxIcon from "vue-material-design-icons/AlphaEBox.vue";
 import AlphaUBoxIcon from "vue-material-design-icons/AlphaUBox.vue";
-import AlphaSBoxIcon from "vue-material-design-icons/AlphaSBox.vue";
-import AlphaDBoxIcon from "vue-material-design-icons/AlphaDBox.vue";
 import * as types from "@/store/mutation-types";
 
 export default {
@@ -86,9 +65,7 @@ export default {
     AlphaCBoxIcon,
     AlphaFBoxIcon,
     AlphaEBoxIcon,
-    AlphaUBoxIcon,
-    AlphaSBoxIcon,
-    AlphaDBoxIcon
+    AlphaUBoxIcon
   },
   data: function() {
     return {
@@ -133,7 +110,6 @@ export default {
   methods: {
     async prepareComponent() {
       await this.getQuantity();
-      await this.getStardust();
     },
     async getQuantity() {
       const response = await QuantityService.get(this.planetId);
@@ -142,10 +118,6 @@ export default {
       this.calculateOre();
       this.calculateCopper();
       this.calculateUranium();
-    },
-    async getStardust() {
-      const response = await UserService.get(this.user);
-      this.stardust = response.stardust;
     },
     calculateQuantity(quantity, depot, rate, lastUpdate) {
       var startTime = moment.unix(parseInt(lastUpdate));

@@ -141,8 +141,10 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getStardust();
-      this.clicked = false;
+      if (this.$route.name == "wallet") {
+        await this.getStardust();
+        this.clicked = false;
+      }
     },
     async getStardust() {
       const response = await WalletService.get(this.gameUser);

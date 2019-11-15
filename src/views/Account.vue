@@ -97,6 +97,18 @@
     <template v-else>
       <p>---</p>
       <p>{{ $t("Logged in as") }}: {{ loginUser }}</p>
+      <span
+        v-if="
+          loginUser == 'jarunik' ||
+            loginUser == 'oliverschmid' ||
+            loginUser == 'nextcolony' ||
+            loginUser == 'rondras'
+        "
+      >
+        <router-link to="/administration" v-tooltip="$t('Administration')">
+          <apple-keyboard-command-icon :title="$t('Administration')" />
+        </router-link>
+      </span>
       <p>
         {{ $t("Language") }}:
         <select v-model="gameLanguage">
@@ -122,9 +134,13 @@ import SteemConnectService from "@/services/steemconnect";
 import UserService from "@/services/user";
 import moment from "moment";
 import { mapState } from "vuex";
+import AppleKeyboardCommandIcon from "vue-material-design-icons/AppleKeyboardCommand.vue";
 
 export default {
   name: "overview",
+  components: {
+    AppleKeyboardCommandIcon
+  },
   props: ["callbackUserName", "callbackAccessToken", "callbackExpiresIn"],
   data: function() {
     return {

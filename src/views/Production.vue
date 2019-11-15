@@ -4,6 +4,9 @@
     <template
       v-if="gameUser !== null && planetId !== null && production !== null"
     >
+      <quantityRibbon />
+      <br />
+      <br />
       <table>
         <thead>
           <th></th>
@@ -133,9 +136,13 @@
 import ProductionService from "@/services/production";
 import { mapState } from "vuex";
 import * as types from "@/store/mutation-types";
+import QuantityRibbon from "@/components/QuantityRibbon.vue";
 
 export default {
   name: "production",
+  components: {
+    QuantityRibbon
+  },
   data: function() {
     return {
       production: null
@@ -156,13 +163,15 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getProduction();
-      this.$store.subscribe(mutation => {
-        switch (mutation.type) {
-          case "planet/" + types.SET_PLANET_ID:
-            this.prepareComponent();
-        }
-      });
+      if (this.$route.name == "production") {
+        await this.getProduction();
+        this.$store.subscribe(mutation => {
+          switch (mutation.type) {
+            case "planet/" + types.SET_PLANET_ID:
+              this.prepareComponent();
+          }
+        });
+      }
     },
     async getProduction() {
       const response = await ProductionService.all(

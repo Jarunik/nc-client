@@ -106,7 +106,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getBattles();
+      if (this.$route.name == "battlefeed") {
+        await this.getBattles();
+      }
     },
     async getBattles() {
       const response = await BattleService.limit(200);

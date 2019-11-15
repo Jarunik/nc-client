@@ -512,15 +512,17 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getShipyard();
-      await this.getFleet();
-      await this.getQuantity();
-      await this.getMissions();
-      await this.getSkills();
-      await this.getStardust();
-      await this.calculateAvailableMissions();
-      await this.calculateYamatoMission();
-      await this.fillForm();
+      if (this.$route.name == "fleet") {
+        await this.getShipyard();
+        await this.getFleet();
+        await this.getQuantity();
+        await this.getMissions();
+        await this.getSkills();
+        await this.getStardust();
+        await this.calculateAvailableMissions();
+        await this.calculateYamatoMission();
+        await this.fillForm();
+      }
     },
     async getStardust() {
       const response = await UserService.get(this.gameUser);

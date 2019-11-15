@@ -110,8 +110,10 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      this.userFilter = this.gameUser;
-      await this.getActivityByFilter(this.activityType, this.userFilter);
+      if (this.$route.name == "activity") {
+        this.userFilter = this.gameUser;
+        await this.getActivityByFilter(this.activityType, this.userFilter);
+      }
     },
     async getActivity() {
       const response = await ActivityService.all(100);

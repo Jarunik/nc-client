@@ -189,7 +189,9 @@ export default {
   },
   methods: {
     async prepareComponent() {
-      await this.getRanking();
+      if (this.$route.name == "ranking") {
+        await this.getRanking();
+      }
     },
     async getRanking() {
       const response = await RankingService.sortDestroyed(200);
