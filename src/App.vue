@@ -103,6 +103,8 @@
       </router-link>
       |
       <PlanetNav :routeUser="gameUser" />
+      <br />
+      <QuantityRibbon />
     </span>
   </div>
 </template>
@@ -132,6 +134,7 @@ import CogsIcon from "vue-material-design-icons/Cogs.vue";
 import WalletIcon from "vue-material-design-icons/Wallet.vue";
 import UserService from "@/services/user";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
+import QuantityRibbon from "@/components/QuantityRibbon.vue";
 
 export default {
   name: "App",
@@ -162,7 +165,8 @@ export default {
     StoreIcon,
     CogsIcon,
     WalletIcon,
-    EarthIcon
+    EarthIcon,
+    QuantityRibbon
   },
   computed: {
     // Needed to set i18n.locale to change language
@@ -423,6 +427,10 @@ input {
 
 .pointer-only {
   cursor: pointer;
+}
+.pointer-only a {
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .router-link-exact-active {

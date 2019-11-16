@@ -896,7 +896,8 @@ export default {
             this.yamatoCopper = shipCost.costs.copper;
             this.yamatoUranium = shipCost.costs.uranium;
             this.yamatoStardust = shipCost.costs.stardust;
-            this.buildYamato = shipCost.shipyard_level >= shipCost.shipyard_min_level;
+            this.buildYamato =
+              shipCost.shipyard_level >= shipCost.shipyard_min_level;
           }
         }
       });
