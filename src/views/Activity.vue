@@ -39,6 +39,7 @@
         <option value="ask">{{ $t("ask") }}</option>
         <option value="cancel_ask">{{ $t("cancel_ask") }}</option>
         <option value="fill_ask">{{ $t("fill_ask") }}</option>
+        <option value="burn">{{ $t("burn") }}</option>
       </select>
       &nbsp;
       <button @click="setUserFilter(gameUser)">{{ $t("Me") }}</button>
