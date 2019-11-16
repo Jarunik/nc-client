@@ -57,7 +57,9 @@
           v-if="!searchUser && (loginUser !== null || gameUser !== null)"
           v-tooltip="gameUser"
         >
-          <span @click="activateSearch()">{{ gameUser.substring(0, 7) }}</span>
+          <span @click="activateSearch()">{{
+            gameUser != null ? gameUser.substring(0, 7) : gameUser
+          }}</span>
         </span>
         <span v-show="searchUser || gameUser === null" v-tooltip="gameUser">
           <input
