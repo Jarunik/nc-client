@@ -151,12 +151,6 @@ export default {
           this.prepareComponent();
       }
     });
-    this.$store.subscribe(mutation => {
-      switch (mutation.type) {
-        case "planet/" + types.SET_PLANET_LIST:
-          this.prepareComponent();
-      }
-    });
   },
   computed: {
     ...mapState({
