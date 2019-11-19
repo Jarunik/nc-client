@@ -12,10 +12,18 @@
           sortedFleet.length > 0
       "
     >
-      <p>
-        {{ $t("Available Missions") }}: {{ availableMissions }} /
-        {{ totalMissions }}
+      <p v-if="availableMissions != null">
+        {{ $t("Available Missions") }} {{ $t("User") }}:
+        <span
+          :style="availableMissions > 0 ? 'color:white': 'color:red'"
+        >{{ availableMissions }}/{{ totalMissions }}</span>
+        ,
+        {{ $t("Planet") }}:
+        <span
+          :style="planetAvailableMissions > 0 ? 'color:white': 'color:red'"
+        >{{ planetAvailableMissions }}/{{ planetTotalMissions }}</span>
       </p>
+      <p v-else>-</p>
       <p
         v-if="isUnderSiege()"
         style="color:red"
@@ -323,10 +331,6 @@
           {{ $t("You have no ships. Build some in the") }}
           <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link>.
         </p>
-        <p>
-          {{ $t("Available Missions") }}: {{ availableMissions }} /
-          {{ totalMissions }}
-        </p>
       </template>
     </template>
   </div>
@@ -390,8 +394,11 @@ export default {
       slowestSpeed: null,
       pos: 0,
       search: null,
-      availableMissions: 0,
-      totalMissions: 0,
+      availableMissions: null,
+      totalMissions: null,
+      planetAvailableMissions: null,
+      planetTotalMissions: null,
+      missionAllowed: false,
       capacity: 0,
       processing: false,
       lastX: null,
@@ -627,50 +634,18 @@ export default {
       this.calculateConsumption();
       this.search = this.xCoordinate + "/" + this.yCoordinate;
     },
-    async fetchStarterPlanet(user) {
-      const response = await PlanetsService.starterPlanet(user);
-      return response;
-    },
-    async fetchPlanet(planetId) {
-      const response = await PlanetsService.byId(planetId);
+    async fetchMissionInfo(userId, planetId) {
+      const response = await FleetService.missionInfo(userId, planetId);
       return response;
     },
     calculateAvailableMissions() {
-      let missionBudget = 0;
-      if (this.skills !== null) {
-        this.skills.forEach(skill => {
-          if (skill.name === "missioncontrol") {
-            missionBudget = skill.current * 2;
-          }
-        });
-      }
-      this.totalMissions = missionBudget;
-      let runningMissions = 0;
-      if (this.activeUserMissions !== null) {
-        this.activeUserMissions.forEach(mission => {
-          if (mission.user === this.gameUser) {
-            runningMissions = runningMissions + 1;
-          }
-        });
-      }
-      this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (planet !== null) {
-          if (this.planetId === planet.id) {
-            missionBudget = missionBudget + 1;
-            this.totalMissions = missionBudget;
-            this.availableMissions = missionBudget - runningMissions;
-          } else {
-            this.availableMissions = missionBudget - runningMissions;
-          }
-        }
+      this.fetchMissionInfo(this.gameUser, this.planetId).then(missionInfo => {
+        this.totalMissions = missionInfo.user_max;
+        this.availableMissions = missionInfo.user_unused;
+        this.planetTotalMissions = missionInfo.planet_max;
+        this.planetAvailableMissions = missionInfo.planet_unused;
+        this.missionAllowed = missionInfo.mission_allowed;
       });
-      this.fetchPlanet(this.planetId).then(planet => {
-        if (this.availableMissions > planet.level_base / 2) {
-          this.missionBudget = planet.level_base / 2;
-          this.availableMissions = missionBudget - runningMissions;
-        }
-      });
-      this.totalMissions = missionBudget;
     },
     calculateYamatoMission() {
       this.activeYamatoMission = false;
@@ -707,7 +682,7 @@ export default {
           this.shipFormation.count > 0 &&
           parseFloat(this.uranium - this.transportUranium) >
             parseFloat(this.fuelConsumption) &&
-          this.availableMissions > 0 &&
+          this.missionAllowed &&
           this.loginUser === this.gameUser
         ) {
           if (command === "transport") {
@@ -755,6 +730,7 @@ export default {
           this.stardust >= this.yamatoStardust &&
           this.buildYamato &&
           !this.activeYamatoMission &&
+          this.missionAllowed &&
           this.loginUser === this.gameUser
         ) {
           enabled = true;
