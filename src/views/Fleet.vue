@@ -14,14 +14,10 @@
     >
       <p v-if="availableMissions != null">
         {{ $t("Available Missions") }} {{ $t("User") }}:
-        <span
-          :style="availableMissions > 0 ? 'color:white': 'color:red'"
-        >{{ availableMissions }}/{{ totalMissions }}</span>
+        <span>{{ availableMissions }}/{{ totalMissions }}</span>
         ,
         {{ $t("Planet") }}:
-        <span
-          :style="planetAvailableMissions > 0 ? 'color:white': 'color:red'"
-        >{{ planetAvailableMissions }}/{{ planetTotalMissions }}</span>
+        <span>{{ planetAvailableMissions }}/{{ planetTotalMissions }}</span>
       </p>
       <p v-else>-</p>
       <p
