@@ -1,6 +1,9 @@
 <template>
   <div class="buildings">
-    <h1>{{ $t("Buildings") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Buildings") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       {{ $t("Next Upgrade") }}: {{ nextEventDuration() || "-" }}
       <br />
@@ -379,6 +382,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale
     }),
     sortedBuildings() {

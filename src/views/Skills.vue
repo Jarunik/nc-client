@@ -1,6 +1,9 @@
 <template>
   <div class="skills">
-    <h1>{{ $t("Skills") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Skills") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       {{ $t("Next Enhancement") }}: {{ nextEventDuration() || "-" }}
       <br />
@@ -275,6 +278,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale
     }),
     sortedSkills() {

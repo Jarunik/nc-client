@@ -1,6 +1,10 @@
 <template>
   <div class="missions">
-    <h1>{{ $t("Missions") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Missions") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
+
     <p>{{ $t("Next Event") }}: {{ nextEventDurationFormatted() || "-" }}</p>
     <template v-if="gameUser !== null">
       <h2>
@@ -365,7 +369,9 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
-      planetName: state => state.planet.name
+      planetName: state => state.planet.name,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY
     }),
     sortedMissions() {
       var sortedMissions = this.missions;

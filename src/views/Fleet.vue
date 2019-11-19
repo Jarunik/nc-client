@@ -1,6 +1,9 @@
 <template>
   <div class="fleet">
-    <h1>{{ $t("Fleet") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Fleet") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       <router-link :to="'/ships'">{{ $t("Sell Ships") }}</router-link>
     </p>
@@ -483,8 +486,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
-      planetPosX: state => state.planet.posX,
-      planetPosY: state => state.planet.posY,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale,
       planetList: state => state.planet.list
     }),
@@ -505,8 +508,8 @@ export default {
       }
     },
     distance() {
-      var a = this.planetPosX - this.xCoordinate;
-      var b = this.planetPosY - this.yCoordinate;
+      var a = this.posX - this.xCoordinate;
+      var b = this.posY - this.yCoordinate;
 
       return Math.sqrt(a * a + b * b);
     },
@@ -605,8 +608,8 @@ export default {
     },
     onCommand() {
       if (this.command == "upgradeyamato") {
-        this.xCoordinate = this.planetPosX;
-        this.yCoordinate = this.planetPosY;
+        this.xCoordinate = this.posX;
+        this.yCoordinate = this.posY;
       }
       this.clicked = false;
       if (
