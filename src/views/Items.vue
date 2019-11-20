@@ -1,6 +1,9 @@
 <template>
   <div class="items">
-    <h1>{{ $t("Items") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Items") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <template v-if="items !== null && items.length > 0">
       <template v-if="groupedItems !== null && groupedItems.length > 0">
         <table>
@@ -165,6 +168,8 @@ export default {
       accessToken: state => state.game.accessToken,
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       planetName: state => state.planet.name
     }),
     groupedItems() {

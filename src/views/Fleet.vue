@@ -1,6 +1,9 @@
 <template>
   <div class="fleet">
-    <h1>{{ $t("Fleet") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Fleet") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       <router-link :to="'/ships'">{{ $t("Sell Ships") }}</router-link>
     </p>
@@ -12,10 +15,14 @@
           sortedFleet.length > 0
       "
     >
-      <p>
-        {{ $t("Available Missions") }}: {{ availableMissions }} /
-        {{ totalMissions }}
+      <p v-if="availableMissions != null">
+        {{ $t("Available Missions") }} {{ $t("User") }}:
+        <span>{{ availableMissions }}/{{ totalMissions }}</span>
+        ,
+        {{ $t("Planet") }}:
+        <span>{{ planetAvailableMissions }}/{{ planetTotalMissions }}</span>
       </p>
+      <p v-else>-</p>
       <p v-if="isUnderSiege()" style="color:red">
         {{ $t("Planet under siege. Only 'Break Siege' is possible!") }}
       </p>
@@ -27,28 +34,28 @@
         <p>
           {{ $t("Command") }}
           <select @change="onCommand()" v-model="command">
-            <option v-if="!isUnderSiege()" value="explorespace">
-              {{ $t("Explore") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="transport">
-              {{ $t("Transport") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="deploy">
-              {{ $t("Deploy") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="support">
-              {{ $t("Support") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="attack">
-              {{ $t("Attack") }}
-            </option>
-            <option v-if="!isUnderSiege()" value="siege">
-              {{ $t("Siege") }}
-            </option>
+            <option v-if="!isUnderSiege()" value="explorespace">{{
+              $t("Explore")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="transport">{{
+              $t("Transport")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="deploy">{{
+              $t("Deploy")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="support">{{
+              $t("Support")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="attack">{{
+              $t("Attack")
+            }}</option>
+            <option v-if="!isUnderSiege()" value="siege">{{
+              $t("Siege")
+            }}</option>
             <option value="breaksiege">{{ $t("Break Siege") }}</option>
-            <option v-if="!isUnderSiege()" value="upgradeyamato">
-              {{ $t("Upgrade Yamato") }}
-            </option>
+            <option v-if="!isUnderSiege()" value="upgradeyamato">{{
+              $t("Upgrade Yamato")
+            }}</option>
             <option value="sent">{{ $t("Sent") }}</option>
           </select>
         </p>
@@ -95,9 +102,11 @@
       </table>
       <!-- Last Destination -->
       <p v-if="command === 'sent'">
-        <span @click="openMap(lastX, lastY)">
-          {{ $t("Last Destination") }}:{{ "(" + lastX + "/" + lastY + ")" }}
-        </span>
+        <span @click="openMap(lastX, lastY)"
+          >{{ $t("Last Destination") }}:{{
+            "(" + lastX + "/" + lastY + ")"
+          }}</span
+        >
       </p>
       <template v-if="command !== null && command !== 'sent'">
         <!-- Formation -->
@@ -355,10 +364,6 @@
           <router-link :to="'/shipyard'">{{ $t("Shipyard") }}</router-link
           >.
         </p>
-        <p>
-          {{ $t("Available Missions") }}: {{ availableMissions }} /
-          {{ totalMissions }}
-        </p>
       </template>
     </template>
   </div>
@@ -369,7 +374,6 @@ import FleetService from "@/services/fleet";
 import QuantityService from "@/services/quantity";
 import MissionsService from "@/services/missions";
 import SkillsService from "@/services/skills";
-import PlanetsService from "@/services/planets";
 import ShipyardService from "@/services/shipyard";
 import UserService from "@/services/user";
 import { mapState } from "vuex";
@@ -422,8 +426,11 @@ export default {
       slowestSpeed: null,
       pos: 0,
       search: null,
-      availableMissions: 0,
-      totalMissions: 0,
+      availableMissions: null,
+      totalMissions: null,
+      planetAvailableMissions: null,
+      planetTotalMissions: null,
+      missionAllowed: false,
       capacity: 0,
       processing: false,
       lastX: null,
@@ -479,8 +486,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
-      planetPosX: state => state.planet.posX,
-      planetPosY: state => state.planet.posY,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale,
       planetList: state => state.planet.list
     }),
@@ -501,8 +508,8 @@ export default {
       }
     },
     distance() {
-      var a = this.planetPosX - this.xCoordinate;
-      var b = this.planetPosY - this.yCoordinate;
+      var a = this.posX - this.xCoordinate;
+      var b = this.posY - this.yCoordinate;
 
       return Math.sqrt(a * a + b * b);
     },
@@ -601,8 +608,8 @@ export default {
     },
     onCommand() {
       if (this.command == "upgradeyamato") {
-        this.xCoordinate = this.planetPosX;
-        this.yCoordinate = this.planetPosY;
+        this.xCoordinate = this.posX;
+        this.yCoordinate = this.posY;
       }
       this.clicked = false;
       if (
@@ -659,40 +666,18 @@ export default {
       this.calculateConsumption();
       this.search = this.xCoordinate + "/" + this.yCoordinate;
     },
-    async fetchStarterPlanet(user) {
-      const response = await PlanetsService.starterPlanet(user);
+    async fetchMissionInfo(userId, planetId) {
+      const response = await FleetService.missionInfo(userId, planetId);
       return response;
     },
     calculateAvailableMissions() {
-      let missionBudget = 0;
-      if (this.skills !== null) {
-        this.skills.forEach(skill => {
-          if (skill.name === "missioncontrol") {
-            missionBudget = skill.current * 2;
-          }
-        });
-      }
-      this.totalMissions = missionBudget;
-      let runningMissions = 0;
-      if (this.activeUserMissions !== null) {
-        this.activeUserMissions.forEach(mission => {
-          if (mission.user === this.gameUser) {
-            runningMissions = runningMissions + 1;
-          }
-        });
-      }
-      this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (planet !== null) {
-          if (this.planetId === planet.id) {
-            missionBudget = missionBudget + 1;
-            this.totalMissions = missionBudget;
-            this.availableMissions = missionBudget - runningMissions;
-          } else {
-            this.availableMissions = missionBudget - runningMissions;
-          }
-        }
+      this.fetchMissionInfo(this.gameUser, this.planetId).then(missionInfo => {
+        this.totalMissions = missionInfo.user_max;
+        this.availableMissions = missionInfo.user_unused;
+        this.planetTotalMissions = missionInfo.planet_max;
+        this.planetAvailableMissions = missionInfo.planet_unused;
+        this.missionAllowed = missionInfo.mission_allowed;
       });
-      this.totalMissions = missionBudget;
     },
     calculateYamatoMission() {
       this.activeYamatoMission = false;
@@ -729,7 +714,7 @@ export default {
           this.shipFormation.count > 0 &&
           parseFloat(this.uranium - this.transportUranium) >
             parseFloat(this.fuelConsumption) &&
-          this.availableMissions > 0 &&
+          this.missionAllowed &&
           this.loginUser === this.gameUser
         ) {
           if (command === "transport") {
@@ -777,6 +762,7 @@ export default {
           this.stardust >= this.yamatoStardust &&
           this.buildYamato &&
           !this.activeYamatoMission &&
+          this.missionAllowed &&
           this.loginUser === this.gameUser
         ) {
           enabled = true;

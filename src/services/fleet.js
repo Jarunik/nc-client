@@ -22,6 +22,14 @@ class FleetService {
 
     return response;
   }
+
+  async missionInfo(userId, planetId) {
+    const response = await ApiService.get(
+      `/missioninfo?user=${userId}&planet=${planetId}`
+    );
+
+    return response;
+  }
 }
 
 export default new FleetService();

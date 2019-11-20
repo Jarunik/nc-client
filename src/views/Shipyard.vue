@@ -1,6 +1,9 @@
 <template>
   <div class="shipyard">
-    <h1>{{ $t("Shipyard") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Shipyard") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       {{ $t("Next ship built in") }}: {{ nextEventDuration() || "-" }}<br />
       {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
@@ -347,6 +350,8 @@ export default {
       gameUser: state => state.game.user,
       planetId: state => state.planet.id,
       planetName: state => state.planet.name,
+      posX: state => state.planet.posX,
+      posY: state => state.planet.posY,
       gameLocale: state => state.game.gameLocale
     }),
     sortedShipyard() {

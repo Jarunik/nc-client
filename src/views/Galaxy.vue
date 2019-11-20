@@ -1,6 +1,9 @@
 <template>
   <div class="galaxy">
-    <h1>{{ $t("Galaxy") }} - {{ planetName }}</h1>
+    <h1>
+      {{ $t("Galaxy") }} {{ planetName }}
+      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
+    </h1>
     <p>
       <router-link :to="`/maps?x=${focusX}&y=${focusY}`"
         >{{ $t("Maps") }} {{ focusX }}/{{ focusY }}</router-link
