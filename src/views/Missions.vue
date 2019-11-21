@@ -461,16 +461,6 @@ export default {
         });
       }
       this.totalMissions = missionBudget;
-      this.fetchStarterPlanet(this.gameUser).then(planet => {
-        if (planet !== null) {
-          if (this.planetId === planet.id) {
-            missionBudget = missionBudget + 1;
-            this.totalMissions = missionBudget;
-          } else {
-            this.totalMissions = missionBudget;
-          }
-        }
-      });
     },
     sort(s) {
       //if s == current sort, reverse
