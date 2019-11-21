@@ -316,7 +316,6 @@
 <script>
 import MissionsService from "@/services/missions";
 import SkillsService from "@/services/skills";
-import PlanetsService from "@/services/planets";
 import { mapState } from "vuex";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
@@ -439,10 +438,6 @@ export default {
       });
 
       this.missions = inactiveMissions;
-    },
-    async fetchStarterPlanet(user) {
-      const response = await PlanetsService.starterPlanet(user);
-      return response;
     },
     async getSkills() {
       const response = await SkillsService.all(this.gameUser);
