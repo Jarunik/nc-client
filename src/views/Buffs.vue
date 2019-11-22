@@ -13,7 +13,7 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Buff") }}</th>
-          <th @click="sort('price')">{{ $t("Price") }}</th>
+          <th @click="sort('price')">{{ $t("SD Price") }}</th>
           <th @click="sort('buff_duration')">{{ $t("Duration") }}</th>
           <th @click="sort('buff_end')">{{ $t("End Date") }}</th>
           <th @click="sort('buff_end')">{{ $t("Ends in") }}</th>
@@ -25,14 +25,14 @@
         <tbody>
           <tr v-for="buff in sortedBuffs" :key="buff.name">
             <td>{{ $t(buff.name) }}</td>
-            <td>
+            <td :style="{ color: '#72bcd4' }">
               {{
                 Number(buff.price / 1e8).toLocaleString(gameLocale, {
                   style: "decimal"
                 })
               }}
             </td>
-            <td>{{ buff.buff_duration }}</td>
+            <td>{{ buff.buff_duration }} {{ $t("days") }}</td>
             <td>
               <span v-if="buff.buff_end > 0">
                 {{
