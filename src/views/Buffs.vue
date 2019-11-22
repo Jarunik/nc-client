@@ -1,9 +1,6 @@
 <template>
   <div class="buffs">
-    <h1>
-      {{ $t("Buffs") }} {{ planetName }}
-      <font color="grey" size="2em">{{ posX }}/{{ posY }}</font>
-    </h1>
+    <h1>{{ $t("Buffs") }} {{ gameUser }}</h1>
     <p>
       {{ $t("Next Buff End") }}: {{ nextEventDuration() || "-" }}
       <br />
