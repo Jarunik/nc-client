@@ -34,7 +34,11 @@
             </td>
             <td>{{ buff.buff_duration }}</td>
             <td>
-              {{ moment.unix(buff.buff_end, "seconds").format("MMM D HH:mm") }}
+              <span v-if="buff.buff_end > 0">
+                {{
+                  moment.unix(buff.buff_end, "seconds").format("MMM D HH:mm")
+                }}</span
+              ><span v-else>-</span>
             </td>
             <td>
               <span v-if="chainResponse.includes(buff.name)">
