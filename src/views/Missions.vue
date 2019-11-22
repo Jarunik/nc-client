@@ -315,7 +315,7 @@
 
 <script>
 import MissionsService from "@/services/missions";
-import SkillsService from "@/services/skills";
+import FleetService from "@/services/fleet";
 import { mapState } from "vuex";
 import CancelIcon from "vue-material-design-icons/Cancel.vue";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
@@ -421,8 +421,7 @@ export default {
     async prepareComponent() {
       if (this.$route.name == "missions") {
         await this.getMissions();
-        await this.getSkills();
-        await this.calculatMissionTotal();
+        await this.getMissionTotal();
       }
     },
     async getMissions() {
@@ -439,23 +438,12 @@ export default {
 
       this.missions = inactiveMissions;
     },
-    async getSkills() {
-      const response = await SkillsService.all(this.gameUser);
-      this.skills = response;
+    async getMissionTotal() {
+      const response = await FleetService.missionInfo(this.gameUser, this.planetId);
+      this.totalMissions = response.user_max;
     },
     openMap(x, y) {
       this.$router.push({ path: "galaxy", query: { x: x, y: y } });
-    },
-    calculatMissionTotal() {
-      let missionBudget = 0;
-      if (this.skills !== null) {
-        this.skills.forEach(skill => {
-          if (skill.name === "missioncontrol") {
-            missionBudget = skill.current * 2;
-          }
-        });
-      }
-      this.totalMissions = missionBudget;
     },
     sort(s) {
       //if s == current sort, reverse
