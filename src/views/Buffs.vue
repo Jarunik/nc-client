@@ -13,7 +13,7 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Buff") }}</th>
-          <th @click="sort('price')">{{ $t("SD Price") }}</th>
+          <th @click="sort('price')">{{ $t("Price") }}</th>
           <th @click="sort('buff_duration')">{{ $t("Duration") }}</th>
           <th @click="sort('buff_end')">{{ $t("End Date") }}</th>
           <th @click="sort('buff_end')">{{ $t("Ends in") }}</th>
@@ -31,6 +31,7 @@
                   style: "decimal"
                 })
               }}
+              {{ $t("SD") }}
             </td>
             <td>{{ buff.buff_duration }} {{ $t("days") }}</td>
             <td>
