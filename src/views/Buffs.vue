@@ -7,12 +7,26 @@
       {{ $t("Next Refresh") }}: {{ nextRefreshFormatted() || "-" }}
     </p>
     <template v-if="gameUser !== null">
+      <p>
+        {{ $t("Your Balance") }}:
+        <b
+          ><font v-if="wallet != null" color="#72bcd4">
+            {{
+              Number(wallet.stardust / 100000000).toLocaleString(gameLocale, {
+                style: "decimal"
+              })
+            }}</font
+          ></b
+        >&nbsp;
+        <span :style="{ color: '#72bcd4' }">{{ $t("SD") }}</span>
+      </p>
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Buff") }}</th>
           <th @click="sort('price')">{{ $t("Price") }}</th>
           <th @click="sort('buff_duration')">{{ $t("Duration") }}</th>
           <th @click="sort('buff_end')">{{ $t("End Date") }}</th>
+          <th @click="sort('buff_end')">{{ $t("Active") }}</th>
           <th @click="sort('buff_end')">{{ $t("Ends in") }}</th>
           <th v-if="loginUser !== null && loginUser === gameUser">
             {{ $t("Buff") }}
@@ -39,6 +53,9 @@
               ><span v-else>-</span>
             </td>
             <td>
+              {{ buff.buff_end | activeCharges(buff.buff_duration) }}
+            </td>
+            <td>
               <span v-if="chainResponse.includes(buff.name)">
                 <timer-sand-icon :title="$t('Transaction sent')" />
                 {{ nextRefreshFormatted() }}
@@ -48,7 +65,7 @@
             <td>
               <span v-if="loginUser !== null && loginUser === gameUser">
                 <button
-                  :disabled="clicked.includes(buff.name) || processing"
+                  :disabled="inWork(buff) || processing"
                   v-if="buffPossible(buff)"
                   @click="sendBuff(buff)"
                 >
@@ -68,6 +85,7 @@
 
 <script>
 import BuffsService from "@/services/buffs";
+import WalletService from "@/services/wallet";
 import SteemConnectService from "@/services/steemconnect";
 import moment from "moment";
 import { mapState } from "vuex";
@@ -84,6 +102,7 @@ export default {
   data: function() {
     return {
       buffs: null,
+      wallet: null,
       quantity: null,
       interval: null,
       coal: null,
@@ -137,6 +156,14 @@ export default {
         return "-";
       }
       return moment.duration(parseInt(time), "seconds").humanize();
+    },
+    activeCharges(endDate, duration) {
+      let active = 0;
+      let now = moment().unix();
+      if (endDate > now) {
+        active = Math.ceil((endDate - now) / (86400 * duration));
+      }
+      return active;
     }
   },
   computed: {
@@ -171,11 +198,16 @@ export default {
     async prepareComponent() {
       if (this.$route.name == "buffs") {
         await this.getBuffs();
+        await this.getStardust();
       }
     },
     async getBuffs() {
       const response = await BuffsService.all(this.gameUser);
       this.buffs = response;
+    },
+    async getStardust() {
+      const response = await WalletService.get(this.gameUser);
+      this.wallet = response;
     },
     refreshDone(buff) {
       let refreshed = false;
@@ -207,11 +239,25 @@ export default {
       if (self.processing) {
         self.chainResponse.push(buff.name);
         self.processing = false;
+        this.wallet.stardust = this.wallet.stardust - buff.price;
         this.nextRefresh = moment.utc().add(6, "seconds");
       }
     },
     buffPossible(buff) {
-      return true;
+      if (this.wallet != null && this.wallet.stardust >= buff.price) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    inWork(buff) {
+      let inWork = false;
+      if (this.clicked != null) {
+        if (this.clicked.some(c => c.name == buff.name)) {
+          inWork = true;
+        }
+      }
+      return inWork;
     },
     sort(s) {
       //if s == current sort, reverse
