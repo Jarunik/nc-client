@@ -78,6 +78,11 @@
           </tr>
         </tbody>
       </table>
+      <p>
+        <i>{{
+          $t("Prices might change. Already purchased buffs are not affected.")
+        }}</i>
+      </p>
     </template>
     <template v-else>
       <p>{{ $t("Please set the") }} {{ $t("user") }}</p>
