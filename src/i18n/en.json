@@ -632,5 +632,16 @@
   "Filtered": "Filtered",
   "Reload": "Reload",
   "You have no ships. Buy some on the": "You have no ships. Buy some on the",
-  "Sell Ships": "Sell Ships"
+  "Sell Ships": "Sell Ships",
+  "Buff": "Buff",
+  "Duration": "Duration",
+  "Buffs": "Buffs",
+  "Next Buff End": "Next Buff End",
+  "End Date": "End Date",
+  "Ends in": "Ends in",
+  "buff": "Buff",
+  "days": "days",
+  "Description": "Description",
+  "400 Missions": "400 Missions",
+  "Prices might change. Already purchased buffs are not affected.": "Prices might change. Already purchased buffs are not affected."
 }

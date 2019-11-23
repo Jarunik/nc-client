@@ -80,6 +80,10 @@
         <cogs-icon :title="$t('Production')" />
       </router-link>
       |
+      <router-link :to="'/buffs'" v-tooltip="$t('Buffs')">
+        <coffee-icon :title="$t('Buffs')" />
+      </router-link>
+      |
       <router-link :to="'/skills'" v-tooltip="$t('Skills')">
         <school-icon :title="$t('Skills')" />
       </router-link>
@@ -137,6 +141,7 @@ import WalletIcon from "vue-material-design-icons/Wallet.vue";
 import UserService from "@/services/user";
 import EarthIcon from "vue-material-design-icons/Earth.vue";
 import QuantityRibbon from "@/components/QuantityRibbon.vue";
+import CoffeeIcon from "vue-material-design-icons/Coffee.vue";
 
 export default {
   name: "App",
@@ -168,7 +173,8 @@ export default {
     CogsIcon,
     WalletIcon,
     EarthIcon,
-    QuantityRibbon
+    QuantityRibbon,
+    CoffeeIcon
   },
   computed: {
     // Needed to set i18n.locale to change language
