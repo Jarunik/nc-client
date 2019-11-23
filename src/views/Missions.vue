@@ -439,7 +439,10 @@ export default {
       this.missions = inactiveMissions;
     },
     async getMissionTotal() {
-      const response = await FleetService.missionInfo(this.gameUser, this.planetId);
+      const response = await FleetService.missionInfo(
+        this.gameUser,
+        this.planetId
+      );
       this.totalMissions = response.user_max;
     },
     openMap(x, y) {

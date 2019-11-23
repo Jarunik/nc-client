@@ -647,7 +647,7 @@ export default {
         planet.id,
         (error, result) => {
           if (error === null && result.success) {
-            console.log(planet.id);
+            null;
           }
         }
       );
@@ -660,7 +660,7 @@ export default {
         planet.id,
         (error, result) => {
           if (error === null && result.success) {
-            console.log(planet.id);
+            null;
           }
         }
       );

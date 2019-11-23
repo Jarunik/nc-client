@@ -207,7 +207,9 @@
                     )
               }}</font>
             </td>
-            <td>{{ ship.speed }} ({{ ship.basespeed }}/{{ ship.battlespeed }})</td>
+            <td>
+              {{ ship.speed }} ({{ ship.basespeed }}/{{ ship.battlespeed }})
+            </td>
             <td>
               {{ ship.costs.time | timePretty }}
             </td>
