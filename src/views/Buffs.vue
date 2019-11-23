@@ -272,7 +272,7 @@ export default {
         description = "400 Missions";
       }
       if (buffName == "battlespeed") {
-        description = "Battleships 5+ Speed";
+        description = "Average Speed 5";
       }
       return description;
     },
