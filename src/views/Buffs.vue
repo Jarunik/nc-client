@@ -271,6 +271,9 @@ export default {
       if (buffName == "missioncontrol") {
         description = "400 Missions";
       }
+      if (buffName == "battlespeed") {
+        description = "Battleships 5+ Speed";
+      }
       return description;
     },
     sort(s) {

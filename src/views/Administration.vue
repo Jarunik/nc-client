@@ -205,10 +205,11 @@
       </template>
       <!-- Update Buff -->
       <template v-if="command == 'updatebuff'">
-                <p>
+        <p>
           {{ $t("Parameter") }}:
           <select v-model="buffName">
             <option value="missioncontrol">{{ $t("Mission Control") }}</option>
+            <option value="battlespeed">{{ $t("Battle Speed") }}</option>
           </select>
           &nbsp;
           <input v-model="buffName" />
