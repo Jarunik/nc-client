@@ -10,6 +10,7 @@
           <option value="issue">{{ $t("Issue Item") }} </option>
           <option value="issuestardust">{{ $t("Issue Stardust") }}</option>
           <option value="newseason">{{ $t("New Season") }}</option>
+          <option value="updatebuff">{{ $t("Update Buff") }}</option>
         </select>
       </p>
       <!-- Update Shop -->
@@ -202,6 +203,31 @@
           {{ result.message }}
         </p>
       </template>
+      <!-- Update Buff -->
+      <template v-if="command == 'updatebuff'">
+                <p>
+          {{ $t("Parameter") }}:
+          <select v-model="buffName">
+            <option value="missioncontrol">{{ $t("Mission Control") }}</option>
+          </select>
+          &nbsp;
+          <input v-model="buffName" />
+        </p>
+        <p>{{ $t("Price") }}: <input v-model="buffPrice" /></p>
+        <p>
+          <button :disabled="clicked" @click="sendUpdateBuff()">
+            {{ $t("Send Update Buff") }}
+          </button>
+        </p>
+        <p v-if="error != null">
+          <font color="red">{{ $t("Error") }}:</font>
+          {{ JSON.stringify(error) }}
+        </p>
+        <p v-if="result != null">
+          <font color="green">{{ $t("Result") }}:</font>
+          {{ result.message }}
+        </p>
+      </template>
     </template>
     <template v-else>
       <template v-if="gameUser === null">
@@ -238,7 +264,9 @@ export default {
       seasonLength: null,
       seasonReward: null,
       seasonLeachRate: null,
-      seasonDeployRate: null
+      seasonDeployRate: null,
+      buffName: null,
+      buffPrice: null
     };
   },
   async mounted() {
@@ -320,6 +348,21 @@ export default {
         this.seasonReward,
         this.seasonLeachRate,
         this.seasonDeployRate,
+        (error, result) => {
+          if (error === null && result.success) {
+            this.error = error;
+            this.result = result;
+          }
+        }
+      );
+    },
+    sendUpdateBuff() {
+      this.clicked = true;
+      SteemConnectService.setAccessToken(this.accessToken);
+      SteemConnectService.updateBuff(
+        this.loginUser,
+        this.buffName,
+        this.buffPrice,
         (error, result) => {
           if (error === null && result.success) {
             this.error = error;
