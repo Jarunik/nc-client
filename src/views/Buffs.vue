@@ -23,6 +23,7 @@
       <table>
         <thead>
           <th @click="sort('name')">{{ $t("Buff") }}</th>
+          <th>{{ $t("Description") }}</th>
           <th @click="sort('price')">{{ $t("Price") }}</th>
           <th @click="sort('buff_duration')">{{ $t("Duration") }}</th>
           <th @click="sort('buff_end')">{{ $t("End Date") }}</th>
@@ -36,6 +37,7 @@
         <tbody>
           <tr v-for="buff in sortedBuffs" :key="buff.name">
             <td>{{ $t(buff.name) }}</td>
+            <td>{{ $t(buffDescription(buff.name)) }}</td>
             <td :style="{ color: '#72bcd4' }">
               {{
                 Number(buff.price / 1e8).toLocaleString(gameLocale, {
@@ -258,6 +260,13 @@ export default {
         }
       }
       return inWork;
+    },
+    buffDescription(buffName) {
+      let description = "-";
+      if (buffName == "missioncontrol") {
+        description = "400 Missions";
+      }
+      return description;
     },
     sort(s) {
       //if s == current sort, reverse
