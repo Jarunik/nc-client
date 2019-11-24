@@ -293,7 +293,7 @@ export default {
       stardust: null,
       clicked: [],
       chainResponse: [],
-      currentSort: "shipyard_min_level",
+      currentSort: "order",
       currentSortDir: "asc",
       processing: false,
       filter: "active",
