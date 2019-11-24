@@ -50,6 +50,12 @@ export default {
           this.prepareComponent();
       }
     });
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "planet/" + types.SET_PLANET_ID:
+          this.setDisplayPlanet();
+      }
+    });
     await this.prepareComponent();
   },
   filters: {
@@ -99,6 +105,9 @@ export default {
         const response = await PlanetsService.byUser(this.gameUser);
         this.planets = response.planets;
       }
+      this.setDisplayPlanet();
+    },
+    async setDisplayPlanet() {
       if (this.planets != null) {
         this.planets.forEach(planet => {
           if (planet.id === this.planetId) {
