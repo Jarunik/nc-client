@@ -412,7 +412,7 @@ export default {
       stardust: null,
       clicked: false,
       chainResponse: [],
-      currentSort: "shipyard_level",
+      currentSort: "order",
       currentSortDir: "asc",
       command: null,
       xCoordinate: null,
