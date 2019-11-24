@@ -93,8 +93,7 @@ export default {
     AlphaEBoxIcon,
     AlphaUBoxIcon,
     AlphaSBoxIcon,
-    AlphaDBoxIcon,
-    UserService
+    AlphaDBoxIcon
   },
   data: function() {
     return {

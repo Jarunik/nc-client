@@ -207,7 +207,12 @@
                     )
               }}</font>
             </td>
-            <td>{{ ship.speed }}</td>
+            <td>
+              <span v-if="ship.basespeed != null">
+                {{ ship.speed }} ({{ ship.basespeed }}/{{ ship.battlespeed }})
+              </span>
+              <span v-else>{{ ship.speed }}</span>
+            </td>
             <td>
               {{ ship.costs.time | timePretty }}
             </td>

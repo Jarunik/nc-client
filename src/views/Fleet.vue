@@ -526,7 +526,7 @@ export default {
         await this.getMissions();
         await this.getSkills();
         await this.getStardust();
-        await this.calculateAvailableMissions();
+        await this.getMissionInfo();
         await this.calculateYamatoMission();
         await this.fillForm();
       }
@@ -592,6 +592,17 @@ export default {
         ship.quantity = quantity - for_sale;
         ship.toSend = 1;
       });
+    },
+    async getMissionInfo() {
+      const missionInfo = await FleetService.missionInfo(
+        this.gameUser,
+        this.planetId
+      );
+      this.totalMissions = missionInfo.user_max;
+      this.availableMissions = missionInfo.user_unused;
+      this.planetTotalMissions = missionInfo.planet_max;
+      this.planetAvailableMissions = missionInfo.planet_unused;
+      this.missionAllowed = missionInfo.mission_allowed;
     },
     isBusy(busy) {
       var busyUntil = moment(new Date(busy * 1000));
@@ -665,19 +676,6 @@ export default {
     onCoordinateChange() {
       this.calculateConsumption();
       this.search = this.xCoordinate + "/" + this.yCoordinate;
-    },
-    async fetchMissionInfo(userId, planetId) {
-      const response = await FleetService.missionInfo(userId, planetId);
-      return response;
-    },
-    calculateAvailableMissions() {
-      this.fetchMissionInfo(this.gameUser, this.planetId).then(missionInfo => {
-        this.totalMissions = missionInfo.user_max;
-        this.availableMissions = missionInfo.user_unused;
-        this.planetTotalMissions = missionInfo.planet_max;
-        this.planetAvailableMissions = missionInfo.planet_unused;
-        this.missionAllowed = missionInfo.mission_allowed;
-      });
     },
     calculateYamatoMission() {
       this.activeYamatoMission = false;

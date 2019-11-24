@@ -25,7 +25,6 @@
           <th>
             <font color="#72bcd4">{{ $t("SD") }}</font>
           </th>
-          <th>{{ $t("Context") }}</th>
           <th>{{ $t("Selected") }}</th>
         </thead>
         <tbody>
@@ -183,9 +182,6 @@
                   ).toLocaleString(gameLocale, { style: "decimal" })
                 }}
               </font>
-            </td>
-            <td>
-              <button @click="setPlanet(planet)">{{ $t("Set") }}</button>
             </td>
             <td>
               <span v-if="planet.id === planetId">
@@ -574,22 +570,6 @@ export default {
         }
       }
     },
-    setPlanet(planet) {
-      if (planet.id !== this.planetId) {
-        this.$store.dispatch("planet/setId", planet.id);
-        this.$store.dispatch("planet/setName", planet.name);
-        this.$store.dispatch("planet/setPosX", planet.posx);
-        this.$store.dispatch("planet/setPosY", planet.posy);
-      } else {
-        this.resetPlanet();
-      }
-    },
-    resetPlanet() {
-      this.$store.dispatch("planet/setId", null);
-      this.$store.dispatch("planet/setName", null);
-      this.$store.dispatch("planet/setPosX", null);
-      this.$store.dispatch("planet/setPosY", null);
-    },
     renamePlanet(planetId, newName) {
       this.clicked.push(planetId);
       SteemConnectService.setAccessToken(this.accessToken);
@@ -667,7 +647,7 @@ export default {
         planet.id,
         (error, result) => {
           if (error === null && result.success) {
-            console.log(planet.id);
+            null;
           }
         }
       );
@@ -680,7 +660,7 @@ export default {
         planet.id,
         (error, result) => {
           if (error === null && result.success) {
-            console.log(planet.id);
+            null;
           }
         }
       );
