@@ -12,7 +12,7 @@
       <br />
       <table>
         <thead>
-          <th></th>
+          <th>{{ $t("Data") }}</th>
           <th>{{ $t("Coal") }}</th>
           <th>{{ $t("Ore") }}</th>
           <th>{{ $t("Copper") }}</th>
