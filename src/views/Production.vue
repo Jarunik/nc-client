@@ -27,6 +27,78 @@
             <td><hr /></td>
           </tr>
           <tr>
+            <td>{{ $t("Depot Size") }}</td>
+            <td>
+              {{
+                Number(production.coal.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.ore.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.copper.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(production.uranium.depot).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>{{ $t("Safe") }}</td>
+            <td>
+              {{
+                Number(Number(production.coal.safe).toFixed(0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(Number(production.ore.safe).toFixed(0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(
+                  Number(production.copper.safe).toFixed(0)
+                ).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(
+                  Number(production.uranium.safe).toFixed(0)
+                ).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
             <td>
               {{ $t("Booster Skill Level") }}
             </td>
@@ -354,68 +426,6 @@
             <td><hr /></td>
             <td><hr /></td>
             <td><hr /></td>
-          </tr>
-          <tr>
-            <td>{{ $t("Depot Size") }}</td>
-            <td>
-              {{
-                Number(production.coal.depot).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.ore.depot).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.copper.depot).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.uranium.depot).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td>{{ $t("Safe") }}</td>
-            <td>
-              {{
-                Number(production.coal.safe).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.ore.safe).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.copper.safe).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.uranium.safe).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
           </tr>
         </tbody>
       </table>
