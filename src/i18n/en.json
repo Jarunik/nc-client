@@ -645,5 +645,12 @@
   "400 Missions": "400 Missions",
   "Prices might change. Already purchased buffs are not affected.": "Prices might change. Already purchased buffs are not affected.",
   "battlespeed": "Battle Speed",
-  "Average Speed 5": "Average Speed 5"
+  "Average Speed 5": "Average Speed 5",
+  "Daily Raw Production": "Daily Raw Production",
+  "Daily Skill Boost": "Daily Skill Boost",
+  "Daily Rarity Boost": "Daily Rarity Boost",
+  "Daily Rune Boost": "Daily Rune Boost",
+  "Daily Normal Production": "Daily Normal Production",
+  "Shield Charge Malus": "Shield Charge Malus",
+  "Current Production": "Current Production"
 }

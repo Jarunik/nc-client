@@ -20,24 +20,33 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{ $t("Daily Production") }}</td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+          </tr>
+          <tr>
             <td>
-              {{
-                Number(production.coal.production).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
+              {{ $t("Booster Skill Level") }}
             </td>
+            <td>({{ production.coal.booster || 0 }})</td>
+            <td>({{ production.ore.booster || 0 }})</td>
+            <td>({{ production.copper.booster || 0 }})</td>
+            <td>({{ production.uranium.booster || 0 }})</td>
+          </tr>
+          <tr>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+          </tr>
+          <tr>
+            <td>{{ $t("Daily Raw Production") }}</td>
             <td>
               {{
-                Number(production.ore.production).toLocaleString(gameLocale, {
-                  style: "decimal"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                Number(production.copper.production).toLocaleString(
+                Number(dailyProduction(production.coal)).toLocaleString(
                   gameLocale,
                   {
                     style: "decimal"
@@ -47,7 +56,7 @@
             </td>
             <td>
               {{
-                Number(production.uranium.production).toLocaleString(
+                Number(dailyProduction(production.ore)).toLocaleString(
                   gameLocale,
                   {
                     style: "decimal"
@@ -55,6 +64,296 @@
                 )
               }}
             </td>
+            <td>
+              {{
+                Number(dailyProduction(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyProduction(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{ $t("Daily Skill Boost") }}
+            </td>
+            <td>
+              {{
+                Number(dailySkillBoost(production.coal || 0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailySkillBoost(production.ore || 0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailySkillBoost(production.copper || 0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailySkillBoost(production.uranium || 0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{ $t("Daily Rarity Boost") }} ({{ $t(production.misc.bonus) }})
+            </td>
+            <td>
+              {{
+                Number(dailyRarityBoost(production.coal || 0)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRarityBoost(production.ore)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRarityBoost(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRarityBoost(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{ $t("Daily Rune Boost") }}
+              ({{ $t(production.misc.rune_name || "-") }})
+            </td>
+            <td>
+              {{
+                Number(dailyRuneBoost(production.coal)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRuneBoost(production.ore)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRuneBoost(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyRuneBoost(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>{{ $t("Daily Normal Production") }}</td>
+            <td>
+              {{
+                Number(dailyTotal(production.coal)).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyTotal(production.ore)).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyTotal(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(dailyTotal(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>{{ $t("Shield Charge Malus") }}</td>
+            <td>
+              {{
+                Number(shieldMalus(production.coal)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(shieldMalus(production.ore)).toLocaleString(gameLocale, {
+                  style: "decimal"
+                })
+              }}
+            </td>
+            <td>
+              {{
+                Number(shieldMalus(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(shieldMalus(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+          </tr>
+          <tr>
+            <td>{{ $t("Current Production") }}</td>
+            <td>
+              {{
+                Number(currentProduction(production.coal)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(currentProduction(production.ore)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(currentProduction(production.copper)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+            <td>
+              {{
+                Number(currentProduction(production.uranium)).toLocaleString(
+                  gameLocale,
+                  {
+                    style: "decimal"
+                  }
+                )
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
+            <td><hr /></td>
           </tr>
           <tr>
             <td>{{ $t("Depot Size") }}</td>
@@ -184,6 +483,36 @@ export default {
         this.planetId
       );
       this.production = response;
+    },
+    dailyProduction(resource) {
+      return resource.production;
+    },
+    dailySkillBoost(resource) {
+      return (this.dailyProduction(resource) * resource.booster * 0.5) / 100;
+    },
+    dailyRarityBoost(resource) {
+      return (this.dailyProduction(resource) * this.production.misc.rate) / 100;
+    },
+    dailyRuneBoost(resource) {
+      return (this.dailyProduction(resource) * this.production.misc.rune) / 100;
+    },
+    dailyTotal(resource) {
+      return (
+        this.dailyProduction(resource) +
+        this.dailySkillBoost(resource) +
+        this.dailyRarityBoost(resource) +
+        this.dailyRuneBoost(resource)
+      );
+    },
+    shieldMalus(resource) {
+      let malus = 0;
+      if (this.production.misc.shieldcharge_busy > this.moment().unix()) {
+        malus = -this.dailyTotal(resource) * 0.1;
+      }
+      return malus;
+    },
+    currentProduction(resource) {
+      return this.dailyTotal(resource) + this.shieldMalus(resource);
     }
   }
 };
