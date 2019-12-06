@@ -17,7 +17,7 @@
             $t("Winner")
           }}</font>
           <font v-if="currentAttacker === this.slots" color="red">{{
-            $t("Looser")
+            $t("Loser")
           }}</font>
         </span>
       </h2>
@@ -126,7 +126,7 @@
             $t("Winner")
           }}</font>
           <font v-if="currentDefender === slots" color="red">{{
-            $t("Looser")
+            $t("Loser")
           }}</font>
         </span>
       </h2>
