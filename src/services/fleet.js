@@ -15,9 +15,17 @@ class FleetService {
 
     return response;
   }
-  async ships(userId, planetId) {
+  async ships(userId, planetId, limit = 100) {
     const response = await ApiService.get(
-      `/planetships?user=${userId}&planet=${planetId}`
+      `/planetships?user=${userId}&planet=${planetId}&limit=${limit}`
+    );
+
+    return response;
+  }
+
+  async shipsByType(userId, planetId, shipType, limit = 100) {
+    const response = await ApiService.get(
+      `/planetships?user=${userId}&planet=${planetId}&type=${shipType}&limit=${limit}`
     );
 
     return response;

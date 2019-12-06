@@ -1,7 +1,25 @@
 <template>
   <div class="ships">
     <h1>{{ $t("Ships") }} - {{ planetName }}</h1>
-    <template v-if="ships !== null && ships.length > 0">
+    <template v-if="gameUser != null">
+      <p>
+        <select @change="setTypeFilter(typeFilter)" v-model="typeFilter">
+          <option value="all">{{ $t("Type: All") }}</option>
+          <option
+            v-for="filter in contextMarketFilter"
+            :key="filter.name"
+            :value="filter.type"
+            >{{ $t(filter.name) }}</option
+          >
+        </select>
+        &nbsp;
+        {{ $t("Limit") }}:
+        <input
+          v-model="limit"
+          @blur="setLimit(limit)"
+          @keyup.enter="setLimit(limit)"
+        />
+      </p>
       <table>
         <thead>
           <th>{{ $t("Name") }}</th>
@@ -42,19 +60,10 @@
       </table>
     </template>
     <template v-else>
-      <template v-if="gameUser !== null">
-        <p>
-          {{ $t("You have no ships. Buy some on the") }}
-          <router-link to="/market">{{ $t("Market") }}</router-link
-          >.
-        </p>
-      </template>
-      <template v-if="gameUser === null">
-        <p>
-          {{ $t("Please set the") }}
-          {{ $t("user") }}
-        </p>
-      </template>
+      <p>
+        {{ $t("Please set the") }}
+        {{ $t("user") }}
+      </p>
     </template>
   </div>
 </template>
@@ -65,6 +74,7 @@ import SteemConnectService from "@/services/steemconnect";
 import { mapState } from "vuex";
 import * as types from "@/store/mutation-types";
 import TimerSandIcon from "vue-material-design-icons/TimerSand.vue";
+import marketFilter from "@/data/marketFilter.js";
 
 export default {
   name: "ships",
@@ -72,10 +82,14 @@ export default {
   data: function() {
     return {
       ships: null,
+      fleet: null,
       recipient: null,
       clicked: [],
       chainResponse: [],
-      placeholderPrice: "enter SD price"
+      placeholderPrice: "enter SD price",
+      marketFilter: marketFilter,
+      typeFilter: "all",
+      limit: 100
     };
   },
   async mounted() {
@@ -106,12 +120,31 @@ export default {
         "type"
       ]);
       return sortedShips;
+    },
+    contextMarketFilter() {
+      let filter = this.marketFilter;
+      filter = filter.filter(item => {
+        return item.category == "ship";
+      });
+      if (this.fleet != null) {
+        filter = filter.filter(item => {
+          let showShip = false;
+          this.fleet.forEach(ship => {
+            if (ship.type == item.type) {
+              showShip = true;
+            }
+          });
+          return showShip;
+        });
+      }
+      return filter;
     }
   },
   methods: {
     async prepareComponent() {
       if (this.$route.name == "ships") {
         await this.getShips();
+        await this.getFleet();
       }
     },
     async getShips() {
@@ -120,6 +153,10 @@ export default {
       this.ships.forEach(ship => {
         ship.price = null;
       });
+    },
+    async getFleet() {
+      const response = await FleetService.grouped(this.gameUser, this.planetId);
+      this.fleet = response;
     },
     sell(ship) {
       this.clicked.push(ship.id);
@@ -149,6 +186,35 @@ export default {
         if (s.type == ship.type && !this.chainResponse.includes(s.id)) {
           s.price = ship.price;
         }
+      });
+    },
+    async setTypeFilter(typeFilter) {
+      this.typeFilter = typeFilter;
+      await this.fetchFromApi();
+    },
+    async setLimit(limit) {
+      this.limit = limit;
+      await this.fetchFromApi();
+    },
+    async fetchFromApi() {
+      let response = null;
+      if (this.typeFilter == "all") {
+        response = await FleetService.ships(
+          this.gameUser,
+          this.planetId,
+          this.limit
+        );
+      } else {
+        response = await FleetService.shipsByType(
+          this.gameUser,
+          this.planetId,
+          this.typeFilter,
+          this.limit
+        );
+      }
+      this.ships = response;
+      this.ships.forEach(ship => {
+        ship.price = null;
       });
     }
   }
