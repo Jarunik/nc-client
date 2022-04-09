@@ -25,7 +25,7 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "steemconnect": "^3.0.4",
     "vue-i18n": "^8.15.0",
     "vue-material-design-icons": "^3.4.0",
